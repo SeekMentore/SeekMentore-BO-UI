@@ -26,7 +26,7 @@ export class ErrorComponent implements OnInit {
   ngOnInit() {
     if (this.errorCode != null) {
       this.utilityService.makeRequest(AppConstants.errorPageURL,
-        'POST', {errorcode: this.errorCode}).subscribe(result => {
+        'POST', {errorcode: this.errorCode}, 'application/x-www-form-urlencoded').subscribe(result => {
         this.errorImageSrc = result['errorImageSrc'];
         this.errorText = result['errorText'];
       }, error => {

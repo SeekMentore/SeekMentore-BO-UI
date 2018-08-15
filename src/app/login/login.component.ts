@@ -32,7 +32,8 @@ export class LoginComponent implements OnInit {
     formData.append('password', this.password);
     formData.append('user-type', this.userType);
 
-    this.utilityService.makeRequest(AppConstants.loginURL, 'POST', formData, true).subscribe(result => {
+    this.utilityService.makeRequest(AppConstants.loginURL, 'POST', formData,
+                                  'application/x-www-form-urlencoded').subscribe(result => {
       if (result['success'] === true) {
         window.location.href = result['redirectTo'];
       } else {

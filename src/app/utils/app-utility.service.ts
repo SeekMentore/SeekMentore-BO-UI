@@ -12,12 +12,18 @@ export class AppUtilityService {
   constructor(private http: HttpClient) {
   }
 
-  public makeRequest(url: string, requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET', data: any = null,
-                     isMultipart: boolean = false, params: HttpParams = null) {
+  public makeRequest(
+              url: string,
+              requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+              data: any = null,
+              contentType: string = 'application/json',
+              isMultipart: boolean = false,
+              params: HttpParams = null
+  ) {
     if (!url.includes('http')) {
-      url = AppConstants.SERVER_URL + '/' + AppConstants.CONTEXT_PATH + '/' + url;
+      url = AppConstants.SERVER_URL + AppConstants.CONTEXT_PATH + url;
     }
-    const requestOptions = {'headers': this.getRequestHeaders(isMultipart)};
+    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
     if (requestType === 'GET') {
       if (params != null) {
         requestOptions['params'] = params;
@@ -30,13 +36,13 @@ export class AppUtilityService {
     return this.http.request(requestType, url, requestOptions);
   }
 
-  private getRequestHeaders(isMultipart = false) {
+  private getRequestHeaders(isMultipart = false, contentType = 'application/json') {
     let headers: HttpHeaders;
     headers = new HttpHeaders({
       'Access-Control-Allow-Origin': '*',
     });
     if (!isMultipart) {
-      headers = headers.append('Content-Type', 'application/json');
+      headers = headers.append('Content-Type', contentType);
     }
     return headers;
   }

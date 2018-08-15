@@ -30,7 +30,8 @@ export class ResetPasswordComponent implements OnInit {
     formData.append('user-id', this.username);
     formData.append('user-type', this.userType);
 
-    this.utilityService.makeRequest(AppConstants.resetPasswordURL, 'POST', formData, true).subscribe(result => {
+    this.utilityService.makeRequest(AppConstants.resetPasswordURL, 'POST', formData,
+                                   'application/x-www-form-urlencoded').subscribe(result => {
       if (result['success'] === true) {
         this.successMessage = result['message'];
       } else {

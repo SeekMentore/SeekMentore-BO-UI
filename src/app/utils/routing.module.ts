@@ -1,19 +1,30 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from '../home/home.component';
-import {ErrorComponent} from '../error/error.component';
-import {LoginComponent} from '../login/login.component';
-import {ResetPasswordComponent} from '../reset-password/reset-password.component';
+import {ErrorComponent} from '../non-login-pages/error/error.component';
+import {LoginComponent} from '../non-login-pages/login/login.component';
+import {ResetPasswordComponent} from '../non-login-pages/reset-password/reset-password.component';
+import {NonLoginPagesComponent} from "../non-login-pages/non-login-pages.component";
+import {LoginPagesComponent} from "../login-pages/login-pages.component";
 
 
 const routes: Routes = [
-  {path: 'home', component: HomeComponent},
-  {path: 'error', component: ErrorComponent},
-  {path: '', component: LoginComponent},
-  {path: 'resetpassword', component: ResetPasswordComponent},
-  {path: '', redirectTo: '', pathMatch: 'full'},
-  {path: '**', redirectTo: '', pathMatch: 'full'}
+  {
+    path: 'lp', component: LoginPagesComponent,
+    children: []
+  },
+  {
+    path: 'nlp', component: NonLoginPagesComponent,
+    children: [
+      {path: 'error', component: ErrorComponent},
+      {path: 'login', component: LoginComponent},
+      {path: 'resetpassword', component: ResetPasswordComponent},
+      {path: '', redirectTo: 'login', pathMatch: 'full'},
+      {path: '**', redirectTo: 'login', pathMatch: 'full'}
+    ]
+  },
+  {path: '', redirectTo: 'nlp', pathMatch: 'full'},
+  {path: '**', redirectTo: 'nlp', pathMatch: 'full'}
 ];
 
 

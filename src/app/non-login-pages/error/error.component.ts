@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {AppUtilityService} from '../utils/app-utility.service';
-import {AppConstants} from '../utils/app-constants';
+import {AppUtilityService} from "../../utils/app-utility.service";
+import {AppConstants} from "../../utils/app-constants";
+
 
 @Component({
   selector: 'app-error',

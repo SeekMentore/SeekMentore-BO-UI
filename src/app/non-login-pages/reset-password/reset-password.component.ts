@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {HelperService} from '../utils/helper.service';
-import {AppUtilityService} from '../utils/app-utility.service';
-import {AppConstants} from '../utils/app-constants';
-import {LoginConstants} from '../utils/login-constants';
+import {HelperService} from '../../utils/helper.service';
+import {AppUtilityService} from '../../utils/app-utility.service';
+import {AppConstants} from '../../utils/app-constants';
+import {LoginConstants} from '../../utils/login-constants';
 
 @Component({
   selector: 'app-forgot-password',
@@ -26,16 +26,22 @@ export class ResetPasswordComponent implements OnInit {
     if (this.isValidFormData() === false) {
       return;
     }
-    const formData = new FormData();
-    formData.append('user-id', this.username);
-    formData.append('user-type', this.userType);
+    const formData = new URLSearchParams();
+    formData.set('userId', this.username);
+    formData.set('userType', this.userType);
 
-    this.utilityService.makeRequest(AppConstants.resetPasswordURL, 'POST', formData,
-                                   'application/x-www-form-urlencoded').subscribe(result => {
-      if (result['success'] === true) {
-        this.successMessage = result['message'];
-      } else {
-        this.errorMessage = result['message'];
+    this.utilityService.makeRequest(AppConstants.resetPasswordURL, 'POST', formData.toString(),
+      'application/x-www-form-urlencoded').subscribe(result => {
+
+
+      let response = result['response'];
+      response = this.utilityService.decodeObjectFromJSON(response);
+      if (response != null) {
+        if (response['success'] === true) {
+          this.successMessage = response['message'];
+        } else {
+          this.errorMessage = response['message'];
+        }
       }
     }, error => {
 

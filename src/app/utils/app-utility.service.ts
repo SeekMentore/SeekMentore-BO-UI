@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AppConstants} from './app-constants';
+import {Observable} from "rxjs/index";
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +13,12 @@ export class AppUtilityService {
   constructor(private http: HttpClient) {
   }
 
-  public makeRequest(
-              url: string,
-              requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-              data: any = null,
-              contentType: string = 'application/json',
-              isMultipart: boolean = false,
-              params: HttpParams = null
-  ) {
+  public makeRequest(url: string,
+                     requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+                     data: any = null,
+                     contentType: string = 'application/json',
+                     isMultipart: boolean = false,
+                     params: HttpParams = null) {
     if (!url.includes('http')) {
       url = AppConstants.SERVER_URL + AppConstants.CONTEXT_PATH + url;
     }
@@ -39,7 +38,7 @@ export class AppUtilityService {
   private getRequestHeaders(isMultipart = false, contentType = 'application/json') {
     let headers: HttpHeaders;
     headers = new HttpHeaders({
-      'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Origin': '*',
     });
     if (!isMultipart) {
       headers = headers.append('Content-Type', contentType);
@@ -57,4 +56,20 @@ export class AppUtilityService {
       // show validation error
     }
   }
+
+  public getBasicInfo() {
+    // return this.makeRequest(AppConstants.basicInfoURL, 'GET');
+    const observable = new Observable((observer) => {
+      observer.next({
+        response: '{"username": "Random Name", "menu": [{"name": "Admin", "submenu": true, "submenuitems": [{"name": "Registered Tutors", "url": "/registeredtutor"}, {"name": "Subscribed Customers", "url": "/registeredtutor"}]}, {"name": "Sales", "submenu": true, "submenuitems": [{"name": "Tutor Enquiry", "url": "/tutorenquiry"}]}], "accessoptions": {"impersonationaccess": false, "emailformaccess": true}}'
+      });
+      observer.complete();
+    });
+    return observable;
+  }
+
+  public decodeObjectFromJSON(json) {
+    return null != json ? JSON.parse(json) : null;
+  }
+
 }

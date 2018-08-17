@@ -3,7 +3,7 @@ import {HelperService} from '../../utils/helper.service';
 import {AppUtilityService} from '../../utils/app-utility.service';
 import {AppConstants} from '../../utils/app-constants';
 import {LoginConstants} from '../../utils/login-constants';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',

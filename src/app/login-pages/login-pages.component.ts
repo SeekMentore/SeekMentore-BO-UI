@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 
 import {AppUtilityService} from '../utils/app-utility.service';
-import {HelperService} from "../utils/helper.service";
-import {AppConstants} from "../utils/app-constants";
+import {HelperService} from '../utils/helper.service';
+import {AppConstants} from '../utils/app-constants';
 
 
 @Component({

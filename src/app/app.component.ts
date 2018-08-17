@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppConstants} from "./utils/app-constants";
+import {AppConstants} from './utils/app-constants';
 
 
 @Component({

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {AppUtilityService} from "../../utils/app-utility.service";
-import {AppConstants} from "../../utils/app-constants";
+import {AppUtilityService} from '../../utils/app-utility.service';
+import {AppConstants} from '../../utils/app-constants';
 
 
 @Component({
@@ -28,11 +28,14 @@ export class ErrorComponent implements OnInit {
     if (this.errorCode != null) {
       this.utilityService.makeRequest(AppConstants.errorPageURL,
         'POST', {errorcode: this.errorCode}, 'application/x-www-form-urlencoded').subscribe(result => {
-        this.errorImageSrc = result['errorImageSrc'];
-        this.errorText = result['errorText'];
+        let response = result['response'];
+        response = this.utilityService.decodeObjectFromJSON(response);
+        if (response !== null) {
+          this.errorImageSrc = response['errorImageSrc'];
+          this.errorText = response['errorText'];
+        }
       }, error => {
       });
     }
   }
-
 }

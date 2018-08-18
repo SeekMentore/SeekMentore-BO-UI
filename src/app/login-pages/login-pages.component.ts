@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 
 import {AppUtilityService} from '../utils/app-utility.service';
-import {HelperService} from "../utils/helper.service";
-import {AppConstants} from "../utils/app-constants";
+import {HelperService} from '../utils/helper.service';
+import {AppConstants} from '../utils/app-constants';
 
 
 @Component({
@@ -16,6 +16,11 @@ export class LoginPagesComponent implements OnInit {
   username = '';
   menu: MenuItem[] = [];
 
+  settingMenu: SubMenuItem[] = [];
+  userMenu: SubMenuItem[] = [];
+
+  accessOptions: AccessOptions;
+
   constructor(private helperService: HelperService, private utilityService: AppUtilityService) {
     this.staticPageURl = AppConstants.PUBLIC_PAGES_URL;
   }
@@ -25,28 +30,28 @@ export class LoginPagesComponent implements OnInit {
       this.title = title;
     });
     this.parseMenu();
-    document.addEventListener('click', (event => {
-      if (this.menu.length === 0) {
-        return;
-      }
-      let menuButtonClicked = false;
-      this.menu.forEach((item, index) => {
-        let element: HTMLElement = null;
-        if (item.submenu) {
-          element = document.getElementById('menuButton' + index);
-        }
-
-        if (element != null && element.id === (<any>event.target).id) {
-          menuButtonClicked = true;
-
-        }
-      });
-      if (menuButtonClicked === false) {
-        // hide menu by sending invalid id
-        this.showDropMenu(-1);
-      }
-      // console.log(menuButtonClicked, event.target);
-    }));
+    // document.addEventListener('click', (event => {
+    //   if (this.menu.length === 0) {
+    //     return;
+    //   }
+    //   let menuButtonClicked = false;
+    //   this.menu.forEach((item, index) => {
+    //     let element: HTMLElement = null;
+    //     if (item.submenu) {
+    //       element = document.getElementById('menuButton' + index);
+    //     }
+    //
+    //     if (element != null && element.id === (<any>event.target).id) {
+    //       menuButtonClicked = true;
+    //
+    //     }
+    //   });
+    //   if (menuButtonClicked === false) {
+    //     // hide menu by sending invalid id
+    //     this.showDropMenu(-1);
+    //   }
+    //   // console.log(menuButtonClicked, event.target);
+    // }));
   }
 
   public parseMenu() {
@@ -57,32 +62,38 @@ export class LoginPagesComponent implements OnInit {
         this.username = response['username'];
         this.helperService.setTitle('Welcome ' + this.username);
         this.menu = response['menu'];
-        console.log(this.username, this.menu);
+        this.accessOptions = response['accessoptions'];
+
+        this.userMenu.push({name: 'Personalize', url: ''}, {name: 'Profile', url: ''});
+        if (this.accessOptions.impersonationaccess) {
+          this.settingMenu.push({name: 'Impersonate', url: ''});
+        }
+        this.settingMenu.push({name: 'Change Password', url: ''}, {name: 'User Setting', url: ''});
       }
     }, error => {
     });
   }
 
-  public showDropMenu(id: number) {
-    this.menu.forEach((item, index) => {
-      let element = null;
-      if (item.submenu) {
-        element = document.getElementById('menuBox' + index);
-      }
-      if (element != null) {
-
-        if (id === index) {
-          if (element.style.display === 'block') {
-            element.style.display = 'none';
-          } else {
-            element.style.display = 'block';
-          }
-        } else {
-          element.style.display = 'none';
-        }
-      }
-    });
-  }
+  // public showDropMenu(id: number) {
+  //   this.menu.forEach((item, index) => {
+  //     let element = null;
+  //     if (item.submenu) {
+  //       element = document.getElementById('menuBox' + index);
+  //     }
+  //     if (element != null) {
+  //
+  //       if (id === index) {
+  //         if (element.style.display === 'block') {
+  //           element.style.display = 'none';
+  //         } else {
+  //           element.style.display = 'block';
+  //         }
+  //       } else {
+  //         element.style.display = 'none';
+  //       }
+  //     }
+  //   });
+  // }
 
 }
 
@@ -95,4 +106,10 @@ interface MenuItem {
   name: string;
   submenu: boolean;
   submenuitems: SubMenuItem[];
+}
+
+interface AccessOptions {
+  impersonationaccess: boolean;
+  emailformaccess: boolean;
+
 }

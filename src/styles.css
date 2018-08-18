@@ -140,7 +140,6 @@ a {
   font-family: "Raleway", sans-serif;
 }
 
-
 textarea {
   resize: vertical;
   height: 200px;
@@ -156,6 +155,67 @@ textarea {
 
 .responsive-row-column input {
   width: 100% !important;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: row;
+  background-color: #f5f5f5;
+  width: 100%;
+  align-content: center;
+  justify-content: center;
+  border-bottom: solid 1px var(--divider);
+  flex: 1 1 100%;
+}
+
+.dropbtn {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  border: none;
+  background-color: transparent;
+  border-bottom: solid 3px transparent;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f0f0f0;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.dropdown-content button {
+  color: black;
+  text-align: start;
+  cursor: pointer;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: transparent;
+  text-decoration: none;
+  display: block;
+  outline: none;
+  border: none;
+}
+
+.dropdown-content button:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  border-bottom: solid 3px var(--colorPrimary);
+  background-color: var(--divider);
+  color: var(--colorPrimaryDark);
 }
 
 @media only screen and (max-width: 700px) {

@@ -61,7 +61,7 @@ export class AppUtilityService {
     // return this.makeRequest(AppConstants.basicInfoURL, 'GET');
     const observable = new Observable((observer) => {
       observer.next({
-        response: '{"username": "Random Name", "menu": [{"name": "Admin", "submenu": true, "submenuitems": [{"name": "Registered Tutors", "url": "/registeredtutor"}, {"name": "Subscribed Customers", "url": "/registeredtutor"}]}, {"name": "Sales", "submenu": true, "submenuitems": [{"name": "Tutor Enquiry", "url": "/tutorenquiry"}]}], "accessoptions": {"impersonationaccess": false, "emailformaccess": true}}'
+        response: '{"username": "Random Name", "menu": [{"name": "Admin", "submenu": true, "submenuitems": [{"name": "Registered Tutors", "url": "/registeredtutor"}, {"name": "Subscribed Customers", "url": "/registeredtutor"}]}, {"name": "Sales", "submenu": true, "submenuitems": [{"name": "Tutor Enquiry", "url": "/tutorenquiry"}]}], "accessoptions": {"impersonationaccess": true, "emailformaccess": true}}'
       });
       observer.complete();
     });

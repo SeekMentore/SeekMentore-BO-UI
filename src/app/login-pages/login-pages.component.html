@@ -1,15 +1,39 @@
 <!-- Toolbar -->
 <div class="toolbar">
   <a href="{{staticPageURl}}" target="_blank"><img src="../assets/logo.PNG"></a>
-  <span class="toolbar-title">{{title}}</span>
+  <div class="toolbar_content">
+    <span>{{title}}</span>
+    <div class="dropdown">
+      <i class="fas fa-user-alt"></i>
+      <div class="dropdown-content" style="left: -100px">
+        <button *ngFor="let element of userMenu">{{element.name}}</button>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <i class="fas fa-cog"></i>
+      <div class="dropdown-content" style="left: -100px">
+        <button *ngFor="let element of settingMenu">{{element.name}}</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!--Main Content-->
-<div class="main_content">
-  <div id="menu-container">
-    <div *ngFor="let element of menu; let i = index">
-      <button id="{{'menuButton'+i}}" (click)="showDropMenu(i)">{{element.name}}</button>
-      <div style="display: none" id = "{{'menuBox'+i}}"  *ngIf="element.submenu">
+<div class="main_content" style="padding: 0">
+  <!--<div id="menu-container">-->
+  <!--<div *ngFor="let element of menu; let i = index">-->
+  <!--<button id="{{'menuButton'+i}}">{{element.name}}</button>-->
+  <!--<div style="display: none" id="{{'menuBox'+i}}" *ngIf="element.submenu">-->
+  <!--<button *ngFor="let sub_element of element.submenuitems">{{sub_element.name}}</button>-->
+  <!--</div>-->
+  <!--</div>-->
+  <!--</div>-->
+
+  <div class="menu-container">
+    <div class="dropdown" *ngFor="let element of menu; let i = index">
+      <button class="dropbtn">{{element.name}}</button>
+      <div class="dropdown-content">
         <button *ngFor="let sub_element of element.submenuitems">{{sub_element.name}}</button>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HelperService} from '../../utils/helper.service';
 import {AppUtilityService} from '../../utils/app-utility.service';
-import {AppConstants} from '../../utils/app-constants';
 import {LoginConstants} from '../../utils/login-constants';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
+import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-login',
@@ -15,9 +15,13 @@ export class LoginComponent implements OnInit {
   username;
   password;
   userType = 'Blank';
-  error = '';
+  errorAjaxResponse: string;
+  errorUsername: string;
+  errorPassword: string;
+  errorUserType: string;
 
   constructor(private helperService: HelperService, private utilityService: AppUtilityService, private router: Router) {
+    this.resetErrorMessages();
   }
 
   ngOnInit() {
@@ -32,7 +36,7 @@ export class LoginComponent implements OnInit {
     formData.set('userId', this.username);
     formData.set('password', this.password);
     formData.set('userType', this.userType);
-    this.utilityService.makeRequest(AppConstants.loginURL, 'POST', formData.toString(),
+    this.utilityService.makeRequest(NlpRestUrls.loginURL, 'POST', formData.toString(),
       'application/x-www-form-urlencoded').subscribe(result => {
       let response = result['response'];
       response = this.utilityService.decodeObjectFromJSON(response);
@@ -41,7 +45,7 @@ export class LoginComponent implements OnInit {
           // window.location.href = result['redirectTo'];
           this.router.navigateByUrl('/lp');
         } else {
-          this.error = response['message'];
+          this.errorAjaxResponse = response['message'];
         }
       }
 
@@ -50,21 +54,29 @@ export class LoginComponent implements OnInit {
   }
 
   isValidLoginData(): boolean {
-    let errorMessage = null;
+    let isValidData = true;
+    this.resetErrorMessages();
+
     if (!this.username || this.username === '') {
-      errorMessage = LoginConstants.enter_username;
-    } else if (!this.password || this.password === '') {
-      errorMessage = LoginConstants.enter_password;
-    } else if (!this.userType || this.userType === 'Blank' || this.userType === '') {
-      errorMessage = LoginConstants.select_usertype;
+      this.errorUsername = LoginConstants.enter_username;
+      isValidData = false;
+    }
+    if (!this.password || this.password === '') {
+      this.errorPassword = LoginConstants.enter_password;
+      isValidData = false;
+    }
+    if (!this.userType || this.userType === 'Blank' || this.userType === '') {
+      this.errorUserType = LoginConstants.select_usertype;
+      isValidData = false;
     }
 
-    if (errorMessage != null) {
-      this.error = errorMessage;
-      return false;
-    } else {
-      this.error = '';
-      return true;
-    }
+    return isValidData;
+  }
+
+  resetErrorMessages() {
+    this.errorAjaxResponse = null;
+    this.errorUsername = null;
+    this.errorPassword = null;
+    this.errorUserType = null;
   }
 }

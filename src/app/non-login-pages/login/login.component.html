@@ -3,18 +3,21 @@
   <form id="login-form" class="form-container">
     <h1>Login</h1>
 
-    <span class="error" *ngIf="error.length>0">{{error}}</span>
+    <span class="error" *ngIf="errorAjaxResponse">{{errorAjaxResponse}}</span>
     <input name="user-id" placeholder="Username" required type="text" [(ngModel)]="username">
+    <span class="validation-error" *ngIf="errorUsername">{{errorUsername}}</span>
     <input name="password" placeholder="Password" required type="password" [(ngModel)]="password">
+    <span class="validation-error" *ngIf="errorPassword">{{errorPassword}}</span>
     <select class="input_field" name="user-type" required [(ngModel)]="userType">
-      <option value="Blank">Select User Type</option>
+      <option value="Blank">User Type</option>
       <option value="admin">Employee</option>
       <option value="tutor">Tutor</option>
       <option value="customer">Parent & Students</option>
     </select>
+    <span class="validation-error" *ngIf="errorUserType">{{errorUserType}}</span>
     <button type="submit" class="button-primary" style="display: flex; align-self: flex-end;" (click)="login()">
       Login
     </button>
-    <span routerLink="/nlp/resetpassword" routerLinkActive="active" style="cursor: pointer;">Forgot Password</span>
+    <span class="button-white-link" routerLink="/nlp/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>
   </form>
 </div>

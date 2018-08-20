@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {HelperService} from '../../utils/helper.service';
 import {AppUtilityService} from '../../utils/app-utility.service';
-import {AppConstants} from '../../utils/app-constants';
 import {LoginConstants} from '../../utils/login-constants';
+import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,13 +13,17 @@ export class ResetPasswordComponent implements OnInit {
 
   username;
   userType = 'Blank';
-  errorMessage = '';
-  successMessage = '';
+  errorAjaxResponse: string;
+  errorUsername: string;
+  errorUserType: string;
+  successMessage: string;
 
   constructor(private helperService: HelperService, private utilityService: AppUtilityService) {
+    this.resetErrorMessages();
   }
 
   ngOnInit() {
+    this.helperService.setTitle('Reset Password');
   }
 
   resetPassword() {
@@ -30,7 +34,7 @@ export class ResetPasswordComponent implements OnInit {
     formData.set('userId', this.username);
     formData.set('userType', this.userType);
 
-    this.utilityService.makeRequest(AppConstants.resetPasswordURL, 'POST', formData.toString(),
+    this.utilityService.makeRequest(NlpRestUrls.resetPasswordURL, 'POST', formData.toString(),
       'application/x-www-form-urlencoded').subscribe(result => {
 
 
@@ -40,7 +44,7 @@ export class ResetPasswordComponent implements OnInit {
         if (response['success'] === true) {
           this.successMessage = response['message'];
         } else {
-          this.errorMessage = response['message'];
+          this.errorAjaxResponse = response['message'];
         }
       }
     }, error => {
@@ -49,20 +53,26 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   isValidFormData(): boolean {
-    let errorMessage = null;
+    let isValidData = true;
+    this.resetErrorMessages();
+
     if (!this.username || this.username === '') {
-      errorMessage = LoginConstants.enter_username;
-    } else if (!this.userType || this.userType === 'Blank' || this.userType === '') {
-      errorMessage = LoginConstants.select_usertype;
+      this.errorUsername = LoginConstants.enter_username;
+      isValidData = false;
+    }
+    if (!this.userType || this.userType === 'Blank' || this.userType === '') {
+      this.errorUserType = LoginConstants.select_usertype;
+      isValidData = false;
     }
 
-    if (errorMessage != null) {
-      this.errorMessage = errorMessage;
-      return false;
-    } else {
-      this.errorMessage = '';
-      return true;
-    }
+    return isValidData;
+  }
+
+  resetErrorMessages() {
+    this.errorAjaxResponse = null;
+    this.errorUsername = null;
+    this.errorUserType = null;
+    this.successMessage = null;
   }
 
 }

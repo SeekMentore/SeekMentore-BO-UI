@@ -51,6 +51,17 @@ a {
   background-color: var(--colorPrimary) !important;
 }
 
+.button-white-link {
+  text-decoration: underline;
+  background-color: white !important;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  color: var(--textColor) !important;
+  transition: all 0.4s;
+  font-family: "Open Sans", sans-serif !important;
+}
+
 .button-primary {
   text-decoration: none !important;
   background-color: var(--colorPrimary) !important;
@@ -137,6 +148,13 @@ a {
   border-radius: 4px;
   padding: 4px 8px;
   color: white;
+  font-family: "Raleway", sans-serif;
+}
+
+.form-container .validation-error {
+  font-size: small;
+  color: darkred;
+  margin-top: -6px;
   font-family: "Raleway", sans-serif;
 }
 

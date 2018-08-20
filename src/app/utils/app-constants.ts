@@ -3,9 +3,8 @@ export class AppConstants {
   static PUBLIC_PAGES_URL = 'http://www.seekmentore.com';
   static CONTEXT_PATH = '/seekmentorerestdummy';
   static APPLICATION_NAME = 'SeekMentore (Dummy) – Back Office';
+  static IMAGE_SERVER = 'http://uitest.seekmentore.com';
 
-  static loginURL = '/rest/login/validateCredential';
-  static resetPasswordURL = '/rest/login/resetPassword';
-  static errorPageURL = '/rest/commons/getErrorDetails';
-  static basicInfoURL = 'rest/commons/getLoginBasicInfo';
+  static LOGO_PATH = '/images/company-logo-complete.png';
+  static IDLE_TIMEOUT = 30; // in minutes
 }

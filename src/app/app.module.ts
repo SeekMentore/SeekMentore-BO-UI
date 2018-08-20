@@ -10,8 +10,8 @@ import {ErrorComponent} from './non-login-pages/error/error.component';
 import {RoutingModule} from './utils/routing.module';
 import {FormsModule} from '@angular/forms';
 import {ResetPasswordComponent} from './non-login-pages/reset-password/reset-password.component';
-import {LoginPagesComponent} from './login-pages/login-pages.component';
 import {NonLoginPagesComponent} from './non-login-pages/non-login-pages.component';
+import {LoginControlledPagesComponent} from './login-controlled-pages/login-controlled-pages.component';
 
 @NgModule({
   declarations: [
@@ -19,8 +19,8 @@ import {NonLoginPagesComponent} from './non-login-pages/non-login-pages.componen
     LoginComponent,
     ErrorComponent,
     ResetPasswordComponent,
-    LoginPagesComponent,
-    NonLoginPagesComponent
+    NonLoginPagesComponent,
+    LoginControlledPagesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 <!-- Toolbar -->
 <div class="toolbar">
-  <a href="{{staticPageURl}}" target="_blank"><img src="../assets/logo.PNG"></a>
+  <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
   <div class="toolbar_content">
     <span>{{title}}</span>
     <div class="dropdown">
@@ -13,7 +13,11 @@
     <div class="dropdown">
       <i class="fas fa-cog"></i>
       <div class="dropdown-content" style="left: -100px">
-        <button *ngFor="let element of settingMenu">{{element.name}}</button>
+        <!--<button *ngFor="let element of settingMenu">{{element.name}}</button>-->
+        <div *ngFor="let element of settingMenu" >
+          <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name }}</button>
+          <button *ngIf="!element.functioncall">{{element.name}}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -39,4 +43,9 @@
     </div>
   </div>
   <router-outlet></router-outlet>
+  <!--<button (click)="askForConfirmation()">Show dialog</button>-->
+  <!--<div id="confirmation-dialog" class="confirmation-dialog" style="display: none">-->
+    <!--<button class="ok-button">ok</button>-->
+    <!--<button class="cancel-button">cancel</button>-->
+  <!--</div>-->
 </div>

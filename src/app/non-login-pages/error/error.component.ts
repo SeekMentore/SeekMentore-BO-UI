@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AppUtilityService} from '../../utils/app-utility.service';
+import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 import {AppConstants} from '../../utils/app-constants';
 
 
@@ -26,12 +27,12 @@ export class ErrorComponent implements OnInit {
 
   ngOnInit() {
     if (this.errorCode != null) {
-      this.utilityService.makeRequest(AppConstants.errorPageURL,
+      this.utilityService.makeRequest(NlpRestUrls.errorPageURL,
         'POST', {errorcode: this.errorCode}, 'application/x-www-form-urlencoded').subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response !== null) {
-          this.errorImageSrc = response['errorImageSrc'];
+          this.errorImageSrc = AppConstants.IMAGE_SERVER + response['errorImageSrc'];
           this.errorText = response['errorText'];
         }
       }, error => {

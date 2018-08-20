@@ -57,16 +57,7 @@ export class AppUtilityService {
     }
   }
 
-  public getBasicInfo() {
-    // return this.makeRequest(AppConstants.basicInfoURL, 'GET');
-    const observable = new Observable((observer) => {
-      observer.next({
-        response: '{"username": "Random Name", "menu": [{"name": "Admin", "submenu": true, "submenuitems": [{"name": "Registered Tutors", "url": "/registeredtutor"}, {"name": "Subscribed Customers", "url": "/registeredtutor"}]}, {"name": "Sales", "submenu": true, "submenuitems": [{"name": "Tutor Enquiry", "url": "/tutorenquiry"}]}], "accessoptions": {"impersonationaccess": true, "emailformaccess": true}}'
-      });
-      observer.complete();
-    });
-    return observable;
-  }
+
 
   public decodeObjectFromJSON(json) {
     return null != json ? JSON.parse(json) : null;

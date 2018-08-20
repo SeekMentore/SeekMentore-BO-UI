@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AppUtilityService} from '../../utils/app-utility.service';
-import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 import {AppConstants} from '../../utils/app-constants';
+import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 
 
 @Component({

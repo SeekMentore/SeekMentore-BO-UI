@@ -8,7 +8,6 @@ import {NonLoginPagesComponent} from '../non-login-pages/non-login-pages.compone
 import {LoginControlledPagesComponent} from '../login-controlled-pages/login-controlled-pages.component';
 
 
-
 const routes: Routes = [
   {
     path: 'lp', component: LoginControlledPagesComponent,

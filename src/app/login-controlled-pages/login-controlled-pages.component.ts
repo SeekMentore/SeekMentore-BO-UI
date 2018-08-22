@@ -39,31 +39,10 @@ export class LoginControlledPagesComponent implements OnInit {
       this.title = title;
     });
     this.parseMenu();
-    // document.addEventListener('click', (event => {
-    //   if (this.menu.length === 0) {
-    //     return;
-    //   }
-    //   let menuButtonClicked = false;
-    //   this.menu.forEach((item, index) => {
-    //     let element: HTMLElement = null;
-    //     if (item.submenu) {
-    //       element = document.getElementById('menuButton' + index);
-    //     }
-    //
-    //     if (element != null && element.id === (<any>event.target).id) {
-    //       menuButtonClicked = true;
-    //
-    //     }
-    //   });
-    //   if (menuButtonClicked === false) {
-    //     // hide menu by sending invalid id
-    //     this.showDropMenu(-1);
-    //   }
-    //   // console.log(menuButtonClicked, event.target);
-    // }));
+
     this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
     this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
-      this.confirmationDialog.style.display = 'block';
+      this.confirmationDialog.style.display = 'flex';
       const okButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('ok-button')[0];
       const cancelButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('cancel-button')[0];
       console.log('message', eventListener.message);
@@ -131,27 +110,6 @@ export class LoginControlledPagesComponent implements OnInit {
     };
     this.helperService.showConfirmationDialog(myListener);
   }
-
-  // public showDropMenu(id: number) {
-  //   this.menu.forEach((item, index) => {
-  //     let element = null;
-  //     if (item.submenu) {
-  //       element = document.getElementById('menuBox' + index);
-  //     }
-  //     if (element != null) {
-  //
-  //       if (id === index) {
-  //         if (element.style.display === 'block') {
-  //           element.style.display = 'none';
-  //         } else {
-  //           element.style.display = 'block';
-  //         }
-  //       } else {
-  //         element.style.display = 'none';
-  //       }
-  //     }
-  //   });
-  // }
 
   public doLogout() {
     this.logoutRequest().subscribe(result => {

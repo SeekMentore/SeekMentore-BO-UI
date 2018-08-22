@@ -6,12 +6,13 @@ import {LoginComponent} from '../non-login-pages/login/login.component';
 import {ResetPasswordComponent} from '../non-login-pages/reset-password/reset-password.component';
 import {NonLoginPagesComponent} from '../non-login-pages/non-login-pages.component';
 import {LoginControlledPagesComponent} from '../login-controlled-pages/login-controlled-pages.component';
+import {CreateEmailComponent} from "../login-controlled-pages/create-email/create-email.component";
 
 
 const routes: Routes = [
   {
     path: 'lp', component: LoginControlledPagesComponent,
-    children: []
+    children: [{path: 'email', component: CreateEmailComponent}]
   },
   {
     path: 'nlp', component: NonLoginPagesComponent,

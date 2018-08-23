@@ -23,22 +23,10 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   receivedEmailData: EmailInterface = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
-    this.emailTemplatesArray = [];
-    this.defaultValueEmailTemplate = {
-      label: 'Select E-mail template',
-      value: '00'
-    };
-    this.emailData = {
-      to: '',
-      cc: '',
-      bcc: '',
-      subject: '',
-      body: ''
-    };
+    this.setDefaultData();
   }
 
   ngOnInit() {
-    this.selectedEmailTemplate = this.defaultValueEmailTemplate;
     this.getEmailTemplates().subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
@@ -141,6 +129,27 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   hideDialog() {
     this.helperService.hideEmailDialog();
+    this.setDefaultData();
+  }
+
+  sendEmail() {
+    this.setDefaultData();
+  }
+
+  setDefaultData() {
+    this.attachments = [];
+    this.defaultValueEmailTemplate = {
+      label: 'Select E-mail template',
+      value: '00'
+    };
+    this.selectedEmailTemplate = this.defaultValueEmailTemplate;
+    this.emailData = {
+      to: '',
+      cc: '',
+      bcc: '',
+      subject: '',
+      body: ''
+    };
   }
 
   getEmailTemplates() {

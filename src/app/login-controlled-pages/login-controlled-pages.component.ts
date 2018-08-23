@@ -4,6 +4,7 @@ import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
 import {Observable} from 'rxjs/index';
 import {Router} from '@angular/router';
+import {LcpConstants} from "../utils/lcp-constants";
 
 
 @Component({
@@ -25,6 +26,7 @@ export class LoginControlledPagesComponent implements OnInit {
   idleTime: number;
 
   confirmationDialog: HTMLDivElement;
+  alertDialog: HTMLDivElement;
 
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
@@ -40,12 +42,13 @@ export class LoginControlledPagesComponent implements OnInit {
     });
     this.parseMenu();
 
+    // set event handler for confirmation dialog
     this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
     this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
-      this.confirmationDialog.style.display = 'flex';
       const okButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('ok-button')[0];
       const cancelButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('cancel-button')[0];
-      console.log('message', eventListener.message);
+      const messageElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('message')[0];
+      messageElement.innerText = eventListener.message;
       okButton.onclick = (ev: Event) => {
         console.log('ok clicked');
         eventListener.onOk();
@@ -56,6 +59,29 @@ export class LoginControlledPagesComponent implements OnInit {
         eventListener.onCancel();
         this.confirmationDialog.style.display = 'none';
       };
+      this.confirmationDialog.style.display = 'flex';
+    });
+    // set event handler for alert dialog
+    this.alertDialog = <HTMLDivElement>document.getElementById('alert-dialog');
+    this.helperService.alertDialogState.subscribe((eventListener: AlertDialogEvent) => {
+      this.alertDialog.style.display = 'flex';
+      const actionButton = <HTMLButtonElement>this.alertDialog.getElementsByClassName('action-button')[0];
+      const titleElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('title')[0];
+      const messageElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('message')[0];
+      if (eventListener.isSuccess) {
+        titleElement.innerText = LcpConstants.success_alert_title;
+        actionButton.innerText = 'ok';
+      } else {
+        titleElement.innerText = LcpConstants.failure_alert_title;
+        actionButton.innerText = 'Dismiss';
+      }
+      messageElement.innerText = eventListener.message;
+
+      actionButton.onclick = (ev: Event) => {
+        eventListener.onOk();
+        this.alertDialog.style.display = 'none';
+      };
+      this.confirmationDialog.style.display = 'flex';
     });
   }
 
@@ -109,6 +135,16 @@ export class LoginControlledPagesComponent implements OnInit {
       }
     };
     this.helperService.showConfirmationDialog(myListener);
+  }
+
+  public showAlertDialog() {
+    const myListener: AlertDialogEvent = {
+      isSuccess: true,
+      message: 'this is message for dialog',
+      onOk: () => {
+
+      }
+    };
   }
 
   public doLogout() {
@@ -194,4 +230,11 @@ export interface ConfirmationDialogEvent {
   onOk(): void;
 
   onCancel(): void;
+}
+
+export interface AlertDialogEvent {
+  isSuccess: boolean;
+  message: string;
+
+  onOk(): void;
 }

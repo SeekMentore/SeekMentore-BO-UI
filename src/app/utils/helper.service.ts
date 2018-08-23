@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/index';
-import {ConfirmationDialogEvent} from '../login-controlled-pages/login-controlled-pages.component';
+import {ConfirmationDialogEvent, AlertDialogEvent} from '../login-controlled-pages/login-controlled-pages.component';
 
 
 @Injectable({
@@ -12,6 +12,8 @@ export class HelperService {
   public titleState = this.titleSubject.asObservable();
   private confirmationDialogSubject = new Subject();
   public confirmationDialogState = this.confirmationDialogSubject.asObservable();
+  private alertDialogSubject = new Subject();
+  public alertDialogState = this.alertDialogState.asObservable();
 
   constructor() {
   }
@@ -22,6 +24,10 @@ export class HelperService {
 
   public showConfirmationDialog(eventListener: ConfirmationDialogEvent) {
     this.confirmationDialogSubject.next(eventListener);
+  }
+
+  public showAlertDialog(eventListener: AlertDialogEvent) {
+    this.alertDialogSubject.next(eventListener);
   }
 }
 

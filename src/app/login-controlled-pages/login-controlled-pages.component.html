@@ -34,7 +34,8 @@
       </div>
     </div>
   </div>
-  <!--<button (click)="askForConfirmation()">Show dialog</button>-->
+  <button (click)="askForConfirmation()">Show confirmation dialog</button>
+  <button (click)="showAlertDialog()">Show alert dialog</button>
   <router-outlet></router-outlet>
 
 
@@ -45,7 +46,7 @@
   <div class="dialog_modal">
 
     <span class="title">Confirmation Message</span>
-    <span> This is message text..</span>
+    <span class="message"> This is message text..</span>
 
     <div class="modal_control">
       <button class="ok-button">ok</button>
@@ -54,15 +55,15 @@
   </div>
 </div>
 
-<!--Positive Dialog-->
-<div id="positive-dialog" class="dialog" style="display: none">
+<!--Alert Dialog-->
+<div id="alert-dialog" class="dialog" style="display: none">
   <div class="dialog_modal">
 
     <span class="title">Positive Title</span>
-    <span> This is positive message text..</span>
+    <span class="message"> This is positive message text..</span>
 
     <div class="modal_control">
-      <button class="ok-button">ok</button>
+      <button class="action-button">ok</button>
     </div>
   </div>
 </div>

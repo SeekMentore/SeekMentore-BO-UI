@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {HelperService} from '../../utils/helper.service';
 import {AppUtilityService} from '../../utils/app-utility.service';
 import {AppConstants} from '../../utils/app-constants';
 import {NlpRestUrls} from '../../utils/nlp-rest-urls';
@@ -17,7 +18,7 @@ export class ErrorComponent implements OnInit {
   errorImageSrc: string;
   errorText: string;
 
-  constructor(private route: ActivatedRoute, private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private helperService: HelperService, private route: ActivatedRoute, private utilityService: AppUtilityService) {
     this.errorCode = null;
     this.errorText = null;
     this.errorImageSrc = null;
@@ -27,9 +28,12 @@ export class ErrorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.helperService.setTitle('Error Occurred');
     if (this.errorCode != null) {
+      const formData = new URLSearchParams();
+      formData.set('errorCode', this.errorCode);
       this.utilityService.makeRequest(NlpRestUrls.errorPageURL,
-        'POST', {errorcode: this.errorCode}, 'application/x-www-form-urlencoded').subscribe(result => {
+        'POST', formData.toString(), 'application/x-www-form-urlencoded').subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response !== null) {

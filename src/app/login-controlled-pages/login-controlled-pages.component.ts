@@ -5,6 +5,7 @@ import {AppConstants} from '../utils/app-constants';
 import {Observable} from 'rxjs/index';
 import {Router} from '@angular/router';
 import {LcpConstants} from "../utils/lcp-constants";
+import {EmailInterface} from "./create-email/create-email.component";
 
 
 @Component({
@@ -28,12 +29,16 @@ export class LoginControlledPagesComponent implements OnInit {
   confirmationDialog: HTMLDivElement;
   alertDialog: HTMLDivElement;
 
+  emailData: EmailInterface;
+  emailDialog: HTMLDivElement;
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
     this.staticPageURl = AppConstants.PUBLIC_PAGES_URL;
     this.idleTime = 0;
     this.setActivityTimer();
+    this.emailData = null;
   }
 
   ngOnInit(): void {
@@ -47,15 +52,13 @@ export class LoginControlledPagesComponent implements OnInit {
     this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
       const okButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('ok-button')[0];
       const cancelButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('cancel-button')[0];
-      const messageElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('message')[0];
+      const messageElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('message')[0];
       messageElement.innerText = eventListener.message;
       okButton.onclick = (ev: Event) => {
-        console.log('ok clicked');
         eventListener.onOk();
         this.confirmationDialog.style.display = 'none';
       };
       cancelButton.onclick = (ev: Event) => {
-        console.log('cancel clicked');
         eventListener.onCancel();
         this.confirmationDialog.style.display = 'none';
       };
@@ -64,16 +67,19 @@ export class LoginControlledPagesComponent implements OnInit {
     // set event handler for alert dialog
     this.alertDialog = <HTMLDivElement>document.getElementById('alert-dialog');
     this.helperService.alertDialogState.subscribe((eventListener: AlertDialogEvent) => {
-      this.alertDialog.style.display = 'flex';
       const actionButton = <HTMLButtonElement>this.alertDialog.getElementsByClassName('action-button')[0];
       const titleElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('title')[0];
       const messageElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('message')[0];
+      actionButton.classList.remove('cancel-button');
+      actionButton.classList.remove('ok-button');
       if (eventListener.isSuccess) {
         titleElement.innerText = LcpConstants.success_alert_title;
         actionButton.innerText = 'ok';
+        actionButton.classList.add('ok-button');
       } else {
         titleElement.innerText = LcpConstants.failure_alert_title;
         actionButton.innerText = 'Dismiss';
+        actionButton.classList.add('cancel-button');
       }
       messageElement.innerText = eventListener.message;
 
@@ -81,8 +87,19 @@ export class LoginControlledPagesComponent implements OnInit {
         eventListener.onOk();
         this.alertDialog.style.display = 'none';
       };
-      this.confirmationDialog.style.display = 'flex';
+      this.alertDialog.style.display = 'flex';
     });
+
+    //set event handler for email
+    this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
+    this.helperService.emailDialogState.subscribe((data: EmailInterface) => {
+      if(data === null){
+        this.emailDialog.style.display = 'none';
+      }else {
+        this.emailData = data;
+        this.emailDialog.style.display = 'flex';
+      }
+    })
   }
 
   public parseMenu() {
@@ -145,6 +162,11 @@ export class LoginControlledPagesComponent implements OnInit {
 
       }
     };
+    this.helperService.showAlertDialog(myListener);
+  }
+
+  public showEmailDialog() {
+    this.helperService.showEmailDialog();
   }
 
   public doLogout() {

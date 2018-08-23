@@ -12,7 +12,9 @@ import {CreateEmailComponent} from '../login-controlled-pages/create-email/creat
 const routes: Routes = [
   {
     path: 'lp', component: LoginControlledPagesComponent,
-    children: [{path: 'email', component: CreateEmailComponent}]
+    children: [
+      {path: 'email', component: CreateEmailComponent}
+    ]
   },
   {
     path: 'nlp', component: NonLoginPagesComponent,

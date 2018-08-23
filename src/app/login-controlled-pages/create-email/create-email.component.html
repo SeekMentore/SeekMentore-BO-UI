@@ -12,22 +12,30 @@
       </div>
 
       <i class="icon_button fas fa-paperclip" onclick="document.getElementById('select_attachments').click()"></i>
-      <select style="margin-top: 0" class="input_field" name="user-type" required [(ngModel)]="userType">
-        <option value="Blank">User Type</option>
-        <option value="admin">Employee</option>
-        <option value="tutor">Tutor</option>
-        <option value="customer">Parent &amp; Students</option>
+      <select class="selectpicker input_field" data-live-search="true" style="margin-top: 0" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
+        <option [ngValue]="defaultValueEmailTemplate" disabled>Select E-mail template</option>
+        <option [ngValue]="element" *ngFor="let element of emailTemplatesArray">{{element.label}}</option>
+
+        <!--<option value="Blank">User Type</option>-->
+        <!--<option value="admin">Employee</option>-->
+        <!--<option value="tutor">Tutor</option>-->
+        <!--<option value="customer">Parent &amp; Students</option>-->
       </select>
     </div>
-    <input name="to_email" placeholder="To" required type="text">
-    <input name="cc_email" placeholder="CC" required type="text">
-    <input name="bcc_email" placeholder="BCC" required type="text">
-    <input name="email_subject" placeholder="Subject" required type="text">
-    <textarea id="email_body" name="email_body">
+    <input [(ngModel)] = "emailData.to" name="to_email" placeholder="To" required type="text">
+    <input [(ngModel)] = "emailData.cc" name="cc_email" placeholder="CC" required type="text">
+    <input [(ngModel)] = "emailData.bcc" name="bcc_email" placeholder="BCC" required type="text">
+    <input [(ngModel)] = "emailData.subject" name="email_subject" placeholder="Subject" required type="text">
+    <textarea [(ngModel)] = "emailData.body" id="email_body" name="email_body">
 
     </textarea>
+    <div style="display: flex;flex-direction: row; justify-content: flex-end">
+      <button class="button-primary" style="margin: 5px" (click)="hideDialog()">Dismiss</button>
+      <button class="button-primary" style="margin: 5px">Send</button>
+    </div>
   </form>
 
-  <input class="hidden_input" value="Attachments" id="select_attachments" type="file" name="attachment"
+  <input class="hidden_input" value="Attachments" id="select_attachments" type="file" name="attachment" accept="{{allowedFileTypes}}"
          (change)="onAttachmentSelected($event)">
+
 </div>

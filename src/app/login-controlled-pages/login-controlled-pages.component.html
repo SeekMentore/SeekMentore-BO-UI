@@ -3,6 +3,7 @@
   <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
   <div class="toolbar_content">
     <span>{{title}}</span>
+    <i *ngIf="accessOptions && accessOptions.emailformaccess" class="fas fa-envelope" (click)="showEmailDialog()"></i>
     <div class="dropdown">
       <i class="fas fa-user-alt"></i>
       <div class="dropdown-content" style="left: -100px">
@@ -68,15 +69,9 @@
   </div>
 </div>
 
-<!--Negative Dialog-->
-<div id="negative-dialog" class="dialog" style="display: none">
-  <div class="dialog_modal">
+<!--Email Dialog-->
+<div id="email-dialog" class="dialog" style="display: none; overflow-y: auto">
 
-    <span class="title">Negative Message</span>
-    <span> This is negative message text..</span>
+    <app-create-email [emailData]="emailData" style="width: 80%; margin: auto"></app-create-email>
 
-    <div class="modal_control">
-      <button class="cancel-button">Dismiss</button>
-    </div>
-  </div>
 </div>

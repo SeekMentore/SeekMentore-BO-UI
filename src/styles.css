@@ -365,10 +365,10 @@ textarea {
 }
 
 .ok-button {
-  background-color: limegreen;
+  background-color: #20A843;
   border: none;
   outline: none;
-  color: var(--textColor);
+  color: white;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   font-family: "Open Sans", sans-serif !important;
   padding: 6px 18px;

@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {HelperService} from '../../utils/helper.service';
 import {AppUtilityService} from '../../utils/app-utility.service';
-import {AppConstants} from '../../utils/app-constants';
+import {EnvironmentConstants} from '../../utils/environment-constants';
 import {NlpRestUrls} from '../../utils/nlp-rest-urls';
-import {HelperService} from '../../utils/helper.service';
 
 
 @Component({
@@ -37,7 +36,7 @@ export class ErrorComponent implements OnInit {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response !== null) {
-          this.errorImageSrc = AppConstants.IMAGE_SERVER + response['errorImageSrc'];
+          this.errorImageSrc = EnvironmentConstants.IMAGE_SERVER + response['errorImageSrc'];
           this.errorText = response['errorText'];
         }
       }, error => {

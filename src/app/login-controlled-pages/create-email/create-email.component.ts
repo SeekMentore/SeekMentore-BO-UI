@@ -3,6 +3,7 @@ import {Observable} from 'rxjs/index';
 import {AppUtilityService} from '../../utils/app-utility.service';
 import {HelperService} from '../../utils/helper.service';
 import {LcpConstants} from '../../utils/lcp-constants';
+import {LcpRestUrls} from '../../utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-create-email',
@@ -11,23 +12,27 @@ import {LcpConstants} from '../../utils/lcp-constants';
 })
 export class CreateEmailComponent implements OnInit, OnChanges {
 
+  title = LcpConstants.email_dialog_title;
   attachments: File[] = [];
-
   emailTemplatesArray: EmailTemplateInterface[];
   defaultValueEmailTemplate: EmailTemplateInterface;
   selectedEmailTemplate: EmailTemplateInterface;
   emailData: EmailInterface;
   allowedFileTypes = LcpConstants.email_attachment_allowed_types;
 
+  searchableItems: {id: string, text: string}[] = [];
+
   @Input('emailData')
   receivedEmailData: EmailInterface = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
+    this.searchableItems.push({id: 'sfa',text: 'thisi si s1'});
+    this.searchableItems.push({id: 'sfa2',text: 'thisi si s1s'});
   }
 
   ngOnInit() {
-    this.getEmailTemplates().subscribe(result => {
+    this.utilityService.makeRequest(LcpRestUrls.emailTemplatesUrl, 'POST').subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response != null) {
@@ -41,45 +46,59 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    let log: string[] = [];
-    for (let propName in changes) {
-      let changedProp = changes[propName];
-      if(propName === 'receivedEmailData' && changedProp.currentValue !== null) {
+    const log: string[] = [];
+    for (const propName in changes) {
+      const changedProp = changes[propName];
+      if (propName === 'receivedEmailData' && changedProp.currentValue !== null) {
         this.emailData = changedProp.currentValue;
       }
     }
   }
 
   removeAttachment(i: number) {
-    console.log('lasd');
     this.attachments.splice(i, 1);
   }
 
   onAttachmentSelected(value) {
-    console.log(value);
-    let totalSize = 0; // in KB
-    const attachmentsNumber = this.attachments.length;
-    let errorMessage = null;
-    this.attachments.forEach((value2 => {
-      totalSize = totalSize + value2.size / 1024;
-    }));
-    const attachment = (<any>value.target).files[0];
-    totalSize += attachment.size / 1024;
-    // console.log(totalSize);
-    if (totalSize > LcpConstants.email_attachemnts_max_size_MB * 1024) {
-      errorMessage = LcpConstants.email_attachment_size_error;
-    } else if (attachmentsNumber >= LcpConstants.email_attachments_max_number) {
-      errorMessage = LcpConstants.email_attachments_number_error;
-    }
-    if (errorMessage !== null) {
+    // console.log(value);
+
+    // show error if more than permitted number of files are selected
+
+    if ((<any>value.target).files.length > LcpConstants.email_attachments_max_number) {
       this.helperService.showAlertDialog({
         isSuccess: false,
-        message: errorMessage,
+        message: LcpConstants.email_attachments_number_error,
         onOk: () => {
         }
       });
-    } else {
-      this.attachments.push(attachment);
+      return;
+    }
+
+    for (const attachment of (<any>value.target).files) {
+      let totalSize = 0; // in KB
+      const attachmentsNumber = this.attachments.length;
+      let errorMessage = null;
+      this.attachments.forEach((value2 => {
+        totalSize = totalSize + value2.size / 1024;
+      }));
+      totalSize += attachment.size / 1024;
+      // console.log(totalSize);
+      if (totalSize > LcpConstants.email_attachemnts_max_size_MB * 1024) {
+        errorMessage = LcpConstants.email_attachment_size_error;
+      } else if (attachmentsNumber >= LcpConstants.email_attachments_max_number) {
+        errorMessage = LcpConstants.email_attachments_number_error;
+      }
+      if (errorMessage !== null) {
+        this.helperService.showAlertDialog({
+          isSuccess: false,
+          message: errorMessage,
+          onOk: () => {
+          }
+        });
+        break;
+      } else {
+        this.attachments.push(attachment);
+      }
     }
 
   }
@@ -114,6 +133,10 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   loadEmailDataFromServer(templateValue: string) {
+    if (templateValue === this.defaultValueEmailTemplate.value) {
+      this.setDefaultData();
+      return;
+    }
     this.getDataForTemplate(templateValue).subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
@@ -133,14 +156,40 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   sendEmail() {
-    this.setDefaultData();
+    const formData = new FormData();
+    for (const key in this.emailData) {
+      formData.append(key, this.emailData[key]);
+    }
+    const inputFilesNames = ['inputFile1', 'inputFile2', 'inputFile3', 'inputFile4'];
+
+    for (let i = 0; i < this.attachments.length; i++) {
+      if (i >= 4) {
+        break;
+      }
+      formData.append(inputFilesNames[i], this.attachments[i]);
+    }
+    this.utilityService.makeRequest(LcpRestUrls.sendMailUrl, 'POST', formData,
+      'multipart/form-data', true).subscribe(
+      result => {
+        this.helperService.showAlertDialog({
+          isSuccess: true,
+          message: LcpConstants.email_sent_success_message,
+          onOk: () => {
+            this.hideDialog();
+          }
+        });
+      },
+      error2 => {
+
+      }
+    );
   }
 
   setDefaultData() {
     this.attachments = [];
     this.defaultValueEmailTemplate = {
       label: 'Select E-mail template',
-      value: '00'
+      value: '-1'
     };
     this.selectedEmailTemplate = this.defaultValueEmailTemplate;
     this.emailData = {
@@ -152,22 +201,12 @@ export class CreateEmailComponent implements OnInit, OnChanges {
     };
   }
 
-  getEmailTemplates() {
-    const observable = new Observable((observer) => {
-      observer.next(
-        {response: '{"emailTemplates": [{"label": "Rejection Template","value": "01"},{"label": "Selection Template","value": "02"}]}'}
-      );
-    });
-    return observable;
-  }
 
   getDataForTemplate(value: string) {
-    const observable = new Observable((observer) => {
-      observer.next(
-        {response: '{"to": "TO VALUE","cc": "CC VALUE","bcc": "BCC VALUE","subject": "SUBJECT VALUE","body": "BODY VALUE"}'}
-      );
-    });
-    return observable;
+    const formData = new URLSearchParams();
+    formData.set('templateId', value);
+    return this.utilityService.makeRequest(LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
+      'application/x-www-form-urlencoded');
   }
 }
 

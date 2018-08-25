@@ -1,4 +1,4 @@
-export class LoginConstants {
+export class NlpConstants {
   static enter_username = 'Please enter Username';
   static enter_password = 'Please enter Password';
   static select_usertype = 'Please select User Type';

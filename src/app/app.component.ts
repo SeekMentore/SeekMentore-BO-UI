@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppConstants} from './utils/app-constants';
+import {EnvironmentConstants} from './utils/environment-constants';
 
 
 @Component({
@@ -9,7 +10,7 @@ import {AppConstants} from './utils/app-constants';
 })
 export class AppComponent implements OnInit {
 
-  staticPageURl = AppConstants.PUBLIC_PAGES_URL;
+  staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
 
   constructor() {
   }

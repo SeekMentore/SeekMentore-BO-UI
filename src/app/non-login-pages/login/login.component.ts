@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HelperService} from '../../utils/helper.service';
 import {AppUtilityService} from '../../utils/app-utility.service';
-import {LoginConstants} from '../../utils/login-constants';
+import {NlpConstants} from '../../utils/nlp-constants';
 import {Router} from '@angular/router';
 import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 
@@ -58,15 +58,15 @@ export class LoginComponent implements OnInit {
     this.resetErrorMessages();
 
     if (!this.username || this.username === '') {
-      this.errorUsername = LoginConstants.enter_username;
+      this.errorUsername = NlpConstants.enter_username;
       isValidData = false;
     }
     if (!this.password || this.password === '') {
-      this.errorPassword = LoginConstants.enter_password;
+      this.errorPassword = NlpConstants.enter_password;
       isValidData = false;
     }
     if (!this.userType || this.userType === 'Blank' || this.userType === '') {
-      this.errorUserType = LoginConstants.select_usertype;
+      this.errorUserType = NlpConstants.select_usertype;
       isValidData = false;
     }
 

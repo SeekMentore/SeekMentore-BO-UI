@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
+import {EnvironmentConstants} from '../utils/environment-constants';
 
 @Component({
   selector: 'app-non-login-pages',
@@ -10,8 +11,8 @@ import {AppConstants} from '../utils/app-constants';
 export class NonLoginPagesComponent implements OnInit {
 
   title = 'Welcome To Seek Mentore';
-  staticPageURl = AppConstants.PUBLIC_PAGES_URL;
-  logoURL = AppConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
+  staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
+  logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
 
   constructor(private helperService: HelperService) {
   }

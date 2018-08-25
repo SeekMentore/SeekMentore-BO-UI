@@ -4,8 +4,10 @@ import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
 import {Observable} from 'rxjs/index';
 import {Router} from '@angular/router';
-import {LcpConstants} from "../utils/lcp-constants";
-import {EmailInterface} from "./create-email/create-email.component";
+import {LcpConstants} from '../utils/lcp-constants';
+import {EmailInterface} from './create-email/create-email.component';
+import {EnvironmentConstants} from '../utils/environment-constants';
+import {LcpRestUrls} from '../utils/lcp-rest-urls';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class LoginControlledPagesComponent implements OnInit {
   userMenu: SubMenuItem[] = [];
 
   accessOptions: AccessOptions;
-  logoURL = AppConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
+  logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
   idleTime: number;
 
   confirmationDialog: HTMLDivElement;
@@ -35,7 +37,7 @@ export class LoginControlledPagesComponent implements OnInit {
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
-    this.staticPageURl = AppConstants.PUBLIC_PAGES_URL;
+    this.staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
     this.idleTime = 0;
     this.setActivityTimer();
     this.emailData = null;
@@ -53,6 +55,8 @@ export class LoginControlledPagesComponent implements OnInit {
       const okButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('ok-button')[0];
       const cancelButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('cancel-button')[0];
       const messageElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('message')[0];
+      const titleElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('title')[0];
+      titleElement.innerText = LcpConstants.confirmation_dialog_title;
       messageElement.innerText = eventListener.message;
       okButton.onclick = (ev: Event) => {
         eventListener.onOk();
@@ -90,29 +94,30 @@ export class LoginControlledPagesComponent implements OnInit {
       this.alertDialog.style.display = 'flex';
     });
 
-    //set event handler for email
+    // set event handler for email
     this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
     this.helperService.emailDialogState.subscribe((data: EmailInterface) => {
-      if(data === null){
+      if (data === null) {
         this.emailDialog.style.display = 'none';
-      }else {
+      } else {
         this.emailData = data;
         this.emailDialog.style.display = 'flex';
       }
-    })
+    });
   }
 
   public parseMenu() {
     // will replace getBasicInfo function with ajax request
-    this.getBasicInfo().subscribe(result => {
+    this.utilityService.makeRequest(LcpRestUrls.basicInfoUrl, 'POST').subscribe(result => {
       let response = result['response'];
       response = this.utilityService.decodeObjectFromJSON(response);
+      console.log(response);
       if (response != null) {
         this.username = response['username'];
         this.helperService.setTitle('Welcome ' + this.username);
         this.menu = response['menu'];
         this.accessOptions = response['accessoptions'];
-
+        console.log(this.menu);
         this.userMenu.push(
           {name: 'Personalize', url: '', functioncall: false},
           {name: 'Profile', url: '', functioncall: false},
@@ -170,7 +175,7 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   public doLogout() {
-    this.logoutRequest().subscribe(result => {
+    this.utilityService.makeRequest(LcpRestUrls.logoutUrl, 'POST').subscribe(result => {
       let response = result['response'];
       response = this.utilityService.decodeObjectFromJSON(response);
       if (response != null) {
@@ -204,26 +209,6 @@ export class LoginControlledPagesComponent implements OnInit {
     }
   }
 
-  public getBasicInfo() {
-    // return this.makeRequest(AppConstants.basicInfoURL, 'GET');
-    const observable = new Observable((observer) => {
-      observer.next({
-        response: '{"username": "Random Name", "menu": [{"name": "Admin", "submenu": true, "submenuitems": [{"name": "Registered Tutors", "url": "/registeredtutor"}, {"name": "Subscribed Customers", "url": "/registeredtutor"}]}, {"name": "Sales", "submenu": true, "submenuitems": [{"name": "Tutor Enquiry", "url": "/tutorenquiry"}]}], "accessoptions": {"impersonationaccess": true, "emailformaccess": true}}'
-      });
-      observer.complete();
-    });
-    return observable;
-  }
-
-  public logoutRequest() {
-    const observable = new Observable((observer) => {
-      observer.next({
-        response: '{ "success": true,"message": "This is a message"}'
-      });
-      observer.complete();
-    });
-    return observable;
-  }
 
 }
 
@@ -236,7 +221,7 @@ interface SubMenuItem {
 interface MenuItem {
   name: string;
   submenu: boolean;
-  submenuitems: SubMenuItem[];
+  subMenuItems: SubMenuItem[];
 }
 
 interface AccessOptions {

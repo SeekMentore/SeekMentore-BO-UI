@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AppConstants} from './app-constants';
 import {Observable} from 'rxjs/index';
+import {EnvironmentConstants} from './environment-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class AppUtilityService {
                      isMultipart: boolean = false,
                      params: HttpParams = null) {
     if (!url.includes('http')) {
-      url = AppConstants.SERVER_URL + AppConstants.CONTEXT_PATH + url;
+      url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
     const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
     if (requestType === 'GET') {

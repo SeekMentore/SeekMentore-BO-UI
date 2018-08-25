@@ -31,7 +31,7 @@
     <div class="dropdown" *ngFor="let element of menu; let i = index">
       <button class="dropbtn">{{element.name}}</button>
       <div class="dropdown-content">
-        <button *ngFor="let sub_element of element.submenuitems">{{sub_element.name}}</button>
+        <button *ngFor="let sub_element of element.subMenuItems">{{sub_element.name}}</button>
       </div>
     </div>
   </div>
@@ -42,8 +42,15 @@
 
 </div>
 
+<!--Email Dialog-->
+<div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">
+
+  <app-create-email [emailData]="emailData" style="width: 80%; margin: auto"></app-create-email>
+
+</div>
+
 <!--Confirmation Dialog-->
-<div id="confirmation-dialog" class="dialog" style="display: none; z-index: 10">
+<div id="confirmation-dialog" class="dialog" style="display: none;">
   <div class="dialog_modal">
 
     <span class="title">Confirmation Message</span>
@@ -57,7 +64,7 @@
 </div>
 
 <!--Alert Dialog-->
-<div id="alert-dialog" class="dialog" style="display: none; z-index: 10">
+<div id="alert-dialog" class="dialog" style="display: none;">
   <div class="dialog_modal">
 
     <span class="title">Positive Title</span>
@@ -69,9 +76,3 @@
   </div>
 </div>
 
-<!--Email Dialog-->
-<div id="email-dialog" class="dialog" style="display: none; overflow-y: auto; z-index: 5">
-
-    <app-create-email [emailData]="emailData" style="width: 80%; margin: auto"></app-create-email>
-
-</div>

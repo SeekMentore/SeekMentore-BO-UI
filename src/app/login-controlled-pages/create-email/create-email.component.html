@@ -1,19 +1,20 @@
 <div style="display: flex; flex-direction: column; margin: 20px; justify-content: center; align-items: center">
-  <form id="login-form" class="form-container" style="max-width: 800px">
-    <h1>Compose Email</h1>
+  <form #emailForm="ngForm" ngNativeValidate  class="form-container" (ngSubmit)="sendEmail()" style="max-width: 800px">
+    <h1>{{title}}</h1>
 
     <div style="display: flex; flex-direction: row; align-items: center;">
       <!--Attachements-->
       <div style="display: flex; flex-direction: row; flex-wrap: wrap; flex: 1 1 auto">
         <div *ngFor="let attachment of attachments; let i = index;" class="attachment_layout">
-          <span title="{{attachment.name.split('/').pop()}}">{{attachment.name.split('/').pop()}}</span>
+          <span title="{{attachment.name.split('/').pop()}}" style="cursor: default">{{attachment.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
           <span style="cursor: pointer" (click)="removeAttachment(i)">&times;</span>
         </div>
       </div>
 
       <i class="icon_button fas fa-paperclip" onclick="document.getElementById('select_attachments').click()"></i>
-      <select class="selectpicker input_field" data-live-search="true" style="margin-top: 0" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
-        <option [ngValue]="defaultValueEmailTemplate" disabled>Select E-mail template</option>
+      <select class="selectpicker input_field" data-live-search="true" style="margin-top: 0; min-width: 225px" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
+
+        <option [ngValue]="defaultValueEmailTemplate">Select E-mail template</option>
         <option [ngValue]="element" *ngFor="let element of emailTemplatesArray">{{element.label}}</option>
 
         <!--<option value="Blank">User Type</option>-->
@@ -23,19 +24,19 @@
       </select>
     </div>
     <input [(ngModel)] = "emailData.to" name="to_email" placeholder="To" required type="text">
-    <input [(ngModel)] = "emailData.cc" name="cc_email" placeholder="CC" required type="text">
-    <input [(ngModel)] = "emailData.bcc" name="bcc_email" placeholder="BCC" required type="text">
+    <input [(ngModel)] = "emailData.cc" name="cc_email" placeholder="CC" type="text">
+    <input [(ngModel)] = "emailData.bcc" name="bcc_email" placeholder="BCC" type="text">
     <input [(ngModel)] = "emailData.subject" name="email_subject" placeholder="Subject" required type="text">
-    <textarea [(ngModel)] = "emailData.body" id="email_body" name="email_body">
+    <textarea [(ngModel)] = "emailData.body" id="email_body" required name="email_body">
 
     </textarea>
-    <div style="display: flex;flex-direction: row; justify-content: flex-end">
-      <button class="button-primary" style="margin: 5px" (click)="hideDialog()">Dismiss</button>
-      <button class="button-primary" style="margin: 5px" (click)="sendEmail()">Send</button>
+    <div style="display: flex;flex-direction: row;">
+      <button class="ok-button" style="margin: 8px" type="submit">Send</button>
+      <button class="cancel-button" style="margin: 8px" (click)="hideDialog()">Dismiss</button>
     </div>
   </form>
 
-  <input class="hidden_input" value="Attachments" id="select_attachments" type="file" name="attachment" accept="{{allowedFileTypes}}"
+  <input class="hidden_input" value="Attachments" id="select_attachments" multiple type="file" name="attachment" accept="{{allowedFileTypes}}"
          (change)="onAttachmentSelected($event)">
 
 </div>

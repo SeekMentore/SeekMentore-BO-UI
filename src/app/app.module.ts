@@ -28,7 +28,7 @@ import { CreateEmailComponent } from './login-controlled-pages/create-email/crea
     BrowserModule,
     HttpClientModule,
     RoutingModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [AppUtilityService, HelperService],
   bootstrap: [AppComponent]

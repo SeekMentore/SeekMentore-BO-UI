@@ -12,7 +12,7 @@
       </div>
 
       <i class="icon_button fas fa-paperclip" onclick="document.getElementById('select_attachments').click()"></i>
-      <select class="selectpicker input_field" data-live-search="true" style="margin-top: 0; min-width: 225px" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
+      <select class="selectpicker" data-live-search="true" style="margin-top: 0; min-width: 225px; padding: 0;" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
 
         <option [ngValue]="defaultValueEmailTemplate">Select E-mail template</option>
         <option [ngValue]="element" *ngFor="let element of emailTemplatesArray">{{element.label}}</option>
@@ -27,9 +27,10 @@
     <input [(ngModel)] = "emailData.cc" name="cc_email" placeholder="CC" type="text">
     <input [(ngModel)] = "emailData.bcc" name="bcc_email" placeholder="BCC" type="text">
     <input [(ngModel)] = "emailData.subject" name="email_subject" placeholder="Subject" required type="text">
-    <textarea [(ngModel)] = "emailData.body" id="email_body" required name="email_body">
-
-    </textarea>
+    <div id="email-toolbar-container"></div>
+    <div style="min-height: 200px; border: solid 1px var(--divider)"  id="email-body" name="email_body">
+      <!--this email id is being used in typescript file-->
+    </div>
     <div style="display: flex;flex-direction: row;">
       <button class="ok-button" style="margin: 8px" type="submit">Send</button>
       <button class="cancel-button" style="margin: 8px" (click)="hideDialog()">Dismiss</button>

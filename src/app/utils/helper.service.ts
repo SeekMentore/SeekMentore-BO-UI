@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/index';
 import {ConfirmationDialogEvent, AlertDialogEvent} from '../login-controlled-pages/login-controlled-pages.component';
-import {EmailInterface } from '../login-controlled-pages/create-email/create-email.component';
-import {subscriptionLogsToBeFn} from "rxjs/internal/testing/TestScheduler";
+import {EmailInterface} from '../login-controlled-pages/create-email/create-email.component';
+
+declare var DecoupledEditor: any;
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class HelperService {
     this.alertDialogSubject.next(eventListener);
   }
 
-  public showEmailDialog(to = '', cc = '', bcc = '', subject = '', body = '' ) {
+  public showEmailDialog(to = '', cc = '', bcc = '', subject = '', body = '') {
     const emailData: EmailInterface = {
       to: to,
       cc: cc,
@@ -43,8 +44,24 @@ export class HelperService {
     };
     this.emailDialogSubject.next(emailData);
   }
+
   public hideEmailDialog() {
     this.emailDialogSubject.next(null);
+  }
+
+  public makeRichEditor(editorId: string, toolbarId: string, handler: any) {
+
+    DecoupledEditor
+      .create(document.querySelector(editorId))
+      .then(editor => {
+        const toolbarContainer = document.querySelector(toolbarId);
+
+        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+        handler(editor);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
 }

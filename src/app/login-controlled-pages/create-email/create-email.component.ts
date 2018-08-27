@@ -5,6 +5,7 @@ import {HelperService} from '../../utils/helper.service';
 import {LcpConstants} from '../../utils/lcp-constants';
 import {LcpRestUrls} from '../../utils/lcp-rest-urls';
 
+
 @Component({
   selector: 'app-create-email',
   templateUrl: './create-email.component.html',
@@ -20,18 +21,23 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   emailData: EmailInterface;
   allowedFileTypes = LcpConstants.email_attachment_allowed_types;
 
-  searchableItems: {id: string, text: string}[] = [];
+  searchableItems: { id: string, text: string }[] = [];
+  emailBodyEditor: any;
 
   @Input('emailData')
   receivedEmailData: EmailInterface = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
-    this.searchableItems.push({id: 'sfa',text: 'thisi si s1'});
-    this.searchableItems.push({id: 'sfa2',text: 'thisi si s1s'});
+    this.searchableItems.push({id: 'sfa', text: 'thisi si s1'});
+    this.searchableItems.push({id: 'sfa2', text: 'thisi si s1s'});
   }
 
   ngOnInit() {
+    this.helperService.makeRichEditor('#email-body', '#email-toolbar-container',
+      (editor: any) => {
+        this.emailBodyEditor = editor;
+      });
     this.utilityService.makeRequest(LcpRestUrls.emailTemplatesUrl, 'POST').subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
@@ -142,7 +148,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response != null) {
           this.emailData = response;
-
+          this.emailBodyEditor.setData(this.emailData.body);
         }
       },
       error => {
@@ -157,6 +163,9 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   sendEmail() {
     const formData = new FormData();
+    this.emailData.body = this.emailBodyEditor.getData();
+    this.emailData.body.trim();
+
     for (const key in this.emailData) {
       formData.append(key, this.emailData[key]);
     }

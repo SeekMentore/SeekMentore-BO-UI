@@ -12,16 +12,18 @@
       </div>
 
       <i class="icon_button fas fa-paperclip" onclick="document.getElementById('select_attachments').click()"></i>
-      <select class="selectpicker" data-live-search="true" style="margin-top: 0; min-width: 225px; padding: 0;" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
+      <div *ngIf="emailTemplatesArray.length > 0">
+        <select id="email-template-dropdown" style="margin-top: 0; min-width: 225px; padding: 0;" name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">
 
-        <option [ngValue]="defaultValueEmailTemplate">Select E-mail template</option>
-        <option [ngValue]="element" *ngFor="let element of emailTemplatesArray">{{element.label}}</option>
+          <option [ngValue]="defaultValueEmailTemplate">Select E-mail template</option>
+          <option [ngValue]="element" *ngFor="let element of emailTemplatesArray">{{element.label}}</option>
 
-        <!--<option value="Blank">User Type</option>-->
-        <!--<option value="admin">Employee</option>-->
-        <!--<option value="tutor">Tutor</option>-->
-        <!--<option value="customer">Parent &amp; Students</option>-->
-      </select>
+          <!--<option value="Blank">User Type</option>-->
+          <!--<option value="admin">Employee</option>-->
+          <!--<option value="tutor">Tutor</option>-->
+          <!--<option value="customer">Parent &amp; Students</option>-->
+        </select>
+      </div>
     </div>
     <input [(ngModel)] = "emailData.to" name="to_email" placeholder="To" required type="text">
     <input [(ngModel)] = "emailData.cc" name="cc_email" placeholder="CC" type="text">

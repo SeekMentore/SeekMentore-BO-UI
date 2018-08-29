@@ -1,0 +1,15 @@
+.grid-skm-row {
+  border: solid 1px grey;
+  display: flex;
+  flex-direction: row;
+}
+
+.grid-skm-cell {
+  border-right: solid 1px grey;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.grid-skm-checkbox {
+
+}

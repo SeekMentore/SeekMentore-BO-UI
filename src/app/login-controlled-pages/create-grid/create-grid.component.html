@@ -1,0 +1,43 @@
+<div>
+  <div *ngIf="showGrid">
+    <span class="grid-skm-row">{{metaData.title}}</span>
+    <span class="grid-skm-row">
+      <span class="grid-skm-cell grid-skm-checkbox" [ngStyle]="{'max-width.px': checkBoxCellWidth}"></span>
+      <span class="grid-skm-cell grid-skm-column-title" [ngStyle]="{'max-width.px': recordTitleCellWidth}"
+            *ngFor="let element of columnsData">{{element.columnName}} </span>
+      <span class="grid-skm-cell grid-skm-column-title" [ngStyle]="{'max-width.px': actionTitleCellWidth}">Action</span>
+    </span>
+    <span class="grid-skm-row">
+      <span class="grid-skm-cell grid-skm-checkbox" [ngStyle]="{'max-width.px': checkBoxCellWidth}"></span>
+      <span class="grid-skm-cell grid-skm-column-title" [ngStyle]="{'max-width.px': recordTitleCellWidth}"
+            *ngFor="let element of columnsData; let i=index">
+        <input style="width: 60%" placeholder="Filter" (input) = "filterRowRecordData(i, $event.target.value)">
+      </span>
+      <span class="grid-skm-cell grid-skm-column-title" [ngStyle]="{'max-width.px': actionTitleCellWidth}">Perform operations</span>
+    </span>
+    <span class="grid-skm-row" *ngFor="let element of rowRecordData; let i=index">
+      <span class="grid-skm-cell grid-skm-checkbox" [ngStyle]="{'max-width.px': checkBoxCellWidth}"></span>
+      <span class="grid-skm-cell grid-skm-record-cell" [ngStyle]="{'max-width.px': recordCellWidth}"
+            *ngFor="let element2 of element">
+        {{element2}}
+      </span>
+      <span class="grid-skm-cell grid-skm-record-cell" [ngStyle]="{'max-width.px': actionCellWidth}"
+            *ngFor="let element of getFakeArray(numberOfActionCells)">
+
+      </span>
+    </span>
+
+    <span class="grid-skm-row">
+        <span class="grid-skm-cell" [ngStyle]="{'max-width.px': checkBoxCellWidth + 2 * recordTitleCellWidth}">
+          Number of record per page: {{metaData.recordPerPage}}
+        </span>
+        <span class="grid-skm-cell" *ngFor="let element of getFakeArray(columnsData.length - 3)"></span>
+        <span class="grid-skm-cell" [ngStyle]="{'max-width.px': recordCellWidth}">
+          Page {{metaData.currentPageNumber}} of {{metaData.totalPageNumbers}}
+        </span>
+        <span class="grid-skm-cell" [ngStyle]="{'max-width.px': actionTitleCellWidth}">
+          Total Records {{metaData.totalRecords}}
+        </span>
+      </span>
+  </div>
+</div>

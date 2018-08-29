@@ -8,6 +8,7 @@ import {LcpConstants} from '../utils/lcp-constants';
 import {EmailInterface} from './create-email/create-email.component';
 import {EnvironmentConstants} from '../utils/environment-constants';
 import {LcpRestUrls} from '../utils/lcp-rest-urls';
+import {CreateGridComponent, GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
 
 
 @Component({
@@ -34,6 +35,10 @@ export class LoginControlledPagesComponent implements OnInit {
   emailData: EmailInterface;
   emailDialog: HTMLDivElement;
 
+  showGrid = false;
+  gridColumnsData: GridColumnInterface[];
+  gridMetaData: GridMetaDataInterface;
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -44,6 +49,38 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
+    setTimeout(() => {
+      this.gridMetaData = {
+        title: 'This is grid',
+        recordPerPage: 10,
+        totalRecords: 100,
+        totalPageNumbers: 10,
+        currentPageNumber: 1
+      };
+      this.gridColumnsData = [{
+        columnName: 'Column 1',
+        mapping: 'firstColumn',
+        datatype: 'string',
+        filterable: true,
+        sortable: true
+      }, {
+        columnName: 'Column 2',
+        mapping: 'secondColumn',
+        datatype: 'string',
+        filterable: true,
+        sortable: true
+      }, {
+        columnName: 'Column 3',
+        mapping: 'thirdColumn',
+        datatype: 'string',
+        filterable: true,
+        sortable: true
+      }];
+      this.showGrid = true;
+    }, 500);
+
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
     });
@@ -111,13 +148,13 @@ export class LoginControlledPagesComponent implements OnInit {
     this.utilityService.makeRequest(LcpRestUrls.basicInfoUrl, 'POST').subscribe(result => {
       let response = result['response'];
       response = this.utilityService.decodeObjectFromJSON(response);
-      console.log(response);
+      // console.log(response);
       if (response != null) {
         this.username = response['username'];
         this.helperService.setTitle('Welcome ' + this.username);
         this.menu = response['menu'];
         this.accessOptions = response['accessoptions'];
-        console.log(this.menu);
+        // console.log(this.menu);
         this.userMenu.push(
           {name: 'Personalize', url: '', functioncall: false},
           {name: 'Profile', url: '', functioncall: false},
@@ -138,7 +175,7 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   public functionCallMenuItem(itemName: string) {
-    console.log(itemName);
+    // console.log(itemName);
     switch (itemName) {
       case 'Sign Out':
         this.doLogout();
@@ -150,10 +187,10 @@ export class LoginControlledPagesComponent implements OnInit {
     const myListener: ConfirmationDialogEvent = {
       message: 'hello there',
       onOk: () => {
-        console.log('ok button clicked');
+        // console.log('ok button clicked');
       },
       onCancel: () => {
-        console.log('cancel button clicked');
+        // console.log('cancel button clicked');
       }
     };
     this.helperService.showConfirmationDialog(myListener);
@@ -182,7 +219,7 @@ export class LoginControlledPagesComponent implements OnInit {
         if (response['success'] === true) {
           this.router.navigateByUrl('/');
         } else {
-          console.log('show error message in dialog');
+          // console.log('show error message in dialog');
         }
       }
     }, error => {

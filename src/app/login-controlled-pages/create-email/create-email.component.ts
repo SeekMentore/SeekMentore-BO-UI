@@ -15,13 +15,12 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   title = LcpConstants.email_dialog_title;
   attachments: File[] = [];
-  emailTemplatesArray: EmailTemplateInterface[];
+  emailTemplatesArray: EmailTemplateInterface[] = [];
   defaultValueEmailTemplate: EmailTemplateInterface;
   selectedEmailTemplate: EmailTemplateInterface;
   emailData: EmailInterface;
   allowedFileTypes = LcpConstants.email_attachment_allowed_types;
 
-  searchableItems: { id: string, text: string }[] = [];
   emailBodyEditor: any;
 
   @Input('emailData')
@@ -29,8 +28,6 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
-    this.searchableItems.push({id: 'sfa', text: 'thisi si s1'});
-    this.searchableItems.push({id: 'sfa2', text: 'thisi si s1s'});
   }
 
   ngOnInit() {
@@ -43,7 +40,8 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response != null) {
           this.emailTemplatesArray = response['emailTemplates'];
-          console.log(this.emailTemplatesArray);
+          // console.log(this.emailTemplatesArray);
+          // document.getElementById('email-template-dropdown').classList.add('selectpicker');
         }
       },
       error => {
@@ -110,7 +108,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   emailTemplateSelected() {
-    console.log(this.selectedEmailTemplate);
+    // console.log(this.selectedEmailTemplate);
     let dataExists = false;
     for (const key in this.emailData) {
       const value = this.emailData[key];
@@ -157,8 +155,8 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   hideDialog() {
-    this.helperService.hideEmailDialog();
     this.setDefaultData();
+    this.helperService.hideEmailDialog();
   }
 
   sendEmail() {

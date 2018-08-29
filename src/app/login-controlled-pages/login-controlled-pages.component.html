@@ -37,6 +37,7 @@
   </div>
   <button (click)="askForConfirmation()">Show confirmation dialog</button>
   <button (click)="showAlertDialog()">Show alert dialog</button>
+  <app-create-grid *ngIf="showGrid" [columns-data]="gridColumnsData" [meta-data]="gridMetaData"></app-create-grid>
   <router-outlet></router-outlet>
 
 

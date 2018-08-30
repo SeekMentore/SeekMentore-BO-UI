@@ -155,8 +155,42 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   hideDialog() {
-    this.setDefaultData();
-    this.helperService.hideEmailDialog();
+
+    // check if data is present
+
+    if (this.isFormDirty()) {
+      this.helperService.showConfirmationDialog({
+        message: LcpConstants.email_dismiss_data_exists_error,
+        onOk: () => {
+          this.setDefaultData();
+          this.emailBodyEditor.setData('');
+          this.helperService.hideEmailDialog();
+        },
+        onCancel: () => {
+
+        }
+      });
+    } else {
+      this.setDefaultData();
+      this.emailBodyEditor.setData('');
+      this.helperService.hideEmailDialog();
+
+    }
+  }
+
+
+  isFormDirty(): boolean {
+    let isDataEntered = false;
+    for (const key in this.emailData) {
+      if (this.emailData[key].trim() !== '') {
+        isDataEntered = true;
+      }
+    }
+    console.log(this.emailBodyEditor.getData());
+    if (!isDataEntered && this.emailBodyEditor.getData() !== '<p>&nbsp;</p>') {
+      isDataEntered = true;
+    }
+    return isDataEntered;
   }
 
   sendEmail() {
@@ -178,11 +212,15 @@ export class CreateEmailComponent implements OnInit, OnChanges {
     this.utilityService.makeRequest(LcpRestUrls.sendMailUrl, 'POST', formData,
       'multipart/form-data', true).subscribe(
       result => {
+        // let response = result['response'];
+        // console.log(response);
+        // response = this.utilityService.decodeObjectFromJSON(response);
         this.helperService.showAlertDialog({
           isSuccess: true,
           message: LcpConstants.email_sent_success_message,
           onOk: () => {
-            this.hideDialog();
+            this.setDefaultData();
+            this.emailBodyEditor.setData('');
           }
         });
       },

@@ -2,13 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {AppUtilityService} from '../utils/app-utility.service';
 import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
-import {Observable} from 'rxjs/index';
 import {Router} from '@angular/router';
 import {LcpConstants} from '../utils/lcp-constants';
 import {EmailInterface} from './create-email/create-email.component';
 import {EnvironmentConstants} from '../utils/environment-constants';
 import {LcpRestUrls} from '../utils/lcp-rest-urls';
-import {CreateGridComponent, GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
+import { GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
 
 
 @Component({
@@ -17,7 +16,7 @@ import {CreateGridComponent, GridColumnInterface, GridMetaDataInterface} from '.
   styleUrls: ['./login-controlled-pages.component.css']
 })
 export class LoginControlledPagesComponent implements OnInit {
-  title = 'Welcome To Seek Mentore';
+  title = EnvironmentConstants.APPLICATION_NAME;
   staticPageURl = '';
   username = '';
   menu: MenuItem[] = [];
@@ -38,6 +37,7 @@ export class LoginControlledPagesComponent implements OnInit {
   showGrid = false;
   gridColumnsData: GridColumnInterface[];
   gridMetaData: GridMetaDataInterface;
+  gridRecords: any[];
 
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
@@ -57,27 +57,42 @@ export class LoginControlledPagesComponent implements OnInit {
         recordPerPage: 10,
         totalRecords: 100,
         totalPageNumbers: 10,
-        currentPageNumber: 1
+        currentPageNumber: 1,
+        paginationRequired: true
       };
       this.gridColumnsData = [{
         columnName: 'Column 1',
         mapping: 'firstColumn',
-        datatype: 'string',
         filterable: true,
         sortable: true
       }, {
         columnName: 'Column 2',
         mapping: 'secondColumn',
-        datatype: 'string',
         filterable: true,
         sortable: true
       }, {
         columnName: 'Column 3',
         mapping: 'thirdColumn',
-        datatype: 'string',
         filterable: true,
         sortable: true
       }];
+      this.gridRecords = [
+        {
+          firstColumn: 'cell 1',
+          secondColumn: 'cell 2',
+          thirdColumn: 3
+        },
+        {
+          firstColumn: 'cell 4',
+          secondColumn: 'cell 5',
+          thirdColumn: 63
+        },
+        {
+          firstColumn: 'cell 1',
+          secondColumn: 'cell 2',
+          thirdColumn: 96
+        }
+      ];
       this.showGrid = true;
     }, 500);
 

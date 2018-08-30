@@ -10,7 +10,7 @@ import {EnvironmentConstants} from '../utils/environment-constants';
 })
 export class NonLoginPagesComponent implements OnInit {
 
-  title = 'Welcome To Seek Mentore';
+  title = EnvironmentConstants.APPLICATION_NAME;
   staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
   logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
 

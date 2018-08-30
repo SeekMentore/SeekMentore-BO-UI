@@ -13,6 +13,7 @@ export class CreateGridComponent implements OnInit {
   @Input('meta-data')
   metaData: GridMetaDataInterface;
 
+  @Input('grid-records')
   gridRecords: any[];
 
   checkBoxCellWidth: number;
@@ -29,7 +30,11 @@ export class CreateGridComponent implements OnInit {
 
   numberOfRecordsToBeDisplayed: number;
 
-  rowRecordData: string[][];
+  rowRecordData: any[][];
+  filteredRowRecordData: any[][];
+
+  filterQueries: { columnIndex: number, query: string }[];
+  sortingQueries: { columnIndex: number, isAscending: boolean }[];
 
   constructor() {
   }
@@ -38,28 +43,17 @@ export class CreateGridComponent implements OnInit {
   ngOnInit() {
     console.log(this.metaData);
     console.log(this.columnsData);
-    this.gridRecords = [
-      {
-        firstColumn: 'cell 1',
-        secondColumn: 'cell 2',
-        thirdColumn: 'cell 3'
-      },
-      {
-        firstColumn: 'cell 4',
-        secondColumn: 'cell 5',
-        thirdColumn: 'cell 6'
-      }
-    ];
     this.numberOfRecordsToBeDisplayed = this.gridRecords.length;
-    let grid_width = 1200;
+    const grid_width = 1200;
     this.checkBoxCellWidth = grid_width * 0.05; // 5 %
     this.actionTitleCellWidth = grid_width * 0.2; // 20 %
     this.actionCellWidth = this.actionTitleCellWidth / this.numberOfActionCells;
     this.recordTitleCellWidth = grid_width * 0.75 / this.columnsData.length;
     this.recordCellWidth = this.recordTitleCellWidth;
+    this.filterQueries = [];
+    this.sortingQueries = [];
     this.setRowRecordData();
     this.showGrid = true;
-
   }
 
   getFakeArray(size: number) {
@@ -77,11 +71,111 @@ export class CreateGridComponent implements OnInit {
         this.rowRecordData[i][j] = this.gridRecords[i][this.columnsData[j]['mapping']];
       }
     }
+    this.filteredRowRecordData = this.rowRecordData;
     // console.log(this.rowRecordData)
   }
 
-  filterRowRecordData(columnIndex: number, query: string) {
-    console.log(columnIndex, query);
+  filterRowRecordData() {
+    this.filteredRowRecordData = [];
+    for (let i = 0; i < this.rowRecordData.length; i++) {
+      let rowMatchesQuery = true;
+      for (const element of this.filterQueries) {
+        const cellValue = this.rowRecordData[i][element.columnIndex];
+        if (typeof(cellValue) === 'string' && !cellValue.includes(element.query)) {
+          rowMatchesQuery = false;
+          break;
+        }
+
+        if (typeof(cellValue) === 'number') {
+          if (cellValue !== parseInt(element.query, 10)) {
+            rowMatchesQuery = false;
+            break;
+          }
+        }
+      }
+      if (rowMatchesQuery) {
+        this.filteredRowRecordData.push(this.rowRecordData[i]);
+      }
+    }
+  }
+
+  addFilterQuery(columnIndex: number, query: string) {
+
+    let queryExistsForIndex = false;
+
+    for (let i = 0; i < this.filterQueries.length; i++) {
+      if (this.filterQueries[i].columnIndex === columnIndex) {
+        if (query.trim() === '') {
+          this.filterQueries.splice(i, 1);
+        } else {
+          this.filterQueries[i].query = query;
+        }
+        queryExistsForIndex = true;
+        break;
+      }
+    }
+
+    if (!queryExistsForIndex && query.trim() !== '') {
+      this.filterQueries.push({columnIndex: columnIndex, query: query});
+    }
+
+    this.filterRowRecordData();
+  }
+
+  addSortingQuery(columnIndex: number, isAscending: boolean) {
+    let queryExistsForIndex = false;
+
+    for (let i = 0; i < this.sortingQueries.length; i++) {
+      if (this.sortingQueries[i].columnIndex === columnIndex) {
+        this.sortingQueries[i].isAscending = isAscending;
+        queryExistsForIndex = true;
+        // this.sortingQueries.splice(i, 1);
+        break;
+      }
+    }
+
+    if (!queryExistsForIndex) {
+      this.sortingQueries.push({columnIndex: columnIndex, isAscending: isAscending});
+    }
+
+    this.sortRowRecordData();
+  }
+
+  sortRowRecordData() {
+    this.filteredRowRecordData.sort((a, b) => {
+
+      for (const element of this.sortingQueries) {
+
+        if (element.isAscending) {
+          if (a[element.columnIndex] > b[element.columnIndex]) {
+            return 1;
+          }
+          if (a[element.columnIndex] < b[element.columnIndex]) {
+            return -1;
+          }
+        } else {
+          if (a[element.columnIndex] > b[element.columnIndex]) {
+            return -1;
+          }
+          if (a[element.columnIndex] < b[element.columnIndex]) {
+            return 1;
+          }
+        }
+
+      }
+      return 0;
+    });
+  }
+
+  resetSortQuery() {
+    this.sortingQueries = [];
+    this.filterRowRecordData();
+  }
+
+  resetFilterQuery() {
+    this.filterQueries = [];
+    this.filterRowRecordData();
+    this.sortRowRecordData();
   }
 
 }
@@ -89,7 +183,6 @@ export class CreateGridComponent implements OnInit {
 export interface GridColumnInterface {
   columnName: string;  // display name
   mapping: string; // name used for unique identification
-  datatype: string;
   sortable: boolean;
   filterable: boolean;
 }
@@ -100,6 +193,7 @@ export interface GridMetaDataInterface {
   totalRecords: number;
   totalPageNumbers: number;
   currentPageNumber: number;
+  paginationRequired: boolean;
 }
 
 export interface GridRecordCellInterface {

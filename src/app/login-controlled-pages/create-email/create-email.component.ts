@@ -1,5 +1,4 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
-import {Observable} from 'rxjs/index';
 import {AppUtilityService} from '../../utils/app-utility.service';
 import {HelperService} from '../../utils/helper.service';
 import {LcpConstants} from '../../utils/lcp-constants';
@@ -15,20 +14,21 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   title = LcpConstants.email_dialog_title;
   attachments: File[] = [];
   emailTemplatesArray: EmailTemplateInterface[];
+  filteredTemplateArray: EmailTemplateInterface[];
   defaultValueEmailTemplate: EmailTemplateInterface;
   selectedEmailTemplate: EmailTemplateInterface;
   emailData: EmailInterface;
   allowedFileTypes = LcpConstants.email_attachment_allowed_types;
 
-  searchableItems: {id: string, text: string}[] = [];
+  searchableItems: { id: string, text: string }[] = [];
 
   @Input('emailData')
   receivedEmailData: EmailInterface = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
-    this.searchableItems.push({id: 'sfa',text: 'thisi si s1'});
-    this.searchableItems.push({id: 'sfa2',text: 'thisi si s1s'});
+    this.searchableItems.push({id: 'sfa', text: 'thisi si s1'});
+    this.searchableItems.push({id: 'sfa2', text: 'thisi si s1s'});
   }
 
   ngOnInit() {
@@ -37,6 +37,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response != null) {
           this.emailTemplatesArray = response['emailTemplates'];
+          this.filteredTemplateArray = this.emailTemplatesArray;
           console.log(this.emailTemplatesArray);
         }
       },
@@ -104,6 +105,8 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   emailTemplateSelected() {
+    // this.toggleDropDown();
+    // this.selectedEmailTemplate = emailTemplate;
     console.log(this.selectedEmailTemplate);
     let dataExists = false;
     for (const key in this.emailData) {
@@ -208,6 +211,31 @@ export class CreateEmailComponent implements OnInit, OnChanges {
     return this.utilityService.makeRequest(LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
   }
+
+  hideDropDownListener = (event) => {
+    this.toggleDropDown();
+  };
+
+  toggleDropDown() {
+    const element = document.getElementById('email_template_dropdown');
+    element.classList.toggle('show');
+    if (element.classList.contains('show')) {
+      window.addEventListener('click', this.hideDropDownListener);
+    } else {
+      window.removeEventListener('click', this.hideDropDownListener);
+    }
+  }
+
+  searchTemplate(query) {
+    console.log(query, event);
+    this.filteredTemplateArray = [];
+    for (const element of this.emailTemplatesArray) {
+      if (element.label.toLowerCase().includes(query.toLowerCase())) {
+        this.filteredTemplateArray.push(element);
+      }
+    }
+  }
+
 }
 
 export interface EmailTemplateInterface {

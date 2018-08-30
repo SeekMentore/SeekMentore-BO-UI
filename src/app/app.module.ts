@@ -12,7 +12,7 @@ import {FormsModule} from '@angular/forms';
 import {ResetPasswordComponent} from './non-login-pages/reset-password/reset-password.component';
 import {NonLoginPagesComponent} from './non-login-pages/non-login-pages.component';
 import {LoginControlledPagesComponent} from './login-controlled-pages/login-controlled-pages.component';
-import { CreateEmailComponent } from './login-controlled-pages/create-email/create-email.component';
+import {CreateEmailComponent} from './login-controlled-pages/create-email/create-email.component';
 
 @NgModule({
   declarations: [

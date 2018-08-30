@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {AppUtilityService} from '../utils/app-utility.service';
 import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
-import {Observable} from 'rxjs/index';
 import {Router} from '@angular/router';
 import {LcpConstants} from '../utils/lcp-constants';
 import {EmailInterface} from './create-email/create-email.component';

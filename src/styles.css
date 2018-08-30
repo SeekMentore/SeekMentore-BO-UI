@@ -195,6 +195,7 @@ body {
   font-size: 15px !important;
   color: var(--textColor);
   transition: all 0.4s;
+  text-align: start;
 }
 
 .form-container input[type=email]:focus,
@@ -273,7 +274,7 @@ textarea {
 
 .dropdown {
   position: relative;
-  display: inline-block;
+  /*display: inline-block;*/
 }
 
 .dropdown-content {

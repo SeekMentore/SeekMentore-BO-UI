@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
 import {EnvironmentConstants} from '../utils/environment-constants';

@@ -12,4 +12,6 @@ export class LcpConstants {
   static email_attachemnts_max_size_MB = 10;
   static email_attachments_number_error = 'Maximum 4 attachments are allowed.';
   static email_sent_success_message = 'Email sent';
+  static email_dismiss_data_exists_error = 'You have data on the form which you have not sent out as email.' +
+    ' Do you still want to dismiss?';
 }

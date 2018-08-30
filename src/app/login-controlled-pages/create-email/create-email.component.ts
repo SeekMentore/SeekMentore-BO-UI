@@ -4,6 +4,7 @@ import {HelperService} from '../../utils/helper.service';
 import {LcpConstants} from '../../utils/lcp-constants';
 import {LcpRestUrls} from '../../utils/lcp-rest-urls';
 
+
 @Component({
   selector: 'app-create-email',
   templateUrl: './create-email.component.html',
@@ -20,18 +21,20 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   emailData: EmailInterface;
   allowedFileTypes = LcpConstants.email_attachment_allowed_types;
 
-  searchableItems: { id: string, text: string }[] = [];
+  emailBodyEditor: any;
 
   @Input('emailData')
   receivedEmailData: EmailInterface = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
-    this.searchableItems.push({id: 'sfa', text: 'thisi si s1'});
-    this.searchableItems.push({id: 'sfa2', text: 'thisi si s1s'});
   }
 
   ngOnInit() {
+    this.helperService.makeRichEditor('#email-body', '#email-toolbar-container',
+      (editor: any) => {
+        this.emailBodyEditor = editor;
+      });
     this.utilityService.makeRequest(LcpRestUrls.emailTemplatesUrl, 'POST').subscribe(result => {
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
@@ -104,10 +107,8 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   }
 
-  emailTemplateSelected() {
-    // this.toggleDropDown();
-    // this.selectedEmailTemplate = emailTemplate;
-    console.log(this.selectedEmailTemplate);
+  emailTemplateSelected(emailTemplate: EmailTemplateInterface) {
+    this.toggleDropDown();
     let dataExists = false;
     for (const key in this.emailData) {
       const value = this.emailData[key];
@@ -123,13 +124,15 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       this.helperService.showConfirmationDialog({
         message: LcpConstants.replace_email_data,
         onOk: () => {
+          this.selectedEmailTemplate = emailTemplate;
           this.loadEmailDataFromServer(this.selectedEmailTemplate.value);
         },
         onCancel: () => {
-          this.selectedEmailTemplate = this.defaultValueEmailTemplate;
+          // this.selectedEmailTemplate = this.defaultValueEmailTemplate;
         }
       });
     } else {
+      this.selectedEmailTemplate = emailTemplate;
       this.loadEmailDataFromServer(this.selectedEmailTemplate.value);
     }
 
@@ -138,6 +141,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   loadEmailDataFromServer(templateValue: string) {
     if (templateValue === this.defaultValueEmailTemplate.value) {
       this.setDefaultData();
+      this.emailBodyEditor.setData('');
       return;
     }
     this.getDataForTemplate(templateValue).subscribe(result => {
@@ -145,7 +149,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response != null) {
           this.emailData = response;
-
+          this.emailBodyEditor.setData(this.emailData.body);
         }
       },
       error => {
@@ -154,12 +158,49 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   hideDialog() {
-    this.helperService.hideEmailDialog();
-    this.setDefaultData();
+
+    // check if data is present
+
+    if (this.isFormDirty()) {
+      this.helperService.showConfirmationDialog({
+        message: LcpConstants.email_dismiss_data_exists_error,
+        onOk: () => {
+          this.setDefaultData();
+          this.emailBodyEditor.setData('');
+          this.helperService.hideEmailDialog();
+        },
+        onCancel: () => {
+
+        }
+      });
+    } else {
+      this.setDefaultData();
+      this.emailBodyEditor.setData('');
+      this.helperService.hideEmailDialog();
+
+    }
+  }
+
+
+  isFormDirty(): boolean {
+    let isDataEntered = false;
+    for (const key in this.emailData) {
+      if (this.emailData[key].trim() !== '') {
+        isDataEntered = true;
+      }
+    }
+    console.log(this.emailBodyEditor.getData());
+    if (!isDataEntered && this.emailBodyEditor.getData() !== '<p>&nbsp;</p>') {
+      isDataEntered = true;
+    }
+    return isDataEntered;
   }
 
   sendEmail() {
     const formData = new FormData();
+    this.emailData.body = this.emailBodyEditor.getData();
+    this.emailData.body.trim();
+
     for (const key in this.emailData) {
       formData.append(key, this.emailData[key]);
     }
@@ -174,11 +215,15 @@ export class CreateEmailComponent implements OnInit, OnChanges {
     this.utilityService.makeRequest(LcpRestUrls.sendMailUrl, 'POST', formData,
       'multipart/form-data', true).subscribe(
       result => {
+        // let response = result['response'];
+        // console.log(response);
+        // response = this.utilityService.decodeObjectFromJSON(response);
         this.helperService.showAlertDialog({
           isSuccess: true,
           message: LcpConstants.email_sent_success_message,
           onOk: () => {
-            this.hideDialog();
+            this.setDefaultData();
+            this.emailBodyEditor.setData('');
           }
         });
       },
@@ -214,7 +259,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   hideDropDownListener = (event) => {
     this.toggleDropDown();
-  };
+  }
 
   toggleDropDown() {
     const element = document.getElementById('email_template_dropdown');

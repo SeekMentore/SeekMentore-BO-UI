@@ -7,6 +7,7 @@ import {LcpConstants} from '../utils/lcp-constants';
 import {EmailInterface} from './create-email/create-email.component';
 import {EnvironmentConstants} from '../utils/environment-constants';
 import {LcpRestUrls} from '../utils/lcp-rest-urls';
+import { GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
 
 
 @Component({
@@ -15,7 +16,7 @@ import {LcpRestUrls} from '../utils/lcp-rest-urls';
   styleUrls: ['./login-controlled-pages.component.css']
 })
 export class LoginControlledPagesComponent implements OnInit {
-  title = 'Welcome To Seek Mentore';
+  title = EnvironmentConstants.APPLICATION_NAME;
   staticPageURl = '';
   username = '';
   menu: MenuItem[] = [];
@@ -33,6 +34,11 @@ export class LoginControlledPagesComponent implements OnInit {
   emailData: EmailInterface;
   emailDialog: HTMLDivElement;
 
+  showGrid = false;
+  gridColumnsData: GridColumnInterface[];
+  gridMetaData: GridMetaDataInterface;
+  gridRecords: any[];
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -43,6 +49,53 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
+    setTimeout(() => {
+      this.gridMetaData = {
+        title: 'This is grid',
+        recordPerPage: 10,
+        totalRecords: 100,
+        totalPageNumbers: 10,
+        currentPageNumber: 1,
+        paginationRequired: true
+      };
+      this.gridColumnsData = [{
+        columnName: 'Column 1',
+        mapping: 'firstColumn',
+        filterable: true,
+        sortable: true
+      }, {
+        columnName: 'Column 2',
+        mapping: 'secondColumn',
+        filterable: true,
+        sortable: true
+      }, {
+        columnName: 'Column 3',
+        mapping: 'thirdColumn',
+        filterable: true,
+        sortable: true
+      }];
+      this.gridRecords = [
+        {
+          firstColumn: 'cell 1',
+          secondColumn: 'cell 2',
+          thirdColumn: 3
+        },
+        {
+          firstColumn: 'cell 4',
+          secondColumn: 'cell 5',
+          thirdColumn: 63
+        },
+        {
+          firstColumn: 'cell 1',
+          secondColumn: 'cell 2',
+          thirdColumn: 96
+        }
+      ];
+      this.showGrid = true;
+    }, 500);
+
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
     });
@@ -110,13 +163,13 @@ export class LoginControlledPagesComponent implements OnInit {
     this.utilityService.makeRequest(LcpRestUrls.basicInfoUrl, 'POST').subscribe(result => {
       let response = result['response'];
       response = this.utilityService.decodeObjectFromJSON(response);
-      console.log(response);
+      // console.log(response);
       if (response != null) {
         this.username = response['username'];
         this.helperService.setTitle('Welcome ' + this.username);
         this.menu = response['menu'];
         this.accessOptions = response['accessoptions'];
-        console.log(this.menu);
+        // console.log(this.menu);
         this.userMenu.push(
           {name: 'Personalize', url: '', functioncall: false},
           {name: 'Profile', url: '', functioncall: false},
@@ -137,7 +190,7 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   public functionCallMenuItem(itemName: string) {
-    console.log(itemName);
+    // console.log(itemName);
     switch (itemName) {
       case 'Sign Out':
         this.doLogout();
@@ -149,10 +202,10 @@ export class LoginControlledPagesComponent implements OnInit {
     const myListener: ConfirmationDialogEvent = {
       message: 'hello there',
       onOk: () => {
-        console.log('ok button clicked');
+        // console.log('ok button clicked');
       },
       onCancel: () => {
-        console.log('cancel button clicked');
+        // console.log('cancel button clicked');
       }
     };
     this.helperService.showConfirmationDialog(myListener);
@@ -181,7 +234,7 @@ export class LoginControlledPagesComponent implements OnInit {
         if (response['success'] === true) {
           this.router.navigateByUrl('/');
         } else {
-          console.log('show error message in dialog');
+          // console.log('show error message in dialog');
         }
       }
     }, error => {

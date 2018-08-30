@@ -13,6 +13,7 @@ import {ResetPasswordComponent} from './non-login-pages/reset-password/reset-pas
 import {NonLoginPagesComponent} from './non-login-pages/non-login-pages.component';
 import {LoginControlledPagesComponent} from './login-controlled-pages/login-controlled-pages.component';
 import {CreateEmailComponent} from './login-controlled-pages/create-email/create-email.component';
+import {CreateGridComponent} from './login-controlled-pages/create-grid/create-grid.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {CreateEmailComponent} from './login-controlled-pages/create-email/create
     ResetPasswordComponent,
     NonLoginPagesComponent,
     LoginControlledPagesComponent,
-    CreateEmailComponent
+    CreateEmailComponent,
+    CreateGridComponent
   ],
   imports: [
     BrowserModule,

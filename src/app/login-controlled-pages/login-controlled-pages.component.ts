@@ -7,7 +7,7 @@ import {LcpConstants} from '../utils/lcp-constants';
 import {EmailInterface} from './create-email/create-email.component';
 import {EnvironmentConstants} from '../utils/environment-constants';
 import {LcpRestUrls} from '../utils/lcp-rest-urls';
-import { GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
+import {GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
 
 
 @Component({
@@ -160,33 +160,56 @@ export class LoginControlledPagesComponent implements OnInit {
 
   public parseMenu() {
     // will replace getBasicInfo function with ajax request
-    this.utilityService.makeRequest(LcpRestUrls.basicInfoUrl, 'POST').subscribe(result => {
-      let response = result['response'];
-      response = this.utilityService.decodeObjectFromJSON(response);
-      // console.log(response);
-      if (response != null) {
-        this.username = response['username'];
-        this.helperService.setTitle('Welcome ' + this.username);
-        this.menu = response['menu'];
-        this.accessOptions = response['accessoptions'];
-        // console.log(this.menu);
-        this.userMenu.push(
-          {name: 'Personalize', url: '', functioncall: false},
-          {name: 'Profile', url: '', functioncall: false},
-          {name: 'Complaint Box', url: '', functioncall: false},
-          {name: 'Help & Support', url: '', functioncall: false}
-        );
+    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');
+    //   .subscribe(result => {
+    //   let response = result['response'];
+    //   response = this.utilityService.decodeObjectFromJSON(response);
+    //   // console.log(response);
+    //   if (response != null) {
+    //     this.username = response['username'];
+    //     this.helperService.setTitle('Welcome ' + this.username);
+    //     this.menu = response['menu'];
+    //     this.accessOptions = response['accessoptions'];
+    //     // console.log(this.menu);
+    //     this.userMenu.push(
+    //       {name: 'Personalize', url: '', functioncall: false},
+    //       {name: 'Profile', url: '', functioncall: false},
+    //       {name: 'Complaint Box', url: '', functioncall: false},
+    //       {name: 'Help & Support', url: '', functioncall: false}
+    //     );
+    //
+    //     this.settingMenu.push({name: 'Change Password', url: '', functioncall: false});
+    //     if (this.accessOptions.impersonationaccess) {
+    //       this.settingMenu.push({name: 'Impersonate', url: '', functioncall: false});
+    //     }
+    //     this.settingMenu.push(
+    //       {name: 'User Settings', url: '', functioncall: false},
+    //       {name: 'Sign Out', url: '', functioncall: true});
+    //   }
+    // }, error => {
+    // });
+  }
 
-        this.settingMenu.push({name: 'Change Password', url: '', functioncall: false});
-        if (this.accessOptions.impersonationaccess) {
-          this.settingMenu.push({name: 'Impersonate', url: '', functioncall: false});
-        }
-        this.settingMenu.push(
-          {name: 'User Settings', url: '', functioncall: false},
-          {name: 'Sign Out', url: '', functioncall: true});
-      }
-    }, error => {
-    });
+  onSuccessBasicInfo(context: any, response: any) {
+    context.username = response['username'];
+    context.helperService.setTitle('Welcome ' + context.username);
+    context.menu = response['menu'];
+    context.accessOptions = response['accessoptions'];
+    // console.log(this.menu);
+    context.userMenu.push(
+      {name: 'Personalize', url: '', functioncall: false},
+      {name: 'Profile', url: '', functioncall: false},
+      {name: 'Complaint Box', url: '', functioncall: false},
+      {name: 'Help & Support', url: '', functioncall: false}
+    );
+
+    context.settingMenu.push({name: 'Change Password', url: '', functioncall: false});
+    if (context.accessOptions.impersonationaccess) {
+      context.settingMenu.push({name: 'Impersonate', url: '', functioncall: false});
+    }
+    context.settingMenu.push(
+      {name: 'User Settings', url: '', functioncall: false},
+      {name: 'Sign Out', url: '', functioncall: true});
   }
 
   public functionCallMenuItem(itemName: string) {
@@ -227,19 +250,29 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   public doLogout() {
-    this.utilityService.makeRequest(LcpRestUrls.logoutUrl, 'POST').subscribe(result => {
-      let response = result['response'];
-      response = this.utilityService.decodeObjectFromJSON(response);
-      if (response != null) {
-        if (response['success'] === true) {
-          this.router.navigateByUrl('/');
-        } else {
-          // console.log('show error message in dialog');
-        }
-      }
-    }, error => {
+    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST')
+    //   .subscribe(result => {
+    //   let response = result['response'];
+    //   response = this.utilityService.decodeObjectFromJSON(response);
+    //   if (response != null) {
+    //     if (response['success'] === true) {
+    //       this.router.navigateByUrl('/');
+    //     } else {
+    //       // console.log('show error message in dialog');
+    //     }
+    //   }
+    // }, error => {
+    //
+    // });
+  }
 
-    });
+  onSuccessLogout(context: any, response: any) {
+
+    if (response['success'] === true) {
+      context.router.navigateByUrl('/');
+    } else {
+      // console.log('show error message in dialog');
+    }
   }
 
   public setActivityTimer() {

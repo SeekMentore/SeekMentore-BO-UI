@@ -36,6 +36,36 @@ export class AppUtilityService {
     return this.http.request(requestType, url, requestOptions);
   }
 
+  public makerequest(context: any, response_handler: any,  url: string,
+                     requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+                     data: any = null,
+                     contentType: string = 'application/json',
+                     isMultipart: boolean = false,
+                     params: HttpParams = null) {
+    if (!url.includes('http')) {
+      url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
+    }
+    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
+    if (requestType === 'GET') {
+      if (params != null) {
+        requestOptions['params'] = params;
+      }
+    } else {
+      if (data != null) {
+        requestOptions['body'] = data;
+      }
+    }
+    this.http.request(requestType, url, requestOptions).subscribe(result => {
+      let response = result['response'];
+      response = this.decodeObjectFromJSON(response);
+      if (response != null) {
+        response_handler(context, response);
+      }
+    }, error2 => {
+
+    });
+  }
+
   private getRequestHeaders(isMultipart = false, contentType = 'application/json') {
     let headers: HttpHeaders;
     headers = new HttpHeaders({
@@ -57,7 +87,6 @@ export class AppUtilityService {
       // show validation error
     }
   }
-
 
 
   public decodeObjectFromJSON(json) {

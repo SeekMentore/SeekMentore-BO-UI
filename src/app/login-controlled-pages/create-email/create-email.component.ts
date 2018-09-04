@@ -35,18 +35,19 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       (editor: any) => {
         this.emailBodyEditor = editor;
       });
-    this.utilityService.makeRequest(LcpRestUrls.emailTemplatesUrl, 'POST').subscribe(result => {
-        let response = result['response'];
-        response = this.utilityService.decodeObjectFromJSON(response);
-        if (response != null) {
-          this.emailTemplatesArray = response['emailTemplates'];
-          this.filteredTemplateArray = this.emailTemplatesArray;
-          console.log(this.emailTemplatesArray);
-        }
-      },
-      error => {
-
-      });
+    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');
+      // .subscribe(result => {
+      //   let response = result['response'];
+      //   response = this.utilityService.decodeObjectFromJSON(response);
+      //   if (response != null) {
+      //     this.emailTemplatesArray = response['emailTemplates'];
+      //     this.filteredTemplateArray = this.emailTemplatesArray;
+      //     console.log(this.emailTemplatesArray);
+      //   }
+      // },
+      // error => {
+      //
+      // });
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -61,6 +62,12 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   removeAttachment(i: number) {
     this.attachments.splice(i, 1);
+  }
+
+  onSuccessEmailTemplates(context: any, response: any) {
+    context.emailTemplatesArray = response['emailTemplates'];
+    context.filteredTemplateArray = context.emailTemplatesArray;
+    // console.log(this.emailTemplatesArray);
   }
 
   onAttachmentSelected(value) {
@@ -144,17 +151,27 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       this.emailBodyEditor.setData('');
       return;
     }
-    this.getDataForTemplate(templateValue).subscribe(result => {
-        let response = result['response'];
-        response = this.utilityService.decodeObjectFromJSON(response);
-        if (response != null) {
-          this.emailData = response;
-          this.emailBodyEditor.setData(this.emailData.body);
-        }
-      },
-      error => {
+    const formData = new URLSearchParams();
+    formData.set('templateId', templateValue);
+    this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
+        'application/x-www-form-urlencoded');
+    // this.getDataForTemplate(this.onSuccessTemplateData, templateValue);
+      // .subscribe(result => {
+      //   let response = result['response'];
+      //   response = this.utilityService.decodeObjectFromJSON(response);
+      //   if (response != null) {
+      //     this.emailData = response;
+      //     this.emailBodyEditor.setData(this.emailData.body);
+      //   }
+      // },
+      // error => {
+      //
+      // });
+  }
 
-      });
+  onSuccessTemplateData(context: any, response: any) {
+    context.emailData = response;
+    context.emailBodyEditor.setData(context.emailData.body);
   }
 
   hideDialog() {
@@ -212,25 +229,37 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       }
       formData.append(inputFilesNames[i], this.attachments[i]);
     }
-    this.utilityService.makeRequest(LcpRestUrls.sendMailUrl, 'POST', formData,
-      'multipart/form-data', true).subscribe(
-      result => {
-        // let response = result['response'];
-        // console.log(response);
-        // response = this.utilityService.decodeObjectFromJSON(response);
-        this.helperService.showAlertDialog({
-          isSuccess: true,
-          message: LcpConstants.email_sent_success_message,
-          onOk: () => {
-            this.setDefaultData();
-            this.emailBodyEditor.setData('');
-          }
-        });
-      },
-      error2 => {
+    this.utilityService.makerequest(this, this.onSuccessEmailSent, LcpRestUrls.sendMailUrl, 'POST', formData,
+      'multipart/form-data', true);
+    //   .subscribe(
+    //   result => {
+    //     // let response = result['response'];
+    //     // console.log(response);
+    //     // response = this.utilityService.decodeObjectFromJSON(response);
+    //     this.helperService.showAlertDialog({
+    //       isSuccess: true,
+    //       message: LcpConstants.email_sent_success_message,
+    //       onOk: () => {
+    //         this.setDefaultData();
+    //         this.emailBodyEditor.setData('');
+    //       }
+    //     });
+    //   },
+    //   error2 => {
+    //
+    //   }
+    // );
+  }
 
+  onSuccessEmailSent(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onOk: () => {
+        context.setDefaultData();
+        context.emailBodyEditor.setData('');
       }
-    );
+    });
   }
 
   setDefaultData() {
@@ -250,10 +279,10 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
 
-  getDataForTemplate(value: string) {
+  getDataForTemplate(response_handler: any, value: string) {
     const formData = new URLSearchParams();
     formData.set('templateId', value);
-    return this.utilityService.makeRequest(LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
+    return this.utilityService.makerequest(this, response_handler, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
   }
 

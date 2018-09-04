@@ -31,17 +31,23 @@ export class ErrorComponent implements OnInit {
     if (this.errorCode != null) {
       const formData = new URLSearchParams();
       formData.set('errorCode', this.errorCode);
-      this.utilityService.makeRequest(NlpRestUrls.errorPageURL,
-        'POST', formData.toString(), 'application/x-www-form-urlencoded').subscribe(result => {
-        let response = result['response'];
-        response = this.utilityService.decodeObjectFromJSON(response);
-        if (response !== null) {
-          this.errorImageSrc = EnvironmentConstants.IMAGE_SERVER + response['errorImageSrc'];
-          this.errorText = response['errorText'];
-        }
-      }, error => {
-      });
+      this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.errorPageURL,
+        'POST', formData.toString(), 'application/x-www-form-urlencoded');
+      //   .subscribe(result => {
+      //   let response = result['response'];
+      //   response = this.utilityService.decodeObjectFromJSON(response);
+      //   if (response !== null) {
+      //     this.errorImageSrc = EnvironmentConstants.IMAGE_SERVER + response['errorImageSrc'];
+      //     this.errorText = response['errorText'];
+      //   }
+      // }, error => {
+      // });
     }
     this.helperService.setTitle('Error Occurred');
+  }
+
+  onSuccess(context: any, response: any) {
+    context.errorImageSrc = EnvironmentConstants.IMAGE_SERVER + response['errorImageSrc'];
+    context.errorText = response['errorText'];
   }
 }

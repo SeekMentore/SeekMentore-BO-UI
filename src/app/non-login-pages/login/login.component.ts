@@ -36,21 +36,22 @@ export class LoginComponent implements OnInit {
     formData.set('userId', this.username);
     formData.set('password', this.password);
     formData.set('userType', this.userType);
-    this.utilityService.makeRequest(NlpRestUrls.loginURL, 'POST', formData.toString(),
-      'application/x-www-form-urlencoded').subscribe(result => {
-      let response = result['response'];
-      response = this.utilityService.decodeObjectFromJSON(response);
-      if (response != null) {
-        if (response['success'] === true) {
-          // window.location.href = result['redirectTo'];
-          this.router.navigateByUrl('/lp');
-        } else {
-          this.errorAjaxResponse = response['message'];
-        }
-      }
-
-    }, error => {
-    });
+    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.loginURL, 'POST', formData.toString(),
+      'application/x-www-form-urlencoded');
+    //   .subscribe(result => {
+    //   let response = result['response'];
+    //   response = this.utilityService.decodeObjectFromJSON(response);
+    //   if (response != null) {
+    //     if (response['success'] === true) {
+    //       // window.location.href = result['redirectTo'];
+    //       this.router.navigateByUrl('/lp');
+    //     } else {
+    //       this.errorAjaxResponse = response['message'];
+    //     }
+    //   }
+    //
+    // }, error => {
+    // });
   }
 
   isValidLoginData(): boolean {
@@ -78,5 +79,15 @@ export class LoginComponent implements OnInit {
     this.errorUsername = null;
     this.errorPassword = null;
     this.errorUserType = null;
+  }
+
+  onSuccess(context: any, response: any) {
+    // console.log(response);
+    if (response['success'] === true) {
+      // window.location.href = result['redirectTo'];
+      context.router.navigateByUrl('/lp');
+    } else {
+      context.errorAjaxResponse = response['message'];
+    }
   }
 }

@@ -34,22 +34,29 @@ export class ResetPasswordComponent implements OnInit {
     formData.set('userId', this.username);
     formData.set('userType', this.userType);
 
-    this.utilityService.makeRequest(NlpRestUrls.resetPasswordURL, 'POST', formData.toString(),
-      'application/x-www-form-urlencoded').subscribe(result => {
+    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.resetPasswordURL, 'POST', formData.toString(),
+      'application/x-www-form-urlencoded');
+    //   .subscribe(result => {
+    //   let response = result['response'];
+    //   response = this.utilityService.decodeObjectFromJSON(response);
+    //   if (response != null) {
+    //     if (response['success'] === true) {
+    //       this.successMessage = response['message'];
+    //     } else {
+    //       this.errorAjaxResponse = response['message'];
+    //     }
+    //   }
+    // }, error => {
+    //
+    // });
+  }
 
-
-      let response = result['response'];
-      response = this.utilityService.decodeObjectFromJSON(response);
-      if (response != null) {
-        if (response['success'] === true) {
-          this.successMessage = response['message'];
-        } else {
-          this.errorAjaxResponse = response['message'];
-        }
-      }
-    }, error => {
-
-    });
+  onSuccess(context: any, response: any) {
+    if (response['success'] === true) {
+      context.successMessage = response['message'];
+    } else {
+      context.errorAjaxResponse = response['message'];
+    }
   }
 
   isValidFormData(): boolean {

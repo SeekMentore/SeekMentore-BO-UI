@@ -33,8 +33,13 @@ export class CreateGridComponent implements OnInit {
   rowRecordData: any[][];
   filteredRowRecordData: any[][];
 
-  filterQueries: { columnIndex: number, query: string }[];
+  filterQueries: { columnIndex: number, query: string, value_type: string, comparision_type: string }[];
   sortingQueries: { columnIndex: number, isAscending: boolean }[];
+
+  comparision_type_contains = 'contains';
+  comparision_type_less_than = 'less_than';
+  comparision_type_equal_to = 'equal_to';
+  comparision_type_greater_than = 'greater_than';
 
   constructor() {
   }
@@ -81,14 +86,39 @@ export class CreateGridComponent implements OnInit {
       let rowMatchesQuery = true;
       for (const element of this.filterQueries) {
         const cellValue = this.rowRecordData[i][element.columnIndex];
-        if (typeof(cellValue) === 'string' && !cellValue.includes(element.query)) {
-          rowMatchesQuery = false;
-          break;
+        if (element.value_type === 'string') {
+          switch (element.comparision_type) {
+            case this.comparision_type_contains:
+              if (!cellValue.includes(element.query)) {
+                rowMatchesQuery = false;
+              }
+              break;
+            case this.comparision_type_equal_to:
+              if (!(cellValue === element.query)) {
+                rowMatchesQuery = false;
+              }
+              break;
+          }
         }
 
-        if (typeof(cellValue) === 'number') {
-          if (cellValue !== parseInt(element.query, 10)) {
-            rowMatchesQuery = false;
+        if (element.value_type === 'number') {
+          switch (element.comparision_type) {
+            case this.comparision_type_greater_than:
+              if (!(cellValue > parseInt(element.query, 10))) {
+                rowMatchesQuery = false;
+              }
+              break;
+            case this.comparision_type_equal_to:
+              if (!(cellValue === parseInt(element.query, 10))) {
+                rowMatchesQuery = false;
+              }
+              break;
+            case this.comparision_type_less_than:
+              if (!(cellValue < parseInt(element.query, 10))) {
+                rowMatchesQuery = false;
+              }
+          }
+          if (rowMatchesQuery === false) {
             break;
           }
         }
@@ -99,7 +129,7 @@ export class CreateGridComponent implements OnInit {
     }
   }
 
-  addFilterQuery(columnIndex: number, query: string) {
+  addFilterQuery(columnIndex: number, query: string, value_type: string, comparision_type: string) {
 
     let queryExistsForIndex = false;
 
@@ -116,7 +146,12 @@ export class CreateGridComponent implements OnInit {
     }
 
     if (!queryExistsForIndex && query.trim() !== '') {
-      this.filterQueries.push({columnIndex: columnIndex, query: query});
+      this.filterQueries.push({
+        columnIndex: columnIndex,
+        query: query,
+        value_type: value_type,
+        comparision_type: comparision_type
+      });
     }
 
     this.filterRowRecordData();
@@ -185,6 +220,8 @@ export interface GridColumnInterface {
   mapping: string; // name used for unique identification
   sortable: boolean;
   filterable: boolean;
+  datatype: string;
+  allowed_values: any[];
 }
 
 export interface GridMetaDataInterface {

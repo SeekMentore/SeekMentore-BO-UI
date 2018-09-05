@@ -28,10 +28,12 @@
 <div class="main_content" style="padding: 0; display: flex; flex-direction: column">
 
   <div class="menu-container">
-    <div class="dropdown" *ngFor="let element of menu; let i = index">
-      <button class="dropbtn">{{element.name}}</button>
-      <div class="dropdown-content">
-        <button *ngFor="let sub_element of element.subMenuItems">{{sub_element.name}}</button>
+    <div class="menu-container-2">
+      <div class="dropdown" *ngFor="let element of menu; let i = index">
+        <button class="dropbtn">{{element.name}}</button>
+        <div class="dropdown-content">
+          <button *ngFor="let sub_element of element.subMenuItems">{{sub_element.name}}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -53,7 +55,7 @@
 <!--Email Dialog-->
 <div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">
 
-  <app-create-email [emailData]="emailData" style="width: 80%; margin: auto"></app-create-email>
+  <app-create-email [emailData]="emailData" style="min-width: 70%; margin: auto"></app-create-email>
 
 </div>
 

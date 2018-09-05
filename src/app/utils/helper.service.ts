@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/index';
 import {ConfirmationDialogEvent, AlertDialogEvent} from '../login-controlled-pages/login-controlled-pages.component';
 import {EmailInterface} from '../login-controlled-pages/create-email/create-email.component';
+import {CkeditorConfig} from "./ckeditor-config";
 
-declare var DecoupledEditor: any;
+declare var CKEDITOR: any;
 
 @Injectable({
   providedIn: 'root'
@@ -49,19 +50,16 @@ export class HelperService {
     this.emailDialogSubject.next(null);
   }
 
-  public makeRichEditor(editorId: string, toolbarId: string, handler: any) {
+  public getDataFromRichEditor(editorId: string): string {
+    return CKEDITOR.instances[editorId].getData();
+  }
 
-    DecoupledEditor
-      .create(document.querySelector(editorId))
-      .then(editor => {
-        const toolbarContainer = document.querySelector(toolbarId);
+  public setDataForRichEditor(editorId: string, data: string) {
+    CKEDITOR.instances[editorId].setData(data);
+  }
 
-        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-        handler(editor);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  public makeRichEditor(editorId: string) {
+    CKEDITOR.replace(editorId, CkeditorConfig.configuration);
   }
 
 }

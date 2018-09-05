@@ -22,9 +22,27 @@
       <span class="grid-skm-cell grid-skm-checkbox" [ngStyle]="{'width.px': checkBoxCellWidth}"></span>
       <span class="grid-skm-cell grid-skm-column-title" [ngStyle]="{'width.px': recordTitleCellWidth}"
             *ngFor="let element of columnsData; let i=index">
-        <i class="fas fa-search"></i>
-        <input [disabled]="!element.filterable" style="width: 60%" placeholder="Filter"
-               (input)="addFilterQuery(i, $event.target.value)">
+
+        <span *ngIf="element.datatype === 'string'">
+          <i class="fas fa-search"></i>
+          <input [disabled]="!element.filterable" style="width: 60%" placeholder="Filter"
+                 (input)="addFilterQuery(i, $event.target.value, 'string', comparision_type_contains)">
+        </span>
+        <span *ngIf="element.datatype === 'number'">
+          GT<input [disabled]="!element.filterable" style="width: 20%" placeholder="Filter"
+                 (input)="addFilterQuery(i, $event.target.value, 'number', comparision_type_greater_than)">
+          ET<input [disabled]="!element.filterable" style="width: 20%" placeholder="Filter"
+                   (input)="addFilterQuery(i, $event.target.value,'number', comparision_type_equal_to)">
+          LT<input [disabled]="!element.filterable" style="width: 20%" placeholder="Filter"
+                   (input)="addFilterQuery(i, $event.target.value,'number', comparision_type_less_than)">
+        </span>
+
+        <span *ngIf="element.datatype === 'list'">
+          <select style="width: 100%" (input)="addFilterQuery(i, $event.target.value,'string', comparision_type_equal_to)">
+            <option selected value="">Select value</option>
+            <option  *ngFor="let value of element.allowed_values" value="{{value}}">{{value}}</option>
+          </select>
+        </span>
         <button [disabled]="!element.sortable" (click)="addSortingQuery(i, true)">⯆</button>
         <button [disabled]="!element.sortable" (click)="addSortingQuery(i, false)">⯅</button>
       </span>

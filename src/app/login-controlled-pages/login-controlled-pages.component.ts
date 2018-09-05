@@ -64,17 +64,23 @@ export class LoginControlledPagesComponent implements OnInit {
         columnName: 'Column 1',
         mapping: 'firstColumn',
         filterable: true,
-        sortable: true
+        sortable: true,
+        datatype: 'string',
+        allowed_values: null
       }, {
         columnName: 'Column 2',
         mapping: 'secondColumn',
         filterable: true,
-        sortable: true
+        sortable: true,
+        datatype: 'list',
+        allowed_values: ['cell 1', 'cell 2']
       }, {
         columnName: 'Column 3',
         mapping: 'thirdColumn',
         filterable: true,
-        sortable: true
+        sortable: true,
+        datatype: 'number',
+        allowed_values: null
       }];
       this.gridRecords = [
         {

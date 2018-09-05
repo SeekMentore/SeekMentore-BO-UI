@@ -264,6 +264,21 @@ textarea {
   flex: 1 1 100%;
 }
 
+.menu-container-2 {
+  min-width: 700px;
+  display: inherit;
+  flex-direction: inherit;
+  width: 70%;
+}
+
+.menu-container-2 .dropdown {
+  flex: 1 1 auto;
+}
+
+.menu-container-2 .dropbtn {
+  width: 100%;
+}
+
 .dropbtn {
   padding: 12px 16px;
   cursor: pointer;

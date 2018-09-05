@@ -21,7 +21,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   emailData: EmailInterface;
   allowedFileTypes = LcpConstants.email_attachment_allowed_types;
 
-  emailBodyEditor: any;
+  emailBodyEditorId = 'email_body';
 
   @Input('emailData')
   receivedEmailData: EmailInterface = null;
@@ -31,23 +31,25 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.helperService.makeRichEditor('#email-body', '#email-toolbar-container',
-      (editor: any) => {
-        this.emailBodyEditor = editor;
-      });
+    // this.helperService.makeRichEditor('#email-body', '#email-toolbar-container',
+    //   (editor: any) => {
+    //     this.emailBodyEditor = editor;
+    //   });
+    this.helperService.makeRichEditor(this.emailBodyEditorId);
+    this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
     this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');
-      // .subscribe(result => {
-      //   let response = result['response'];
-      //   response = this.utilityService.decodeObjectFromJSON(response);
-      //   if (response != null) {
-      //     this.emailTemplatesArray = response['emailTemplates'];
-      //     this.filteredTemplateArray = this.emailTemplatesArray;
-      //     console.log(this.emailTemplatesArray);
-      //   }
-      // },
-      // error => {
-      //
-      // });
+    // .subscribe(result => {
+    //   let response = result['response'];
+    //   response = this.utilityService.decodeObjectFromJSON(response);
+    //   if (response != null) {
+    //     this.emailTemplatesArray = response['emailTemplates'];
+    //     this.filteredTemplateArray = this.emailTemplatesArray;
+    //     console.log(this.emailTemplatesArray);
+    //   }
+    // },
+    // error => {
+    //
+    // });
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -148,30 +150,31 @@ export class CreateEmailComponent implements OnInit, OnChanges {
   loadEmailDataFromServer(templateValue: string) {
     if (templateValue === this.defaultValueEmailTemplate.value) {
       this.setDefaultData();
-      this.emailBodyEditor.setData('');
+      this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
       return;
     }
     const formData = new URLSearchParams();
     formData.set('templateId', templateValue);
     this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
-        'application/x-www-form-urlencoded');
+      'application/x-www-form-urlencoded');
     // this.getDataForTemplate(this.onSuccessTemplateData, templateValue);
-      // .subscribe(result => {
-      //   let response = result['response'];
-      //   response = this.utilityService.decodeObjectFromJSON(response);
-      //   if (response != null) {
-      //     this.emailData = response;
-      //     this.emailBodyEditor.setData(this.emailData.body);
-      //   }
-      // },
-      // error => {
-      //
-      // });
+    // .subscribe(result => {
+    //   let response = result['response'];
+    //   response = this.utilityService.decodeObjectFromJSON(response);
+    //   if (response != null) {
+    //     this.emailData = response;
+    //     this.emailBodyEditor.setData(this.emailData.body);
+    //   }
+    // },
+    // error => {
+    //
+    // });
   }
 
   onSuccessTemplateData(context: any, response: any) {
     context.emailData = response;
-    context.emailBodyEditor.setData(context.emailData.body);
+    // context.emailBodyEditor.setData(context.emailData.body);
+    context.helperService.setDataForRichEditor(context.emailBodyEditorId, context.emailData.body);
   }
 
   hideDialog() {
@@ -183,7 +186,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         message: LcpConstants.email_dismiss_data_exists_error,
         onOk: () => {
           this.setDefaultData();
-          this.emailBodyEditor.setData('');
+          this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
           this.helperService.hideEmailDialog();
         },
         onCancel: () => {
@@ -192,7 +195,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       });
     } else {
       this.setDefaultData();
-      this.emailBodyEditor.setData('');
+      this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
       this.helperService.hideEmailDialog();
 
     }
@@ -200,14 +203,14 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
 
   isFormDirty(): boolean {
+    // console.log(this.helperService.getDataFromRichEditor(this.emailBodyEditorId));
     let isDataEntered = false;
     for (const key in this.emailData) {
       if (this.emailData[key].trim() !== '') {
         isDataEntered = true;
       }
     }
-    console.log(this.emailBodyEditor.getData());
-    if (!isDataEntered && this.emailBodyEditor.getData() !== '<p>&nbsp;</p>') {
+    if (!isDataEntered && this.helperService.getDataFromRichEditor(this.emailBodyEditorId) !== '') {
       isDataEntered = true;
     }
     return isDataEntered;
@@ -215,7 +218,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
 
   sendEmail() {
     const formData = new FormData();
-    this.emailData.body = this.emailBodyEditor.getData();
+    this.emailData.body = this.helperService.getDataFromRichEditor(this.emailBodyEditorId);
     this.emailData.body.trim();
 
     for (const key in this.emailData) {
@@ -257,7 +260,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       message: response['message'],
       onOk: () => {
         context.setDefaultData();
-        context.emailBodyEditor.setData('');
+        context.helperService.setDataForRichEditor(context.emailBodyEditorId, '');
       }
     });
   }

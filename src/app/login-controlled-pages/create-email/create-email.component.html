@@ -1,5 +1,7 @@
-<div style="display: flex; flex-direction: column; margin: 20px; justify-content: center; align-items: center">
-  <form #emailForm="ngForm" ngNativeValidate class="form-container" (ngSubmit)="sendEmail()" style="max-width: 800px">
+<div
+  style="width: 100%;display: flex; flex-direction: column; margin: 20px; justify-content: center; align-items: center">
+  <form #emailForm="ngForm" ngNativeValidate class="form-container" (ngSubmit)="sendEmail()"
+        style="max-width: 70%; min-width: 700px; width: 70%">
     <h1>{{title}}</h1>
 
     <div style="display: flex; flex-direction: row; align-items: center;">
@@ -21,7 +23,7 @@
         </span>
         <div class="dropdown-select-content" id="email_template_dropdown">
           <input class="input_field" name="template_search_query" placeholder="Enter text"
-                 (click)="$event.stopPropagation()"
+                 style="width: calc(100% - 10px)" (click)="$event.stopPropagation()"
                  (input)="searchTemplate($event.target.value)">
           <button type="button" (click)="$event.stopPropagation(); emailTemplateSelected(defaultValueEmailTemplate)">
             Select E-mail template
@@ -43,10 +45,11 @@
     <input [(ngModel)]="emailData.cc" name="cc_email" placeholder="CC" type="text">
     <input [(ngModel)]="emailData.bcc" name="bcc_email" placeholder="BCC" type="text">
     <input [(ngModel)]="emailData.subject" name="email_subject" placeholder="Subject" required type="text">
-    <div id="email-toolbar-container"></div>
-    <div style="min-height: 200px; border: solid 1px var(--divider)" id="email-body" name="email_body">
+    <!--<div id="email-toolbar-container"></div>-->
+    <textarea style="min-height: 200px; max-height: 200px; border: solid 1px var(--divider)" id="email_body"
+              name="email_body">
       <!--this email id is being used in typescript file-->
-    </div>
+    </textarea>
     <div style="display: flex;flex-direction: row;">
       <button class="ok-button" style="margin: 8px" type="submit">Send</button>
       <button type="button" class="cancel-button" style="margin: 8px" (click)="hideDialog()">Dismiss</button>

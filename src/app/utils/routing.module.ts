@@ -7,11 +7,13 @@ import {ResetPasswordComponent} from '../non-login-pages/reset-password/reset-pa
 import {NonLoginPagesComponent} from '../non-login-pages/non-login-pages.component';
 import {LoginControlledPagesComponent} from '../login-controlled-pages/login-controlled-pages.component';
 import {CreateEmailComponent} from '../login-controlled-pages/create-email/create-email.component';
+import {RoutingGuardService} from './routing-guard.service';
 
 
 const routes: Routes = [
   {
     path: 'lp', component: LoginControlledPagesComponent,
+    // canActivate: [RoutingGuardService],
     children: [
       {path: 'email', component: CreateEmailComponent}
     ]
@@ -39,7 +41,7 @@ const routes: Routes = [
   exports: [
     RouterModule
   ],
-  providers: [],
+  providers: [RoutingGuardService],
   declarations: []
 })
 export class RoutingModule {

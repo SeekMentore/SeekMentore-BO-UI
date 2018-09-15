@@ -14,4 +14,5 @@ export class LcpConstants {
   static email_sent_success_message = 'Email sent';
   static email_dismiss_data_exists_error = 'You have data on the form which you have not sent out as email.' +
     ' Do you still want to dismiss?';
+  static auth_token_key = 'client_authentication_token';
 }

@@ -26,7 +26,7 @@
                  style="width: calc(100% - 10px)" (click)="$event.stopPropagation()"
                  (input)="searchTemplate($event.target.value)">
           <button type="button" (click)="$event.stopPropagation(); emailTemplateSelected(defaultValueEmailTemplate)">
-            Select E-mail template
+            - Select E-mail template -
           </button>
           <button type="button" *ngFor="let element of filteredTemplateArray"
                   (click)="$event.stopPropagation(); emailTemplateSelected(element)">

@@ -72,12 +72,12 @@ export class CreateEmailComponent implements OnInit, OnChanges {
     // console.log(this.emailTemplatesArray);
   }
 
-  onAttachmentSelected(value) {
+  onAttachmentSelected(event) {
     // console.log(value);
 
     // show error if more than permitted number of files are selected
 
-    if ((<any>value.target).files.length > LcpConstants.email_attachments_max_number) {
+    if ((<any>event.target).files.length > LcpConstants.email_attachments_max_number) {
       this.helperService.showAlertDialog({
         isSuccess: false,
         message: LcpConstants.email_attachments_number_error,
@@ -87,7 +87,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       return;
     }
 
-    for (const attachment of (<any>value.target).files) {
+    for (const attachment of (<any>event.target).files) {
       let totalSize = 0; // in KB
       const attachmentsNumber = this.attachments.length;
       let errorMessage = null;
@@ -113,6 +113,8 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         this.attachments.push(attachment);
       }
     }
+
+    (<any>event.target).value = '';
 
   }
 

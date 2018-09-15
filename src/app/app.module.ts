@@ -14,6 +14,7 @@ import {NonLoginPagesComponent} from './non-login-pages/non-login-pages.componen
 import {LoginControlledPagesComponent} from './login-controlled-pages/login-controlled-pages.component';
 import {CreateEmailComponent} from './login-controlled-pages/create-email/create-email.component';
 import {CreateGridComponent} from './login-controlled-pages/create-grid/create-grid.component';
+import { GridComponent } from './login-controlled-pages/grid/grid.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {CreateGridComponent} from './login-controlled-pages/create-grid/create-g
     NonLoginPagesComponent,
     LoginControlledPagesComponent,
     CreateEmailComponent,
-    CreateGridComponent
+    CreateGridComponent,
+    GridComponent
   ],
   imports: [
     BrowserModule,

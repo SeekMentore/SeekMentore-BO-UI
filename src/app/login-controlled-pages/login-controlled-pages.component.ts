@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {AppUtilityService} from '../utils/app-utility.service';
 import {HelperService} from '../utils/helper.service';
 import {AppConstants} from '../utils/app-constants';
@@ -8,6 +8,15 @@ import {EmailInterface} from './create-email/create-email.component';
 import {EnvironmentConstants} from '../utils/environment-constants';
 import {LcpRestUrls} from '../utils/lcp-rest-urls';
 import {GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
+import {Store} from "./grid/store";
+import {SelectionColumn} from "./grid/selection-column";
+import {ActionButton} from "./grid/action-button";
+import {ActionColumn} from "./grid/action-column";
+import {Paginator} from "./grid/paginator";
+import {Column} from "./grid/column";
+import {Filter} from "./grid/filter";
+import {Sorter} from "./grid/sorter";
+import {GridComponent} from "./grid/grid.component";
 
 
 @Component({
@@ -15,7 +24,7 @@ import {GridColumnInterface, GridMetaDataInterface} from './create-grid/create-g
   templateUrl: './login-controlled-pages.component.html',
   styleUrls: ['./login-controlled-pages.component.css']
 })
-export class LoginControlledPagesComponent implements OnInit {
+export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   title = EnvironmentConstants.APPLICATION_NAME;
   staticPageURl = '';
   username = '';
@@ -39,6 +48,9 @@ export class LoginControlledPagesComponent implements OnInit {
   gridMetaData: GridMetaDataInterface;
   gridRecords: any[];
 
+  @ViewChild('grid1')
+  gridObject: GridComponent;
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -50,57 +62,56 @@ export class LoginControlledPagesComponent implements OnInit {
 
   ngOnInit(): void {
 
-
-    setTimeout(() => {
-      this.gridMetaData = {
-        title: 'This is grid',
-        recordPerPage: 10,
-        totalRecords: 100,
-        totalPageNumbers: 10,
-        currentPageNumber: 1,
-        paginationRequired: true
-      };
-      this.gridColumnsData = [{
-        columnName: 'Column 1',
-        mapping: 'firstColumn',
-        filterable: true,
-        sortable: true,
-        datatype: 'string',
-        allowed_values: null
-      }, {
-        columnName: 'Column 2',
-        mapping: 'secondColumn',
-        filterable: true,
-        sortable: true,
-        datatype: 'list',
-        allowed_values: ['cell 1', 'cell 2']
-      }, {
-        columnName: 'Column 3',
-        mapping: 'thirdColumn',
-        filterable: true,
-        sortable: true,
-        datatype: 'number',
-        allowed_values: null
-      }];
-      this.gridRecords = [
-        {
-          firstColumn: 'cell 1',
-          secondColumn: 'cell 2',
-          thirdColumn: 3
-        },
-        {
-          firstColumn: 'cell 4',
-          secondColumn: 'cell 5',
-          thirdColumn: 63
-        },
-        {
-          firstColumn: 'cell 1',
-          secondColumn: 'cell 2',
-          thirdColumn: 96
-        }
-      ];
-      this.showGrid = true;
-    }, 500);
+    // setTimeout(() => {
+    //   this.gridMetaData = {
+    //     title: 'This is grid',
+    //     recordPerPage: 10,
+    //     totalRecords: 100,
+    //     totalPageNumbers: 10,
+    //     currentPageNumber: 1,
+    //     paginationRequired: true
+    //   };
+    //   this.gridColumnsData = [{
+    //     columnName: 'Column 1',
+    //     mapping: 'firstColumn',
+    //     filterable: true,
+    //     sortable: true,
+    //     datatype: 'string',
+    //     allowed_values: null
+    //   }, {
+    //     columnName: 'Column 2',
+    //     mapping: 'secondColumn',
+    //     filterable: true,
+    //     sortable: true,
+    //     datatype: 'list',
+    //     allowed_values: ['cell 1', 'cell 2']
+    //   }, {
+    //     columnName: 'Column 3',
+    //     mapping: 'thirdColumn',
+    //     filterable: true,
+    //     sortable: true,
+    //     datatype: 'number',
+    //     allowed_values: null
+    //   }];
+    //   this.gridRecords = [
+    //     {
+    //       firstColumn: 'cell 1',
+    //       secondColumn: 'cell 2',
+    //       thirdColumn: 3
+    //     },
+    //     {
+    //       firstColumn: 'cell 4',
+    //       secondColumn: 'cell 5',
+    //       thirdColumn: 63
+    //     },
+    //     {
+    //       firstColumn: 'cell 1',
+    //       secondColumn: 'cell 2',
+    //       thirdColumn: 96
+    //     }
+    //   ];
+    //   this.showGrid = true;
+    // }, 500);
 
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
@@ -163,6 +174,52 @@ export class LoginControlledPagesComponent implements OnInit {
       }
     });
   }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.setUpGrid();
+    }, 0);
+  }
+
+  public setUpGrid() {
+    const store = new Store('G1-S', true);
+    const data = [
+      {name: 'Manjeet', age: 20},
+      {name: 'Kumar', age: 25}
+    ];
+    store.setStaticData(data);
+    store.convertIntoRecordData(store.getStaticData());
+    const selection_column = new SelectionColumn('G1-SC');
+    const action_button1 = new ActionButton('G1-AB1', 'open');
+    const action_button2 = new ActionButton('G1-AB2', 'remove');
+    const action_column = new ActionColumn('G1-AC', [action_button1, action_button2]);
+    const paginator = new Paginator('G1-P', 20);
+    paginator.init();
+    const column1 = new Column('G1-C1', 'Client Name', 'string', 'name', true, true, true, false, [], null, null);
+    const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
+    const filter1 = new Filter('G1-C1-F1', 'string', 'name', 'Client Name');
+    const filter2 = new Filter('G1-C2-F1', 'number', 'age', 'Client Age');
+    const sorter1 = new Sorter('G1-C1-S1', 'string', 'name', 'Client Name');
+    const sorter2 = new Sorter('G1-C1-S1', 'number', 'age', 'Client Age');
+    this.gridObject.id = 'grid-1';
+    this.gridObject.title = 'grid title';
+    this.gridObject.htmlDomElementId = 'grid-1';
+    this.gridObject.hasSelectionColumn = true;
+    this.gridObject.selectionColumn = selection_column;
+    this.gridObject.hasActionColumn = true;
+    this.gridObject.actionColumn = action_column;
+    this.gridObject.isPagingCapable = true;
+    this.gridObject.paginator = paginator;
+    this.gridObject.isSortingCapable = true;
+    this.gridObject.sorters = [sorter1, sorter2];
+    this.gridObject.isFilterCapable = true;
+    this.gridObject.filters = [filter1, filter2];
+    this.gridObject.columns = [column1, column2];
+    this.gridObject.store = store;
+    this.gridObject.init();
+    this.gridObject.createGrid();
+  }
+
 
   public parseMenu() {
     // will replace getBasicInfo function with ajax request
@@ -256,7 +313,7 @@ export class LoginControlledPagesComponent implements OnInit {
   }
 
   public doLogout() {
-    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST')
+    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST');
     //   .subscribe(result => {
     //   let response = result['response'];
     //   response = this.utilityService.decodeObjectFromJSON(response);

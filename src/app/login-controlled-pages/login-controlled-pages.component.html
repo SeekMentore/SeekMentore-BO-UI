@@ -45,12 +45,13 @@
 
 </div>
 
-<app-create-grid *ngIf="showGrid"
-                 [columns-data]="gridColumnsData"
-                 [meta-data]="gridMetaData"
-                 [grid-records]="gridRecords">
+<!--<app-create-grid *ngIf="showGrid"-->
+                 <!--[columns-data]="gridColumnsData"-->
+                 <!--[meta-data]="gridMetaData"-->
+                 <!--[grid-records]="gridRecords">-->
 
-</app-create-grid>
+<!--</app-create-grid>-->
+<app-grid #grid1 id="grid-1"></app-grid>
 
 <!--Email Dialog-->
 <div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">

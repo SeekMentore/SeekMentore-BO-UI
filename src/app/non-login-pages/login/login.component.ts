@@ -4,6 +4,7 @@ import {AppUtilityService} from '../../utils/app-utility.service';
 import {NlpConstants} from '../../utils/nlp-constants';
 import {Router} from '@angular/router';
 import {NlpRestUrls} from '../../utils/nlp-rest-urls';
+import {LcpConstants} from "../../utils/lcp-constants";
 
 @Component({
   selector: 'app-login',
@@ -82,9 +83,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSuccess(context: any, response: any) {
-    // console.log(response);
+
     if (response['success'] === true) {
       // window.location.href = result['redirectTo'];
+      const authToken = response['clientAuthToken'];
+      localStorage.setItem(LcpConstants.auth_token_key, authToken);
       context.router.navigateByUrl('/lp');
     } else {
       context.errorAjaxResponse = response['message'];

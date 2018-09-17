@@ -197,10 +197,10 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     paginator.init();
     const column1 = new Column('G1-C1', 'Client Name', 'string', 'name', true, true, true, false, [], null, null);
     const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
-    const filter1 = new Filter('G1-C1-F1', 'string', 'name', 'Client Name');
-    const filter2 = new Filter('G1-C2-F1', 'number', 'age', 'Client Age');
-    const sorter1 = new Sorter('G1-C1-S1', 'string', 'name', 'Client Name');
-    const sorter2 = new Sorter('G1-C1-S1', 'number', 'age', 'Client Age');
+    // const filter1 = new Filter('G1-C1-F1', 'string', 'name', 'Client Name');
+    // const filter2 = new Filter('G1-C2-F1', 'number', 'age', 'Client Age');
+    // const sorter1 = new Sorter('G1-C1-S1', 'string', 'name', 'Client Name');
+    // const sorter2 = new Sorter('G1-C1-S1', 'number', 'age', 'Client Age');
     this.gridObject.id = 'grid-1';
     this.gridObject.title = 'grid title';
     this.gridObject.htmlDomElementId = 'grid-1';
@@ -211,9 +211,9 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.gridObject.isPagingCapable = true;
     this.gridObject.paginator = paginator;
     this.gridObject.isSortingCapable = true;
-    this.gridObject.sorters = [sorter1, sorter2];
+    // this.gridObject.sorters = [sorter1, sorter2];
     this.gridObject.isFilterCapable = true;
-    this.gridObject.filters = [filter1, filter2];
+    // this.gridObject.filters = [filter1, filter2];
     this.gridObject.columns = [column1, column2];
     this.gridObject.store = store;
     this.gridObject.init();

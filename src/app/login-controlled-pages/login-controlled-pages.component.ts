@@ -17,6 +17,7 @@ import {Column} from "./grid/column";
 import {Filter} from "./grid/filter";
 import {Sorter} from "./grid/sorter";
 import {GridComponent} from "./grid/grid.component";
+import {FilterOptions} from "./grid/filter-options";
 
 
 @Component({
@@ -184,8 +185,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   public setUpGrid() {
     const store = new Store('G1-S', true);
     const data = [
-      {name: 'Manjeet', age: 20},
-      {name: 'Kumar', age: 25}
+      {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+      {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
     ];
     store.setStaticData(data);
     store.convertIntoRecordData(store.getStaticData());
@@ -195,12 +196,12 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const action_column = new ActionColumn('G1-AC', [action_button1, action_button2]);
     const paginator = new Paginator('G1-P', 20);
     paginator.init();
+    const filterOption1 = new FilterOptions('1', 'Male', 'male');
+    const filterOption2 = new FilterOptions('2', 'Female', 'female');
     const column1 = new Column('G1-C1', 'Client Name', 'string', 'name', true, true, true, false, [], null, null);
     const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
-    // const filter1 = new Filter('G1-C1-F1', 'string', 'name', 'Client Name');
-    // const filter2 = new Filter('G1-C2-F1', 'number', 'age', 'Client Age');
-    // const sorter1 = new Sorter('G1-C1-S1', 'string', 'name', 'Client Name');
-    // const sorter2 = new Sorter('G1-C1-S1', 'number', 'age', 'Client Age');
+    const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
+    const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
     this.gridObject.id = 'grid-1';
     this.gridObject.title = 'grid title';
     this.gridObject.htmlDomElementId = 'grid-1';
@@ -214,7 +215,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     // this.gridObject.sorters = [sorter1, sorter2];
     this.gridObject.isFilterCapable = true;
     // this.gridObject.filters = [filter1, filter2];
-    this.gridObject.columns = [column1, column2];
+    this.gridObject.columns = [column1, column2, column3, column4];
     this.gridObject.store = store;
     this.gridObject.init();
     this.gridObject.createGrid();

@@ -25,7 +25,7 @@ export class Column {
     this.filterable = filterable;
     this.hideable = hideable;
     this.hidden = hidden;
-    this.filterOptions = [];
+    this.filterOptions = filterOptions;
     this.renderer = renderer;
     this.eventHandler = eventHandler;
     /*

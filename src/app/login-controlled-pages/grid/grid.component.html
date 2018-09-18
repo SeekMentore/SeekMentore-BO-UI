@@ -73,11 +73,22 @@
         </span>
         <span *ngIf="column.dataType == 'number'">
           <label>GT</label><input type="number"
-                                  (input)="addNumberFilterQuery(column.id, column.mapping, 'gt', $event.target.value)">
+                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'number')">
           <label>EQ</label><input type="number"
-                                  (input)="addNumberFilterQuery(column.id, column.mapping, 'et', $event.target.value)">
+                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'number')">
           <label>LT</label><input type="number"
-                                  (input)="addNumberFilterQuery(column.id, column.mapping, 'lt', $event.target.value)">
+                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'number')">
+        </span>
+        <span *ngIf="column.dataType == 'date'">
+          <label>GT</label><input type="date"
+                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'date')">
+          <label>EQ</label><input type="date"
+                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'date')">
+          <label>LT</label><input type="date"
+                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'date')">
+        </span>
+        <span *ngIf="column.dataType == 'list'">
+          <button (click)="showMultiSelectFilter(column)">Select Filters</button>
         </span>
       </span>
     </span>
@@ -125,4 +136,9 @@
     </div>
   </div>
 
+</div>
+
+<div id="{{id + 'multi-select'}}">
+<app-multi-select-input [data]="mulit_select_input_data" (apply)="handleMulitSelectApply($event)"
+                        (close)="closeMultiSelectInput()"></app-multi-select-input>
 </div>

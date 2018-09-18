@@ -7,6 +7,7 @@ import {Filter} from './filter';
 import {Column} from './column';
 import {Store} from './store';
 import {Record} from './record';
+import {MultiSelectInputData} from "../../utils/multi-select-input/multi-select-input.component";
 
 @Component({
   selector: 'app-grid',
@@ -47,6 +48,8 @@ export class GridComponent implements OnInit, AfterViewInit {
   showGrid = false;
 
   filtered_records: Record[] = [];
+
+  mulit_select_input_data: MultiSelectInputData = null;
 
   constructor() {
   }
@@ -135,7 +138,6 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
 
-
   public selectionColumnSelectUnselectAll() {
 
   }
@@ -149,6 +151,9 @@ export class GridComponent implements OnInit, AfterViewInit {
       if (this.filters[i].columnId === columnId) {
         this.filters.splice(i, 1);
         i = i - 1;
+        if (i < 0) {
+          i = 0;
+        }
         // this.removeFilterFromColumn(columnId);
       }
     }
@@ -186,7 +191,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
 
   public sortColumn(columnId: string, sortOrder: SortingOrder) {
-    const columnObject = null;
+    let columnObject = null;
     this.columns.forEach(value => {
       if (value.id === columnId) {
         columnObject = value;
@@ -201,6 +206,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         sorterExists = true;
       }
     });
+
     if (sorterExists) {
       return;
     }
@@ -219,7 +225,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         const propertyB = b.getProperty(element.mapping);
         if (element.order === SortingOrder.ASC) {
 
-          if ( propertyA > propertyB) {
+          if (propertyA > propertyB) {
             return 1;
           }
           if (propertyA < propertyB) {
@@ -252,18 +258,6 @@ export class GridComponent implements OnInit, AfterViewInit {
           if (!cellValue.includes(element.stringValue)) {
             rowMatchesQuery = false;
           }
-          // switch (element.comparision_type) {
-          //   case this.comparision_type_contains:
-          //     if (!cellValue.includes(element.query)) {
-          //       rowMatchesQuery = false;
-          //     }
-          //     break;
-          //   case this.comparision_type_equal_to:
-          //     if (!(cellValue === element.query)) {
-          //       rowMatchesQuery = false;
-          //     }
-          //     break;
-          // }
         }
 
         if (element.type === 'number') {
@@ -283,10 +277,32 @@ export class GridComponent implements OnInit, AfterViewInit {
               rowMatchesQuery = false;
             }
           }
+        }
 
+        if (element.type === 'date') {
+          const cellValueInDate = new Date(cellValue);
+          if (element.afterDate != null) {
+            if (!(cellValueInDate > element.afterDate)) {
+              rowMatchesQuery = false;
+            }
+          }
+          if (element.onDate != null) {
+            if (!(cellValueInDate.getTime() === element.onDate.getTime())) {
+              rowMatchesQuery = false;
+            }
+          }
+          if (element.beforeDate != null) {
+            if (!(cellValueInDate < element.beforeDate)) {
+              rowMatchesQuery = false;
+            }
+          }
+        }
 
-          if (rowMatchesQuery === false) {
-            break;
+        if (element.type === 'list') {
+          console.log(element.listValue, cellValue);
+          console.log(element.listValue.indexOf(cellValue))
+          if (!(element.listValue.indexOf(cellValue) >= 0)) {
+            rowMatchesQuery = false;
           }
         }
       }
@@ -335,27 +351,59 @@ export class GridComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  public filterAsignValueForComparisionType(filter: Filter, comparision_type: string, value: number) {
-    if (comparision_type === 'gt') {
-      filter.greaterThan = value;
+  public filterAsignValueForComparisionType(filter: Filter, comparision_type: string, value: number, data_type: string) {
+    switch (data_type) {
+      case 'number':
+        switch (comparision_type) {
+          case 'gt':
+            filter.greaterThan = value;
+            break;
+          case 'et':
+            filter.equalTo = value;
+            break;
+          case 'lt':
+            filter.lessThan = value;
+            break;
+        }
+        break;
+      case 'date':
+        const date_value = new Date(value);
+        switch (comparision_type) {
+          case 'gt':
+            filter.afterDate = date_value;
+            break;
+          case 'et':
+            filter.onDate = date_value;
+            break;
+          case 'lt':
+            filter.beforeDate = date_value;
+            break;
+        }
     }
-    if (comparision_type === 'et') {
-      filter.equalTo = value;
-    }
-    if (comparision_type === 'lt') {
-      filter.lessThan = value;
-    }
+
   }
 
-  public addNumberFilterQuery(columnId: string, mapping: string, comparision_type: string, value: string) {
+  public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: string, data_type: string) {
     let queryExistsForIndex = false;
-    const query_value = parseInt(value, 10);
+
+    let query_value = null;
+    switch (data_type) {
+      case 'number':
+        query_value = parseInt(value, 10);
+        break;
+      case 'date':
+        query_value = new Date(value);
+        break;
+    }
+    if (query_value == null) {
+      return;
+    }
     for (let i = 0; i < this.filters.length; i++) {
-      if (this.filters[i].columnId === columnId && this.filterValueExistsForComparisionType(this.filters[i], comparision_type)) {
+      if (this.filters[i].columnId === columnId) {
         if (value.trim() === '') {
           this.filters.splice(i, 1);
         } else {
-          this.filterAsignValueForComparisionType(this.filters[i], comparision_type, query_value);
+          this.filterAsignValueForComparisionType(this.filters[i], comparision_type, query_value, data_type);
         }
         queryExistsForIndex = true;
         break;
@@ -363,13 +411,37 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
 
     if (!queryExistsForIndex && value.trim() !== '') {
-      const filter_object = new Filter(this.id + columnId, 'number', mapping, columnId);
-      this.filterAsignValueForComparisionType(filter_object, comparision_type, query_value);
+      const filter_object = new Filter(this.id + columnId, data_type, mapping, columnId);
+      this.filterAsignValueForComparisionType(filter_object, comparision_type, query_value, data_type);
       this.filters.push(filter_object);
     }
+
     this.filterRecords();
 
   }
+
+  public addListFilterQuery(column: Column) {
+    // Remove previous filter for this column
+    for (let i = 0; i < this.filters.length; i++) {
+      if (this.filters[i].columnId === column.id) {
+        this.filters.splice(i, 1);
+        break;
+      }
+    }
+    const filter_object = new Filter(this.id + column.id, column.dataType, column.mapping, column.id);
+    // Add new filters for this column filterOptions
+    column.filterOptions.forEach((value) => {
+      if (value.isSelected) {
+        filter_object.listValue.push(value.label);
+      }
+    });
+    if (filter_object.listValue.length > 0) {
+      this.filters.push(filter_object);
+    }
+    // console.log(filter_object)
+    this.filterRecords();
+  }
+
 
   public hideShowRemoveFilterTab() {
     /*
@@ -398,6 +470,65 @@ export class GridComponent implements OnInit, AfterViewInit {
         element.hidden = true;
       }
     });
+  }
+
+  public showMultiSelectFilter(column: Column) {
+    if (column.filterOptions === null || column.filterOptions.length === 0) {
+      return;
+    }
+    const tempData: MultiSelectInputData = {
+      operation: 'column_filter',
+      meta_data: {
+        columnId: column.id
+      },
+      data: []
+    };
+
+    column.filterOptions.forEach((value) => {
+      tempData.data.push({
+        label: value.label,
+        value: value.value,
+        enabled: true,
+        selected: value.isSelected
+      });
+    });
+
+    this.showMulitSelectInput(tempData);
+
+  }
+
+  public closeMultiSelectInput() {
+    console.log('close multi-select-input');
+  }
+
+  public showMulitSelectInput(data: MultiSelectInputData) {
+    this.mulit_select_input_data = data;
+    console.log('show multi-select-input');
+
+  }
+
+  public handleMulitSelectApply(data: MultiSelectInputData) {
+    switch (data.operation) {
+      case 'column_filter':
+        let columnInstance = null;
+        const columnId = data.meta_data['columnId'];
+        for (const column of this.columns) {
+          if (column.id === columnId) {
+            columnInstance = column;
+            break;
+          }
+        }
+        if (columnInstance != null) {
+          for (const element of data.data) {
+            for (const option of columnInstance.filterOptions) {
+              if (option['value'] === element['value']) {
+                option['isSelected'] = element['selected'];
+              }
+            }
+          }
+        }
+        this.addListFilterQuery(columnInstance);
+    }
   }
 
 

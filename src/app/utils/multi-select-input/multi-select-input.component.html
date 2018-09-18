@@ -1,0 +1,13 @@
+<div>
+  <button (click)="closeDialog()">close</button>
+  <div *ngIf="data">
+    <ul>
+       <li *ngFor="let element of data.data; let i = index">
+         {{element.label}}
+         <input type="checkbox" [disabled]="!element.enabled"
+                [checked]="element.selected" (click)="dataOptionToggled(i)">
+       </li>
+    </ul>
+    <button (click)="applySelected()">Apply</button>
+  </div>
+</div>

@@ -15,6 +15,8 @@ import {LoginControlledPagesComponent} from './login-controlled-pages/login-cont
 import {CreateEmailComponent} from './login-controlled-pages/create-email/create-email.component';
 import {CreateGridComponent} from './login-controlled-pages/create-grid/create-grid.component';
 import { GridComponent } from './login-controlled-pages/grid/grid.component';
+import {MultiSelectInputComponent} from './utils/multi-select-input/multi-select-input.component';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { GridComponent } from './login-controlled-pages/grid/grid.component';
     LoginControlledPagesComponent,
     CreateEmailComponent,
     CreateGridComponent,
-    GridComponent
+    GridComponent,
+    MultiSelectInputComponent
   ],
   imports: [
     BrowserModule,

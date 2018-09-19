@@ -1,5 +1,18 @@
+.uigrid {
+  border: solid 0.5pt var(--cellBorderColor);
+  margin: 20px;
+  border-collapse: collapse;
+}
+
+.uigrid-cell div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .uigrid-row {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: row;
 }
 
@@ -9,11 +22,31 @@
   padding: 3px 6px;
   border: solid 0.5pt var(--cellBorderColor);
   display: flex;
-  flex: 1 1 auto;
+  border-collapse: collapse;
+  flex-direction: row;
+  min-width: 240px;
+  flex: 1 1 0;
+  overflow: hidden;
 }
 
 .uigrid-cell.select_box {
-  flex: 0 0 60px;
+  min-width: 60px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.column-header {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+}
+
+.column-header .title {
+  color: var(--colorPrimary);
+  flex: 1 1 auto;
+  text-align: center;
+  font-weight: bold;
 }
 
 .uigrid-cell input {
@@ -53,12 +86,107 @@
   justify-content: center;
 }
 
-.grid-skm-checkbox {
-
+.sorter-button {
+  padding: 2px 6px;
+  margin: 0 2px;
+  border-radius: 3px;
+  background-color: var(--colorPrimary);
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
 }
 
-.uigrid {
-  border: solid 0.5pt var(--cellBorderColor);
-  width: 1200px;
-  margin: 20px;
+.sorter-button .order_icon {
+  color: white;
+  margin: 0 6px;
+}
+
+.remove {
+  border-radius: 50%;
+  padding: 2px 4px;
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  cursor: pointer;
+  color: var(--colorPrimary);
+}
+
+.uigrid-ok-button {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #20A843 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.uigrid-ok-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.uigrid-cancel-button {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  background-color: darkred !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.uigrid-cancel-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.uigrid-stroked-white-button {
+  padding: 0 3px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: var(--colorPrimary) !important;
+  border: 1px solid var(--colorPrimary) !important;
+  outline: none;
+  cursor: pointer;
+}
+
+.uigrid-order-icon-button {
+  border-radius: 50%;
+  padding: 4px;
+  margin: 0 2px !important;
+  width: 20px;
+  height: 20px;
+  background-color: ghostwhite !important;
+  cursor: pointer;
+  color: var(--colorPrimary) !important;
+}
+
+.filter_column {
+  display: block !important;
+}
+
+.filter_column span {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.filter_column input {
+  margin: 0 5px;
+  padding: 0 2px;
+  border-radius: 5px;
+  border: 1px solid var(--colorPrimary);
+  line-height: 20px;
+  height: 20px;
 }

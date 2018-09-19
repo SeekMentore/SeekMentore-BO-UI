@@ -1,13 +1,13 @@
-<div>
-  <button (click)="closeDialog()">close</button>
+<div style="display: flex; flex-direction: column; width: 100%">
+  <i class="fas fa-times" style="color: var(--colorPrimary); align-self: flex-end; margin: 20px"
+     (click)="closeDialog()"></i>
   <div *ngIf="data">
-    <ul>
-       <li *ngFor="let element of data.data; let i = index">
-         {{element.label}}
-         <input type="checkbox" [disabled]="!element.enabled"
-                [checked]="element.selected" (click)="dataOptionToggled(i)">
-       </li>
-    </ul>
-    <button (click)="applySelected()">Apply</button>
+    <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary)"
+         *ngFor="let element of data.data; let i = index">
+      <span style="flex: 1 1 auto; padding: 0">{{element.label}}</span>
+      <input type="checkbox" [disabled]="!element.enabled" style="align-self: center"
+             [checked]="element.selected" (click)="dataOptionToggled(i)">
+    </div>
   </div>
+  <button class="ok-button" style="align-self: flex-end" (click)="applySelected()">Apply</button>
 </div>

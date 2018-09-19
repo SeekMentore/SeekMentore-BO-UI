@@ -498,11 +498,13 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public closeMultiSelectInput() {
+    document.getElementById(this.id + 'multi-select').hidden = true;
     console.log('close multi-select-input');
   }
 
   public showMulitSelectInput(data: MultiSelectInputData) {
     this.mulit_select_input_data = data;
+    document.getElementById(this.id + 'multi-select').hidden = false;
     console.log('show multi-select-input');
 
   }
@@ -529,6 +531,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         }
         this.addListFilterQuery(columnInstance);
     }
+    document.getElementById(this.id + 'multi-select').hidden = true;
   }
 
 

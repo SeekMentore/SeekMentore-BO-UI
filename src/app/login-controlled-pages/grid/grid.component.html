@@ -1,125 +1,137 @@
+<!--Grid UI-->
 <div class="uigrid" *ngIf="showGrid">
+
+  <!--Title Bar-->
   <div class="uigrid-title-toolbar">
     <div class="uigrid-row">
-      <div class="uigrid-cell title">
+      <div class="uigrid-cell title fill">
         <span>{{title}}</span>
       </div>
     </div>
   </div>
+
+  <!--Sorting Bar-->
   <div class="uigrid-sorter-toolbar" *ngIf="isSortingCapable">
     <div class="uigrid-row">
-      <span class="uigrid-cell">
-        <span class="sorter-button" *ngFor="let element of sorters">
-          {{element.columnName}}
-          <span *ngIf="element.order === 1">
-            ASC
-          </span>
-          <span *ngIf="element.order === 2">
-            DESC
-          </span>
-          <span (click)="removeColumnFromSorterList(element.id)">Remove</span>
-        </span>
-
-        <button (click)="sortRowRecordData()">
+      <div class="uigrid-cell fill">
+        <div style="flex: 1 1 auto; flex-direction: row; display: flex;">
+          <div class="sorter-button" *ngFor="let element of sorters">
+            {{element.columnName}}
+            <i *ngIf="element.order === 1" class="fas fa-arrow-up order_icon"></i>
+            <i *ngIf="element.order === 2" class="fas fa-arrow-down order_icon"></i>
+            <i class="fas fa-times remove" (click)="removeColumnFromSorterList(element.id)"></i>
+          </div>
+        </div>
+        <button class="uigrid-ok-button" (click)="sortRowRecordData()">
           Apply Sort
         </button>
-        <button>
+        <button class="uigrid-cancel-button">
           Reset Sort
         </button>
-      </span>
+      </div>
     </div>
   </div>
-  <div class="uigrid-column-header-toolbar">
-    <div class="uigrid-row">
+
+  <div style="overflow-x: auto;">
+    <!--Column Bar-->
+    <div class="uigrid-column-header-toolbar">
+
+      <!--Column Name Bar-->
+      <div class="uigrid-row">
       <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box">
-        <input type="checkbox" (change)="selectionColumnSelectUnselectAll()">
+        <input title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll()">
       </span>
-      <span *ngFor="let column of columns">
-        <span class="uigrid-cell" *ngIf="!column.toBeHidden">
-          <span class="column-header">
-            <span id="{{id+column.id+'remove-filter'}}" *ngIf="isFilterCapable && column.filterable && getFilterByColumnId(column.id) != null">
-            <span class="remove-filter-tab">
-              <span (click)="removeFilterFromColumn(column.id)">Remove</span>
-            </span>
-            </span>
-            <span *ngIf="column.hideable">
-              <button (click)="hideColumn(column.id)">Hide</button>
-            </span>
-              <label>{{column.headerName}}</label>
-              <span *ngIf="isSortingCapable && column.sortable">
-                &nbsp;<span (click)="sortColumn(column.id, 1)">ASC</span>
-                &nbsp;<span (click)="sortColumn(column.id, 2)">DESC</span>
-              </span>
+        <div class="uigrid-cell" *ngFor="let column of columns">
+          <div *ngIf="!column.toBeHidden" class="column-header">
+            <div id="{{id+column.id+'remove-filter'}}"
+                 *ngIf="isFilterCapable && column.filterable && getFilterByColumnId(column.id) != null">
+              <i class="fas fa-times remove" (click)="removeFilterFromColumn(column.id)"></i>
+            </div>
+            <button *ngIf="column.hideable" class="uigrid-stroked-white-button" (click)="hideColumn(column.id)">Hide
+            </button>
+            <span class="title">{{column.headerName}}</span>
+            <div *ngIf="isSortingCapable && column.sortable">
+              <i class="fas fa-arrow-up uigrid-order-icon-button" (click)="sortColumn(column.id, 1)"></i>
+              <i class="fas fa-arrow-down uigrid-order-icon-button" (click)="sortColumn(column.id, 2)"></i>
+            </div>
+          </div>
+        </div>
+        <div class="uigrid-cell" *ngIf="hasActionColumn">
+          <div class="column-header">
+            <span class="title">Action Buttons</span>
+          </div>
+        </div>
+      </div>
 
-          </span>
-
-        </span>
-      </span>
-      <span class="uigrid-cell" *ngIf="hasActionColumn">
-        Action Buttons
-      </span>
-    </div>
-
-    <div class="uigrid-row">
-    <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box">
-      <span>
-        <!--Blank Cell-->
-      </span>
-    </span>
-      <span *ngFor="let column of columns">
-      <span class="uigrid-cell" *ngIf="isFilterCapable && !column.toBeHidden && column.filterable">
-        <span *ngIf="column.dataType == 'string'">
-          <input type="text" (input)="addStringFilterQuery(column.id, column.mapping, $event.target.value)"/>
-        </span>
-        <span *ngIf="column.dataType == 'number'">
-          <label>GT</label><input type="number"
-                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'number')">
-          <label>EQ</label><input type="number"
-                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'number')">
-          <label>LT</label><input type="number"
-                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'number')">
-        </span>
-        <span *ngIf="column.dataType == 'date'">
-          <label>GT</label><input type="date"
-                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'date')">
-          <label>EQ</label><input type="date"
-                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'date')">
-          <label>LT</label><input type="date"
-                                  (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'date')">
-        </span>
-        <span *ngIf="column.dataType == 'list'">
-          <button (click)="showMultiSelectFilter(column)">Select Filters</button>
-        </span>
-      </span>
-    </span>
-      <span class="uigrid-cell" *ngIf="hasActionColumn">
+      <!--Column Filter Bar-->
+      <div class="uigrid-row">
+        <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box"></span>
+        <div *ngFor="let column of columns" class="uigrid-cell">
+          <div *ngIf="isFilterCapable && !column.toBeHidden && column.filterable">
+            <div *ngIf="column.dataType == 'string'">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="search"
+                     (input)="addStringFilterQuery(column.id, column.mapping, $event.target.value)"/>
+            </div>
+            <div class="filter_column" *ngIf="column.dataType == 'number'">
+              <span>GT</span>
+              <input
+                (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'number')"
+                type="number" title="GT"><br>
+              <span>EQ</span>
+              <input
+                (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'number')"
+                type="number" title="EQ"><br>
+              <span>LT</span>
+              <input
+                (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'number')"
+                type="number" title="LT">
+            </div>
+            <div class="filter_column" *ngIf="column.dataType == 'date'">
+              <span>After</span>
+              <input (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'date')"
+                     type="date" title="after"><br>
+              <span>On</span>
+              <input (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'date')"
+                     type="date" title="On"><br>
+              <span>Before</span>
+              <input (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'date')"
+                     type="date" title="Before">
+            </div>
+            <div *ngIf="column.dataType == 'list'"> Choose from list
+              <i class="fas fa-list" style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;"
+                 (click)="showMultiSelectFilter(column)"></i>
+            </div>
+          </div>
+        </div>
+        <span class="uigrid-cell" *ngIf="hasActionColumn">
         <!--Action Buttons-->
     </span>
+      </div>
     </div>
-  </div>
 
-  <div class="uigrid-record-section">
+    <!--Grid Records-->
     <div *ngFor="let record of filtered_records" class="uigrid-row">
       <span class="uigrid-cell select_box" *ngIf="hasSelectionColumn">
-        <input type="checkbox" (change)="selectionButtonCheckedUnchecked(record.id)">
+        <input title="select" type="checkbox" (change)="selectionButtonCheckedUnchecked(record.id)">
       </span>
       <span class="uigrid-cell" *ngFor="let column of columns">
         {{record.getProperty(column.mapping)}}
       </span>
 
-      <span *ngIf="hasActionColumn">
-        <span class="uigrid-cell" *ngFor="let button of actionColumn.buttons">
+      <div *ngIf="hasActionColumn" class="uigrid-cell">
+        <span *ngFor="let button of actionColumn.buttons">
           <button (click)="actionButtonClicked(record.id, button.id)">
             Button
           </button>
         </span>
-      </span>
+      </div>
     </div>
-  </div>
 
-  <div class="uigrid-paging-toolbar">
-    <div class="uigrid-row">
-      <span class="uigrid-cell">
+  </div>
+  <!--Pagination Bar-->
+  <div class="uigrid-row">
+      <span class="uigrid-cell fill">
         Total Records: {{store.totalRecords}}
         <span *ngIf="isPagingCapable">
           Records per page: <input name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage">
@@ -133,12 +145,14 @@
           <button (click)="goToPageNumber(pageNumber.value)">Go To</button>
         </span>
       </span>
-    </div>
   </div>
 
 </div>
 
-<div id="{{id + 'multi-select'}}">
-<app-multi-select-input [data]="mulit_select_input_data" (apply)="handleMulitSelectApply($event)"
-                        (close)="closeMultiSelectInput()"></app-multi-select-input>
+<!--List Dialog-->
+<div id="{{id + 'multi-select'}}" class="dialog" hidden>
+  <div class="dialog_modal">
+    <app-multi-select-input [data]="mulit_select_input_data" (apply)="handleMulitSelectApply($event)"
+                            (close)="closeMultiSelectInput()" style="width: 100%"></app-multi-select-input>
+  </div>
 </div>

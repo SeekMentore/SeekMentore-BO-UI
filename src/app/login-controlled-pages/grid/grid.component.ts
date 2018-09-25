@@ -389,7 +389,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: string, data_type: string, target: HTMLInputElement = null) {
     let queryExistsForIndex = false;
-
+    console.log(value)
     let query_value = null;
     switch (data_type) {
       case 'number':
@@ -423,6 +423,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     if(target && data_type === 'date') {
       target.title = query_value.getDate() + '';
     }
+    console.log(this.filters)
 
     this.filterRecords();
 

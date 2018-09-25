@@ -88,15 +88,16 @@
                 type="number" title="LT">
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'date'">
-              <div style="background-color: #0f74a8; position: relative">
-                <span style="position: absolute; top: 0; left: 0">After</span>
-                <input style="opacity: 0" (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'date', $event.target)"
-                             type="date"></div>
-              <span>On</span>
-              <input #date_input2 hidden (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'date', $event.target)"
+              <span >After</span>
+              <input  type="date"
+                     (change)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'date')"><br>
+              <span >On</span>
+              <input
+                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'date')"
                      type="date" title="On"><br>
-              <span>Before</span>
-              <input #date_input3 hidden (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'date', $event.target)"
+              <span >Before</span>
+              <input
+                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'date')"
                      type="date" title="Before">
             </div>
             <div *ngIf="column.dataType == 'list'"> Choose from list

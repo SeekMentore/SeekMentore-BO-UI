@@ -4,7 +4,7 @@ import {AppConstants} from './app-constants';
 import {Observable} from 'rxjs/index';
 import {EnvironmentConstants} from './environment-constants';
 import {LcpRestUrls} from './lcp-rest-urls';
-import {LcpConstants} from "./lcp-constants";
+import {LcpConstants} from './lcp-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class AppUtilityService {
   constructor(private http: HttpClient) {
   }
 
-  public makeRequest(url: string,
+  public makeRequest1(url: string,
                      requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
                      data: any = null,
                      contentType: string = 'application/json',
@@ -74,7 +74,7 @@ export class AppUtilityService {
     const token = localStorage.getItem(LcpConstants.auth_token_key);
     // console.log(token);
     headers = new HttpHeaders({
-      // // 'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Origin': '*',
     });
     // headers = headers.append('origin-client', AppConstants.ORIGIN_CLIENT);
     if (!isMultipart) {
@@ -107,7 +107,7 @@ export class AppUtilityService {
       urlPath: path
     };
     const _observable = new Observable<boolean>(observer => {
-      this.makeRequest(LcpRestUrls.uiAccessUrl, 'POST', JSON.stringify(params)).subscribe(
+      this.makeRequest1(LcpRestUrls.uiAccessUrl, 'POST', JSON.stringify(params)).subscribe(
         result => {
           let response = result['response'];
           response = this.decodeObjectFromJSON(response);

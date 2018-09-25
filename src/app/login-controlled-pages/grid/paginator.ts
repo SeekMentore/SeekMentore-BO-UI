@@ -7,11 +7,15 @@ export class Paginator {
   startRecordNumber = -1;
   totalPages = -1;
 
-  constructor(id, numberOfRecordsPerPage) {
+  constructor(id, numberOfRecordsPerPage = null) {
     /*
          * If numberOfRecordsPerPage is Not Null
          * set its value to class variable
          */
+    this.id = id;
+    if (numberOfRecordsPerPage != null) {
+      this.numberOfRecordsPerPage = numberOfRecordsPerPage;
+    }
   }
 
   public init() {

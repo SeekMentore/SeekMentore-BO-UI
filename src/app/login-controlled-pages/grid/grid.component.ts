@@ -7,7 +7,8 @@ import {Filter} from './filter';
 import {Column} from './column';
 import {Store} from './store';
 import {Record} from './record';
-import {MultiSelectInputData} from "../../utils/multi-select-input/multi-select-input.component";
+import {MultiSelectInputData} from '../../utils/multi-select-input/multi-select-input.component';
+import {AppUtilityService} from '../../utils/app-utility.service';
 
 @Component({
   selector: 'app-grid',
@@ -51,7 +52,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   mulit_select_input_data: MultiSelectInputData = null;
 
-  constructor() {
+  constructor(public utility_servive: AppUtilityService) {
   }
 
   ngOnInit() {
@@ -66,7 +67,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
 
   public createGrid() {
-    this.showGrid = true;
+    this.loadData();
     /*
          * function to create grid on UI
          *
@@ -103,6 +104,8 @@ export class GridComponent implements OnInit, AfterViewInit {
          * Step 1 - Check Store.isStatic
          * Step 2 - If True call paintData() else call loadDynamicData
          */
+
+    this.store.load(this);
   }
 
   public loadDynamicData() {
@@ -118,6 +121,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public paintData() {
     this.removeData();
+    this.showGrid = true;
     // In grid-template <record-section> this section will be painted now
     // The logic on how to paint the section is written in grid-template.html
   }
@@ -300,7 +304,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
         if (element.type === 'list') {
           console.log(element.listValue, cellValue);
-          console.log(element.listValue.indexOf(cellValue))
+          console.log(element.listValue.indexOf(cellValue));
           if (!(element.listValue.indexOf(cellValue) >= 0)) {
             rowMatchesQuery = false;
           }
@@ -383,7 +387,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   }
 
-  public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: string, data_type: string) {
+  public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: string, data_type: string, target: HTMLInputElement = null) {
     let queryExistsForIndex = false;
 
     let query_value = null;
@@ -414,6 +418,10 @@ export class GridComponent implements OnInit, AfterViewInit {
       const filter_object = new Filter(this.id + columnId, data_type, mapping, columnId);
       this.filterAsignValueForComparisionType(filter_object, comparision_type, query_value, data_type);
       this.filters.push(filter_object);
+    }
+
+    if(target && data_type === 'date') {
+      target.title = query_value.getDate() + '';
     }
 
     this.filterRecords();

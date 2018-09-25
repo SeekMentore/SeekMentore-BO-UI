@@ -183,13 +183,16 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public setUpGrid() {
-    const store = new Store('G1-S', true);
-    const data = [
-      {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
-      {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
-    ];
-    store.setStaticData(data);
-    store.convertIntoRecordData(store.getStaticData());
+    // const store = new Store('G1-S', true);
+    // const data = [
+    //   {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+    //   {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
+    // ];
+    // store.setStaticData(data);
+
+    const store = new Store('G1-S', false, 'rest/employee/alertsRemindersGrid', null);
+
+
     const selection_column = new SelectionColumn('G1-SC');
     const action_button1 = new ActionButton('G1-AB1', 'open');
     const action_button2 = new ActionButton('G1-AB2', 'remove');
@@ -202,6 +205,15 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
     const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
     const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
+
+    // const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
+    // const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);
+    // const column3 = new Column('G1-C3', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null);
+    // const column4 = new Column('G1-C4', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null);
+    // const column5 = new Column('G1-C5', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null);
+    // const column6 = new Column('G1-C6', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null);
+
+
     this.gridObject.id = 'grid-1';
     this.gridObject.title = 'grid title';
     this.gridObject.htmlDomElementId = 'grid-1';

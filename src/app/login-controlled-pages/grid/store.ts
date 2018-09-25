@@ -1,4 +1,6 @@
 import {Record} from './record';
+import {GridComponent} from './grid.component';
+import {Observable, of} from "rxjs/index";
 
 export class Store {
   id: string;
@@ -13,6 +15,8 @@ export class Store {
 
   constructor(id: string, isStatic: boolean = null, restURL: string = null, downloadURL: string = null) {
     this.id = id;
+    this.restURL = restURL;
+    this.downloadURL = downloadURL;
     if (isStatic != null) {
       this.isStatic = isStatic;
     }
@@ -23,28 +27,60 @@ export class Store {
          */
   }
 
-  public load(gridObject) {
+  public load(gridObject: GridComponent) {
     if (this.isStatic) {
       // --> convert staticData into data using convertIntoRecordData
+      this.convertIntoRecordData(this.getStaticData());
       gridObject.paintData();
     } else {
       // --> Make a rest call and store the response.data in restData
-      // const params = {
-      //   start: null != gridObject.paginator ? gridObject.paginator.startRecordNumber : 1,
-      //   limit: null != gridObject.paginator ? gridObject.paginator.numberOfRecordsPerPage : -1,
-      //   otherParams: JSON_encode(extraParams),
-      //   sorter: gridObject.isSortingCapable ? gridObject.sorter : null,
-      //   filter: gridObject.isFilterCapable ? gridObject.filter : null
-      // };
-      // makeHttpRequest(restURL, JSON_encode($params)).subscribe(){
-      //   // --> convert restData into data using convertIntoRecordData
-      //   gridObject.paintData();
-      // }
-      // error(){
-      //   // Alert Message - Common alert of Utils
-      // }
+      const params = {
+        start: null != gridObject.paginator ? gridObject.paginator.startRecordNumber : 1,
+        limit: null != gridObject.paginator ? gridObject.paginator.numberOfRecordsPerPage : -1,
+        // otherParams: JSON_encode(extraParams),
+        // sorter: gridObject.isSortingCapable ? gridObject.sorter : null,
+        // filter: gridObject.isFilterCapable ? gridObject.filter : null
+      };
+      // gridObject.utility_servive.makeRequest1(this.restURL, 'POST', params).subscribe(
+      //   result => {
+      //     let response = result['response'];
+      //     response = gridObject.utility_servive.decodeObjectFromJSON(response);
+      //     console.log(response);
+      //     this.restData = response['data'];
+      //     this.convertIntoRecordData(this.getRestData());
+      //   },
+      //   error2 => {
+      //
+      //   }
+      // );
+      this.simulateRestRequest().subscribe(
+        result => {
+          let response = result['response'];
+          response = gridObject.utility_servive.decodeObjectFromJSON(response);
+          this.restData = response['data'];
+          this.convertIntoRecordData(this.getRestData());
+          gridObject.paintData();
+        },
+        error2 => {
+
+        }
+      );
     }
   }
+
+  public simulateRestRequest(): Observable<any> {
+    const response = {
+        totalRecords: 2,
+        success: true,
+        message: '',
+        data: [
+          {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+          {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
+        ]
+    };
+    return of({response: JSON.stringify(response)});
+  }
+
 
   public convertIntoRecordData(objectList: Object[]) {
 
@@ -68,6 +104,10 @@ export class Store {
 
   public getStaticData(): Object[] {
     return this.staticData;
+  }
+
+  public getRestData(): Object[] {
+    return this.restData;
   }
 
 }

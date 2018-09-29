@@ -17,7 +17,7 @@ import {CreateGridComponent} from './login-controlled-pages/create-grid/create-g
 import { GridComponent } from './login-controlled-pages/grid/grid.component';
 import {MultiSelectInputComponent} from './utils/multi-select-input/multi-select-input.component';
 
-// import {NgbDatepickerModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDatepickerModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -38,7 +38,7 @@ import {MultiSelectInputComponent} from './utils/multi-select-input/multi-select
     HttpClientModule,
     RoutingModule,
     FormsModule,
-    // NgbDatepickerModule
+    NgbDatepickerModule
   ],
   providers: [AppUtilityService, HelperService],
   bootstrap: [AppComponent]

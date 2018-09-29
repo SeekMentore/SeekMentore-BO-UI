@@ -41,13 +41,14 @@ export class Store {
         // sorter: gridObject.isSortingCapable ? gridObject.sorter : null,
         // filter: gridObject.isFilterCapable ? gridObject.filter : null
       };
-      // gridObject.utility_servive.makeRequest1(this.restURL, 'POST', params).subscribe(
+      // gridObject.utility_service.makeRequest1(this.restURL, 'POST', JSON.stringify(params)).subscribe(
       //   result => {
       //     let response = result['response'];
-      //     response = gridObject.utility_servive.decodeObjectFromJSON(response);
+      //     response = gridObject.utility_service.decodeObjectFromJSON(response);
       //     console.log(response);
       //     this.restData = response['data'];
       //     this.convertIntoRecordData(this.getRestData());
+      //     gridObject.paintData();
       //   },
       //   error2 => {
       //
@@ -56,7 +57,7 @@ export class Store {
       this.simulateRestRequest().subscribe(
         result => {
           let response = result['response'];
-          response = gridObject.utility_servive.decodeObjectFromJSON(response);
+          response = gridObject.utility_service.decodeObjectFromJSON(response);
           this.restData = response['data'];
           this.convertIntoRecordData(this.getRestData());
           gridObject.paintData();

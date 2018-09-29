@@ -4,9 +4,16 @@
   <!--Title Bar-->
   <div class="uigrid-title-toolbar">
     <div class="uigrid-row">
-      <div class="uigrid-cell title fill">
-        <span>{{title}}</span>
+      <div class="uigrid-cell fill">
+        <span style="flex: 1 1 auto;">{{title}}</span>
+        <button class="uigrid-ok-button" (click)="filterRecords()">
+          Apply Filter
+        </button>
+        <button class="uigrid-cancel-button">
+          Reset Filter
+        </button>
       </div>
+
     </div>
   </div>
 
@@ -19,7 +26,7 @@
             {{element.columnName}}
             <i *ngIf="element.order === 1" class="fas fa-arrow-up order_icon"></i>
             <i *ngIf="element.order === 2" class="fas fa-arrow-down order_icon"></i>
-            <i class="fas fa-times remove" (click)="removeColumnFromSorterList(element.id)"></i>
+            <i class="fas fa-times remove order_icon" (click)="removeColumnFromSorterList(element.id)"></i>
           </div>
         </div>
         <button class="uigrid-ok-button" (click)="sortRowRecordData()">
@@ -88,21 +95,21 @@
                 type="number" title="LT">
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'date'">
-              <span >After</span>
-              <input  type="date"
-                     (change)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'date')"><br>
-              <span >On</span>
-              <input
-                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'date')"
-                     type="date" title="On"><br>
-              <span >Before</span>
-              <input
-                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'date')"
-                     type="date" title="Before">
+              <span (click)="date1.toggle()" #dateButton1>After</span>
+              <input  type="text" ngbDatepicker #date1="ngbDatepicker"
+                     (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event, 'date', dateButton1)"><br>
+              <span (click)="date2.toggle()" #dateButton2>On</span>
+              <input type="text" ngbDatepicker #date2="ngbDatepicker"
+                     (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event, 'date' ,dateButton2)"
+                     title="On"><br>
+              <span (click)="date3.toggle()" #dateButton3>Before</span>
+              <input type="text" ngbDatepicker #date3="ngbDatepicker"
+                     (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event, 'date', dateButton3)"
+                     title="Before">
             </div>
             <div *ngIf="column.dataType == 'list'"> Choose from list
-              <i class="fas fa-list" style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;"
-                 (click)="showMultiSelectFilter(column)"></i>
+              <i class="fas fa-list {{id + 'label-filter'}}" style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #listButton
+                 (click)="showMultiSelectFilter(column, listButton)"></i>
             </div>
           </div>
         </div>

@@ -190,7 +190,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     // ];
     // store.setStaticData(data);
 
-    const store = new Store('G1-S', false, 'rest/employee/alertsRemindersGrid', null);
+    const store = new Store('G1-S', false, '/rest/employee/alertsRemindersGrid', null);
 
 
     const selection_column = new SelectionColumn('G1-SC');
@@ -205,7 +205,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
     const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
     const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
-
+    //
     // const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
     // const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);
     // const column3 = new Column('G1-C3', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null);

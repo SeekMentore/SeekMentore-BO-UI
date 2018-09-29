@@ -52,7 +52,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   mulit_select_input_data: MultiSelectInputData = null;
 
-  constructor(public utility_servive: AppUtilityService) {
+  constructor(public utility_service: AppUtilityService) {
   }
 
   ngOnInit() {
@@ -218,7 +218,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     const sorterObject = new Sorter(this.id + columnId + 'sorter', columnObject.dataType, columnObject.mapping, columnId, columnObject.headerName);
     sorterObject.order = sortOrder;
     this.sorters.push(sorterObject);
-    this.sortRowRecordData();
+    // this.sortRowRecordData();
   }
 
   sortRowRecordData() {
@@ -338,7 +338,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.filters.push(filter_object);
     }
 
-    this.filterRecords();
+    // this.filterRecords();
 
   }
 
@@ -387,16 +387,15 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   }
 
-  public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: string, data_type: string, target: HTMLInputElement = null) {
+  public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: any, data_type: string, target: HTMLInputElement = null) {
     let queryExistsForIndex = false;
-    console.log(value)
     let query_value = null;
     switch (data_type) {
       case 'number':
         query_value = parseInt(value, 10);
         break;
       case 'date':
-        query_value = new Date(value);
+        query_value = new Date(value.year, value.month - 1, value.day);
         break;
     }
     if (query_value == null) {
@@ -404,7 +403,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i].columnId === columnId) {
-        if (value.trim() === '') {
+        if (data_type === 'number' && value.trim() === '') {
           this.filters.splice(i, 1);
         } else {
           this.filterAsignValueForComparisionType(this.filters[i], comparision_type, query_value, data_type);
@@ -414,18 +413,18 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if (!queryExistsForIndex && value.trim() !== '') {
+    if (!queryExistsForIndex) {
       const filter_object = new Filter(this.id + columnId, data_type, mapping, columnId);
       this.filterAsignValueForComparisionType(filter_object, comparision_type, query_value, data_type);
       this.filters.push(filter_object);
     }
 
-    if(target && data_type === 'date') {
-      target.title = query_value.getDate() + '';
+    if (target && data_type === 'date') {
+      target.title = query_value.toDateString();
     }
-    console.log(this.filters)
+    console.log(this.filters);
 
-    this.filterRecords();
+    // this.filterRecords();
 
   }
 
@@ -448,7 +447,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.filters.push(filter_object);
     }
     // console.log(filter_object)
-    this.filterRecords();
+    // this.filterRecords();
   }
 
 
@@ -481,14 +480,15 @@ export class GridComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public showMultiSelectFilter(column: Column) {
+  public showMultiSelectFilter(column: Column, sourceButton: HTMLElement) {
     if (column.filterOptions === null || column.filterOptions.length === 0) {
       return;
     }
     const tempData: MultiSelectInputData = {
       operation: 'column_filter',
       meta_data: {
-        columnId: column.id
+        columnId: column.id,
+        sourceButton: sourceButton
       },
       data: []
     };
@@ -523,6 +523,8 @@ export class GridComponent implements OnInit, AfterViewInit {
       case 'column_filter':
         let columnInstance = null;
         const columnId = data.meta_data['columnId'];
+        const selectedOptionsValue: string[] = [];
+        const sourceButton: HTMLElement = data.meta_data['sourceButton'];
         for (const column of this.columns) {
           if (column.id === columnId) {
             columnInstance = column;
@@ -534,10 +536,14 @@ export class GridComponent implements OnInit, AfterViewInit {
             for (const option of columnInstance.filterOptions) {
               if (option['value'] === element['value']) {
                 option['isSelected'] = element['selected'];
+                if (option['isSelected']) {
+                  selectedOptionsValue.push(option['value']);
+                }
               }
             }
           }
         }
+        sourceButton.title = selectedOptionsValue.join(', ');
         this.addListFilterQuery(columnInstance);
     }
     document.getElementById(this.id + 'multi-select').hidden = true;

@@ -6,12 +6,19 @@
     <div class="uigrid-row">
       <div class="uigrid-cell fill">
         <span style="flex: 1 1 auto;">{{title}}</span>
-        <button class="uigrid-ok-button" (click)="filterRecords()">
+        <button class="uigrid-ok-button">
+          Download Data
+        </button>
+        <button class="uigrid-ok-button" (click)="applyFilter()">
           Apply Filter
         </button>
-        <button class="uigrid-cancel-button">
+        <button class="uigrid-cancel-button" (click)="resetFilter()">
           Reset Filter
         </button>
+        <span style="display: flex">
+          <input type="radio" name="onlineOfflineBtn" checked value="ONLINE" (click)="toggleRemoteLoad($event)">
+          <input type="radio" name="onlineOfflineBtn" value="OFFLINE" (click)="toggleRemoteLoad($event)">
+        </span>
       </div>
 
     </div>
@@ -29,10 +36,10 @@
             <i class="fas fa-times remove order_icon" (click)="removeColumnFromSorterList(element.id)"></i>
           </div>
         </div>
-        <button class="uigrid-ok-button" (click)="sortRowRecordData()">
+        <button class="uigrid-ok-button" (click)="applySorter()">
           Apply Sort
         </button>
-        <button class="uigrid-cancel-button">
+        <button class="uigrid-cancel-button" (click)="resetSorter()">
           Reset Sort
         </button>
       </div>
@@ -51,7 +58,7 @@
         <div class="uigrid-cell" *ngFor="let column of columns">
           <div *ngIf="!column.toBeHidden" class="column-header">
             <div id="{{id+column.id+'remove-filter'}}"
-                 *ngIf="isFilterCapable && column.filterable && getFilterByColumnId(column.id) != null">
+                 *ngIf="isFilterCapable && column.filterable">
               <i class="fas fa-times remove" (click)="removeFilterFromColumn(column.id)"></i>
             </div>
             <button *ngIf="column.hideable" class="uigrid-stroked-white-button" (click)="hideColumn(column.id)">Hide
@@ -77,26 +84,26 @@
           <div *ngIf="isFilterCapable && !column.toBeHidden && column.filterable">
             <div *ngIf="column.dataType == 'string'">
               <i class="fas fa-search"></i>
-              <input type="text" placeholder="search"
+              <input type="text" placeholder="search" #string1
                      (input)="addStringFilterQuery(column.id, column.mapping, $event.target.value)"/>
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'number'">
               <span>GT</span>
-              <input
-                (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'number')"
-                type="number" title="GT"><br>
+              <input #number1
+                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'number')"
+                     type="number" title="GT"><br>
               <span>EQ</span>
-              <input
-                (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'number')"
-                type="number" title="EQ"><br>
+              <input #number2
+                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'number')"
+                     type="number" title="EQ"><br>
               <span>LT</span>
-              <input
-                (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'number')"
-                type="number" title="LT">
+              <input #number3
+                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'number')"
+                     type="number" title="LT">
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'date'">
               <span (click)="date1.toggle()" #dateButton1>After</span>
-              <input  type="text" ngbDatepicker #date1="ngbDatepicker"
+              <input type="text" ngbDatepicker #date1="ngbDatepicker"
                      (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event, 'date', dateButton1)"><br>
               <span (click)="date2.toggle()" #dateButton2>On</span>
               <input type="text" ngbDatepicker #date2="ngbDatepicker"
@@ -108,7 +115,8 @@
                      title="Before">
             </div>
             <div *ngIf="column.dataType == 'list'"> Choose from list
-              <i class="fas fa-list {{id + 'label-filter'}}" style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #listButton
+              <i class="fas fa-list {{id + 'label-filter'}}"
+                 style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #listButton
                  (click)="showMultiSelectFilter(column, listButton)"></i>
             </div>
           </div>

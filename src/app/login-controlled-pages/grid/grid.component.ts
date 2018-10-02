@@ -52,6 +52,9 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   mulit_select_input_data: MultiSelectInputData = null;
 
+  online: boolean;
+
+
   constructor(public utility_service: AppUtilityService) {
   }
 
@@ -97,6 +100,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.sorters = [];
     }
     this.filtered_records = this.store.data;
+    this.online = true;
   }
 
   public loadData() {
@@ -146,9 +150,45 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   }
 
-  public getFilterByColumnId(columnId: string) {
-    return true;
+  public applyFilter() {
+    if (this.online === true) {
+      this.store.load(this);
+    } else {
+      this.filterRecords();
+    }
   }
+
+  public resetFilter() {
+    this.filters = [];
+  }
+
+  public applySorter() {
+    if (this.online === true) {
+      this.store.load(this);
+
+    } else {
+      this.sortRowRecordData();
+    }
+  }
+
+  public resetSorter() {
+    this.sorters = [];
+  }
+
+
+  //
+  // public clearTextForColumn(columnId: string) {
+  //   if (this.label_fields[columnId]) {
+  //     this.label_fields[columnId].forEach((element) => {
+  //       element.title = '';
+  //     });
+  //   }
+  //   if (this.input_fields[columnId]) {
+  //     this.input_fields[columnId].forEach((element) => {
+  //       element.value = '';
+  //     });
+  //   }
+  // }
 
   public removeFilterFromColumn(columnId: string) {
     for (let i = 0; i < this.filters.length; i++) {
@@ -161,7 +201,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         // this.removeFilterFromColumn(columnId);
       }
     }
-    this.filterRecords();
+    this.applyFilter();
   }
 
   public hideColumn(columnId: string) {
@@ -182,6 +222,14 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public goToPageNumber(pageNumber: number) {
 
+  }
+
+  public toggleRemoteLoad(event: any) {
+    if (event.target.value === 'ONLINE') {
+      this.online = true;
+    } else {
+      this.online = false;
+    }
   }
 
   public removeColumnFromSorterList(sorterId: string) {

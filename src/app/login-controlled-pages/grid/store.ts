@@ -37,9 +37,9 @@ export class Store {
       const params = {
         start: null != gridObject.paginator ? gridObject.paginator.startRecordNumber : 1,
         limit: null != gridObject.paginator ? gridObject.paginator.numberOfRecordsPerPage : -1,
-        // otherParams: JSON_encode(extraParams),
-        // sorter: gridObject.isSortingCapable ? gridObject.sorter : null,
-        // filter: gridObject.isFilterCapable ? gridObject.filter : null
+        otherParams: JSON.stringify(this.extraParams),
+        sorter: gridObject.isSortingCapable ? gridObject.sorters : null,
+        filter: gridObject.isFilterCapable ? gridObject.filters : null
       };
       // gridObject.utility_service.makeRequest1(this.restURL, 'POST', JSON.stringify(params)).subscribe(
       //   result => {
@@ -54,11 +54,13 @@ export class Store {
       //
       //   }
       // );
+      console.log(JSON.stringify(params));
       this.simulateRestRequest().subscribe(
         result => {
           let response = result['response'];
           response = gridObject.utility_service.decodeObjectFromJSON(response);
           this.restData = response['data'];
+          this.data = [];
           this.convertIntoRecordData(this.getRestData());
           gridObject.paintData();
         },
@@ -71,13 +73,13 @@ export class Store {
 
   public simulateRestRequest(): Observable<any> {
     const response = {
-        totalRecords: 2,
-        success: true,
-        message: '',
-        data: [
-          {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
-          {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
-        ]
+      totalRecords: 2,
+      success: true,
+      message: '',
+      data: [
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
+      ]
     };
     return of({response: JSON.stringify(response)});
   }
@@ -109,6 +111,27 @@ export class Store {
 
   public getRestData(): Object[] {
     return this.restData;
+  }
+
+  public getRecordById(id: string) {
+    for (const record of this.data) {
+      if (record.id === id) {
+        return record;
+      }
+    }
+    return null;
+  }
+
+  public setAllRecordsToSelected() {
+    for (const record of this.data) {
+      record.selectionModelCheck = true;
+    }
+  }
+
+  public setAllRecordsToUnselected() {
+    for (const record of this.data) {
+      record.selectionModelCheck = false;
+    }
   }
 
 }

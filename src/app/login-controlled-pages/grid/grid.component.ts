@@ -9,6 +9,7 @@ import {Store} from './store';
 import {Record} from './record';
 import {MultiSelectInputData} from '../../utils/multi-select-input/multi-select-input.component';
 import {AppUtilityService} from '../../utils/app-utility.service';
+import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 @Component({
   selector: 'app-grid',
@@ -99,7 +100,6 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (this.sorters == null) {
       this.sorters = [];
     }
-    this.filtered_records = this.store.data;
     this.online = true;
   }
 
@@ -125,6 +125,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public paintData() {
     this.removeData();
+    this.filtered_records = this.store.data;
     this.showGrid = true;
     // In grid-template <record-section> this section will be painted now
     // The logic on how to paint the section is written in grid-template.html
@@ -146,12 +147,14 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
 
-  public selectionColumnSelectUnselectAll() {
-
-  }
-
   public applyFilter() {
     if (this.online === true) {
+      this.filters = [];
+      for (const column of this.columns) {
+        if (column.isFiltered) {
+          this.filters.push(column.filter);
+        }
+      }
       this.store.load(this);
     } else {
       this.filterRecords();
@@ -160,68 +163,9 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public resetFilter() {
     this.filters = [];
-  }
-
-  public applySorter() {
-    if (this.online === true) {
-      this.store.load(this);
-
-    } else {
-      this.sortRowRecordData();
+    for (const column of this.columns) {
+      column.isFiltered = false;
     }
-  }
-
-  public resetSorter() {
-    this.sorters = [];
-  }
-
-
-  //
-  // public clearTextForColumn(columnId: string) {
-  //   if (this.label_fields[columnId]) {
-  //     this.label_fields[columnId].forEach((element) => {
-  //       element.title = '';
-  //     });
-  //   }
-  //   if (this.input_fields[columnId]) {
-  //     this.input_fields[columnId].forEach((element) => {
-  //       element.value = '';
-  //     });
-  //   }
-  // }
-
-  public removeFilterFromColumn(columnId: string) {
-    for (let i = 0; i < this.filters.length; i++) {
-      if (this.filters[i].columnId === columnId) {
-        this.filters.splice(i, 1);
-        i = i - 1;
-        if (i < 0) {
-          i = 0;
-        }
-        // this.removeFilterFromColumn(columnId);
-      }
-    }
-    this.applyFilter();
-  }
-
-  public hideColumn(columnId: string) {
-
-  }
-
-  public selectionButtonCheckedUnchecked(recordId: string) {
-
-  }
-
-  public actionButtonClicked(recordId: string, buttonId: string) {
-
-  }
-
-  public refreshGridData() {
-
-  }
-
-  public goToPageNumber(pageNumber: number) {
-
   }
 
   public toggleRemoteLoad(event: any) {
@@ -241,20 +185,76 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.sortRowRecordData();
   }
 
+  public applySorter() {
+    if (this.online === true) {
+      this.store.load(this);
 
-  public sortColumn(columnId: string, sortOrder: SortingOrder) {
-    let columnObject = null;
-    this.columns.forEach(value => {
-      if (value.id === columnId) {
-        columnObject = value;
-      }
-    });
-    if (columnObject == null) {
-      return;
+    } else {
+      this.sortRowRecordData();
     }
+  }
+
+  public resetSorter() {
+    this.sorters = [];
+  }
+
+  public selectionColumnSelectUnselectAll(element: HTMLInputElement) {
+    for (const record of this.filtered_records) {
+      const checkBox = document.getElementById(this.id + 'checkbox' + record.id);
+      if (checkBox) {
+        (<HTMLInputElement>checkBox).checked = element.checked;
+      }
+    }
+
+    if (element.checked === true) {
+      this.store.setAllRecordsToSelected();
+    } else {
+      this.store.setAllRecordsToUnselected();
+    }
+  }
+
+
+  //
+  // public clearTextForColumn(columnId: string) {
+  //   if (this.label_fields[columnId]) {
+  //     this.label_fields[columnId].forEach((element) => {
+  //       element.title = '';
+  //     });
+  //   }
+  //   if (this.input_fields[columnId]) {
+  //     this.input_fields[columnId].forEach((element) => {
+  //       element.value = '';
+  //     });
+  //   }
+  // }
+
+  public removeFilterFromColumn(column: Column) {
+
+    const columnFilter = column.filter;
+    column.isFiltered = false;
+    columnFilter.nullifyFilterProperties();
+
+    // for (let i = 0; i < this.filters.length; i++) {
+    //   if (this.filters[i].columnId === columnId) {
+    //     this.filters.splice(i, 1);
+    //     i = i - 1;
+    //     if (i < 0) {
+    //       i = 0;
+    //     }
+    //     // this.removeFilterFromColumn(columnId);
+    //   }
+    // }
+    // this.applyFilter();
+  }
+
+  public hideColumn(columnId: string) {
+
+  }
+
+  public sortColumn(column: Column, sortOrder: SortingOrder) {
     let sorterExists = false;
     this.sorters.forEach(value => {
-      if (value.columnId === columnId) {
+      if (value.columnId === column.id) {
         sorterExists = true;
       }
     });
@@ -263,11 +263,103 @@ export class GridComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const sorterObject = new Sorter(this.id + columnId + 'sorter', columnObject.dataType, columnObject.mapping, columnId, columnObject.headerName);
+    const sorterObject = new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName);
     sorterObject.order = sortOrder;
     this.sorters.push(sorterObject);
     // this.sortRowRecordData();
   }
+
+  public columnFilteredTextChanged(column: Column, element: HTMLInputElement) {
+    const colFilter = column.filter;
+    colFilter.stringValue = element.value;
+    if (colFilter.stringValue && colFilter.stringValue.trim() !== '') {
+      column.isFiltered = true;
+    } else {
+      column.isFiltered = false;
+    }
+  }
+
+  public columnFilteredGreaterNumberChanged(column: Column, element: HTMLInputElement) {
+    const colFilter = column.filter;
+    const parsedValue = parseInt(element.value, 10);
+    if (element.value && element.value.trim() !== '' && !isNaN(parsedValue)) {
+      colFilter.greaterThan = parsedValue;
+      column.isFiltered = true;
+    } else {
+      column.isFiltered = false;
+    }
+  }
+
+  public columnFilteredEqualNumberChanged(column: Column, element: HTMLInputElement) {
+    const colFilter = column.filter;
+    const parsedValue = parseInt(element.value, 10);
+    if (element.value && element.value.trim() !== '' && !isNaN(parsedValue)) {
+      colFilter.equalTo = parsedValue;
+      column.isFiltered = true;
+    } else {
+      column.isFiltered = false;
+    }
+  }
+
+  public columnFilteredLowerNumberChanged(column: Column, element: HTMLInputElement) {
+    const colFilter = column.filter;
+    const parsedValue = parseInt(element.value, 10);
+    if (element.value && element.value.trim() !== '' && !isNaN(parsedValue)) {
+      colFilter.lessThan = parsedValue;
+      column.isFiltered = true;
+    } else {
+      column.isFiltered = false;
+    }
+  }
+
+  public columnFilteredBeforeDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
+    const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
+    const colFilter = column.filter;
+    colFilter.beforeDate = date_value;
+    colFilter.beforeDateMillis = date_value.getTime();
+    label.title = date_value.toDateString();
+    column.isFiltered = true;
+  }
+
+  public columnFilteredAfterDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
+    const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
+    const colFilter = column.filter;
+    colFilter.afterDate = date_value;
+    colFilter.afterDateMillis = date_value.getTime();
+    label.title = date_value.toDateString();
+    column.isFiltered = true;
+  }
+
+  public columnFilteredOnDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
+    const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
+    const colFilter = column.filter;
+    colFilter.onDate = date_value;
+    colFilter.onDateMillis = date_value.getTime();
+    label.title = date_value.toDateString();
+    column.isFiltered = true;
+  }
+
+
+  public selectionButtonCheckedUnchecked(recordId: string, element: HTMLInputElement) {
+    const record = this.store.getRecordById(recordId);
+    if (record !== null) {
+      record.selectionModelCheck = element.checked;
+    }
+
+  }
+
+  public actionButtonClicked(recordId: string, buttonId: string) {
+
+  }
+
+  public refreshGridData() {
+
+  }
+
+  public goToPageNumber(pageNumber: number) {
+
+  }
+
 
   sortRowRecordData() {
     this.filtered_records.sort((a, b) => {
@@ -365,134 +457,108 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.hideShowRemoveFilterTab();
   }
 
-  public addStringFilterQuery(columnId: string, mapping: string, value: string) {
-    let queryExistsForIndex = false;
 
-    for (let i = 0; i < this.filters.length; i++) {
-      if (this.filters[i].columnId === columnId) {
-        if (value.trim() === '') {
-          this.filters.splice(i, 1);
-        } else {
-          this.filters[i].stringValue = value;
-        }
-        queryExistsForIndex = true;
-        break;
-      }
-    }
+  // public filterValueExistsForComparisionType(filter: Filter, comparision_type: string): boolean {
+  //   if (comparision_type === 'gt' && filter.greaterThan != null) {
+  //     return true;
+  //   }
+  //   if (comparision_type === 'et' && filter.equalTo != null) {
+  //     return true;
+  //   }
+  //   if (comparision_type === 'lt' && filter.lessThan != null) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-    if (!queryExistsForIndex && value.trim() !== '') {
-      const filter_object = new Filter(this.id + columnId, 'string', mapping, columnId);
-      filter_object.stringValue = value;
-      this.filters.push(filter_object);
-    }
-
-    // this.filterRecords();
-
-  }
-
-  public filterValueExistsForComparisionType(filter: Filter, comparision_type: string): boolean {
-    if (comparision_type === 'gt' && filter.greaterThan != null) {
-      return true;
-    }
-    if (comparision_type === 'et' && filter.equalTo != null) {
-      return true;
-    }
-    if (comparision_type === 'lt' && filter.lessThan != null) {
-      return true;
-    }
-    return false;
-  }
-
-  public filterAsignValueForComparisionType(filter: Filter, comparision_type: string, value: number, data_type: string) {
-    switch (data_type) {
-      case 'number':
-        switch (comparision_type) {
-          case 'gt':
-            filter.greaterThan = value;
-            break;
-          case 'et':
-            filter.equalTo = value;
-            break;
-          case 'lt':
-            filter.lessThan = value;
-            break;
-        }
-        break;
-      case 'date':
-        const date_value = new Date(value);
-        switch (comparision_type) {
-          case 'gt':
-            filter.afterDate = date_value;
-            break;
-          case 'et':
-            filter.onDate = date_value;
-            break;
-          case 'lt':
-            filter.beforeDate = date_value;
-            break;
-        }
-    }
-
-  }
-
-  public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string, value: any, data_type: string, target: HTMLInputElement = null) {
-    let queryExistsForIndex = false;
-    let query_value = null;
-    switch (data_type) {
-      case 'number':
-        query_value = parseInt(value, 10);
-        break;
-      case 'date':
-        query_value = new Date(value.year, value.month - 1, value.day);
-        break;
-    }
-    if (query_value == null) {
-      return;
-    }
-    for (let i = 0; i < this.filters.length; i++) {
-      if (this.filters[i].columnId === columnId) {
-        if (data_type === 'number' && value.trim() === '') {
-          this.filters.splice(i, 1);
-        } else {
-          this.filterAsignValueForComparisionType(this.filters[i], comparision_type, query_value, data_type);
-        }
-        queryExistsForIndex = true;
-        break;
-      }
-    }
-
-    if (!queryExistsForIndex) {
-      const filter_object = new Filter(this.id + columnId, data_type, mapping, columnId);
-      this.filterAsignValueForComparisionType(filter_object, comparision_type, query_value, data_type);
-      this.filters.push(filter_object);
-    }
-
-    if (target && data_type === 'date') {
-      target.title = query_value.toDateString();
-    }
-    console.log(this.filters);
-
-    // this.filterRecords();
-
-  }
+  // public filterAsignValueForComparisionType(filter: Filter, comparision_type: string, value: number, data_type: string) {
+  //   switch (data_type) {
+  //     case 'number':
+  //       switch (comparision_type) {
+  //         case 'gt':
+  //           filter.greaterThan = value;
+  //           break;
+  //         case 'et':
+  //           filter.equalTo = value;
+  //           break;
+  //         case 'lt':
+  //           filter.lessThan = value;
+  //           break;
+  //       }
+  //       break;
+  //     case 'date':
+  //       const date_value = new Date(value);
+  //       switch (comparision_type) {
+  //         case 'gt':
+  //           filter.afterDate = date_value;
+  //           break;
+  //         case 'et':
+  //           filter.onDate = date_value;
+  //           break;
+  //         case 'lt':
+  //           filter.beforeDate = date_value;
+  //           break;
+  //       }
+  //   }
+  //
+  // }
+  //
+  // public addNumberOrDateFilterQuery(columnId: string, mapping: string, comparision_type: string,
+  // value: any, data_type: string, target: HTMLInputElement = null) {
+  //   let queryExistsForIndex = false;
+  //   let query_value = null;
+  //   switch (data_type) {
+  //     case 'number':
+  //       query_value = parseInt(value, 10);
+  //       break;
+  //     case 'date':
+  //       query_value = new Date(value.year, value.month - 1, value.day);
+  //       break;
+  //   }
+  //   if (query_value == null) {
+  //     return;
+  //   }
+  //   for (let i = 0; i < this.filters.length; i++) {
+  //     if (this.filters[i].columnId === columnId) {
+  //       if (data_type === 'number' && value.trim() === '') {
+  //         this.filters.splice(i, 1);
+  //       } else {
+  //         this.filterAsignValueForComparisionType(this.filters[i], comparision_type, query_value, data_type);
+  //       }
+  //       queryExistsForIndex = true;
+  //       break;
+  //     }
+  //   }
+  //
+  //   if (!queryExistsForIndex) {
+  //     const filter_object = new Filter(this.id + columnId, data_type, mapping, columnId);
+  //     this.filterAsignValueForComparisionType(filter_object, comparision_type, query_value, data_type);
+  //     this.filters.push(filter_object);
+  //   }
+  //
+  //   if (target && data_type === 'date') {
+  //     target.title = query_value.toDateString();
+  //   }
+  //   console.log(this.filters);
+  //
+  //   // this.filterRecords();
+  //
+  // }
 
   public addListFilterQuery(column: Column) {
     // Remove previous filter for this column
-    for (let i = 0; i < this.filters.length; i++) {
-      if (this.filters[i].columnId === column.id) {
-        this.filters.splice(i, 1);
-        break;
-      }
-    }
-    const filter_object = new Filter(this.id + column.id, column.dataType, column.mapping, column.id);
+    const colFilter = column.filter;
+    colFilter.listValue = [];
     // Add new filters for this column filterOptions
     column.filterOptions.forEach((value) => {
       if (value.isSelected) {
-        filter_object.listValue.push(value.label);
+        colFilter.listValue.push(value.label);
       }
     });
-    if (filter_object.listValue.length > 0) {
-      this.filters.push(filter_object);
+    if (colFilter.listValue.length > 0) {
+      column.isFiltered = true;
+    } else {
+      column.isFiltered = false;
     }
     // console.log(filter_object)
     // this.filterRecords();

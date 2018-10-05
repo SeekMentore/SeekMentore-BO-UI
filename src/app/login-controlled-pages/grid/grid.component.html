@@ -57,20 +57,20 @@
       <!--Column Name Bar-->
       <div class="uigrid-row">
       <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box">
-        <input title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll()">
+        <input title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
       </span>
         <div class="uigrid-cell" *ngFor="let column of columns">
           <div *ngIf="!column.toBeHidden" class="column-header">
             <div id="{{id+column.id+'remove-filter'}}"
                  *ngIf="isFilterCapable && column.filterable">
-              <i class="fas fa-times remove" (click)="removeFilterFromColumn(column.id)"></i>
+              <i class="fas fa-times remove" (click)="removeFilterFromColumn(column)"></i>
             </div>
             <button *ngIf="column.hideable" class="uigrid-stroked-white-button" (click)="hideColumn(column.id)">Hide
             </button>
             <span class="title">{{column.headerName}}</span>
             <div *ngIf="isSortingCapable && column.sortable">
-              <i class="fas fa-arrow-up uigrid-order-icon-button" (click)="sortColumn(column.id, 1)"></i>
-              <i class="fas fa-arrow-down uigrid-order-icon-button" (click)="sortColumn(column.id, 2)"></i>
+              <i class="fas fa-arrow-up uigrid-order-icon-button" (click)="sortColumn(column, 1)"></i>
+              <i class="fas fa-arrow-down uigrid-order-icon-button" (click)="sortColumn(column, 2)"></i>
             </div>
           </div>
         </div>
@@ -89,44 +89,44 @@
             <div *ngIf="column.dataType == 'string'">
               <i class="fas fa-search"></i>
               <input type="text" placeholder="search" #string1
-                     (input)="addStringFilterQuery(column.id, column.mapping, $event.target.value)"/>
+                     (input)="columnFilteredTextChanged(column, $event.target)"/>
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'number'">
               <span>GT</span>
               <input #number1 class="number_input"
-                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event.target.value, 'number')"
+                     (input)="columnFilteredGreaterNumberChanged(column,$event.target)"
                      type="number" title="GT"><br>
               <span>EQ</span>
               <input #number2 class="number_input"
-                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event.target.value, 'number')"
+                     (input)="columnFilteredEqualNumberChanged(column, $event.target)"
                      type="number" title="EQ"><br>
               <span>LT</span>
               <input #number3 class="number_input"
-                     (input)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event.target.value, 'number')"
+                     (input)="columnFilteredLowerNumberChanged(column, $event.target)"
                      type="number" title="LT">
             </div>
 
             <div class="filter_column" *ngIf="column.dataType == 'date'">
               <div>
-                <span (click)="date1.toggle()" #dateButton1>After</span>
+                <span #dateLabel1>After</span>
                 <input type="text" ngbDatepicker #date1="ngbDatepicker" class="date_input"
-                       (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'gt', $event, 'date', dateButton1)">
-                <i class="fas fa-calendar"></i>
+                       (dateSelect)="columnFilteredAfterDateChanged(column, $event, dateLabel1)">
+                <i class="fas fa-calendar" (click)="date1.toggle()" ></i>
               </div>
               <div>
 
-                <span (click)="date2.toggle()" #dateButton2>On</span>
+                <span  #dateLabel2>On</span>
                 <input type="text" ngbDatepicker #date2="ngbDatepicker" class="date_input"
-                       (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'et', $event, 'date' ,dateButton2)"
+                       (dateSelect)="columnFilteredOnDateChanged(column, $event, dateLabel2)"
                        title="On">
-                <i class="fas fa-calendar"></i>
+                <i class="fas fa-calendar" (click)="date2.toggle()"></i>
               </div>
               <div>
-                <span (click)="date3.toggle()" #dateButton3>Before</span>
+                <span  #dateLabel3>Before</span>
                 <input type="text" ngbDatepicker #date3="ngbDatepicker" class="date_input"
-                       (dateSelect)="addNumberOrDateFilterQuery(column.id, column.mapping, 'lt', $event, 'date', dateButton3)"
+                       (dateSelect)="columnFilteredBeforeDateChanged(column, $event, dateLabel3)"
                        title="Before">
-                <i class="fas fa-calendar"></i>
+                <i class="fas fa-calendar" (click)="date3.toggle()"></i>
               </div>
             </div>
             <div *ngIf="column.dataType == 'list'"> Choose from list
@@ -145,7 +145,7 @@
     <!--Grid Records-->
     <div *ngFor="let record of filtered_records" class="uigrid-row">
       <span class="uigrid-cell select_box" *ngIf="hasSelectionColumn">
-        <input title="select" type="checkbox" (change)="selectionButtonCheckedUnchecked(record.id)">
+        <input id="{{id + 'checkbox' + record.id}}" title="select" type="checkbox" (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
       </span>
       <span class="uigrid-cell" *ngFor="let column of columns">
         {{record.getProperty(column.mapping)}}

@@ -8,6 +8,7 @@ export class Filter {
   equalTo: number = null;
   greaterThan: number = null;
   stringValue: string = null;
+  textCaseSensitiveSearch = true;
   beforeDate: Date = null;
   onDate: Date = null;
   afterDate: Date = null;
@@ -23,4 +24,25 @@ export class Filter {
     this.columnId = columnId;
     // Set values
   }
+
+  nullifyFilterProperties() {
+    if (this.type === 'number') {
+      this.lessThan = null;
+      this.equalTo = null;
+      this.greaterThan = null;
+    } else if (this.type === 'string') {
+      this.stringValue = null;
+      this.textCaseSensitiveSearch = true;
+    } else if (this.type === 'date') {
+      this.beforeDate = null;
+      this.onDate = null;
+      this.afterDate = null;
+      this.beforeDateMillis = null;
+      this.onDateMillis = null;
+      this.afterDateMillis = null;
+    } else if (this.type === 'list') {
+      this.listValue = []; // empty list
+    }
+  }
+
 }

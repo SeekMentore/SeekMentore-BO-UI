@@ -1,6 +1,7 @@
 export class Record {
   id: string;
   property: Object;
+  selectionModelCheck = false;
 
   constructor(id: string, property: Object) {
     this.id = id;

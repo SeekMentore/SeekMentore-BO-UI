@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {SelectionColumn} from './selection-column';
 import {ActionColumn} from './action-column';
 import {Paginator} from './paginator';
@@ -225,7 +225,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public toggleRemoteLoad(event: any) {
-    if (event.target.value === 'ONLINE') {
+    if (event === 'ONLINE') {
       this.online = true;
     } else {
       this.online = false;

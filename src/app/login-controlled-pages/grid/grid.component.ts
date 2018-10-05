@@ -166,6 +166,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     for (const column of this.columns) {
       column.isFiltered = false;
     }
+    this.hideShowRemoveFilterTab();
   }
 
   public toggleRemoteLoad(event: any) {
@@ -233,7 +234,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     const columnFilter = column.filter;
     column.isFiltered = false;
     columnFilter.nullifyFilterProperties();
-
+    this.hideShowRemoveFilterTab(column);
     // for (let i = 0; i < this.filters.length; i++) {
     //   if (this.filters[i].columnId === columnId) {
     //     this.filters.splice(i, 1);
@@ -565,33 +566,53 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
 
-  public hideShowRemoveFilterTab() {
+  public hideShowRemoveFilterTab(column: Column = null) {
     /*
     hide remove-filter element of those columns which do not contain any filter
      */
-    const columns_ids: string[] = [];
-    this.columns.forEach((column) => {
-      columns_ids.push(column.id);
-    });
-    this.filters.forEach((value) => {
-      const index = columns_ids.indexOf(value.columnId);
-      if (index > -1) {
-        columns_ids.splice(index, 1);
-        const element = document.getElementById(this.id + value.columnId + 'remove-filter');
-        if (element) {
-          element.hidden = false;
+    if (column !== null) {
+      const crossButton = document.getElementById(this.id + column.id + 'remove-filter');
+      if (column.isFiltered) {
+        crossButton.hidden = false;
+      } else {
+        column.hidden = true;
+      }
+    } else {
+      for (const element of this.columns) {
+        const crossButton = document.getElementById(this.id + element.id + 'remove-filter');
+        if (crossButton) {
+          if (element.isFiltered) {
+            crossButton.hidden = false;
+          } else {
+            crossButton.hidden = true;
+          }
         }
       }
-    });
-    // console.log(columns_ids);
-    columns_ids.forEach(id => {
-      // console.log(this.id + id + 'remove-filter');
-      const element = document.getElementById(this.id + id + 'remove-filter');
-      // console.log(element);
-      if (element) {
-        element.hidden = true;
-      }
-    });
+    }
+
+    // const columns_ids: string[] = [];
+    // this.columns.forEach((column) => {
+    //   columns_ids.push(column.id);
+    // });
+    // this.filters.forEach((value) => {
+    //   const index = columns_ids.indexOf(value.columnId);
+    //   if (index > -1) {
+    //     columns_ids.splice(index, 1);
+    //     const element = document.getElementById(this.id + value.columnId + 'remove-filter');
+    //     if (element) {
+    //       element.hidden = false;
+    //     }
+    //   }
+    // });
+    // // console.log(columns_ids);
+    // columns_ids.forEach(id => {
+    //   // console.log(this.id + id + 'remove-filter');
+    //   const element = document.getElementById(this.id + id + 'remove-filter');
+    //   // console.log(element);
+    //   if (element) {
+    //     element.hidden = true;
+    //   }
+    // });
   }
 
   public showMultiSelectFilter(column: Column, sourceButton: HTMLElement) {

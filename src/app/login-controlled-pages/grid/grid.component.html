@@ -60,12 +60,12 @@
         <input title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
       </span>
         <div class="uigrid-cell" *ngFor="let column of columns">
-          <div *ngIf="!column.toBeHidden" class="column-header">
+          <div *ngIf="!column.hidden" class="column-header">
             <div id="{{id+column.id+'remove-filter'}}"
                  *ngIf="isFilterCapable && column.filterable">
               <i class="fas fa-times remove" (click)="removeFilterFromColumn(column)"></i>
             </div>
-            <button *ngIf="column.hideable" class="uigrid-stroked-white-button" (click)="hideColumn(column.id)">Hide
+            <button *ngIf="column.hideable" class="uigrid-stroked-white-button" (click)="hideColumn(column)">Hide
             </button>
             <span class="title">{{column.headerName}}</span>
             <div *ngIf="isSortingCapable && column.sortable">
@@ -85,7 +85,7 @@
       <div class="uigrid-row">
         <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box"></span>
         <div *ngFor="let column of columns" class="uigrid-cell">
-          <div *ngIf="isFilterCapable && !column.toBeHidden && column.filterable" style="width:100%;">
+          <div *ngIf="isFilterCapable && !(column.hidden) && column.filterable" style="width:100%;">
             <div *ngIf="column.dataType == 'string'">
               <i class="fas fa-search"></i>
               <input type="text" placeholder="search" #string1 class="{{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
@@ -148,7 +148,9 @@
                (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
       </span>
       <span class="uigrid-cell" *ngFor="let column of columns">
-        {{record.getProperty(column.mapping)}}
+        <span *ngIf="!(column.hidden)">
+          {{record.getProperty(column.mapping)}}
+        </span>
       </span>
 
       <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">

@@ -9,7 +9,6 @@ import {Store} from './store';
 import {Record} from './record';
 import {MultiSelectInputData} from '../../utils/multi-select-input/multi-select-input.component';
 import {AppUtilityService} from '../../utils/app-utility.service';
-import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 @Component({
   selector: 'app-grid',
@@ -248,8 +247,10 @@ export class GridComponent implements OnInit, AfterViewInit {
     // this.applyFilter();
   }
 
-  public hideColumn(columnId: string) {
-
+  public hideColumn(column: Column) {
+    column.hidden = true;
+    this.showGrid = false;
+    this.showGrid = true;
   }
 
   public sortColumn(column: Column, sortOrder: SortingOrder) {
@@ -631,29 +632,35 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public resetFilterInputs(column: Column = null) {
-    let elements = [];
+    let elements: HTMLCollectionOf<Element> = null;
     if (column !== null) {
       elements = document.getElementsByClassName(this.id + 'grid_column_input' + column.id);
 
     } else {
       elements = document.getElementsByClassName(this.id + 'grid_input');
     }
-    for (const i = 0; i < elements.length; i++) {
-      (<HTMLInputElement>elements.item(i)).value = '';
+    if (elements !== null) {
+      for (let i = 0; i < elements.length; i++) {
+        (<HTMLInputElement>elements.item(i)).value = '';
+      }
     }
+
   }
 
   public resetFilterLabels(column: Column = null) {
-    let elements = [];
+    let elements: HTMLCollectionOf<Element> = null;
     if (column !== null) {
       elements = document.getElementsByClassName(this.id + 'grid_column_label' + column.id);
 
     } else {
       elements = document.getElementsByClassName(this.id + 'grid_label');
     }
-    for (const i = 0; i < elements.length; i++) {
-      (<HTMLElement>elements.item(i)).title = '';
+    if (elements !== null) {
+      for (let i = 0; i < elements.length; i++) {
+        (<HTMLElement>elements.item(i)).title = '';
+      }
     }
+
   }
 
 

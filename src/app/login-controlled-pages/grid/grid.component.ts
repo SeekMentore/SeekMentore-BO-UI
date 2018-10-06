@@ -278,17 +278,22 @@ export class GridComponent implements OnInit, AfterViewInit {
     } else {
       column.isFiltered = false;
     }
+    this.hideShowRemoveFilterTab(column);
   }
 
   public columnFilteredGreaterNumberChanged(column: Column, element: HTMLInputElement) {
     const colFilter = column.filter;
     const parsedValue = parseInt(element.value, 10);
-    if (element.value && element.value.trim() !== '' && !isNaN(parsedValue)) {
+    if (isNaN(parsedValue)) {
+      return;
+    }
+    if (element.value && element.value.trim() !== '') {
       colFilter.greaterThan = parsedValue;
       column.isFiltered = true;
     } else {
       column.isFiltered = false;
     }
+    this.hideShowRemoveFilterTab(column);
   }
 
   public columnFilteredEqualNumberChanged(column: Column, element: HTMLInputElement) {
@@ -300,6 +305,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     } else {
       column.isFiltered = false;
     }
+    this.hideShowRemoveFilterTab(column);
   }
 
   public columnFilteredLowerNumberChanged(column: Column, element: HTMLInputElement) {
@@ -311,6 +317,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     } else {
       column.isFiltered = false;
     }
+    this.hideShowRemoveFilterTab(column);
   }
 
   public columnFilteredBeforeDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
@@ -320,6 +327,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     colFilter.beforeDateMillis = date_value.getTime();
     label.title = date_value.toDateString();
     column.isFiltered = true;
+    this.hideShowRemoveFilterTab(column);
   }
 
   public columnFilteredAfterDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
@@ -329,6 +337,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     colFilter.afterDateMillis = date_value.getTime();
     label.title = date_value.toDateString();
     column.isFiltered = true;
+    this.hideShowRemoveFilterTab(column);
   }
 
   public columnFilteredOnDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
@@ -338,6 +347,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     colFilter.onDateMillis = date_value.getTime();
     label.title = date_value.toDateString();
     column.isFiltered = true;
+    this.hideShowRemoveFilterTab(column);
   }
 
 
@@ -575,7 +585,9 @@ export class GridComponent implements OnInit, AfterViewInit {
       if (column.isFiltered) {
         crossButton.hidden = false;
       } else {
-        column.hidden = true;
+        crossButton.hidden = true;
+        this.resetFilterInputs(column);
+        this.resetFilterLabels(column);
       }
     } else {
       for (const element of this.columns) {
@@ -588,7 +600,10 @@ export class GridComponent implements OnInit, AfterViewInit {
           }
         }
       }
+      this.resetFilterInputs();
+      this.resetFilterLabels();
     }
+
 
     // const columns_ids: string[] = [];
     // this.columns.forEach((column) => {
@@ -614,6 +629,33 @@ export class GridComponent implements OnInit, AfterViewInit {
     //   }
     // });
   }
+
+  public resetFilterInputs(column: Column = null) {
+    let elements = [];
+    if (column !== null) {
+      elements = document.getElementsByClassName(this.id + 'grid_column_input' + column.id);
+
+    } else {
+      elements = document.getElementsByClassName(this.id + 'grid_input');
+    }
+    for (const i = 0; i < elements.length; i++) {
+      (<HTMLInputElement>elements.item(i)).value = '';
+    }
+  }
+
+  public resetFilterLabels(column: Column = null) {
+    let elements = [];
+    if (column !== null) {
+      elements = document.getElementsByClassName(this.id + 'grid_column_label' + column.id);
+
+    } else {
+      elements = document.getElementsByClassName(this.id + 'grid_label');
+    }
+    for (const i = 0; i < elements.length; i++) {
+      (<HTMLElement>elements.item(i)).title = '';
+    }
+  }
+
 
   public showMultiSelectFilter(column: Column, sourceButton: HTMLElement) {
     if (column.filterOptions === null || column.filterOptions.length === 0) {

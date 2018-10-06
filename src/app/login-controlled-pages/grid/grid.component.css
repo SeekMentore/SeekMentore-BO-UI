@@ -40,6 +40,15 @@ label {
   justify-content: center;
 }
 
+.uigrid-cell.grid_actions {
+  justify-content: center;
+}
+
+.uigrid-cell.grid_actions button {
+  font-weight: bold;
+  margin: 0 8px;
+}
+
 .column-header {
   display: flex;
   flex-direction: row;
@@ -183,12 +192,18 @@ label {
   width: 100%;
 }
 
+i {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
 .filter_column .date_input {
   width: 0;
   height: 0;
   opacity: 0;
   padding: 0;
   margin: 0;
+  flex: 0 0 0;
 }
 
 .filter_column .number_input {
@@ -205,13 +220,18 @@ label {
   font-size: 14px;
 }
 
-.filter_column input {
-  margin: 0 5px;
-  padding: 0 2px;
-  border-radius: 5px;
-  border: 1px solid var(--colorPrimary);
+.filter_column input, .filter_input_field {
+  margin: 0 5px !important;
+  padding: 0 2px !important;
+  border-radius: 5px !important;
+  border: 1px solid var(--colorPrimary) !important;
   line-height: 20px;
   height: 20px;
+}
+
+.filter_input_field {
+  max-width: 70px;
+  padding: 0 8px;
 }
 
 .tab_checkmark.left {

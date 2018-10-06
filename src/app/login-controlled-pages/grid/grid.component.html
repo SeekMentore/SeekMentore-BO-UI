@@ -88,49 +88,48 @@
           <div *ngIf="isFilterCapable && !column.toBeHidden && column.filterable" style="width:100%;">
             <div *ngIf="column.dataType == 'string'">
               <i class="fas fa-search"></i>
-              <input type="text" placeholder="search" #string1
+              <input type="text" placeholder="search" #string1 class="{{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
                      (input)="columnFilteredTextChanged(column, $event.target)"/>
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'number'">
               <span>GT</span>
-              <input #number1 class="number_input"
+              <input #number1 class="number_input {{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
                      (input)="columnFilteredGreaterNumberChanged(column,$event.target)"
                      type="number" title="GT"><br>
               <span>EQ</span>
-              <input #number2 class="number_input"
+              <input #number2 class="number_input {{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
                      (input)="columnFilteredEqualNumberChanged(column, $event.target)"
                      type="number" title="EQ"><br>
               <span>LT</span>
-              <input #number3 class="number_input"
+              <input #number3 class="number_input {{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
                      (input)="columnFilteredLowerNumberChanged(column, $event.target)"
                      type="number" title="LT">
             </div>
 
             <div class="filter_column" *ngIf="column.dataType == 'date'">
               <div>
-                <span #dateLabel1>After</span>
+                <i class="fas fa-calendar" (click)="date1.toggle()"></i>
+                <span #dateLabel1 class="{{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}">After</span>
                 <input type="text" ngbDatepicker #date1="ngbDatepicker" class="date_input"
                        (dateSelect)="columnFilteredAfterDateChanged(column, $event, dateLabel1)">
-                <i class="fas fa-calendar" (click)="date1.toggle()" ></i>
               </div>
               <div>
-
-                <span  #dateLabel2>On</span>
+                <i class="fas fa-calendar " (click)="date2.toggle()"></i>
+                <span #dateLabel2 class="{{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}">On</span>
                 <input type="text" ngbDatepicker #date2="ngbDatepicker" class="date_input"
                        (dateSelect)="columnFilteredOnDateChanged(column, $event, dateLabel2)"
                        title="On">
-                <i class="fas fa-calendar" (click)="date2.toggle()"></i>
               </div>
               <div>
-                <span  #dateLabel3>Before</span>
+                <i class="fas fa-calendar" (click)="date3.toggle()"></i>
+                <span #dateLabel3 class="{{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}">Before</span>
                 <input type="text" ngbDatepicker #date3="ngbDatepicker" class="date_input"
                        (dateSelect)="columnFilteredBeforeDateChanged(column, $event, dateLabel3)"
                        title="Before">
-                <i class="fas fa-calendar" (click)="date3.toggle()"></i>
               </div>
             </div>
             <div *ngIf="column.dataType == 'list'"> Choose from list
-              <i class="fas fa-list {{id + 'label-filter'}}"
+              <i class="fas fa-list {{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}"
                  style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #listButton
                  (click)="showMultiSelectFilter(column, listButton)"></i>
             </div>
@@ -145,13 +144,14 @@
     <!--Grid Records-->
     <div *ngFor="let record of filtered_records" class="uigrid-row">
       <span class="uigrid-cell select_box" *ngIf="hasSelectionColumn">
-        <input id="{{id + 'checkbox' + record.id}}" title="select" type="checkbox" (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
+        <input id="{{id + 'checkbox' + record.id}}" title="select" type="checkbox"
+               (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
       </span>
       <span class="uigrid-cell" *ngFor="let column of columns">
         {{record.getProperty(column.mapping)}}
       </span>
 
-      <div *ngIf="hasActionColumn" class="uigrid-cell">
+      <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">
         <span *ngFor="let button of actionColumn.buttons">
           <button (click)="actionButtonClicked(record.id, button.id)">
             Button
@@ -163,20 +163,23 @@
   </div>
   <!--Pagination Bar-->
   <div class="uigrid-row">
-      <span class="uigrid-cell fill">
-        Total Records: {{store.totalRecords}}
-        <span *ngIf="isPagingCapable">
-          Records per page: <input name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage">
-        </span>
-        <button (click)="refreshGridData()">Refresh Data</button>
-        <span *ngIf="isPagingCapable">
-          <button (click)="loadPreviousPage()">Previous</button>
-          Page {{paginator.currentPage}} of {{paginator.totalPages}}
-          <button (click)="loadNextPage()">Next</button>
-          <input type="number" #pageNumber>
-          <button (click)="goToPageNumber(pageNumber.value)">Go To</button>
-        </span>
-      </span>
+    <div class="uigrid-cell fill">
+      <span style="margin-right: 20px"><b> Total Records: {{store.totalRecords}}</b></span>
+      <div *ngIf="isPagingCapable">
+        <span>Records per page:</span>
+        <input class="filter_input_field" name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage"
+               placeholder="per page">
+      </div>
+      <button class="uigrid-ok-button" (click)="refreshGridData()">Refresh Data</button>
+      <div style="flex: 1 1 auto"></div>
+      <div *ngIf="isPagingCapable">
+        <i class="fas fa-arrow-left" (click)="loadPreviousPage()"></i>
+        <span style="margin: 0 20px"><b>Page {{paginator.currentPage}} of {{paginator.totalPages}}</b></span>
+        <i class="fas fa-arrow-right" (click)="loadNextPage()"></i>
+        <input class="filter_input_field" type="number" #pageNumber placeholder="goto">
+        <button class="uigrid-ok-button" (click)="goToPageNumber(pageNumber.value)">Go to page</button>
+      </div>
+    </div>
   </div>
 
 </div>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {SelectionColumn} from './selection-column';
 import {ActionColumn} from './action-column';
 import {Paginator} from './paginator';
@@ -54,12 +54,15 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   online: boolean;
 
+  @Input()
+  gridMetaData: GridDataInterface;
+
 
   constructor(public utility_service: AppUtilityService) {
   }
 
   ngOnInit() {
-
+    console.log(this.gridMetaData);
   }
 
   ngAfterViewInit() {
@@ -90,6 +93,19 @@ export class GridComponent implements OnInit, AfterViewInit {
     /*
          * Init all values
          */
+    this.id = this.gridMetaData.id;
+    this.title = this.gridMetaData.title;
+    this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
+    this.hasSelectionColumn = this.gridMetaData.hasSelectionColumn;
+    this.selectionColumn = this.gridMetaData.selectionColumn;
+    this.hasActionColumn = this.gridMetaData.hasActionColumn;
+    this.actionColumn = this.gridMetaData.actionColumn;
+    this.isPagingCapable = this.gridMetaData.isPagingCapable;
+    this.paginator = this.gridMetaData.paginator;
+    this.isSortingCapable = this.gridMetaData.isSortingCapable;
+    this.isFilterCapable = this.gridMetaData.isFilterCapable;
+    this.columns = this.gridMetaData.columns;
+    this.store = this.gridMetaData.store;
     if (this.isPagingCapable) {
       this.paginator.init();
     }
@@ -736,4 +752,20 @@ export class GridComponent implements OnInit, AfterViewInit {
   getDisplay(column) {
     return column.hidden ? 'none' : 'flex';
   }
+}
+
+export interface GridDataInterface {
+  id: string;
+  title: string;
+  htmlDomElementId: string;
+  hasSelectionColumn: boolean;
+  selectionColumn: SelectionColumn;
+  hasActionColumn: boolean;
+  actionColumn: ActionColumn;
+  isPagingCapable: boolean;
+  paginator: Paginator;
+  isSortingCapable: boolean;
+  isFilterCapable: boolean;
+  columns: Column[];
+  store: Store;
 }

@@ -16,7 +16,7 @@ import {Paginator} from "./grid/paginator";
 import {Column} from "./grid/column";
 import {Filter} from "./grid/filter";
 import {Sorter} from "./grid/sorter";
-import {GridComponent} from "./grid/grid.component";
+import {GridComponent, GridDataInterface} from "./grid/grid.component";
 import {FilterOptions} from "./grid/filter-options";
 
 
@@ -44,10 +44,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   emailData: EmailInterface;
   emailDialog: HTMLDivElement;
 
-  showGrid = false;
-  gridColumnsData: GridColumnInterface[];
-  gridMetaData: GridMetaDataInterface;
-  gridRecords: any[];
+  gridMetaData: GridDataInterface;
 
   @ViewChild('grid1')
   gridObject: GridComponent;
@@ -59,60 +56,11 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.idleTime = 0;
     this.setActivityTimer();
     this.emailData = null;
+    this.gridMetaData = null;
+    this.setUpGridMetaData();
   }
 
   ngOnInit(): void {
-
-    // setTimeout(() => {
-    //   this.gridMetaData = {
-    //     title: 'This is grid',
-    //     recordPerPage: 10,
-    //     totalRecords: 100,
-    //     totalPageNumbers: 10,
-    //     currentPageNumber: 1,
-    //     paginationRequired: true
-    //   };
-    //   this.gridColumnsData = [{
-    //     columnName: 'Column 1',
-    //     mapping: 'firstColumn',
-    //     filterable: true,
-    //     sortable: true,
-    //     datatype: 'string',
-    //     allowed_values: null
-    //   }, {
-    //     columnName: 'Column 2',
-    //     mapping: 'secondColumn',
-    //     filterable: true,
-    //     sortable: true,
-    //     datatype: 'list',
-    //     allowed_values: ['cell 1', 'cell 2']
-    //   }, {
-    //     columnName: 'Column 3',
-    //     mapping: 'thirdColumn',
-    //     filterable: true,
-    //     sortable: true,
-    //     datatype: 'number',
-    //     allowed_values: null
-    //   }];
-    //   this.gridRecords = [
-    //     {
-    //       firstColumn: 'cell 1',
-    //       secondColumn: 'cell 2',
-    //       thirdColumn: 3
-    //     },
-    //     {
-    //       firstColumn: 'cell 4',
-    //       secondColumn: 'cell 5',
-    //       thirdColumn: 63
-    //     },
-    //     {
-    //       firstColumn: 'cell 1',
-    //       secondColumn: 'cell 2',
-    //       thirdColumn: 96
-    //     }
-    //   ];
-    //   this.showGrid = true;
-    // }, 500);
 
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
@@ -178,21 +126,13 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.setUpGrid();
+      this.gridObject.init();
+      this.gridObject.createGrid();
     }, 0);
   }
 
-  public setUpGrid() {
-    // const store = new Store('G1-S', true);
-    // const data = [
-    //   {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
-    //   {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
-    // ];
-    // store.setStaticData(data);
-
+  public setUpGridMetaData() {
     const store = new Store('G1-S', false, '/rest/employee/alertsRemindersGrid', null);
-
-
     const selection_column = new SelectionColumn('G1-SC');
     const action_button1 = new ActionButton('G1-AB1', 'open');
     const action_button2 = new ActionButton('G1-AB2', 'remove');
@@ -205,32 +145,23 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
     const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
     const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
-    //
-    // const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
-    // const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);
-    // const column3 = new Column('G1-C3', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null);
-    // const column4 = new Column('G1-C4', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null);
-    // const column5 = new Column('G1-C5', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null);
-    // const column6 = new Column('G1-C6', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null);
 
+    this.gridMetaData = {
+      id: 'grid-1',
+      title: 'grid title',
+      htmlDomElementId: 'grid-1',
+      hasSelectionColumn: true,
+      selectionColumn: selection_column,
+      hasActionColumn: true,
+      actionColumn: action_column,
+      isPagingCapable: true,
+      paginator: paginator,
+      isSortingCapable: true,
+      isFilterCapable: true,
+      columns: [column1, column2, column3, column4],
+      store: store
+    };
 
-    this.gridObject.id = 'grid-1';
-    this.gridObject.title = 'grid title';
-    this.gridObject.htmlDomElementId = 'grid-1';
-    this.gridObject.hasSelectionColumn = true;
-    this.gridObject.selectionColumn = selection_column;
-    this.gridObject.hasActionColumn = true;
-    this.gridObject.actionColumn = action_column;
-    this.gridObject.isPagingCapable = true;
-    this.gridObject.paginator = paginator;
-    this.gridObject.isSortingCapable = true;
-    // this.gridObject.sorters = [sorter1, sorter2];
-    this.gridObject.isFilterCapable = true;
-    // this.gridObject.filters = [filter1, filter2];
-    this.gridObject.columns = [column1, column2, column3, column4];
-    this.gridObject.store = store;
-    this.gridObject.init();
-    this.gridObject.createGrid();
   }
 
 

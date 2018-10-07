@@ -39,6 +39,8 @@
   </div>
   <button (click)="askForConfirmation()">Show confirmation dialog</button>
   <button (click)="showAlertDialog()">Show alert dialog</button>
+  <app-grid #grid1 id="grid-1" [gridMetaData]="gridMetaData"></app-grid>
+
 
   <router-outlet></router-outlet>
 
@@ -51,7 +53,6 @@
                  <!--[grid-records]="gridRecords">-->
 
 <!--</app-create-grid>-->
-<app-grid #grid1 id="grid-1" [gridMetaData]="gridMetaData"></app-grid>
 
 <!--Email Dialog-->
 <div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">

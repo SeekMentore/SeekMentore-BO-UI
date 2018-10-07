@@ -1,7 +1,7 @@
 import {EventHandler} from './event-handler';
 import {Renderer} from './renderer';
 import {FilterOptions} from './filter-options';
-import {Filter} from "./filter";
+import {Filter} from './filter';
 
 export class Column {
   id: string;

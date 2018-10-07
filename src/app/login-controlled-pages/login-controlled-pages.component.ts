@@ -1,21 +1,18 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {AppUtilityService} from '../utils/app-utility.service';
-import {HelperService} from '../utils/helper.service';
-import {AppConstants} from '../utils/app-constants';
-import {Router} from '@angular/router';
-import {LcpConstants} from '../utils/lcp-constants';
-import {EmailInterface} from './create-email/create-email.component';
-import {EnvironmentConstants} from '../utils/environment-constants';
-import {LcpRestUrls} from '../utils/lcp-rest-urls';
-import {GridColumnInterface, GridMetaDataInterface} from './create-grid/create-grid.component';
+import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
+import {AppUtilityService} from "../utils/app-utility.service";
+import {HelperService} from "../utils/helper.service";
+import {AppConstants} from "../utils/app-constants";
+import {Router} from "@angular/router";
+import {LcpConstants} from "../utils/lcp-constants";
+import {EmailInterface} from "./create-email/create-email.component";
+import {EnvironmentConstants} from "../utils/environment-constants";
+import {LcpRestUrls} from "../utils/lcp-rest-urls";
 import {Store} from "./grid/store";
 import {SelectionColumn} from "./grid/selection-column";
 import {ActionButton} from "./grid/action-button";
 import {ActionColumn} from "./grid/action-column";
 import {Paginator} from "./grid/paginator";
 import {Column} from "./grid/column";
-import {Filter} from "./grid/filter";
-import {Sorter} from "./grid/sorter";
 import {GridComponent, GridDataInterface} from "./grid/grid.component";
 import {FilterOptions} from "./grid/filter-options";
 
@@ -139,12 +136,26 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const action_column = new ActionColumn('G1-AC', [action_button1, action_button2]);
     const paginator = new Paginator('G1-P', 20);
     paginator.init();
-    const filterOption1 = new FilterOptions('1', 'Male', 'male');
-    const filterOption2 = new FilterOptions('2', 'Female', 'female');
-    const column1 = new Column('G1-C1', 'Client Name', 'string', 'name', true, true, true, false, [], null, null);
-    const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
-    const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
-    const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
+
+
+    const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
+
+    const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);
+
+    const column3 = new Column('G1-C3', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null);
+
+    const column4 = new Column('G1-C4', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null);
+
+    const column5 = new Column('G1-C5', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null);
+
+    const column6 = new Column('G1-C6', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null);
+
+    // const filterOption1 = new FilterOptions('1', 'Male', 'male');
+    // const filterOption2 = new FilterOptions('2', 'Female', 'female');
+    // const column1 = new Column('G1-C1', 'Client Name', 'string', 'name', true, true, true, false, [], null, null);
+    // const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
+    // const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
+    // const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
 
     this.gridMetaData = {
       id: 'grid-1',
@@ -158,7 +169,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       paginator: paginator,
       isSortingCapable: true,
       isFilterCapable: true,
-      columns: [column1, column2, column3, column4],
+      columns: [column1, column2, column3, column4, column5, column6],
       store: store
     };
 

@@ -23,6 +23,10 @@
           <input type="radio" name="onlineOfflineBtn" checked>
           <span class="tab_checkmark right">Offline</span>
         </label>
+        <button class="uigrid-ok-button" (click)="showColumnHiddenStates()">
+          Hide columns
+        </button>
+
       </div>
 
     </div>
@@ -50,7 +54,7 @@
     </div>
   </div>
 
-  <div style="overflow-x: auto;">
+  <div style="overflow-x: scroll; overflow-y: scroll; max-height: 500px">
     <!--Column Bar-->
     <div class="uigrid-column-header-toolbar">
 
@@ -142,26 +146,26 @@
       </div>
     </div>
 
-    <!--Grid Records-->
-    <div *ngFor="let record of filtered_records" class="uigrid-row">
+      <!--Grid Records-->
+      <div *ngFor="let record of filtered_records" class="uigrid-row">
       <span class="uigrid-cell select_box" *ngIf="hasSelectionColumn">
         <input id="{{id + 'checkbox' + record.id}}" title="select" type="checkbox"
                (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
       </span>
-      <span class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}" >
+        <span class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}" >
         <span *ngIf="!(column.hidden)">
           {{record.getProperty(column.mapping)}}
         </span>
       </span>
 
-      <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">
+        <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">
         <span *ngFor="let button of actionColumn.buttons">
           <button (click)="actionButtonClicked(record.id, button.id)">
             Button
           </button>
         </span>
+        </div>
       </div>
-    </div>
 
   </div>
   <!--Pagination Bar-->

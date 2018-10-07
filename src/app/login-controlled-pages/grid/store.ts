@@ -41,26 +41,12 @@ export class Store {
         sorter: gridObject.isSortingCapable ? gridObject.sorters : null,
         filter: gridObject.isFilterCapable ? gridObject.filters : null
       };
-      // gridObject.utility_service.makeRequest1(this.restURL, 'POST', JSON.stringify(params)).subscribe(
-      //   result => {
-      //     let response = result['response'];
-      //     response = gridObject.utility_service.decodeObjectFromJSON(response);
-      //     console.log(response);
-      //     this.restData = response['data'];
-      //     this.convertIntoRecordData(this.getRestData());
-      //     gridObject.paintData();
-      //   },
-      //   error2 => {
-      //
-      //   }
-      // );
-      console.log(JSON.stringify(params));
-      this.simulateRestRequest().subscribe(
+      gridObject.utility_service.makeRequest1(this.restURL, 'POST', JSON.stringify(params)).subscribe(
         result => {
           let response = result['response'];
           response = gridObject.utility_service.decodeObjectFromJSON(response);
+          console.log(response);
           this.restData = response['data'];
-          this.data = [];
           this.convertIntoRecordData(this.getRestData());
           gridObject.paintData();
         },
@@ -68,6 +54,20 @@ export class Store {
 
         }
       );
+      // console.log(JSON.stringify(params));
+      // this.simulateRestRequest().subscribe(
+      //   result => {
+      //     let response = result['response'];
+      //     response = gridObject.utility_service.decodeObjectFromJSON(response);
+      //     this.restData = response['data'];
+      //     this.data = [];
+      //     this.convertIntoRecordData(this.getRestData());
+      //     gridObject.paintData();
+      //   },
+      //   error2 => {
+      //
+      //   }
+      // );
     }
   }
 
@@ -78,7 +78,29 @@ export class Store {
       message: '',
       data: [
         {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
-        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'}
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
+        {name: 'Manjeet', age: 20, birth_date: '2018-09-20', gender: 'Male'},
+        {name: 'Kumar', age: 25, birth_date: '2018-08-20', gender: 'Female'},
       ]
     };
     return of({response: JSON.stringify(response)});

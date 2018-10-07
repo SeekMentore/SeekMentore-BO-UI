@@ -1,14 +1,14 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {SelectionColumn} from './selection-column';
-import {ActionColumn} from './action-column';
-import {Paginator} from './paginator';
-import {Sorter, SortingOrder} from './sorter';
-import {Filter} from './filter';
-import {Column} from './column';
-import {Store} from './store';
-import {Record} from './record';
-import {MultiSelectInputData} from '../../utils/multi-select-input/multi-select-input.component';
-import {AppUtilityService} from '../../utils/app-utility.service';
+import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
+import {SelectionColumn} from "./selection-column";
+import {ActionColumn} from "./action-column";
+import {Paginator} from "./paginator";
+import {Sorter, SortingOrder} from "./sorter";
+import {Filter} from "./filter";
+import {Column} from "./column";
+import {Store} from "./store";
+import {Record} from "./record";
+import {MultiSelectInputData} from "../../utils/multi-select-input/multi-select-input.component";
+import {AppUtilityService} from "../../utils/app-utility.service";
 
 @Component({
   selector: 'app-grid',
@@ -75,24 +75,24 @@ export class GridComponent implements OnInit, AfterViewInit {
   public createGrid() {
     this.loadData();
     /*
-         * function to create grid on UI
-         *
-         * 1) Print the Title on the Grid
-         * 2) If isPagingCapable = true - Paint the Paging Toolbar with values
-         * 3) If isSortingCapable = true - Paint the Sorter Toolbar
-         * 4) If isFilterCapable = true - Paint the Filter Toolbar and Filter Buttons
-         * 5) If hasSelectionColumn = true - Paint the Selection Column
-         * 6) If hasActionColumn = true - Paint the Action Column
-         * 7) Iterate and paint all Columns
-         * 8) If column has filterable true paint the Filter column
-         * 9) If column.datatype = list, paint the Filter using filterOptions in column
-         */
+     * function to create grid on UI
+     *
+     * 1) Print the Title on the Grid
+     * 2) If isPagingCapable = true - Paint the Paging Toolbar with values
+     * 3) If isSortingCapable = true - Paint the Sorter Toolbar
+     * 4) If isFilterCapable = true - Paint the Filter Toolbar and Filter Buttons
+     * 5) If hasSelectionColumn = true - Paint the Selection Column
+     * 6) If hasActionColumn = true - Paint the Action Column
+     * 7) Iterate and paint all Columns
+     * 8) If column has filterable true paint the Filter column
+     * 9) If column.datatype = list, paint the Filter using filterOptions in column
+     */
   }
 
   public init() {
     /*
-         * Init all values
-         */
+     * Init all values
+     */
     this.id = this.gridMetaData.id;
     this.title = this.gridMetaData.title;
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
@@ -120,9 +120,9 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public loadData() {
     /*
-         * Step 1 - Check Store.isStatic
-         * Step 2 - If True call paintData() else call loadDynamicData
-         */
+     * Step 1 - Check Store.isStatic
+     * Step 2 - If True call paintData() else call loadDynamicData
+     */
 
     this.store.load(this);
   }
@@ -133,8 +133,8 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public removeData() {
     /*
-         * Remove all the records before painting new records
-         */
+     * Remove all the records before painting new records
+     */
     // In grid-template this will remove everything from <record-section>
   }
 
@@ -595,7 +595,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public hideShowRemoveFilterTab(column: Column = null) {
     /*
-    hide remove-filter element of those columns which do not contain any filter
+     hide remove-filter element of those columns which do not contain any filter
      */
     if (column !== null) {
       const crossButton = document.getElementById(this.id + column.id + 'remove-filter');
@@ -706,16 +706,31 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   }
 
+  public showColumnHiddenStates() {
+    const tempData: MultiSelectInputData = {
+      operation: 'hide_show_column',
+      meta_data: null,
+      data: []
+    };
+
+    for (const element of this.columns) {
+      tempData.data.push({
+        label: element.headerName,
+        value: element.id,
+        enabled: element.hideable,
+        selected: element.hidden
+      });
+    }
+    this.showMulitSelectInput(tempData);
+  }
+
   public closeMultiSelectInput() {
     document.getElementById(this.id + 'multi-select').hidden = true;
-    console.log('close multi-select-input');
   }
 
   public showMulitSelectInput(data: MultiSelectInputData) {
     this.mulit_select_input_data = data;
     document.getElementById(this.id + 'multi-select').hidden = false;
-    console.log('show multi-select-input');
-
   }
 
   public handleMulitSelectApply(data: MultiSelectInputData) {
@@ -745,6 +760,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         }
         sourceButton.title = selectedOptionsValue.join(', ');
         this.addListFilterQuery(columnInstance);
+        break;
+
+      case 'hide_show_column':
+        for (const data_element of data.data) {
+          for (const column_element of this.columns) {
+            if (data_element['value'] === column_element.id) {
+              column_element.hidden = data_element['selected'];
+            }
+          }
+        }
+        this.showGrid = false;
+        this.showGrid = true;
+        break;
+
     }
     document.getElementById(this.id + 'multi-select').hidden = true;
   }

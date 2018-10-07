@@ -733,5 +733,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     document.getElementById(this.id + 'multi-select').hidden = true;
   }
 
-
+  getDisplay(column) {
+    return column.hidden ? 'none' : 'flex';
+  }
 }

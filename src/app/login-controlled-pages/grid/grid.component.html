@@ -59,7 +59,7 @@
       <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box">
         <input title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
       </span>
-        <div class="uigrid-cell" *ngFor="let column of columns">
+        <div class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}">
           <div *ngIf="!column.hidden" class="column-header">
             <div id="{{id+column.id+'remove-filter'}}"
                  *ngIf="isFilterCapable && column.filterable">
@@ -84,11 +84,12 @@
       <!--Column Filter Bar-->
       <div class="uigrid-row">
         <span *ngIf="hasSelectionColumn" class="uigrid-cell select_box"></span>
-        <div *ngFor="let column of columns" class="uigrid-cell">
+        <div *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}" class="uigrid-cell">
           <div *ngIf="isFilterCapable && !(column.hidden) && column.filterable" style="width:100%;">
             <div *ngIf="column.dataType == 'string'">
               <i class="fas fa-search"></i>
-              <input type="text" placeholder="search" #string1 class="{{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
+              <input type="text" placeholder="search" #string1
+                     class="{{id + 'grid_input'}} {{id + 'grid_column_input'+ column.id}}"
                      (input)="columnFilteredTextChanged(column, $event.target)"/>
             </div>
             <div class="filter_column" *ngIf="column.dataType == 'number'">
@@ -147,7 +148,7 @@
         <input id="{{id + 'checkbox' + record.id}}" title="select" type="checkbox"
                (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
       </span>
-      <span class="uigrid-cell" *ngFor="let column of columns">
+      <span class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}" >
         <span *ngIf="!(column.hidden)">
           {{record.getProperty(column.mapping)}}
         </span>

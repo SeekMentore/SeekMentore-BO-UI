@@ -12,7 +12,7 @@
         <button class="uigrid-ok-button" (click)="applyFilter()">
           Apply Filter
         </button>
-        <button class="uigrid-cancel-button" (click)="resetFilter()">
+        <button class="uigrid-blue-button" (click)="resetFilter()">
           Reset Filter
         </button>
         <label class="tab_container" (click)="toggleRemoteLoad('ONLINE')">
@@ -23,9 +23,7 @@
           <input type="radio" name="onlineOfflineBtn" checked>
           <span class="tab_checkmark right">Offline</span>
         </label>
-        <button class="uigrid-ok-button" (click)="showColumnHiddenStates()">
-          Hide columns
-        </button>
+        <i class="fas fa-cogs uigrid-order-icon-button" (click)="showColumnHiddenStates()"></i>
 
       </div>
 
@@ -47,7 +45,7 @@
         <button class="uigrid-ok-button" (click)="applySorter()">
           Apply Sort
         </button>
-        <button class="uigrid-cancel-button" (click)="resetSorter()">
+        <button class="uigrid-blue-button" (click)="resetSorter()">
           Reset Sort
         </button>
       </div>
@@ -65,11 +63,14 @@
       </span>
         <div class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}">
           <div *ngIf="!column.hidden" class="column-header">
-            <div id="{{id+column.id+'remove-filter'}}"
+            <div hidden id="{{id+column.id+'remove-filter'}}"
                  *ngIf="isFilterCapable && column.filterable">
-              <i class="fas fa-times remove" (click)="removeFilterFromColumn(column)"></i>
+              <div class="ui-grid-clear-filter-button" (click)="removeFilterFromColumn(column)">
+                <i class="fas fa-filter"></i>
+                <i class="fas fa-times remove"></i>
+              </div>
             </div>
-            <button *ngIf="column.hideable" class="uigrid-stroked-white-button" (click)="hideColumn(column)">Hide
+            <button *ngIf="column.hideable" class="uigrid-blue-button" (click)="hideColumn(column)">Hide
             </button>
             <span class="title">{{column.headerName}}</span>
             <div *ngIf="isSortingCapable && column.sortable">
@@ -146,26 +147,26 @@
       </div>
     </div>
 
-      <!--Grid Records-->
-      <div *ngFor="let record of filtered_records" class="uigrid-row">
+    <!--Grid Records-->
+    <div *ngFor="let record of filtered_records" class="uigrid-row">
       <span class="uigrid-cell select_box" *ngIf="hasSelectionColumn">
         <input id="{{id + 'checkbox' + record.id}}" title="select" type="checkbox"
                (change)="selectionButtonCheckedUnchecked(record.id, $event.target)">
       </span>
-        <span class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}" >
+      <span class="uigrid-cell" *ngFor="let column of columns" [ngStyle]="{'display' : getDisplay(column)}">
         <span *ngIf="!(column.hidden)">
           {{record.getProperty(column.mapping)}}
         </span>
       </span>
 
-        <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">
+      <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">
         <span *ngFor="let button of actionColumn.buttons">
           <button class="{{button.btnclass}}" (click)="actionButtonClicked(record.id, button.id)">
             Button
           </button>
         </span>
-        </div>
       </div>
+    </div>
 
   </div>
   <!--Pagination Bar-->
@@ -174,8 +175,17 @@
       <span style="margin-right: 20px"><b> Total Records: {{store.totalRecords}}</b></span>
       <div *ngIf="isPagingCapable">
         <span>Records per page:</span>
-        <input class="filter_input_field" type="number" name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage"
-               placeholder="per page">
+        <!--<input class="filter_input_field" type="number" name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage"-->
+        <!--placeholder="per page">-->
+        <select title="per page" [(ngModel)]="paginator.numberOfRecordsPerPage" style="margin: 0 10px">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+
+        </select>
       </div>
       <button class="uigrid-ok-button" (click)="refreshGridData()">Refresh Data</button>
       <div style="flex: 1 1 auto"></div>

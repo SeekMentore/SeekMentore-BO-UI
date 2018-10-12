@@ -115,12 +115,19 @@ label {
   margin: 0 6px;
 }
 
+.ui-grid-clear-filter-button {
+  position: relative;
+  margin-right: 5px;
+}
+
 .remove {
   border-radius: 50%;
   padding: 2px 4px;
   margin: 0;
-  width: 18px;
-  height: 18px;
+  font-size: 10px !important;
+  position: absolute;
+  top: -5px;
+  right: -12px;
   background-color: white;
   cursor: pointer;
   color: var(--colorPrimary);
@@ -153,7 +160,7 @@ label {
   margin: 0 2px !important;
   border-radius: 3px;
   color: white !important;
-  background-color: darkred !important;
+  background-color: #c00000 !important;
   border: none;
   outline: none;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
@@ -175,6 +182,28 @@ label {
   border: 1px solid var(--colorPrimary) !important;
   outline: none;
   cursor: pointer;
+}
+
+.uigrid-blue-button {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #2a61ff !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.uigrid-ok-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .uigrid-order-icon-button {
@@ -265,7 +294,7 @@ i {
   font-weight: normal;
   color: rgba(255, 255, 255, 0.80);
   transition: 0.5s ease;
-  background-color: darkred;
+  background-color: #e70000;
 }
 
 .tab_container:hover input ~ .tab_checkmark {
@@ -274,6 +303,6 @@ i {
 
 .tab_container input:checked ~ .tab_checkmark {
   color: rgb(255, 255, 255);
-  background: limegreen;
+  background: #20A843;
   transition: 0.5s ease;
 }

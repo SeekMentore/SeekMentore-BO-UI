@@ -47,6 +47,8 @@ export class Store {
           response = gridObject.utility_service.decodeObjectFromJSON(response);
           console.log(response);
           this.restData = response['data'];
+          this.data = [];
+          this.totalRecords = response['totalRecords'];
           this.convertIntoRecordData(this.getRestData());
           gridObject.paintData();
         },

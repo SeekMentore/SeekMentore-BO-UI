@@ -4,6 +4,7 @@ import {EventHandler} from './event-handler';
 export class ActionButton {
   id: string;
   label: string;
+  btnclass = 'btnSubmit';
   renderer: Renderer; // This is a JS definition which we defined
   eventHandler: EventHandler;  // This is a JS definition which we defined
 

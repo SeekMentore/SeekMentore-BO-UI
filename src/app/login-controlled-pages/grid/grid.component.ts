@@ -1,14 +1,14 @@
-import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
-import {SelectionColumn} from "./selection-column";
-import {ActionColumn} from "./action-column";
-import {Paginator} from "./paginator";
-import {Sorter, SortingOrder} from "./sorter";
-import {Filter} from "./filter";
-import {Column} from "./column";
-import {Store} from "./store";
-import {Record} from "./record";
-import {MultiSelectInputData} from "../../utils/multi-select-input/multi-select-input.component";
-import {AppUtilityService} from "../../utils/app-utility.service";
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {SelectionColumn} from './selection-column';
+import {ActionColumn} from './action-column';
+import {Paginator} from './paginator';
+import {Sorter, SortingOrder} from './sorter';
+import {Filter} from './filter';
+import {Column} from './column';
+import {Store} from './store';
+import {Record} from './record';
+import {MultiSelectInputData} from '../../utils/multi-select-input/multi-select-input.component';
+import {AppUtilityService} from '../../utils/app-utility.service';
 
 @Component({
   selector: 'app-grid',
@@ -141,24 +141,31 @@ export class GridComponent implements OnInit, AfterViewInit {
   public paintData() {
     this.removeData();
     this.filtered_records = this.store.data;
+    this.paginator.setTotalPages(this.store.totalRecords);
     this.showGrid = true;
     // In grid-template <record-section> this section will be painted now
     // The logic on how to paint the section is written in grid-template.html
   }
 
   public loadNextPage() {
-    this.paginator.getNextPage();
-    this.loadData();
+    if (this.paginator.getNextPage()) {
+      this.loadData();
+    }
+
   }
 
   public loadPreviousPage() {
-    this.paginator.getPreviousPage();
-    this.loadData();
+    if (this.paginator.getPreviousPage()) {
+      this.loadData();
+    }
+
   }
 
-  public loadPage(pageNum) {
-    this.paginator.goToPage(pageNum);
-    this.loadData();
+  public goToPageNumber(pageNum) {
+    if (this.paginator.goToPage(pageNum)) {
+      this.loadData();
+    }
+
   }
 
 
@@ -381,12 +388,10 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public refreshGridData() {
-
+    this.loadData();
   }
 
-  public goToPageNumber(pageNumber: number) {
 
-  }
 
 
   sortRowRecordData() {

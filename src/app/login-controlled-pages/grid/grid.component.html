@@ -160,7 +160,7 @@
 
         <div *ngIf="hasActionColumn" class="uigrid-cell grid_actions">
         <span *ngFor="let button of actionColumn.buttons">
-          <button (click)="actionButtonClicked(record.id, button.id)">
+          <button class="{{button.btnclass}}" (click)="actionButtonClicked(record.id, button.id)">
             Button
           </button>
         </span>
@@ -174,7 +174,7 @@
       <span style="margin-right: 20px"><b> Total Records: {{store.totalRecords}}</b></span>
       <div *ngIf="isPagingCapable">
         <span>Records per page:</span>
-        <input class="filter_input_field" name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage"
+        <input class="filter_input_field" type="number" name="records-per-page" [(ngModel)]="paginator.numberOfRecordsPerPage"
                placeholder="per page">
       </div>
       <button class="uigrid-ok-button" (click)="refreshGridData()">Refresh Data</button>
@@ -183,7 +183,7 @@
         <i class="fas fa-arrow-left" (click)="loadPreviousPage()"></i>
         <span style="margin: 0 20px"><b>Page {{paginator.currentPage}} of {{paginator.totalPages}}</b></span>
         <i class="fas fa-arrow-right" (click)="loadNextPage()"></i>
-        <input class="filter_input_field" type="number" #pageNumber placeholder="goto">
+        <input class="filter_input_field" type="number" #pageNumber placeholder="">
         <button class="uigrid-ok-button" (click)="goToPageNumber(pageNumber.value)">Go to page</button>
       </div>
     </div>

@@ -23,7 +23,7 @@ export class Paginator {
          * Whenver you change currentPage also set the startRecordNumber
          */
     this.currentPage = 1;
-    this.startRecordNumber = ((this.currentPage - 1) * this.numberOfRecordsPerPage) + 1;
+    this.setRecordNumber();
   }
 
   public getNextPage() {
@@ -32,6 +32,13 @@ export class Paginator {
          * If true Increment the currentPage and return its value
          * Else return -1
          */
+    if (this.currentPage < this.totalPages) {
+      this.currentPage = this.currentPage + 1;
+      this.setRecordNumber();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public getPreviousPage() {
@@ -40,6 +47,13 @@ export class Paginator {
          * If true Decrement the currentPage and return its value
          * Else return -1
          */
+    if (this.currentPage > 1) {
+      this.currentPage = this.currentPage - 1;
+      this.setRecordNumber();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public goToPage(pageNum) {
@@ -48,6 +62,22 @@ export class Paginator {
          * If true set currentPage to pageNum and return true
          * Else return false
          */
+    if (pageNum >= 1 && pageNum <= this.totalPages ) {
+      this.currentPage = pageNum;
+      this.setRecordNumber();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public setRecordNumber() {
+    this.startRecordNumber = ((this.currentPage - 1) * this.numberOfRecordsPerPage) + 1;
+  }
+
+  public setTotalPages(totalRecords) {
+    this.totalPages = Math.ceil(totalRecords / this.numberOfRecordsPerPage);
+    this.setRecordNumber();
   }
 
   /**

@@ -1,5 +1,6 @@
 import { GridComponent } from './grid.component';
 import { Record } from './record';
+import { Grid } from './grid';
 
 export class Store {
   id: string;
@@ -20,19 +21,19 @@ export class Store {
     this.data = [];     
   }
 
-  public load(gridObject: GridComponent) {
+  public load(grid: Grid, gridObject: GridComponent) {
     if (this.isStatic) {
       // --> convert staticData into data using convertIntoRecordData
       this.convertIntoRecordData(this.getStaticData());
-      gridObject.paintData();
+      grid.setData();
     } else {
       // --> Make a rest call and store the response.data in restData
       const params = {
-        start: (gridObject.isPagingCapable) ? gridObject.paginator.startRecordNumber : 1,
-        limit: (gridObject.isPagingCapable) ? gridObject.paginator.numberOfRecordsPerPage : -1,
+        start: (grid.isPagingCapable) ? grid.paginator.startRecordNumber : 1,
+        limit: (grid.isPagingCapable) ? grid.paginator.numberOfRecordsPerPage : -1,
         otherParams: JSON.stringify(this.extraParams),
-        sorter: (gridObject.isSortingCapable) ? gridObject.sorters : null,
-        filter: (gridObject.isFilterCapable) ? gridObject.filters : null
+        sorter: (grid.isSortingCapable) ? grid.sorters : null,
+        filter: (grid.isFilterCapable) ? grid.filters : null
       };
       gridObject.utility_service.makeRequest1(this.restURL, 'POST', JSON.stringify(params)).subscribe(
         result => {
@@ -42,7 +43,7 @@ export class Store {
           this.data = [];
           this.totalRecords = response['totalRecords'];
           this.convertIntoRecordData(this.getRestData());
-          gridObject.paintData();
+          grid.setData();
         },
         error2 => {
 

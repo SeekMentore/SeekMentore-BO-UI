@@ -20,7 +20,7 @@ export class Paginator {
   }
 
   public navigateNextPage() {    
-    if (this.currentPage <= this.totalPages) {
+    if (this.currentPage < this.totalPages) {
       this.currentPage = this.currentPage + 1;
       this.computeStartRecordNumber();
       return true;
@@ -29,7 +29,7 @@ export class Paginator {
   }
 
   public navigatePreviousPage() {    
-    if (this.currentPage >= 1) {
+    if (this.currentPage > 1) {
       this.currentPage = this.currentPage - 1;
       this.computeStartRecordNumber();  
       return true;   

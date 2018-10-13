@@ -14,6 +14,7 @@ import { GridComponent, GridDataInterface } from "./grid/grid.component";
 import { Paginator } from "./grid/paginator";
 import { SelectionColumn } from "./grid/selection-column";
 import { Store } from "./grid/store";
+import { Grid } from "./grid/grid";
 
 
 @Component({
@@ -134,23 +135,14 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const column4 = new Column('G1-C4', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null);
     const column5 = new Column('G1-C5', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null);
     const column6 = new Column('G1-C6', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null);
+    const columns = [column1, column2, column3, column4, column5, column6];
+    const grid = new Grid('grid-1', 'Reformed Title', store, columns, true, paginator, true, true, true, selection_column, true, action_column, false);
     
     this.gridMetaData = {
-      id: 'grid-1',
-      title: 'New Grid Title',
+      grid: grid,      
       htmlDomElementId: 'grid-1',
-      hasSelectionColumn: true,
-      selectionColumn: selection_column,
-      hasActionColumn: true,
-      actionColumn: action_column,
-      isPagingCapable: true,
-      paginator: paginator,
-      isSortingCapable: true,
-      isFilterCapable: true,
-      columns: [column1, column2, column3, column4, column5, column6],
-      store: store
+      hidden: false
     };
-
   }
 
 

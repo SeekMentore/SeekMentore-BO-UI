@@ -1,16 +1,12 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { AppUtilityService } from '../../utils/app-utility.service';
 import { MultiSelectInputData } from '../../utils/multi-select-input/multi-select-input.component';
-import { ActionColumn } from './action-column';
 import { Column } from './column';
-import { Filter } from './filter';
-import { Paginator } from './paginator';
 import { Record } from './record';
-import { SelectionColumn } from './selection-column';
 import { Sorter, SortingOrder } from './sorter';
-import { Store } from './store';
 import { ActionButton } from './action-button';
 import { HelperService, AlertDialogEvent } from 'src/app/utils/helper.service';
+import { Grid } from './grid';
 
 @Component({
   selector: 'app-grid',
@@ -19,30 +15,19 @@ import { HelperService, AlertDialogEvent } from 'src/app/utils/helper.service';
 })
 export class GridComponent implements OnInit, AfterViewInit {
 
-  id: string;
-  title: string;
-  htmlDomElementId: string;
-  hasSelectionColumn: boolean;
-  selectionColumn: SelectionColumn;
-  hasActionColumn: boolean;
-  actionColumn: ActionColumn;
-  isPagingCapable: boolean;
-  paginator: Paginator;
-  isSortingCapable: boolean;
-  sorters: Sorter[];
-  isFilterCapable: boolean;
-  filters: Filter[] = null;
-  columns: Column[];
-  store: Store;
-  hidden: boolean = true;
-  filtered_records: Record[] = [];
-  mulit_select_input_data: MultiSelectInputData = null;
-  offline: boolean;
+  htmlDomElementId: string;  
+  idForModalPopUp: string;
+  hidden: boolean = true;  
+  mulit_select_input_data: MultiSelectInputData = null;  
+  grid: Grid;
 
   @Input()
   gridMetaData: GridDataInterface;
 
-  constructor(public utility_service: AppUtilityService, private helperService: HelperService,) {
+  constructor(
+    public utility_service: AppUtilityService, 
+    private helperService: HelperService
+  ) {
   }
 
   ngOnInit() {}
@@ -54,292 +39,607 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public createGrid() {
-    this.loadData();    
+    this.grid.loadData(this);    
   }
 
-  public init() {   
-    this.id = this.gridMetaData.id;
-    this.title = this.gridMetaData.title;
+  public init() {
+    this.grid = this.gridMetaData.grid;
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
-    this.hasSelectionColumn = this.gridMetaData.hasSelectionColumn;
-    this.selectionColumn = this.gridMetaData.selectionColumn;
-    this.hasActionColumn = this.gridMetaData.hasActionColumn;
-    this.actionColumn = this.gridMetaData.actionColumn;
-    this.isPagingCapable = this.gridMetaData.isPagingCapable;
-    this.paginator = this.gridMetaData.paginator;
-    this.isSortingCapable = this.gridMetaData.isSortingCapable;
-    this.isFilterCapable = this.gridMetaData.isFilterCapable;
-    this.columns = this.gridMetaData.columns;
-    this.store = this.gridMetaData.store;
-    if (this.isPagingCapable) {
-      this.paginator.init();
-    }
-    if (this.filters == null) {
-      this.filters = [];
-    }
-    if (this.sorters == null) {
-      this.sorters = [];
-    }
-    this.offline = false;
-  }
-
-  public loadData() {    
-    this.store.load(this);
-  }
-
-  private removeData() {}
-
-  public paintData() {
-    this.removeData();
-    this.filtered_records = this.store.data;
-    this.paginator.setTotalPages(this.store.totalRecords);
-    this.hidden = false;
-  }
+    this.hidden = this.gridMetaData.hidden;    
+    this.idForModalPopUp = this.gridMetaData.grid.id;
+  } 
 
   public loadNextPage() {
-    if (this.paginator.navigateNextPage()) {
-      this.loadData();
-    }      
+    if (this.grid.isPagingCapable) {
+      if (this.grid.paginator.navigateNextPage()) {
+        this.grid.loadData(this);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'This is the last page, cannot navigate to next page.',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);  
+      return;   
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Paging capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }
 
   public loadPreviousPage() {
-    if (this.paginator.navigatePreviousPage()) {
-      this.loadData();
+    if (this.grid.isPagingCapable) {
+      if (this.grid.paginator.navigatePreviousPage()) {
+        this.grid.loadData(this);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'This is the first page, cannot navigate to previous page.',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;
     }
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Paging capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);     
   }
 
   public goToPageNumber(pageNum) {
-    if (this.paginator.navigateToPage(pageNum)) {
-      this.loadData();
+    if (this.grid.isPagingCapable) {
+      if (this.grid.paginator.navigateToPage(pageNum)) {
+        this.grid.loadData(this);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Cannot navigate to Page : "'+pageNum+'". Please enter a page between 1 - '+this.grid.paginator.totalPages,
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;
     }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Paging capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);      
   }
 
   public applyFilter() {
-    if (!this.offline) {
-      this.filters = [];
-      for (const column of this.columns) {
-        if (column.isFiltered) {
-          this.filters.push(column.filter);
+    if (this.grid.isFilterCapable) {
+      if (!this.grid.offline) {
+        this.grid.filters = [];
+        for (const column of this.grid.columns) {
+          if (column.isFiltered) {
+            this.grid.filters.push(column.filter);
+          }
         }
+        alert(JSON.stringify(this.grid.filters));
+        this.grid.loadData(this);
+      } else {
+        this.filterRecords();
       }
-      this.store.load(this);
-    } else {
-      this.filterRecords();
+      this.hideShowRemoveFilterTab();
+      return;
     }
-    this.hideShowRemoveFilterTab();
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }
 
   public resetFilter() {
-    this.filters = [];
-    for (const column of this.columns) {
-      column.isFiltered = false;
+    if (this.grid.isFilterCapable) {
+      this.grid.filters = [];
+      for (const column of this.grid.columns) {
+        column.isFiltered = false;
+      }
+      if (!this.grid.offline) {
+        this.grid.loadData(this);
+      } else {
+        this.filterRecords();
+      }
+      this.hideShowRemoveFilterTab();
+      return;
     }
-    if (!this.offline) {
-      this.store.load(this);
-    } else {
-      this.filterRecords();
-    }
-    this.hideShowRemoveFilterTab();
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);     
   }
 
   public toggleRemoteLoad(event: any) {
     if (event === 'ONLINE') {
-      this.offline = false;
+      this.grid.offline = false;
     } else {
-      this.offline = true;
+      this.grid.offline = true;
     }
   }
 
   public sortToggle(sorter: Sorter, sortOrder: SortingOrder) {
-    sorter.order = sortOrder;    
+    if (this.grid.isSortingCapable) {
+      sorter.order = sortOrder;    
+      return;
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Sorting capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener); 
   }
 
   public sortColumn(column: Column, sortOrder: SortingOrder) {
-    let sorterExists = false;
-    this.sorters.forEach(sorter => {
-      if (sorter.columnId === column.id) {
-        if (sorter.order !== sortOrder) {
-          sorter.order = sortOrder;
-        }
-        sorterExists = true;
+    if (this.grid.isSortingCapable) {
+      if (column.sortable) {
+        let sorterExists = false;
+        this.grid.sorters.forEach(sorter => {
+          if (sorter.columnId === column.id) {
+            if (sorter.order !== sortOrder) {
+              sorter.order = sortOrder;
+            }
+            sorterExists = true;
+          }
+        });
+        if (sorterExists) {
+          return;
+        }    
+        this.grid.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder));
+        return;
       }
-    });
-    if (sorterExists) {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Sorting capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
       return;
-    }    
-    this.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder));
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Sorting capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }
 
-  public removeColumnFromSorterList(sorterId: string) {
-    for (let i = 0; i < this.sorters.length; i++) {
-      if (this.sorters[i].id === sorterId) {
-        this.sorters.splice(i, 1);
+  public removeSorterFromSorterList(sorter: Sorter) {
+    if (this.grid.isSortingCapable) {
+      for (let i = 0; i < this.grid.sorters.length; i++) {
+        if (this.grid.sorters[i].id === sorter.id) {
+          this.grid.sorters.splice(i, 1);
+        }
       }
-    }    
+      return;  
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Sorting capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener); 
   }
 
   public applySorter() {
-    if (!this.offline) {
-      this.store.load(this);
-    } else {
-      this.sortRowRecordData();
+    if (this.grid.isSortingCapable) {
+      if (!this.grid.offline) {
+        this.grid.loadData(this);
+      } else {
+        this.sortRowRecordData();
+      }
+      return;
     }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Sorting capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }
 
   public resetSorter() {
-    this.sorters = [];
-    if (!this.offline) {
-      this.store.load(this);
-    } else {
-      this.sortRowRecordData();
-    }    
+    if (this.grid.isSortingCapable) {
+      this.grid.sorters = [];
+      if (!this.grid.offline) {
+        this.grid.loadData(this);
+      } else {
+        this.sortRowRecordData();
+      }  
+      return;  
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Sorting capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }
 
   public selectionColumnSelectUnselectAll(element: HTMLInputElement) {
-    for (const record of this.filtered_records) {      
-      const checkBox = document.getElementById('uigrid-'+this.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'+'-input-checkbox');
-      if (checkBox) {
-        (<HTMLInputElement>checkBox).checked = element.checked;
+    if (this.grid.hasSelectionColumn) {
+      for (const record of this.grid.filtered_records) {      
+        const checkBox = document.getElementById('uigrid-'+this.grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'+'-input-checkbox');
+        if (checkBox) {
+          (<HTMLInputElement>checkBox).checked = element.checked;
+        }
       }
+      this.grid.store.setAllRecordsSelectedOrUnSelected(element.checked);    
+      return;
     }
-    this.store.setAllRecordsSelectedOrUnSelected(element.checked);    
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have SelectionColumn',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }  
 
   public removeFilterFromColumn(column: Column) {
-    const columnFilter = column.filter;
-    column.isFiltered = false;
-    columnFilter.nullifyFilterProperties();
-    this.hideShowRemoveFilterTab(column);    
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const columnFilter = column.filter;
+        column.isFiltered = false;
+        columnFilter.nullifyFilterProperties();
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   }
 
-  /**REVIEW */
   public hideColumn(column: Column) {
-    column.hidden = true;
-    this.hidden = true;
-    this.hidden = false;
+    if (column.hideable) {
+      column.hidden = true;
+      return;    
+    } 
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Column does not have Hide capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   } 
 
   /**REVIEW */
   public columnFilteredTextChanged(column: Column, element: HTMLInputElement) {
-    const filter = column.filter;
-    filter.stringValue = element.value;
-    column.isFiltered = (filter.stringValue && filter.stringValue.trim() !== '');
-    this.hideShowRemoveFilterTab(column);
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const filter = column.filter;
+        filter.stringValue = element.value;
+        column.isFiltered = (filter.stringValue && filter.stringValue.trim() !== '');
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);    
   }
 
   /**REVIEW */
   public columnFilteredGreaterNumberChanged(column: Column, element: HTMLInputElement) {
-    const filter = column.filter;
-    const parsedValue = parseInt(element.value, 10);
-    if (isNaN(parsedValue)) {
-      /** Show error tip there that this is not number and erase the content in the textbox */
-      return;
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const filter = column.filter;
+        const parsedValue = parseInt(element.value, 10);
+        if (isNaN(parsedValue)) {
+          /**Validation */
+          return;
+        }
+        if (element.value && element.value.toString().trim() !== '') {
+          filter.greaterThan = parsedValue;
+          column.isFiltered = true;
+        } else {
+          column.isFiltered = false;
+        }
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
     }
-    if (element.value && element.value.trim() !== '') {
-      filter.greaterThan = parsedValue;
-      column.isFiltered = true;
-    } else {
-      column.isFiltered = false;
-    }
-    this.hideShowRemoveFilterTab(column);
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);   
   }
 
   /**REVIEW */
   public columnFilteredEqualNumberChanged(column: Column, element: HTMLInputElement) {
-    const filter = column.filter;
-    const parsedValue = parseInt(element.value, 10);
-    if (isNaN(parsedValue)) {
-      /** Show error tip there that this is not number and erase the content in the textbox */
-      return;
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const filter = column.filter;
+        const parsedValue = parseInt(element.value, 10);
+        if (isNaN(parsedValue)) {
+          /**Validation */
+          return;
+        }
+        if (element.value && element.value.toString().trim() !== '') {
+          filter.equalTo = parsedValue;
+          column.isFiltered = true;
+        } else {
+          column.isFiltered = false;
+        }
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
     }
-    if (element.value && element.value.trim() !== '') {
-      filter.equalTo = parsedValue;
-      column.isFiltered = true;
-    } else {
-      column.isFiltered = false;
-    }
-    this.hideShowRemoveFilterTab(column);
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);   
   }
 
   /**REVIEW */
   public columnFilteredLowerNumberChanged(column: Column, element: HTMLInputElement) {
-    const filter = column.filter;
-    const parsedValue = parseInt(element.value, 10);
-    if (isNaN(parsedValue)) {
-      /** Show error tip there that this is not number and erase the content in the textbox */
-      return;
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const filter = column.filter;
+        const parsedValue = parseInt(element.value, 10);
+        if (isNaN(parsedValue)) {
+          /**Validation */
+          return;
+        }
+        if (element.value && element.value.toString().trim() !== '') {
+          filter.lessThan = parsedValue;
+          column.isFiltered = true;
+        } else {
+          column.isFiltered = false;
+        }
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
     }
-    if (element.value && element.value.trim() !== '') {
-      filter.lessThan = parsedValue;
-      column.isFiltered = true;
-    } else {
-      column.isFiltered = false;
-    }
-    this.hideShowRemoveFilterTab(column);
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);     
   }
 
   public columnFilteredBeforeDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-    const filter = column.filter;
-    filter.beforeDate = date_value;
-    filter.beforeDateMillis = date_value.getTime();
-    label.title = date_value.toDateString();
-    column.isFiltered = true;
-    this.hideShowRemoveFilterTab(column);
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
+        const filter = column.filter;
+        filter.beforeDate = date_value;
+        filter.beforeDateMillis = date_value.getTime();
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + date_value.getFullYear();
+        column.isFiltered = true;
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);    
   }
 
   public columnFilteredAfterDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-    const filter = column.filter;
-    filter.afterDate = date_value;
-    filter.afterDateMillis = date_value.getTime();
-    label.title = date_value.toDateString();
-    column.isFiltered = true;
-    this.hideShowRemoveFilterTab(column);
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
+        const filter = column.filter;
+        filter.afterDate = date_value;
+        filter.afterDateMillis = date_value.getTime();
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + date_value.getFullYear();
+        column.isFiltered = true;
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);    
   }
 
   public columnFilteredOnDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-    const filter = column.filter;
-    filter.onDate = date_value;
-    filter.onDateMillis = date_value.getTime();
-    label.title = date_value.toDateString();
-    column.isFiltered = true;
-    this.hideShowRemoveFilterTab(column);
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
+        const filter = column.filter;
+        filter.onDate = date_value;
+        filter.onDateMillis = date_value.getTime();
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + date_value.getFullYear();    
+        column.isFiltered = true;
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);    
+  }
+
+  /** REVIEW */
+  public addListFilterQuery(column: Column) {  
+    if (this.grid.isFilterCapable) {
+      if (column.filterable) {
+        const filter = column.filter;
+        filter.listValue = [];    
+        column.filterOptions.forEach((filterOption) => {
+          if (filterOption.isSelected) {
+            filter.listValue.push(filterOption.value);
+          }
+        });
+        if (filter.listValue.length > 0) {
+          column.isFiltered = true;
+        } else {
+          column.isFiltered = false;
+        }
+        this.hideShowRemoveFilterTab(column);
+        return;
+      }
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have Filter capability',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+      return;    
+    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have Filter capability',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);      
   }
 
   public selectionButtonCheckedUnchecked(record: Record, element: HTMLInputElement) {
-    if (record !== null) {
-      record.selectionModelCheck = element.checked;
+    if (this.grid.hasSelectionColumn) {
+      if (record !== null) {
+        record.selectionModelCheck = element.checked;
+      }
+      return;
     }
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Grid does not have SelectionColumn',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
   } 
 
   public refreshGridData() {
-    this.loadData();
-  }  
-
-  /** REVIEW */
-  public addListFilterQuery(column: Column) {
-    // Remove previous filter for this column
-    const colFilter = column.filter;
-    colFilter.listValue = [];
-    // Add new filters for this column filterOptions
-    column.filterOptions.forEach((value) => {
-      if (value.isSelected) {
-        colFilter.listValue.push(value.label);
-      }
-    });
-    if (colFilter.listValue.length > 0) {
-      column.isFiltered = true;
-    } else {
-      column.isFiltered = false;
-    }
-  }
+    this.grid.loadData(this);
+  } 
 
   /** REVIEW */
   public showMultiSelectFilter(column: Column, sourceButton: HTMLElement) {
     if (column.filterOptions === null || column.filterOptions.length === 0) {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Column does not have any FilterOptions for List Filter',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
       return;
     }
     const filterData: MultiSelectInputData = {
@@ -368,7 +668,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       meta_data: null,
       data: []
     };
-    for (const column of this.columns) {
+    for (const column of this.grid.columns) {
       columnData.data.push({
         label: column.headerName,
         value: column.id,
@@ -380,12 +680,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public closeMultiSelectInput() {    
-    document.getElementById('multi-select-'+this.id+'-dialog').hidden = true;
+    document.getElementById('multi-select-'+this.idForModalPopUp+'-dialog').hidden = true;
   }
 
   public showMulitSelectInput(data: MultiSelectInputData) {
     this.mulit_select_input_data = data;
-    document.getElementById('multi-select-'+this.id+'-dialog').hidden = false;
+    document.getElementById('multi-select-'+this.idForModalPopUp+'-dialog').hidden = false;
   }
 
   /** REVIEW */
@@ -396,7 +696,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         const columnId = data.meta_data['columnId'];
         const selectedOptionsValue: string[] = [];
         const sourceButton: HTMLElement = data.meta_data['sourceButton'];
-        for (const column of this.columns) {
+        for (const column of this.grid.columns) {
           if (column.id === columnId) {
             columnInstance = column;
             break;
@@ -420,14 +720,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       }    
       case 'hide_show_column': {
         for (const data_element of data.data) {
-          for (const column_element of this.columns) {
+          for (const column_element of this.grid.columns) {
             if (data_element['value'] === column_element.id) {
               column_element.hidden = data_element['selected'];
             }
           }
-        }
-        this.hidden = true;
-        this.hidden = false;
+        }        
         break;
       }
     }
@@ -456,9 +754,9 @@ export class GridComponent implements OnInit, AfterViewInit {
   /**
    * Paint Filter Tabs
    */
-  private hideShowRemoveFilterTab(column: Column = null) {    
+  private hideShowRemoveFilterTab(column: Column = null) {       
     if (column !== null) {      
-      const crossButton = document.getElementById('uigrid-'+this.id+'-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-'+column.id+'-column-header-remove-filter');
+      const crossButton = document.getElementById('uigrid-'+this.grid.id+'-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-'+column.id+'-column-header-remove-filter');
       if (column.isFiltered) {
         crossButton.hidden = false;
       } else {
@@ -467,18 +765,18 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.resetFilterLabels(column);
       }
     } else {
-      for (const column of this.columns) {
-        const crossButton = document.getElementById('uigrid-'+this.id+'-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-'+column.id+'-column-header-remove-filter');
+      for (const column of this.grid.columns) {
+        const crossButton = document.getElementById('uigrid-'+this.grid.id+'-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-'+column.id+'-column-header-remove-filter');
         if (crossButton) {
           if (column.isFiltered) {
             crossButton.hidden = false;
           } else {
             crossButton.hidden = true;
+            this.resetFilterInputs(column);
+            this.resetFilterLabels(column);
           }
         }
-      }
-      this.resetFilterInputs();
-      this.resetFilterLabels();
+      }      
     }
   }
 
@@ -486,9 +784,9 @@ export class GridComponent implements OnInit, AfterViewInit {
   private resetFilterInputs(column: Column = null) {
     let elements: HTMLCollectionOf<Element> = null;
     if (column !== null) {
-      elements = document.getElementsByClassName(this.id + 'grid_column_input' + column.id);
+      elements = document.getElementsByClassName(this.grid.id + '-grid-column-input-' + column.id);
     } else {
-      elements = document.getElementsByClassName(this.id + 'grid_input');
+      elements = document.getElementsByClassName(this.grid.id + '-grid-input');
     }
     if (elements !== null) {
       for (let i = 0; i < elements.length; i++) {
@@ -499,15 +797,31 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   /** Reset Filter Labels */
   private resetFilterLabels(column: Column = null) {
-    let elements: HTMLCollectionOf<Element> = null;
+    let elements_after: HTMLCollectionOf<Element> = null;
+    let elements_on: HTMLCollectionOf<Element> = null;
+    let elements_before: HTMLCollectionOf<Element> = null;
     if (column !== null) {
-      elements = document.getElementsByClassName(this.id + 'grid_column_label' + column.id);
+      elements_after = document.getElementsByClassName(this.grid.id + '-grid-column-label-after-' + column.id);
+      elements_on = document.getElementsByClassName(this.grid.id + '-grid-column-label-on-' + column.id);
+      elements_before = document.getElementsByClassName(this.grid.id + '-grid-column-label-before-' + column.id);
     } else {
-      elements = document.getElementsByClassName(this.id + 'grid_label');
+      elements_after = document.getElementsByClassName(this.grid.id + '-grid-label-after');
+      elements_on = document.getElementsByClassName(this.grid.id + '-grid-label-on');
+      elements_before = document.getElementsByClassName(this.grid.id + '-grid-label-before');
     }
-    if (elements !== null) {
-      for (let i = 0; i < elements.length; i++) {
-        (<HTMLElement>elements.item(i)).title = '';
+    if (elements_after !== null) {
+      for (let i = 0; i < elements_after.length; i++) {
+        (<HTMLElement>elements_after.item(i)).innerHTML = 'After';
+      }
+    }
+    if (elements_on !== null) {
+      for (let i = 0; i < elements_on.length; i++) {
+        (<HTMLElement>elements_on.item(i)).innerHTML = 'On';
+      }
+    }
+    if (elements_before !== null) {
+      for (let i = 0; i < elements_before.length; i++) {
+        (<HTMLElement>elements_before.item(i)).innerHTML = 'Before';
       }
     }
   }
@@ -522,8 +836,8 @@ export class GridComponent implements OnInit, AfterViewInit {
   * Offline Sorting
   */
  private sortRowRecordData() {
-    this.filtered_records.sort((a, b) => {
-      for (const sorter of this.sorters) {
+    this.grid.filtered_records.sort((a, b) => {
+      for (const sorter of this.grid.sorters) {
         const propertyA = a.getProperty(sorter.mapping);
         const propertyB = b.getProperty(sorter.mapping);
         if (sorter.order === SortingOrder.ASC) {
@@ -550,11 +864,11 @@ export class GridComponent implements OnInit, AfterViewInit {
   * Offline Filtering
   */
   private filterRecords() {
-    this.filtered_records = [];
-    for (let i = 0; i < this.store.data.length; i++) {
+    this.grid.filtered_records = [];
+    for (let i = 0; i < this.grid.store.data.length; i++) {
       let rowMatchesQuery = true;
-      const record_instance = this.store.data[i];
-      for (const element of this.filters) {
+      const record_instance = this.grid.store.data[i];
+      for (const element of this.grid.filters) {
         const cellValue = record_instance.getProperty(element.mapping);
         if (element.type === 'string') {
           if (!cellValue.includes(element.stringValue)) {
@@ -605,24 +919,14 @@ export class GridComponent implements OnInit, AfterViewInit {
         }
       }
       if (rowMatchesQuery) {
-        this.filtered_records.push(record_instance);
+        this.grid.filtered_records.push(record_instance);
       }
     }    
   } 
 }
 
-export interface GridDataInterface {
-  id: string;
-  title: string;
-  htmlDomElementId: string;
-  hasSelectionColumn: boolean;
-  selectionColumn: SelectionColumn;
-  hasActionColumn: boolean;
-  actionColumn: ActionColumn;
-  isPagingCapable: boolean;
-  paginator: Paginator;
-  isSortingCapable: boolean;
-  isFilterCapable: boolean;
-  columns: Column[];
-  store: Store;
+export interface GridDataInterface {  
+  htmlDomElementId: string; 
+  hidden: boolean;
+  grid: Grid;
 }

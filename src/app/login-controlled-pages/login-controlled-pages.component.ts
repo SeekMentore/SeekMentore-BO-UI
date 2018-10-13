@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, Renderer } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppConstants } from "../utils/app-constants";
 import { AppUtilityService } from "../utils/app-utility.service";
@@ -15,6 +15,7 @@ import { Paginator } from "./grid/paginator";
 import { SelectionColumn } from "./grid/selection-column";
 import { Store } from "./grid/store";
 import { Grid } from "./grid/grid";
+import { EventHandler } from "./grid/event-handler";
 
 
 @Component({
@@ -123,24 +124,35 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public setUpGridMetaData() {
-    const store = new Store('G1-S', false, '/rest/employee/alertsRemindersGrid', null);
-    const selection_column = new SelectionColumn('G1-SC');
-    const action_button1 = new ActionButton('G1-AB1', 'Open');
-    const action_button2 = new ActionButton('G1-AB2', 'Update', 'btnReset');
-    const action_button3 = new ActionButton('G1-AB3', 'Remove', 'btnReject');
-    const action_column = new ActionColumn('G1-AC', [action_button1, action_button2, action_button3]);
-    const paginator = new Paginator('G1-P', 20);
-    const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
-    const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);
-    const column3 = new Column('G1-C3', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null);
-    const column4 = new Column('G1-C4', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null);
-    const column5 = new Column('G1-C5', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null);
-    const column6 = new Column('G1-C6', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null);
-    const columns = [column1, column2, column3, column4, column5, column6];
-    const grid = new Grid('grid-1', 'Reformed Title', store, columns, true, paginator, true, true, true, selection_column, true, action_column, false);
-    
+       
     this.gridMetaData = {
-      grid: grid,      
+      grid: new Grid(
+        'alertGrid',
+        'Alerts & Reminders',
+        new Store('alertGrid-Store', false, '/rest/employee/alertsRemindersGrid', null),
+        [
+          new Column('alertGrid-Column-Id', 'ID', 'number', 'id', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-InitiatedDate', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-ActionDate', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-DueDate', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-InitiatedBy', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-ActionBy', 'Action By', 'string', 'actionBy', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-Subject', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null)
+        ],
+        true,
+        new Paginator('alertGrid-Paginator', 20),
+        true,
+        true,
+        true,
+        new SelectionColumn('alertGrid-SelectionColumn'),
+        true,
+        new ActionColumn('alertGrid-ActionColumn',
+         [
+          new ActionButton('alertGrid-ActionButtonOpen', 'Open'), 
+          new ActionButton('alertGrid-ActionButtonOpen', 'Update', 'btnReset'),  
+          new ActionButton('alertGrid-ActionButtonOpen', 'Remove', 'btnReject'), 
+          ]),
+      ),      
       htmlDomElementId: 'grid-1',
       hidden: false
     };

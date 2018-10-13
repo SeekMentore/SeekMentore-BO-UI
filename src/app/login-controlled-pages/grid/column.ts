@@ -21,7 +21,19 @@ export class Column {
   shouldHide: boolean = false; // Do not set in constructor
 
 
-  constructor(id, headerName, dataType, mapping, sortable, filterable, hideable, hidden, filterOptions, renderer, eventHandler) {
+  constructor(
+          id: string, 
+          headerName: string, 
+          dataType: string, 
+          mapping: string, 
+          sortable: boolean, 
+          filterable: boolean, 
+          hideable: boolean, 
+          hidden: boolean, 
+          filterOptions: FilterOption[] = [], 
+          renderer: Renderer = null, 
+          eventHandler: EventHandler = null
+  ) {
     this.id = id;
     this.headerName = headerName;
     this.dataType = dataType;

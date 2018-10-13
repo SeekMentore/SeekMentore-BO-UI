@@ -8,7 +8,7 @@ export class SelectionColumn {
   renderer: Renderer;
   eventHandler: EventHandler;
 
-  constructor(id: string, attachMapping = false, mapping = null, renderer = null, eventHandler = null) {
+  constructor(id: string, attachMapping: boolean = false, mapping: string = null, renderer: Renderer = null, eventHandler: EventHandler = null) {
     this.id = id;
     this.attachMapping = attachMapping;
     this.mapping = mapping;

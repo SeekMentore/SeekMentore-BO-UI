@@ -54,9 +54,9 @@
         <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'}}" *ngIf="grid.hasSelectionColumn" class="uigrid-cell select_box">
           <input id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'+'-input-selectionColumnSelectUnselectAll'}}" title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
         </span>
-        <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id}}" class="uigrid-cell" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}">
+        <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id}}" class="uigrid-cell uigrid-cell-column-name" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}">
           <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'}}" *ngIf="!column.hidden" class="column-header">
-            <div hidden id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'+'-remove-filter'}}" *ngIf="grid.isFilterCapable && column.filterable">
+            <div hidden id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'+'-remove-filter'}}" class="column-header-filter" *ngIf="grid.isFilterCapable && column.filterable">
               <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'+'-remove-filter'+'-div-removeFilterFromColumn'}}" class="ui-grid-clear-filter-button" (click)="removeFilterFromColumn(column)">
                 <i id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'+'-remove-filter'+'-div-removeFilterFromColumn'+'-filter-icon'}}" class="fas fa-filter"></i>
                 <i id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'+'-remove-filter'+'-div-removeFilterFromColumn'+'-remove-icon'}}" class="fas fa-times remove"></i>
@@ -71,7 +71,7 @@
             </div>
           </div>
         </div>
-        <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-action-column'}}" class="uigrid-cell" *ngIf="grid.hasActionColumn">
+        <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-action-column'}}" class="uigrid-cell grid_actions" *ngIf="grid.hasActionColumn">
           <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-action-column'+'-column-header'}}" class="column-header">
             <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-action-column'+'-column-header'+'-span-title'}}" class="title">Action Column</span>
           </div>
@@ -80,7 +80,7 @@
       <!--Column Filter Bar-->
       <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'}}" class="uigrid-row">
         <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-span-uigrid-cell-select-box'}}" *ngIf="grid.hasSelectionColumn" class="uigrid-cell select_box"></span>
-        <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id}}" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}" class="uigrid-cell">
+        <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id}}" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}" class="uigrid-cell uigrid-cell-column-filter">
           <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'}}" *ngIf="grid.isFilterCapable && !(column.hidden) && column.filterable" style="width:100%;"><!--REVIEW-->
             <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'}}" *ngIf="column.dataType == 'string'">
               <i id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-i-search'}}" class="fas fa-search"></i>
@@ -140,7 +140,7 @@
             </div>
           </div>
         </div>
-        <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-action-column'}}" class="uigrid-cell" *ngIf="grid.hasActionColumn">
+        <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-action-column'}}" class="uigrid-cell grid_actions" *ngIf="grid.hasActionColumn">
             <!--Action Buttons-->
         </span>
       </div>
@@ -166,7 +166,7 @@
     </div>
   </div>
   <!--Pagination Bar-->
-  <div id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'}}" class="uigrid-row">
+  <div id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'}}" class="uigrid-row uigrid-pagination-toolbar">
     <div id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'}}" class="uigrid-cell fill">
       <span id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-span-total-records'}}" style="margin-right: 20px"><b> Total Records: {{grid.store.totalRecords}}</b></span>
       <div id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-records-per-page'}}" *ngIf="grid.isPagingCapable">

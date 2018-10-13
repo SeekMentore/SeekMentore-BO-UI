@@ -125,9 +125,10 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   public setUpGridMetaData() {
     const store = new Store('G1-S', false, '/rest/employee/alertsRemindersGrid', null);
     const selection_column = new SelectionColumn('G1-SC');
-    const action_button1 = new ActionButton('G1-AB1', 'open');
-    const action_button2 = new ActionButton('G1-AB2', 'remove', 'btnReject');
-    const action_column = new ActionColumn('G1-AC', [action_button1, action_button2]);
+    const action_button1 = new ActionButton('G1-AB1', 'Open');
+    const action_button2 = new ActionButton('G1-AB2', 'Update', 'btnReset');
+    const action_button3 = new ActionButton('G1-AB3', 'Remove', 'btnReject');
+    const action_column = new ActionColumn('G1-AC', [action_button1, action_button2, action_button3]);
     const paginator = new Paginator('G1-P', 20);
     const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
     const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);

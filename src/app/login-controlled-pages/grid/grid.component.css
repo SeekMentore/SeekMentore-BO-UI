@@ -334,6 +334,23 @@ i {
   align-self: stretch;
 }
 
+.btnReset {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #2a61ff !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
 .btnReject {
   padding: 2px 6px;
   margin: 0 2px !important;
@@ -349,4 +366,22 @@ i {
   cursor: pointer;
   transition: all 0.3s;
   align-self: stretch;
+}
+
+.uigrid-title-toolbar, .uigrid-sorter-toolbar, .uigrid-pagination-toolbar, .select_box, .grid_actions {
+  background-color: beige;
+}
+
+.uigrid-cell-column-name {
+  background-color: lightgrey;
+}
+
+.uigrid-cell-column-filter {
+  background-color: lightcyan;
+}
+
+.column-header-filter {
+  background-color: darkgoldenrod;
+  height: 1.6em;
+  border-radius: 4px;
 }

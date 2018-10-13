@@ -8,6 +8,10 @@ label {
   margin: 20px 20px 50px;
 }
 
+.span-title {
+  flex: 1 1 auto;
+}
+
 .uigrid-cell div {
   display: flex;
   flex-direction: row;
@@ -99,6 +103,12 @@ label {
   justify-content: center;
 }
 
+.sorter-tabs {
+  flex: 1 1 auto;
+  flex-direction: row;
+  display: flex;
+}
+
 .sorter-button {
   padding: 2px 6px;
   margin: 0 2px;
@@ -133,7 +143,7 @@ label {
   color: var(--colorPrimary);
 }
 
-.uigrid-ok-button {
+.uigrid-green-button {
   padding: 2px 6px;
   margin: 0 2px !important;
   border-radius: 3px;
@@ -150,7 +160,7 @@ label {
   align-self: stretch;
 }
 
-.uigrid-ok-button:hover {
+.uigrid-green-button:hover {
   transition: all 0.3s;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
@@ -201,7 +211,7 @@ label {
   align-self: stretch;
 }
 
-.uigrid-ok-button:hover {
+.uigrid-green-button:hover {
   transition: all 0.3s;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
@@ -305,4 +315,38 @@ i {
   color: rgb(255, 255, 255);
   background: #20A843;
   transition: 0.5s ease;
+}
+
+.btnSubmit {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #20A843 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.btnReject {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #e70000 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
 }

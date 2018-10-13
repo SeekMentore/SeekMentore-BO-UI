@@ -1,24 +1,24 @@
 import {EventHandler} from './event-handler';
 import {Renderer} from './renderer';
-import {FilterOptions} from './filter-options';
+import {FilterOption} from './filter-option';
 import {Filter} from './filter';
 
 export class Column {
   id: string;
   headerName: string;
-  dataType: string;  // (listed values {number | string | date | list})
+  dataType: string = 'string';  // (listed values {number | string | date | list})
   mapping: string;
-  sortable: boolean;
-  filterable: boolean;
-  hideable: boolean;
-  hidden: boolean;
-  toBeHidden: boolean;
-  filterOptions: FilterOptions[]; // This is a JS definition which we defined
-  renderer: Renderer; // This is a JS definition which we defined
-  eventHandler: EventHandler; // This is a JS definition which we defined
+  sortable: boolean = true;
+  filterable: boolean = true;
+  hideable: boolean = true;
+  hidden: boolean = false;
+  toBeHidden: boolean = false;
+  filterOptions: FilterOption[]; 
+  renderer: Renderer;
+  eventHandler: EventHandler;
   filter: Filter;
-  isFiltered = false;
-  shouldHide = false;
+  isFiltered: boolean = false; // Do not set in constructor
+  shouldHide: boolean = false; // Do not set in constructor
 
 
   constructor(id, headerName, dataType, mapping, sortable, filterable, hideable, hidden, filterOptions, renderer, eventHandler) {
@@ -33,10 +33,6 @@ export class Column {
     this.filterOptions = filterOptions;
     this.renderer = renderer;
     this.eventHandler = eventHandler;
-    this.filter = new Filter(this.id + '-filter', this.dataType, this.mapping, this.id);
-    /*
-         * If headerName, dataType, mapping, sortable, filterable, hideable, filterOptions, renderer, eventHandler are Not Null
-         * set values to class variables
-         */
+    this.filter = new Filter(this.id + '-filter', this.dataType, this.mapping, this.id);    
   }
 }

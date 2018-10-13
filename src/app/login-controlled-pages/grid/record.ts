@@ -1,7 +1,7 @@
 export class Record {
   id: string;
   property: Object;
-  selectionModelCheck = false;
+  selectionModelCheck: boolean = false;
 
   constructor(id: string, property: Object) {
     this.id = id;
@@ -11,5 +11,4 @@ export class Record {
   public getProperty(propertyName: string) {
     return this.property[propertyName];
   }
-
 }

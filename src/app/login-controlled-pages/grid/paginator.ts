@@ -1,83 +1,58 @@
-import {GridConstants} from './grid-constants';
+import { GridConstants } from './grid-constants';
 
 export class Paginator {
   id: string;
-  numberOfRecordsPerPage = GridConstants.DEFAULT_NUMBER_OF_RECORDS_PER_PAGE; // Should come from Constants file
-  currentPage = -1;
-  startRecordNumber = -1;
-  totalPages = -1;
+  numberOfRecordsPerPage: number = GridConstants.DEFAULT_NUMBER_OF_RECORDS_PER_PAGE;
+  currentPage: number = -1;
+  startRecordNumber: number = -1;
+  totalPages: number = -1;
 
-  constructor(id, numberOfRecordsPerPage = null) {
-    /*
-         * If numberOfRecordsPerPage is Not Null
-         * set its value to class variable
-         */
+  constructor(id, numberOfRecordsPerPage = null) {    
     this.id = id;
     if (numberOfRecordsPerPage != null) {
       this.numberOfRecordsPerPage = numberOfRecordsPerPage;
     }
   }
 
-  public init() {
-    /*
-         * Whenver you change currentPage also set the startRecordNumber
-         */
+  public init() {    
     this.currentPage = 1;
-    this.setRecordNumber();
+    this.computeStartRecordNumber();
   }
 
-  public getNextPage() {
-    /*
-         * Check if the currentPage is not the last Page
-         * If true Increment the currentPage and return its value
-         * Else return -1
-         */
-    if (this.currentPage < this.totalPages) {
+  public navigateNextPage() {    
+    if (this.currentPage <= this.totalPages) {
       this.currentPage = this.currentPage + 1;
-      this.setRecordNumber();
+      this.computeStartRecordNumber();
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
-  public getPreviousPage() {
-    /*
-         * Check if the currentPage is not the first Page
-         * If true Decrement the currentPage and return its value
-         * Else return -1
-         */
-    if (this.currentPage > 1) {
+  public navigatePreviousPage() {    
+    if (this.currentPage >= 1) {
       this.currentPage = this.currentPage - 1;
-      this.setRecordNumber();
-      return true;
-    } else {
-      return false;
+      this.computeStartRecordNumber();  
+      return true;   
     }
+    return false;
   }
 
-  public goToPage(pageNum) {
-    /*
-         * Check if pageNum is between 1 & totalPages
-         * If true set currentPage to pageNum and return true
-         * Else return false
-         */
+  public navigateToPage(pageNum: number) {    
     if (pageNum >= 1 && pageNum <= this.totalPages ) {
       this.currentPage = pageNum;
-      this.setRecordNumber();
-      return true;
-    } else {
-      return false;
+      this.computeStartRecordNumber();  
+      return true;    
     }
+    return false;
   }
 
-  public setRecordNumber() {
+  private computeStartRecordNumber() {
     this.startRecordNumber = ((this.currentPage - 1) * this.numberOfRecordsPerPage) + 1;
   }
 
-  public setTotalPages(totalRecords) {
+  public setTotalPages(totalRecords: number) {
     this.totalPages = Math.ceil(totalRecords / this.numberOfRecordsPerPage);
-    this.setRecordNumber();
+    this.computeStartRecordNumber();
   }
 
   /**

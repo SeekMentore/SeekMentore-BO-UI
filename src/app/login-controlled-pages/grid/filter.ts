@@ -2,13 +2,12 @@ export class Filter {
   id: string;
   type: string; // (listed values {number | string | date | list})
   mapping: string;
-  // columnName: string;
   columnId: string;
   lessThan: number = null;
   equalTo: number = null;
   greaterThan: number = null;
   stringValue: string = null;
-  textCaseSensitiveSearch = true;
+  textCaseSensitiveSearch: boolean = false;
   beforeDate: Date = null;
   onDate: Date = null;
   afterDate: Date = null;
@@ -22,7 +21,6 @@ export class Filter {
     this.type = type;
     this.mapping = mapping;
     this.columnId = columnId;
-    // Set values
   }
 
   nullifyFilterProperties() {

@@ -1,24 +1,31 @@
-import {ActionButton} from './action-button';
+import { ActionButton } from './action-button';
 
 export class ActionColumn {
   id: string;
   buttons: ActionButton[];
-  totalButtons = -1;
+  totalButtons: number = -1;
 
   constructor(id: string, buttons: ActionButton[]) {
     this.id = id;
     this.buttons = buttons;
-    /*
-         * If label, renderer, eventHandler are Not Null
-         * set values to class variables
-         */
+    this.totalButtons =  this.buttons.length;
   }
 
-  public getButtonFromButtonNumber() {
-    // return button using button number
+  public getButtonFromButtonNumber(num: number) {
+    if (null != this.buttons) {
+      if (num > 0 && num < this.buttons.length) {
+        return this.buttons[num];
+      }
+    }
+    return null;
   }
 
-  public getButtonFromButtonId() {
-    // return button using button number
+  public getButtonFromButtonId(id: string) {
+    for (const button of this.buttons) {
+      if (button.id === id) {
+        return button;
+      }
+    }
+    return null;
   }
 }

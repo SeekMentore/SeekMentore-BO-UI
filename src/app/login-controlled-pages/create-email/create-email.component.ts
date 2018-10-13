@@ -81,7 +81,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
       this.helperService.showAlertDialog({
         isSuccess: false,
         message: LcpConstants.email_attachments_number_error,
-        onOk: () => {
+        onButtonClicked: () => {
         }
       });
       return;
@@ -105,7 +105,7 @@ export class CreateEmailComponent implements OnInit, OnChanges {
         this.helperService.showAlertDialog({
           isSuccess: false,
           message: errorMessage,
-          onOk: () => {
+          onButtonClicked: () => {
           }
         });
         break;

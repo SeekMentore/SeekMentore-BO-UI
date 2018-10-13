@@ -1,8 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/index';
-import {ConfirmationDialogEvent, AlertDialogEvent} from '../login-controlled-pages/login-controlled-pages.component';
-import {EmailInterface} from '../login-controlled-pages/create-email/create-email.component';
-import {CkeditorConfig} from "./ckeditor-config";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/index';
+import { EmailInterface } from '../login-controlled-pages/create-email/create-email.component';
+import { CkeditorConfig } from "./ckeditor-config";
 
 declare var CKEDITOR: any;
 
@@ -61,8 +60,16 @@ export class HelperService {
   public makeRichEditor(editorId: string) {
     CKEDITOR.replace(editorId, CkeditorConfig.configuration);
   }
-
 }
 
+export interface ConfirmationDialogEvent {
+  message: string;
+  onOk(): void;
+  onCancel(): void;
+}
 
-
+export interface AlertDialogEvent {
+  isSuccess: boolean;
+  message: string;
+  onButtonClicked(): void;
+}

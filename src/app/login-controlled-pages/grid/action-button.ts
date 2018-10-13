@@ -1,19 +1,18 @@
-import {Renderer} from './renderer';
-import {EventHandler} from './event-handler';
+import { EventHandler } from './event-handler';
+import { Renderer } from './renderer';
 
 export class ActionButton {
   id: string;
   label: string;
-  btnclass = 'btnSubmit';
-  renderer: Renderer; // This is a JS definition which we defined
-  eventHandler: EventHandler;  // This is a JS definition which we defined
+  btnclass: string = 'btnSubmit';
+  renderer: Renderer;
+  eventHandler: EventHandler;
 
-  constructor(id: string, label: string, renderer: Renderer = null, eventHandler: EventHandler = null) {
+  constructor(id: string, label: string, btnclass: string = 'btnSubmit', renderer: Renderer = null, eventHandler: EventHandler = null) {
     this.id = id;
     this.label = label;
-    /*
-         * If label, renderer, eventHandler are Not Null
-         * set values to class variables
-         */
+    this.btnclass = btnclass;
+    this.renderer = renderer;
+    this.eventHandler = eventHandler;
   }
 }

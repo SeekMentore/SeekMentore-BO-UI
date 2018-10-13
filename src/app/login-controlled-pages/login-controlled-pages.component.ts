@@ -1,20 +1,19 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
-import {AppUtilityService} from "../utils/app-utility.service";
-import {HelperService} from "../utils/helper.service";
-import {AppConstants} from "../utils/app-constants";
-import {Router} from "@angular/router";
-import {LcpConstants} from "../utils/lcp-constants";
-import {EmailInterface} from "./create-email/create-email.component";
-import {EnvironmentConstants} from "../utils/environment-constants";
-import {LcpRestUrls} from "../utils/lcp-rest-urls";
-import {Store} from "./grid/store";
-import {SelectionColumn} from "./grid/selection-column";
-import {ActionButton} from "./grid/action-button";
-import {ActionColumn} from "./grid/action-column";
-import {Paginator} from "./grid/paginator";
-import {Column} from "./grid/column";
-import {GridComponent, GridDataInterface} from "./grid/grid.component";
-import {FilterOptions} from "./grid/filter-options";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { AppConstants } from "../utils/app-constants";
+import { AppUtilityService } from "../utils/app-utility.service";
+import { EnvironmentConstants } from "../utils/environment-constants";
+import { HelperService, ConfirmationDialogEvent, AlertDialogEvent } from "../utils/helper.service";
+import { LcpConstants } from "../utils/lcp-constants";
+import { LcpRestUrls } from "../utils/lcp-rest-urls";
+import { EmailInterface } from "./create-email/create-email.component";
+import { ActionButton } from "./grid/action-button";
+import { ActionColumn } from "./grid/action-column";
+import { Column } from "./grid/column";
+import { GridComponent, GridDataInterface } from "./grid/grid.component";
+import { Paginator } from "./grid/paginator";
+import { SelectionColumn } from "./grid/selection-column";
+import { Store } from "./grid/store";
 
 
 @Component({
@@ -23,24 +22,20 @@ import {FilterOptions} from "./grid/filter-options";
   styleUrls: ['./login-controlled-pages.component.css']
 })
 export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
+
   title = EnvironmentConstants.APPLICATION_NAME;
   staticPageURl = '';
   username = '';
   menu: MenuItem[] = [];
-
   settingMenu: SubMenuItem[] = [];
   userMenu: SubMenuItem[] = [];
-
   accessOptions: AccessOptions;
   logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
   idleTime: number;
-
   confirmationDialog: HTMLDivElement;
   alertDialog: HTMLDivElement;
-
   emailData: EmailInterface;
   emailDialog: HTMLDivElement;
-
   gridMetaData: GridDataInterface;
 
   @ViewChild('grid1')
@@ -63,7 +58,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       this.title = title;
     });
     this.parseMenu();
-
     // set event handler for confirmation dialog
     this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
     this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
@@ -103,12 +97,11 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       messageElement.innerText = eventListener.message;
 
       actionButton.onclick = (ev: Event) => {
-        eventListener.onOk();
+        eventListener.onButtonClicked();
         this.alertDialog.style.display = 'none';
       };
       this.alertDialog.style.display = 'flex';
     });
-
     // set event handler for email
     this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
     this.helperService.emailDialogState.subscribe((data: EmailInterface) => {
@@ -132,34 +125,19 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const store = new Store('G1-S', false, '/rest/employee/alertsRemindersGrid', null);
     const selection_column = new SelectionColumn('G1-SC');
     const action_button1 = new ActionButton('G1-AB1', 'open');
-    const action_button2 = new ActionButton('G1-AB2', 'remove');
+    const action_button2 = new ActionButton('G1-AB2', 'remove', 'btnReject');
     const action_column = new ActionColumn('G1-AC', [action_button1, action_button2]);
     const paginator = new Paginator('G1-P', 20);
-    paginator.init();
-
-
     const column1 = new Column('G1-C1', 'ID', 'number', 'id', true, true, true, false, [], null, null);
-
     const column2 = new Column('G1-C2', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null);
-
     const column3 = new Column('G1-C3', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null);
-
     const column4 = new Column('G1-C4', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null);
-
     const column5 = new Column('G1-C5', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null);
-
     const column6 = new Column('G1-C6', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null);
-
-    // const filterOption1 = new FilterOptions('1', 'Male', 'male');
-    // const filterOption2 = new FilterOptions('2', 'Female', 'female');
-    // const column1 = new Column('G1-C1', 'Client Name', 'string', 'name', true, true, true, false, [], null, null);
-    // const column2 = new Column('G1-C2', 'Client Age', 'number', 'age', true, true, true, false, [], null, null);
-    // const column3 = new Column('G1-C3', 'Birth date', 'date', 'birth_date', true, true, true, false, [], null, null);
-    // const column4 = new Column('G1-C4', 'Gender', 'list', 'gender', true, true, true, false, [filterOption1, filterOption2], null, null);
-
+    
     this.gridMetaData = {
       id: 'grid-1',
-      title: 'grid title',
+      title: 'New Grid Title',
       htmlDomElementId: 'grid-1',
       hasSelectionColumn: true,
       selectionColumn: selection_column,
@@ -176,36 +154,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
 
-  public parseMenu() {
-    // will replace getBasicInfo function with ajax request
-    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');
-    //   .subscribe(result => {
-    //   let response = result['response'];
-    //   response = this.utilityService.decodeObjectFromJSON(response);
-    //   // console.log(response);
-    //   if (response != null) {
-    //     this.username = response['username'];
-    //     this.helperService.setTitle('Welcome ' + this.username);
-    //     this.menu = response['menu'];
-    //     this.accessOptions = response['accessoptions'];
-    //     // console.log(this.menu);
-    //     this.userMenu.push(
-    //       {name: 'Personalize', url: '', functioncall: false},
-    //       {name: 'Profile', url: '', functioncall: false},
-    //       {name: 'Complaint Box', url: '', functioncall: false},
-    //       {name: 'Help & Support', url: '', functioncall: false}
-    //     );
-    //
-    //     this.settingMenu.push({name: 'Change Password', url: '', functioncall: false});
-    //     if (this.accessOptions.impersonationaccess) {
-    //       this.settingMenu.push({name: 'Impersonate', url: '', functioncall: false});
-    //     }
-    //     this.settingMenu.push(
-    //       {name: 'User Settings', url: '', functioncall: false},
-    //       {name: 'Sign Out', url: '', functioncall: true});
-    //   }
-    // }, error => {
-    // });
+  public parseMenu() {    
+    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');    
   }
 
   onSuccessBasicInfo(context: any, response: any) {
@@ -213,7 +163,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     context.helperService.setTitle('Welcome ' + context.username);
     context.menu = response['menu'];
     context.accessOptions = response['accessoptions'];
-    // console.log(this.menu);
     context.userMenu.push(
       {name: 'Personalize', url: '', functioncall: false},
       {name: 'Profile', url: '', functioncall: false},
@@ -231,7 +180,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public functionCallMenuItem(itemName: string) {
-    // console.log(itemName);
     switch (itemName) {
       case 'Sign Out':
         this.doLogout();
@@ -256,7 +204,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     const myListener: AlertDialogEvent = {
       isSuccess: true,
       message: 'this is message for dialog',
-      onOk: () => {
+      onButtonClicked: () => {
 
       }
     };
@@ -268,20 +216,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public doLogout() {
-    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST');
-    //   .subscribe(result => {
-    //   let response = result['response'];
-    //   response = this.utilityService.decodeObjectFromJSON(response);
-    //   if (response != null) {
-    //     if (response['success'] === true) {
-    //       this.router.navigateByUrl('/');
-    //     } else {
-    //       // console.log('show error message in dialog');
-    //     }
-    //   }
-    // }, error => {
-    //
-    // });
+    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST');    
   }
 
   onSuccessLogout(context: any, response: any) {
@@ -289,7 +224,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     if (response['success'] === true) {
       context.router.navigateByUrl('/');
     } else {
-      // console.log('show error message in dialog');
+      
     }
   }
 
@@ -331,20 +266,4 @@ interface AccessOptions {
   impersonationaccess: boolean;
   emailformaccess: boolean;
 
-}
-
-export interface ConfirmationDialogEvent {
-
-  message: string;
-
-  onOk(): void;
-
-  onCancel(): void;
-}
-
-export interface AlertDialogEvent {
-  isSuccess: boolean;
-  message: string;
-
-  onOk(): void;
 }

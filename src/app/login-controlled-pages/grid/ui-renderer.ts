@@ -5,7 +5,7 @@ export class UIRenderer {
   id: string;  
 	private callback_renderColumn: any;	
 
-  constructor(id: string, callback_renderColumn: any = null) {
+  constructor(id: string, callback_renderColumn: any) {
     this.id = id;
     this.callback_renderColumn =  callback_renderColumn;
   }  

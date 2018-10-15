@@ -1,23 +1,23 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Renderer } from "@angular/core";
-import { Router } from "@angular/router";
-import { AppConstants } from "../utils/app-constants";
-import { AppUtilityService } from "../utils/app-utility.service";
-import { EnvironmentConstants } from "../utils/environment-constants";
-import { HelperService, ConfirmationDialogEvent, AlertDialogEvent } from "../utils/helper.service";
-import { LcpConstants } from "../utils/lcp-constants";
-import { LcpRestUrls } from "../utils/lcp-rest-urls";
-import { EmailInterface } from "./create-email/create-email.component";
-import { ActionButton } from "./grid/action-button";
-import { ActionColumn } from "./grid/action-column";
-import { Column } from "./grid/column";
-import { GridComponent, GridDataInterface } from "./grid/grid.component";
-import { Paginator } from "./grid/paginator";
-import { SelectionColumn } from "./grid/selection-column";
-import { Store } from "./grid/store";
-import { Grid } from "./grid/grid";
-import { EventHandler } from "./grid/event-handler";
-import { FilterOption } from "./grid/filter-option";
-import { UIRenderer } from "./grid/ui-renderer";
+import { AfterViewInit, Component, OnInit, ViewChild, Renderer } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppConstants } from '../utils/app-constants';
+import { AppUtilityService } from '../utils/app-utility.service';
+import { EnvironmentConstants } from '../utils/environment-constants';
+import { HelperService, ConfirmationDialogEvent, AlertDialogEvent } from '../utils/helper.service';
+import { LcpConstants } from '../utils/lcp-constants';
+import { LcpRestUrls } from '../utils/lcp-rest-urls';
+import { EmailInterface } from './create-email/create-email.component';
+import { ActionButton } from './grid/action-button';
+import { ActionColumn } from './grid/action-column';
+import { Column } from './grid/column';
+import { GridComponent, GridDataInterface } from './grid/grid.component';
+import { Paginator } from './grid/paginator';
+import { SelectionColumn } from './grid/selection-column';
+import { Store } from './grid/store';
+import { Grid } from './grid/grid';
+import { EventHandler } from './grid/event-handler';
+import { FilterOption } from './grid/filter-option';
+import { UIRenderer } from './grid/ui-renderer';
 import { Record } from './grid/record';
 
 
@@ -41,10 +41,10 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   alertDialog: HTMLDivElement;
   emailData: EmailInterface;
   emailDialog: HTMLDivElement;
-  gridMetaData: GridDataInterface;
 
-  @ViewChild('grid1')
-  gridObject: GridComponent;
+  @ViewChild('alertGrid')
+  alertGridObject: GridComponent;
+  alertGridMetaData: GridDataInterface;
 
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
@@ -53,7 +53,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.idleTime = 0;
     this.setActivityTimer();
     this.emailData = null;
-    this.gridMetaData = null;
+    this.alertGridMetaData = null;
     this.setUpGridMetaData();
   }
 
@@ -121,13 +121,13 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.gridObject.init();
-      this.gridObject.createGrid();
+      this.alertGridObject.init();
+      this.alertGridObject.createGrid();
     }, 0);
   }
 
-  public setUpGridMetaData() {       
-    this.gridMetaData = {
+  public setUpGridMetaData() {
+    this.alertGridMetaData = {
       grid: new Grid(
         'alertGrid',
         'Alerts & Reminders',
@@ -146,16 +146,16 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             new FilterOption('alertGrid-Column-SubjectList-FilterOption-Biology', 'Biology', 'bio'),
             new FilterOption('alertGrid-Column-SubjectList-FilterOption-Mathematics', 'Mathematics', 'maths')
           ], new UIRenderer('alertGrid-Column-SubjectList-Renderer', function(record: Record, column: Column) {
-                                return record.getProperty(column.mapping)+'External';
+                                return record.getProperty(column.mapping) + 'External';
           }),
           new EventHandler('alertGrid-ColumnSubjectList-EH', function(record: Record, column: Column) {
-                      alert(record.id+' '+column.headerName);
+                      alert(record.id + ' ' + column.headerName);
           })),
           new Column('alertGrid-Column-SubjectList2', 'Subject List 2', 'list', 'subject', true, true, true, false, [
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Hindi', 'Hindi', 'phy'),
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-English', 'English', 'chem'),
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Sanskrit', 'Sanskrit', 'bio'),
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Geography', 'Geography', 'maths')
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Hindi', 'Hindi', 'hindi'),
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-English', 'English', 'english'),
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Sanskrit', 'Sanskrit', 'sanskrit'),
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Geography', 'Geography', 'geo')
           ], null, null)
         ],
         true,
@@ -167,25 +167,28 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
         true,
         new ActionColumn('alertGrid-ActionColumn',
          [
-          new ActionButton('alertGrid-ActionButtonOpen', 'Open', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id+' '+button.label);
-          })), 
-          new ActionButton('alertGrid-ActionButtonOpen', 'Update', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id+' '+button.label);
-          }), 'btnReset'),  
-          new ActionButton('alertGrid-ActionButtonOpen', 'Remove', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id+' '+button.label);
-          }), 'btnReject'), 
+          new ActionButton('alertGrid-ActionButtonOpen',
+                          'Open', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id + ' ' + button.label);
+          })),
+          new ActionButton('alertGrid-ActionButtonOpen',
+                           'Update', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id + ' ' + button.label);
+          }), 'btnReset'),
+          new ActionButton('alertGrid-ActionButtonOpen',
+                           'Remove', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id + ' ' + button.label);
+          }), 'btnReject'),
           ]),
-      ),      
-      htmlDomElementId: 'grid-1',
+      ),
+      htmlDomElementId: 'alert-grid',
       hidden: false
     };
   }
 
 
-  public parseMenu() {    
-    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');    
+  public parseMenu() {
+    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');
   }
 
   onSuccessBasicInfo(context: any, response: any) {
@@ -246,7 +249,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public doLogout() {
-    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST');    
+    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST');
   }
 
   onSuccessLogout(context: any, response: any) {
@@ -254,7 +257,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     if (response['success'] === true) {
       context.router.navigateByUrl('/');
     } else {
-      
+
     }
   }
 

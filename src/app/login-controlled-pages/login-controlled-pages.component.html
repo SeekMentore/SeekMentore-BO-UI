@@ -39,20 +39,13 @@
   </div>
   <button (click)="askForConfirmation()">Show confirmation dialog</button>
   <button (click)="showAlertDialog()">Show alert dialog</button>
-  <app-grid #grid1 id="grid-1" [gridMetaData]="gridMetaData"></app-grid>
+  <app-grid #alertGrid id="alert-grid" [gridMetaData]="alertGridMetaData"></app-grid>
 
 
   <router-outlet></router-outlet>
 
 
 </div>
-
-<!--<app-create-grid *ngIf="showGrid"-->
-                 <!--[columns-data]="gridColumnsData"-->
-                 <!--[meta-data]="gridMetaData"-->
-                 <!--[grid-records]="gridRecords">-->
-
-<!--</app-create-grid>-->
 
 <!--Email Dialog-->
 <div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">

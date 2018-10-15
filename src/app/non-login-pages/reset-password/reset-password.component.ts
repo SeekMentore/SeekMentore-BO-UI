@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {HelperService} from '../../utils/helper.service';
-import {AppUtilityService} from '../../utils/app-utility.service';
-import {NlpConstants} from '../../utils/nlp-constants';
-import {NlpRestUrls} from '../../utils/nlp-rest-urls';
+import { Component, OnInit } from '@angular/core';
+import { AppUtilityService } from '../../utils/app-utility.service';
+import { HelperService } from '../../utils/helper.service';
+import { NlpConstants } from '../../utils/nlp-constants';
+import { NlpRestUrls } from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-forgot-password',

@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {HelperService} from '../../utils/helper.service';
-import {AppUtilityService} from '../../utils/app-utility.service';
-import {EnvironmentConstants} from '../../utils/environment-constants';
-import {NlpRestUrls} from '../../utils/nlp-rest-urls';
-
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AppUtilityService } from '../../utils/app-utility.service';
+import { EnvironmentConstants } from '../../utils/environment-constants';
+import { HelperService } from '../../utils/helper.service';
+import { NlpRestUrls } from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-error',

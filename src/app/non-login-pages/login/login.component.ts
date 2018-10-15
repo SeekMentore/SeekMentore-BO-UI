@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {HelperService} from '../../utils/helper.service';
-import {AppUtilityService} from '../../utils/app-utility.service';
-import {NlpConstants} from '../../utils/nlp-constants';
-import {Router} from '@angular/router';
-import {NlpRestUrls} from '../../utils/nlp-rest-urls';
-import {LcpConstants} from "../../utils/lcp-constants";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppUtilityService } from '../../utils/app-utility.service';
+import { HelperService } from '../../utils/helper.service';
+import { LcpConstants } from '../../utils/lcp-constants';
+import { NlpConstants } from '../../utils/nlp-constants';
+import { NlpRestUrls } from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-login',

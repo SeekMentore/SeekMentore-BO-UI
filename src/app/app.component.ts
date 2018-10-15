@@ -1,7 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AppConstants} from './utils/app-constants';
-import {EnvironmentConstants} from './utils/environment-constants';
-
+import { Component, OnInit } from '@angular/core';
+import { EnvironmentConstants } from './utils/environment-constants';
 
 @Component({
   selector: 'app-root',

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Renderer } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConstants } from '../utils/app-constants';
 import { AppUtilityService } from '../utils/app-utility.service';

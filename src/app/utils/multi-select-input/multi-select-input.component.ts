@@ -24,9 +24,11 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     for (const propName in changes) {
-      const changedProp = changes[propName];
-      if (propName === 'data' && changedProp.currentValue !== null) {
-        this.data = changedProp.currentValue;
+      if (null !== propName) {
+        const changedProp = changes[propName];
+        if (propName === 'data' && changedProp.currentValue !== null) {
+          this.data = changedProp.currentValue;
+        }
       }
     }
   }

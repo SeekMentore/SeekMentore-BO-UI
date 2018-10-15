@@ -1,13 +1,13 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
-import {ErrorComponent} from '../non-login-pages/error/error.component';
-import {LoginComponent} from '../non-login-pages/login/login.component';
-import {ResetPasswordComponent} from '../non-login-pages/reset-password/reset-password.component';
-import {NonLoginPagesComponent} from '../non-login-pages/non-login-pages.component';
-import {LoginControlledPagesComponent} from '../login-controlled-pages/login-controlled-pages.component';
-import {CreateEmailComponent} from '../login-controlled-pages/create-email/create-email.component';
-import {RoutingGuardService} from './routing-guard.service';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CreateEmailComponent } from '../login-controlled-pages/create-email/create-email.component';
+import { LoginControlledPagesComponent } from '../login-controlled-pages/login-controlled-pages.component';
+import { ErrorComponent } from '../non-login-pages/error/error.component';
+import { LoginComponent } from '../non-login-pages/login/login.component';
+import { NonLoginPagesComponent } from '../non-login-pages/non-login-pages.component';
+import { ResetPasswordComponent } from '../non-login-pages/reset-password/reset-password.component';
+import { RoutingGuardService } from './routing-guard.service';
 
 
 const routes: Routes = [

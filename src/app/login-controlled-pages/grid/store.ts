@@ -35,7 +35,7 @@ export class Store {
         sorter: (grid.isSortingCapable) ? grid.sorters : null,
         filter: (grid.isFilterCapable) ? grid.filters : null
       };
-      gridObject.utility_service.makeRequest1(this.restURL, 'POST', JSON.stringify(params)).subscribe(
+      gridObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', JSON.stringify(params)).subscribe(
         result => {
           let response = result['response'];
           response = gridObject.utility_service.decodeObjectFromJSON(response);          

@@ -20,7 +20,6 @@ import { FilterOption } from './grid/filter-option';
 import { UIRenderer } from './grid/ui-renderer';
 import { Record } from './grid/record';
 
-
 @Component({
   selector: 'app-login-controlled-pages',
   templateUrl: './login-controlled-pages.component.html',
@@ -46,6 +45,10 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   alertGridObject: GridComponent;
   alertGridMetaData: GridDataInterface;
 
+  @ViewChild('taskGrid')
+  taskGridObject: GridComponent;
+  taskGridMetaData: GridDataInterface;
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -54,6 +57,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.setActivityTimer();
     this.emailData = null;
     this.alertGridMetaData = null;
+    this.taskGridMetaData = null;
     this.setUpGridMetaData();
   }
 
@@ -123,6 +127,9 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.alertGridObject.init();
       this.alertGridObject.createGrid();
+
+      this.taskGridObject.init();
+      this.taskGridObject.createGrid();
     }, 0);
   }
 
@@ -182,6 +189,57 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
           ]),
       ),
       htmlDomElementId: 'alert-grid',
+      hidden: false
+    };
+
+    this.taskGridMetaData = {
+      grid: new Grid(
+        'taskGrid',
+        'Tasks',
+        new Store('taskGrid-Store', false, '/rest/employee/tasksGrid', null),
+        [
+          new Column('taskGrid-Column-Id', 'ID', 'number', 'id', true, true, true, false, [], null, null),
+          new Column('taskGrid-Column-InitiatedDate', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null),
+          new Column('taskGrid-Column-ActionDate', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null),
+          new Column('taskGrid-Column-DueDate', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null),
+          new Column('taskGrid-Column-InitiatedBy', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null),
+          new Column('taskGrid-Column-ActionBy', 'Action By', 'string', 'actionBy', true, true, true, false, [], null, null),         
+          new Column('taskGrid-Column-SubjectList', 'Subject List', 'list', 'subject', true, true, true, false, [
+            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Physics', 'Physics', 'phy'),
+            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Chemimstry', 'Chemimstry', 'chem'),
+            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Biology', 'Biology', 'bio'),
+            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Mathematics', 'Mathematics', 'maths')
+          ], new UIRenderer('taskGrid-Column-SubjectList-Renderer', function(record: Record, column: Column) {
+                                return record.getProperty(column.mapping) + 'External';
+          }),
+          new EventHandler('taskGrid-ColumnSubjectList-EH', function(record: Record, column: Column) {
+                      alert(record.id + ' ' + column.headerName);
+          }))
+        ],
+        true,
+        new Paginator('taskGrid-Paginator', 20),
+        true,
+        true,
+        true,
+        new SelectionColumn('taskGrid-SelectionColumn'),
+        true,
+        new ActionColumn('taskGrid-ActionColumn',
+         [
+          new ActionButton('taskGrid-ActionButtonOpen',
+                          'Open', new EventHandler('taskGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id + ' ' + button.label);
+          })),
+          new ActionButton('taskGrid-ActionButtonOpen',
+                           'Update', new EventHandler('taskGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id + ' ' + button.label);
+          }), 'btnReset'),
+          new ActionButton('taskGrid-ActionButtonOpen',
+                           'Remove', new EventHandler('taskGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id + ' ' + button.label);
+          }), 'btnReject'),
+          ]),
+      ),
+      htmlDomElementId: 'task-grid',
       hidden: false
     };
   }

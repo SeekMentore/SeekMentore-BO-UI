@@ -133,7 +133,7 @@
                        title="Before">
               </div>
             </div>
-            <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-list'}}" *ngIf="column.dataType == 'list'"> Choose from list
+            <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-list'}}" *ngIf="column.dataType == 'list'">Choose from list
               <i id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-list'+'-i-list'}}" class="fas fa-list {{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}"
                  style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #filterList
                  (click)="showMultiSelectFilter(column, filterList)"></i>
@@ -153,7 +153,7 @@
       </span>
       <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}" class="uigrid-cell" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}">
         <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}" *ngIf="!(column.hidden)">
-          {{record.getProperty(column.mapping)}}
+          {{defaultColumnValueRenderer(record, column)}}          
         </span>
       </span>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'}}" *ngIf="grid.hasActionColumn" class="uigrid-cell grid_actions">
@@ -163,6 +163,11 @@
           </button>
         </span>
       </div>
+    </div>
+    <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-no-record'}}" *ngIf="!(grid.filtered_records.length > 0)" class="uigrid-row">
+        <span class="uigrid-cell">
+            No Records
+        </span>
     </div>
   </div>
   <!--Pagination Bar-->

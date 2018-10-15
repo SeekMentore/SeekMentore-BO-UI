@@ -16,6 +16,7 @@ import { SelectionColumn } from "./grid/selection-column";
 import { Store } from "./grid/store";
 import { Grid } from "./grid/grid";
 import { EventHandler } from "./grid/event-handler";
+import { FilterOption } from "./grid/filter-option";
 
 
 @Component({
@@ -123,8 +124,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public setUpGridMetaData() {
-       
+  public setUpGridMetaData() {       
     this.gridMetaData = {
       grid: new Grid(
         'alertGrid',
@@ -137,7 +137,19 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
           new Column('alertGrid-Column-DueDate', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null),
           new Column('alertGrid-Column-InitiatedBy', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null),
           new Column('alertGrid-Column-ActionBy', 'Action By', 'string', 'actionBy', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-Subject', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null)
+          new Column('alertGrid-Column-Subject', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null),
+          new Column('alertGrid-Column-SubjectList', 'Subject List ', 'list', 'subject', true, true, true, false, [
+            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Physics', 'Physics', 'phy'),
+            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Chemimstry', 'Chemimstry', 'chem'),
+            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Biology', 'Biology', 'bio'),
+            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Mathematics', 'Mathematics', 'maths')
+          ], null, null),
+          new Column('alertGrid-Column-SubjectList2', 'Subject List 2', 'list', 'subject', true, true, true, false, [
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Hindi', 'Hindi', 'phy'),
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-English', 'English', 'chem'),
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Sanskrit', 'Sanskrit', 'bio'),
+            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Geography', 'Geography', 'maths')
+          ], null, null)
         ],
         true,
         new Paginator('alertGrid-Paginator', 20),

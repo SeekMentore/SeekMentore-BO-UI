@@ -1,4 +1,5 @@
 import { Record } from './record';
+import { Column } from './column';
 
 export class Renderer {
   id: string;
@@ -17,8 +18,8 @@ export class Renderer {
     this.callback_renderSelectionColumn(record);
   }
 
-  public renderColumn(record: Record) {
-    this.callback_renderColumn(record);
+  public renderColumn(record: Record, column: Column) {
+    this.callback_renderColumn(record, column);
   }
 
   public renderActionButton(record: Record) {

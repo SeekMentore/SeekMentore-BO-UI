@@ -754,6 +754,13 @@ export class GridComponent implements OnInit, AfterViewInit {
   /**
    * Paint Filter Tabs
    */
+  private defaultColumnValueRenderer(record: Record, column: Column) {
+    if (column.renderer === null) {
+      return record.getProperty(column.mapping)+'Test';
+    }
+    column.renderer.renderColumn(record, column);
+  }
+
   private hideShowRemoveFilterTab(column: Column = null) {       
     if (column !== null) {      
       const crossButton = document.getElementById('uigrid-'+this.grid.id+'-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-'+column.id+'-column-header-remove-filter');

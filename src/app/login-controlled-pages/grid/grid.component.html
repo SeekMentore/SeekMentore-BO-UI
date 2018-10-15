@@ -152,7 +152,7 @@
                (change)="selectionButtonCheckedUnchecked(record, $event.target)">
       </span>
       <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}" class="uigrid-cell" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}">
-        <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}" *ngIf="!(column.hidden)">
+        <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}" *ngIf="!(column.hidden)" (click)="columnClicked(record, column)">
           {{defaultColumnValueRenderer(record, column)}}          
         </span>
       </span>

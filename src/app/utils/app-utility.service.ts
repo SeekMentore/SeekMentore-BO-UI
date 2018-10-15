@@ -16,7 +16,7 @@ export class AppUtilityService {
   constructor(private http: HttpClient) {
   }
 
-  public makeRequest1(url: string,
+  public makeRequestWithoutResponseHandler(url: string,
                      requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
                      data: any = null,
                      contentType: string = 'application/json',
@@ -107,7 +107,7 @@ export class AppUtilityService {
       urlPath: path
     };
     const _observable = new Observable<boolean>(observer => {
-      this.makeRequest1(LcpRestUrls.uiAccessUrl, 'POST', JSON.stringify(params)).subscribe(
+      this.makeRequestWithoutResponseHandler(LcpRestUrls.uiAccessUrl, 'POST', JSON.stringify(params)).subscribe(
         result => {
           let response = result['response'];
           response = this.decodeObjectFromJSON(response);

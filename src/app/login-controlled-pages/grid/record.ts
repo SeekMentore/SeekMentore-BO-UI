@@ -9,6 +9,6 @@ export class Record {
   }
 
   public getProperty(propertyName: string) {
-    return this.property[propertyName];
+    return (null !== this.property[propertyName] || undefined !== this.property[propertyName]) ? this.property[propertyName] : '';
   }
 }

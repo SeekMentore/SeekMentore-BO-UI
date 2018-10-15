@@ -737,7 +737,7 @@ export class GridComponent implements OnInit, AfterViewInit {
    */
   public actionButtonClicked(record: Record, button: ActionButton) {    
     if (button.eventHandler !== null) {
-      button.eventHandler.clickEvent(record);
+      button.eventHandler.clickEventButton(record, button);
     } else {
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -749,17 +749,23 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public columnClicked(record: Record, column: Column) {    
+    if (column.eventHandler !== null) {
+      column.eventHandler.clickEventColumn(record, column);
+    } 
+  }
+
   /** Paint & Reset Functions */
 
   /**
    * Paint Filter Tabs
    */
-  private defaultColumnValueRenderer(record: Record, column: Column) {
-    if (column.renderer === null) {
-      return record.getProperty(column.mapping)+'Test';
+  public defaultColumnValueRenderer(record: Record, column: Column) {
+    if (column.uiRenderer === null) {
+      return record.getProperty(column.mapping);
     }
-    column.renderer.renderColumn(record, column);
-  }
+    return column.uiRenderer.renderColumn(record, column);
+  }  
 
   private hideShowRemoveFilterTab(column: Column = null) {       
     if (column !== null) {      

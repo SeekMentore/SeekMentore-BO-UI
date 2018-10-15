@@ -17,6 +17,8 @@ import { Store } from "./grid/store";
 import { Grid } from "./grid/grid";
 import { EventHandler } from "./grid/event-handler";
 import { FilterOption } from "./grid/filter-option";
+import { UIRenderer } from "./grid/ui-renderer";
+import { Record } from './grid/record';
 
 
 @Component({
@@ -138,12 +140,17 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
           new Column('alertGrid-Column-InitiatedBy', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null),
           new Column('alertGrid-Column-ActionBy', 'Action By', 'string', 'actionBy', true, true, true, false, [], null, null),
           new Column('alertGrid-Column-Subject', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-SubjectList', 'Subject List ', 'list', 'subject', true, true, true, false, [
+          new Column('alertGrid-Column-SubjectList', 'Subject List', 'list', 'subject', true, true, true, false, [
             new FilterOption('alertGrid-Column-SubjectList-FilterOption-Physics', 'Physics', 'phy'),
             new FilterOption('alertGrid-Column-SubjectList-FilterOption-Chemimstry', 'Chemimstry', 'chem'),
             new FilterOption('alertGrid-Column-SubjectList-FilterOption-Biology', 'Biology', 'bio'),
             new FilterOption('alertGrid-Column-SubjectList-FilterOption-Mathematics', 'Mathematics', 'maths')
-          ], null, null),
+          ], new UIRenderer('alertGrid-Column-SubjectList-Renderer', function(record: Record, column: Column) {
+                                return record.getProperty(column.mapping)+'External';
+          }),
+          new EventHandler('alertGrid-ColumnSubjectList-EH', function(record: Record, column: Column) {
+                      alert(record.id+' '+column.headerName);
+          })),
           new Column('alertGrid-Column-SubjectList2', 'Subject List 2', 'list', 'subject', true, true, true, false, [
             new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Hindi', 'Hindi', 'phy'),
             new FilterOption('alertGrid-Column-SubjectList2-FilterOption-English', 'English', 'chem'),
@@ -160,9 +167,15 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
         true,
         new ActionColumn('alertGrid-ActionColumn',
          [
-          new ActionButton('alertGrid-ActionButtonOpen', 'Open'), 
-          new ActionButton('alertGrid-ActionButtonOpen', 'Update', 'btnReset'),  
-          new ActionButton('alertGrid-ActionButtonOpen', 'Remove', 'btnReject'), 
+          new ActionButton('alertGrid-ActionButtonOpen', 'Open', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id+' '+button.label);
+          })), 
+          new ActionButton('alertGrid-ActionButtonOpen', 'Update', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id+' '+button.label);
+          }), 'btnReset'),  
+          new ActionButton('alertGrid-ActionButtonOpen', 'Remove', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
+                        alert(record.id+' '+button.label);
+          }), 'btnReject'), 
           ]),
       ),      
       htmlDomElementId: 'grid-1',

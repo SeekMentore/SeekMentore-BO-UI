@@ -1,5 +1,5 @@
 import {EventHandler} from './event-handler';
-import {Renderer} from './renderer';
+import {UIRenderer} from './ui-renderer';
 import {FilterOption} from './filter-option';
 import {Filter} from './filter';
 
@@ -14,7 +14,7 @@ export class Column {
   hidden: boolean = false;
   toBeHidden: boolean = false;
   filterOptions: FilterOption[]; 
-  renderer: Renderer;
+  uiRenderer: UIRenderer;
   eventHandler: EventHandler;
   filter: Filter;
   isFiltered: boolean = false; // Do not set in constructor
@@ -31,7 +31,7 @@ export class Column {
           hideable: boolean, 
           hidden: boolean, 
           filterOptions: FilterOption[] = [], 
-          renderer: Renderer = null, 
+          uiRenderer: UIRenderer = null, 
           eventHandler: EventHandler = null
   ) {
     this.id = id;
@@ -43,7 +43,7 @@ export class Column {
     this.hideable = hideable;
     this.hidden = hidden;
     this.filterOptions = filterOptions;
-    this.renderer = renderer;
+    this.uiRenderer = uiRenderer;
     this.eventHandler = eventHandler;
     this.filter = new Filter(this.id + '-filter', this.dataType, this.mapping, this.id);    
   }

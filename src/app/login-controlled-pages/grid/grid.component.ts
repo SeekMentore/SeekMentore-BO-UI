@@ -490,7 +490,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         const filter = column.filter;
         filter.beforeDate = date_value;
         filter.beforeDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + date_value.getFullYear();
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + (date_value.getUTCFullYear()%100);
         column.isFiltered = true;
         this.hideShowRemoveFilterTab(column);
         return;
@@ -520,7 +520,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         const filter = column.filter;
         filter.afterDate = date_value;
         filter.afterDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + date_value.getFullYear();
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + (date_value.getUTCFullYear()%100);
         column.isFiltered = true;
         this.hideShowRemoveFilterTab(column);
         return;
@@ -550,7 +550,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         const filter = column.filter;
         filter.onDate = date_value;
         filter.onDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + date_value.getFullYear();    
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth()+1) + '/' + (date_value.getUTCFullYear()%100);
         column.isFiltered = true;
         this.hideShowRemoveFilterTab(column);
         return;

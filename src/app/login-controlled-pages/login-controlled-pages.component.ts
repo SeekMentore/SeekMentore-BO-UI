@@ -129,12 +129,14 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.alertGridMetaData = {
-      grid: new Grid(
-        'alertGrid',
-        'Alerts & Reminders', {
+      grid : {
+        id : 'alertGrid',
+        title : 'Alerts & Reminders', 
+        store : {
           isStatic : false,
           restURL : '/rest/employee/alertsRemindersGrid'
-        },[{
+        },
+        columns : [{
             id : 'initiatedDate',
             headerName : 'Initiated Date',
             dataType : 'date',
@@ -168,19 +170,26 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             dataType : 'string',
             mapping : 'subject'            
           }
-        ], true, null, true, true, false, null, false, null
-      ),
-      htmlDomElementId: 'alert-grid',
-      hidden: false
+        ], 
+        pagingCapable : true, 
+        sortable : true, 
+        filterable : true, 
+        hasSelectionColumn : false, 
+        hasActionColumn : false
+      },
+      htmlDomElementId : 'alert-grid',
+      hidden : false
     };
 
     this.taskGridMetaData = {
-      grid: new Grid(
-        'taskGrid',
-        'Tasks',{
+      grid : {
+        id : 'taskGrid',
+        title : 'Tasks',
+        store : {
           isStatic : false,
           restURL : '/rest/employee/tasksGrid'
-        },[{
+        },
+        columns : [{
             id : 'initiatedDate',
             headerName : 'Initiated Date',
             dataType : 'date',
@@ -235,8 +244,13 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             }            
           } 
         ],
-        true,20,true,true,true,null,
-        true,{
+        pagingCapable : true,
+        recordsPerPage : 20,
+        sortable : true,
+        filterable : true,
+        hasSelectionColumn : true,
+        hasActionColumn : true,
+        actionColumn : {
           label : 'Modified Actions',
           buttons : [{
             id : 'openBtn',
@@ -260,7 +274,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
                         }
           }]
         }
-      ),
+      },
       htmlDomElementId: 'task-grid',
       hidden: false
     };

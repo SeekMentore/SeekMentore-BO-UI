@@ -3,22 +3,16 @@ import { Router } from '@angular/router';
 import { AppConstants } from '../utils/app-constants';
 import { AppUtilityService } from '../utils/app-utility.service';
 import { EnvironmentConstants } from '../utils/environment-constants';
-import { HelperService, ConfirmationDialogEvent, AlertDialogEvent } from '../utils/helper.service';
+import { AlertDialogEvent, ConfirmationDialogEvent, HelperService } from '../utils/helper.service';
 import { LcpConstants } from '../utils/lcp-constants';
 import { LcpRestUrls } from '../utils/lcp-rest-urls';
 import { EmailInterface } from './create-email/create-email.component';
 import { ActionButton } from './grid/action-button';
-import { ActionColumn } from './grid/action-column';
 import { Column } from './grid/column';
-import { GridComponent, GridDataInterface } from './grid/grid.component';
-import { Paginator } from './grid/paginator';
-import { SelectionColumn } from './grid/selection-column';
-import { Store } from './grid/store';
 import { Grid } from './grid/grid';
-import { EventHandler } from './grid/event-handler';
-import { FilterOption } from './grid/filter-option';
-import { UIRenderer } from './grid/ui-renderer';
+import { GridComponent, GridDataInterface } from './grid/grid.component';
 import { Record } from './grid/record';
+import { GridCommonFunctions } from './grid/grid-common-functions';
 
 @Component({
   selector: 'app-login-controlled-pages',
@@ -137,56 +131,44 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.alertGridMetaData = {
       grid: new Grid(
         'alertGrid',
-        'Alerts & Reminders',
-        new Store('alertGrid-Store', false, '/rest/employee/alertsRemindersGrid', null),
-        [
-          new Column('alertGrid-Column-Id', 'ID', 'number', 'id', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-InitiatedDate', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-ActionDate', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-DueDate', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-InitiatedBy', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-ActionBy', 'Action By', 'string', 'actionBy', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-Subject', 'Subject ', 'string', 'subject', true, true, true, false, [], null, null),
-          new Column('alertGrid-Column-SubjectList', 'Subject List', 'list', 'subject', true, true, true, false, [
-            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Physics', 'Physics', 'phy'),
-            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Chemimstry', 'Chemimstry', 'chem'),
-            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Biology', 'Biology', 'bio'),
-            new FilterOption('alertGrid-Column-SubjectList-FilterOption-Mathematics', 'Mathematics', 'maths')
-          ], new UIRenderer('alertGrid-Column-SubjectList-Renderer', function(record: Record, column: Column) {
-                                return record.getProperty(column.mapping) + 'External';
-          }),
-          new EventHandler('alertGrid-ColumnSubjectList-EH', function(record: Record, column: Column) {
-                      alert(record.id + ' ' + column.headerName);
-          })),
-          new Column('alertGrid-Column-SubjectList2', 'Subject List 2', 'list', 'subject', true, true, true, false, [
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Hindi', 'Hindi', 'hindi'),
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-English', 'English', 'english'),
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Sanskrit', 'Sanskrit', 'sanskrit'),
-            new FilterOption('alertGrid-Column-SubjectList2-FilterOption-Geography', 'Geography', 'geo')
-          ], null, null)
-        ],
-        true,
-        new Paginator('alertGrid-Paginator', 20),
-        true,
-        true,
-        true,
-        new SelectionColumn('alertGrid-SelectionColumn'),
-        true,
-        new ActionColumn('alertGrid-ActionColumn',
-         [
-          new ActionButton('alertGrid-ActionButtonOpen',
-                          'Open', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id + ' ' + button.label);
-          })),
-          new ActionButton('alertGrid-ActionButtonOpen',
-                           'Update', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id + ' ' + button.label);
-          }), 'btnReset'),
-          new ActionButton('alertGrid-ActionButtonOpen',
-                           'Remove', new EventHandler('alertGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id + ' ' + button.label);
-          }), 'btnReject'),
-          ]),
+        'Alerts & Reminders', {
+          isStatic : false,
+          restURL : '/rest/employee/alertsRemindersGrid'
+        },[{
+            id : 'initiatedDate',
+            headerName : 'Initiated Date',
+            dataType : 'date',
+            mapping : 'initiatedDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
+          },{
+            id : 'actionDate',
+            headerName : 'Action Date',
+            dataType : 'date',
+            mapping : 'actionDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
+          },{
+            id : 'dueDate',
+            headerName : 'Due Date',
+            dataType : 'date',
+            mapping : 'dueDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
+          },{
+            id : 'initiatedBy',
+            headerName : 'Initiated By',
+            dataType : 'string',
+            mapping : 'initiatedBy'            
+          },{
+            id : 'actionBy',
+            headerName : 'Action By',
+            dataType : 'string',
+            mapping : 'actionBy'            
+          },{
+            id : 'subject',
+            headerName : 'Subject',
+            dataType : 'string',
+            mapping : 'subject'            
+          }
+        ], true, null, true, true, false, null, false, null
       ),
       htmlDomElementId: 'alert-grid',
       hidden: false
@@ -195,49 +177,89 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.taskGridMetaData = {
       grid: new Grid(
         'taskGrid',
-        'Tasks',
-        new Store('taskGrid-Store', false, '/rest/employee/tasksGrid', null),
-        [
-          new Column('taskGrid-Column-Id', 'ID', 'number', 'id', true, true, true, false, [], null, null),
-          new Column('taskGrid-Column-InitiatedDate', 'Initiated Date', 'date', 'initiatedDate', true, true, true, false, [], null, null),
-          new Column('taskGrid-Column-ActionDate', 'Action Date', 'date', 'actionDate', true, true, true, false, [], null, null),
-          new Column('taskGrid-Column-DueDate', 'Due Date', 'date', 'dueDate', true, true, true, false, [], null, null),
-          new Column('taskGrid-Column-InitiatedBy', 'Initiated By', 'string', 'initiatedBy', true, true, true, false, [], null, null),
-          new Column('taskGrid-Column-ActionBy', 'Action By', 'string', 'actionBy', true, true, true, false, [], null, null),         
-          new Column('taskGrid-Column-SubjectList', 'Subject List', 'list', 'subject', true, true, true, false, [
-            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Physics', 'Physics', 'phy'),
-            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Chemimstry', 'Chemimstry', 'chem'),
-            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Biology', 'Biology', 'bio'),
-            new FilterOption('taskGrid-Column-SubjectList-FilterOption-Mathematics', 'Mathematics', 'maths')
-          ], new UIRenderer('taskGrid-Column-SubjectList-Renderer', function(record: Record, column: Column) {
-                                return record.getProperty(column.mapping) + 'External';
-          }),
-          new EventHandler('taskGrid-ColumnSubjectList-EH', function(record: Record, column: Column) {
-                      alert(record.id + ' ' + column.headerName);
-          }))
+        'Tasks',{
+          isStatic : false,
+          restURL : '/rest/employee/tasksGrid'
+        },[{
+            id : 'initiatedDate',
+            headerName : 'Initiated Date',
+            dataType : 'date',
+            mapping : 'initiatedDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillisWithTime
+          },{
+            id : 'actionDate',
+            headerName : 'Action Date',
+            dataType : 'date',
+            mapping : 'actionDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillisWithTime
+          },{
+            id : 'dueDate',
+            headerName : 'Due Date',
+            dataType : 'date',
+            mapping : 'dueDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillisWithTime
+          },{
+            id : 'initiatedBy',
+            headerName : 'Initiated By',
+            dataType : 'string',
+            mapping : 'initiatedBy'
+          },{
+            id : 'actionBy',
+            headerName : 'Action By',
+            dataType : 'string',
+            mapping : 'actionBy'
+          },{
+            id : 'subjectList',
+            headerName : 'Subject List',
+            dataType : 'list',
+            mapping : 'subject',
+            filterOptions : [{
+                  value : 'phy',
+                  label : 'Physics'
+                },{
+                  value : 'chem',
+                  label : 'Chemimstry'
+                },{
+                  value : 'bio',
+                  label : 'Biology'
+                },{
+                  value : 'maths',
+                  label : 'Mathematics'
+                }
+            ],
+            renderer : function(record: Record, column: Column) {
+                        return column.getValueForColumn(record) + 'External';
+            },
+            clickEvent : function(record: Record, column: Column) {
+                        alert(record.id + ' ' + column.headerName);
+            }            
+          } 
         ],
-        true,
-        new Paginator('taskGrid-Paginator', 20),
-        true,
-        true,
-        true,
-        new SelectionColumn('taskGrid-SelectionColumn'),
-        true,
-        new ActionColumn('taskGrid-ActionColumn',
-         [
-          new ActionButton('taskGrid-ActionButtonOpen',
-                          'Open', new EventHandler('taskGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id + ' ' + button.label);
-          })),
-          new ActionButton('taskGrid-ActionButtonOpen',
-                           'Update', new EventHandler('taskGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id + ' ' + button.label);
-          }), 'btnReset'),
-          new ActionButton('taskGrid-ActionButtonOpen',
-                           'Remove', new EventHandler('taskGrid-ActionButtonOpen-EH', function(record: Record, button: ActionButton) {
-                        alert(record.id + ' ' + button.label);
-          }), 'btnReject'),
-          ]),
+        true,20,true,true,true,null,
+        true,{
+          label : 'Modified Actions',
+          buttons : [{
+            id : 'openBtn',
+            label : 'Open',
+            clickEvent : function(record: Record, button: ActionButton) {
+                                alert(record.id + ' ' + button.label);
+                        }
+          },{
+            id : 'updateBtn',
+            label : 'Update',
+            btnclass : 'btnReset',
+            clickEvent : function(record: Record, button: ActionButton) {
+                                alert(record.id + ' ' + button.label);
+                        }
+          },{
+            id : 'removeBtn',
+            label : 'Remove',
+            btnclass : 'btnReject',
+            clickEvent : function(record: Record, button: ActionButton) {
+                                alert(record.id + ' ' + button.label);
+                        }
+          }]
+        }
       ),
       htmlDomElementId: 'task-grid',
       hidden: false

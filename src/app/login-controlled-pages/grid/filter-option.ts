@@ -4,7 +4,7 @@ export class FilterOption {
   value: string;
   isSelected: boolean = false; // Do not set in constructor
 
-  constructor(id, label, value) {
+  constructor(id: string, label: string, value: string) {
     this.id = id;
     this.label = label;
     this.value = value;

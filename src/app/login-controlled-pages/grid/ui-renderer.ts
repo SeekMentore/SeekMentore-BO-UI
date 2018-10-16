@@ -14,6 +14,6 @@ export class UIRenderer {
     if (null !== this.callback_renderColumn) {
       return this.callback_renderColumn(record, column);      
     }    
-    return record.getProperty(column.mapping);
+    return column.getValueForColumn(record);
   }  
 }

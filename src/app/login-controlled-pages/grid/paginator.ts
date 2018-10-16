@@ -7,11 +7,9 @@ export class Paginator {
   startRecordNumber: number = -1;
   totalPages: number = -1;
 
-  constructor(id, numberOfRecordsPerPage = null) {    
+  constructor(id: string, numberOfRecordsPerPage: number = GridConstants.DEFAULT_NUMBER_OF_RECORDS_PER_PAGE) {    
     this.id = id;
-    if (numberOfRecordsPerPage != null) {
-      this.numberOfRecordsPerPage = numberOfRecordsPerPage;
-    }
+    this.numberOfRecordsPerPage = numberOfRecordsPerPage;    
   }
 
   public init() {    

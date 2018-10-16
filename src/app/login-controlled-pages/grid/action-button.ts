@@ -6,10 +6,18 @@ export class ActionButton {
   btnclass: string = 'btnSubmit';
   eventHandler: EventHandler;
 
-  constructor(id: string, label: string, eventHandler: EventHandler, btnclass: string = 'btnSubmit') {
+  constructor(
+          id: string, 
+          label: string, 
+          clickEvent: any, 
+          btnclass: string = 'btnSubmit'
+  ) {
     this.id = id;
     this.label = label;
     this.btnclass = btnclass;
-    this.eventHandler = eventHandler;
+    this.eventHandler = null;
+    if (null !== clickEvent) {
+      this.eventHandler = new EventHandler(this.id + '-eventHandler', clickEvent);
+    }
   }
 }

@@ -2,12 +2,30 @@ import { ActionButton } from './action-button';
 
 export class ActionColumn {
   id: string;
+  label: string = 'Action Column'
   buttons: ActionButton[];
   totalButtons: number = -1;
 
-  constructor(id: string, buttons: ActionButton[]) {
+  constructor(
+      id: string, 
+      buttonsMetadata: Object[] = [], 
+      label: string = 'Action Column'
+  ) {
     this.id = id;
-    this.buttons = buttons;
+    this.label = label;
+    this.buttons = [];
+    if (null !== buttonsMetadata && buttonsMetadata.length > 0) {
+      for (var i = 0; i < buttonsMetadata.length; i++) {
+        var buttonMetadata:any = buttonsMetadata[i];
+        if (null !== buttonMetadata) {
+          if (null !== buttonMetadata.btnclass) {
+            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonMetadata.id, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.btnclass));
+          } else {
+            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonMetadata.id, buttonMetadata.label, buttonMetadata.clickEvent));
+          }
+        }
+      }
+    }
     this.totalButtons =  this.buttons.length;
   }
 

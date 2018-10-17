@@ -170,12 +170,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             dataType : 'string',
             mapping : 'subject'            
           }
-        ], 
-        pagingCapable : true, 
-        sortable : true, 
-        filterable : true, 
-        hasSelectionColumn : false, 
-        hasActionColumn : false
+        ]
       },
       htmlDomElementId : 'alert-grid',
       hidden : false
@@ -244,10 +239,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             }            
           } 
         ],
-        pagingCapable : true,
         recordsPerPage : 20,
-        sortable : true,
-        filterable : true,
         hasSelectionColumn : true,
         hasActionColumn : true,
         actionColumn : {

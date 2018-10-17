@@ -7,6 +7,7 @@ import {Sorter, SortingOrder} from './sorter';
 import {ActionButton} from './action-button';
 import {HelperService, AlertDialogEvent} from 'src/app/utils/helper.service';
 import {Grid} from './grid';
+import { GridCommonFunctions } from './grid-common-functions';
 
 @Component({
   selector: 'app-grid',
@@ -39,27 +40,29 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public createGrid() {
     this.grid.loadData(this);
-  }
+  }  
 
   public init() {
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
     this.grid = null;
     if (null !== this.gridMetaData.grid) {
-      // alert((undefined !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title');
+      const pagingCapable = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true;
+      const hasSelectionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false;
+      const hasActionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false  
       this.grid = new Grid(
-        (null !== this.gridMetaData.grid.id || '' !== this.gridMetaData.grid.id.trim()) ? this.gridMetaData.grid.id : this.htmlDomElementId,
-        (null !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title',
+        GridCommonFunctions.checkStringAvailability(this.gridMetaData.grid.id) ? this.gridMetaData.grid.id : this.htmlDomElementId,
+        GridCommonFunctions.checkStringAvailability(this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : this.htmlDomElementId,
         this.gridMetaData.grid.store, /**Assign a default store here */
-        (null !== this.gridMetaData.grid.columns) ? this.gridMetaData.grid.columns : [],
-        (null !== this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true,
-        ((null !== this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true) ? this.gridMetaData.grid.recordsPerPage : null,
-        (null !== this.gridMetaData.grid.sortable) ? this.gridMetaData.grid.sortable : true,
-        (null !== this.gridMetaData.grid.filterable) ? this.gridMetaData.grid.filterable : true,
-        (null !== this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false,
-        ((null !== this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false) ? this.gridMetaData.grid.selectionColumn : null,
-        (null !== this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false,
-        ((null !== this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false) ? this.gridMetaData.grid.actionColumn : null,
-        (null !== this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.columns) ? this.gridMetaData.grid.columns : [],
+        pagingCapable,
+        pagingCapable ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.recordsPerPage) ? this.gridMetaData.grid.recordsPerPage : null) : null,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.sortable) ? this.gridMetaData.grid.sortable : true,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.filterable) ? this.gridMetaData.grid.filterable : true,
+        hasSelectionColumn,
+        hasSelectionColumn ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.selectionColumn) ? this.gridMetaData.grid.selectionColumn : null) : null,
+        hasActionColumn,
+        hasActionColumn ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.actionColumn) ? this.gridMetaData.grid.actionColumn : null) : null,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false
       );
     }
     this.hidden = this.gridMetaData.hidden;

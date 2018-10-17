@@ -2,6 +2,23 @@ import { Column } from './column';
 import { Record } from './record';
 
 export class GridCommonFunctions {
+
+  /** Common validity functions */
+  public static checkObjectAvailability(object: any) {
+    if (null !== object && undefined !== object) {
+      return true;
+    }
+    return false;
+  }
+
+  public static checkStringAvailability(stringObject: string) {
+    if (GridCommonFunctions.checkObjectAvailability(stringObject)) {
+      if ('' !== stringObject.trim()) {
+        return true;
+      }
+    }
+    return false;
+  }
   
   /** Common Renderer functions */
   public static renderDateFromMillis(record: Record, column: Column) {

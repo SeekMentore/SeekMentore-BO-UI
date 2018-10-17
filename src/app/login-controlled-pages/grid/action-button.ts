@@ -1,4 +1,5 @@
 import { EventHandler } from './event-handler';
+import { GridCommonFunctions } from './grid-common-functions';
 
 export class ActionButton {
   id: string;
@@ -16,7 +17,7 @@ export class ActionButton {
     this.label = label;
     this.btnclass = btnclass;
     this.eventHandler = null;
-    if (null !== clickEvent) {
+    if (GridCommonFunctions.checkObjectAvailability(clickEvent)) {
       this.eventHandler = new EventHandler(this.id + '-eventHandler', clickEvent);
     }
   }

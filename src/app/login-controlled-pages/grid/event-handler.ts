@@ -1,6 +1,7 @@
 import { Record } from './record';
 import { Column } from './column';
 import { ActionButton } from './action-button';
+import { GridCommonFunctions } from './grid-common-functions';
 
 export class EventHandler {
   id: string;
@@ -12,13 +13,13 @@ export class EventHandler {
   }
 
   public clickEventColumn(record: Record, column: Column) {
-    if (null !== this.callback_clickEvent) {
+    if (GridCommonFunctions.checkObjectAvailability(this.callback_clickEvent)) {
       this.callback_clickEvent(record, column);      
     }    
   }
 
   public clickEventButton(record: Record, button: ActionButton) {
-    if (null !== this.callback_clickEvent) {
+    if (GridCommonFunctions.checkObjectAvailability(this.callback_clickEvent)) {
       this.callback_clickEvent(record, button);      
     }    
   }

@@ -23,7 +23,7 @@ export class GridCommonFunctions {
   /** Common Renderer functions */
   public static renderDateFromMillis(record: Record, column: Column) {
     const datemillis = column.getValueForColumn(record);
-    if (null !== datemillis) {
+    if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
       var dateString = date_value.getDate() 
                       + '/' + (date_value.getMonth() + 1) 
@@ -35,7 +35,7 @@ export class GridCommonFunctions {
 
   public static renderDateFromMillisWithTime(record: Record, column: Column) {
     const datemillis = column.getValueForColumn(record);
-    if (null !== datemillis) {
+    if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
       var dateString = date_value.getDate() 
                       + '/' + (date_value.getMonth() + 1) 

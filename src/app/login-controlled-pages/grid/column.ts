@@ -1,6 +1,7 @@
 import { EventHandler } from './event-handler';
 import { Filter } from './filter';
 import { FilterOption } from './filter-option';
+import { GridCommonFunctions } from './grid-common-functions';
 import { Record } from './record';
 import { UIRenderer } from './ui-renderer';
 
@@ -32,7 +33,7 @@ export class Column {
           hideable: boolean = true, 
           hidden: boolean = false,
           filterOptionsMetadata: Object[] = [],
-          callback_renderColumn: any = null, 
+          renderer: any = null, 
           clickEvent: any = null
   ) {    
     this.id = id;
@@ -48,10 +49,10 @@ export class Column {
     this.hideable = hideable;
     this.hidden = hidden;
     this.filterOptions = [];
-    if (null !== filterOptionsMetadata && filterOptionsMetadata.length > 0) {
+    if (GridCommonFunctions.checkObjectAvailability(filterOptionsMetadata) && filterOptionsMetadata.length > 0) {
       for (var i = 0; i < filterOptionsMetadata.length; i++) {
         var filterOptionMetadata:any = filterOptionsMetadata[i];
-        if (null !== filterOptionMetadata) {
+        if (GridCommonFunctions.checkObjectAvailability(filterOptionMetadata)) {
           this.filterOptions.push(
             new FilterOption(this.id + '-FilterOption-' + filterOptionMetadata.value, filterOptionMetadata.label, filterOptionMetadata.value)
           );
@@ -59,11 +60,11 @@ export class Column {
       }
     }
     this.uiRenderer = null;
-    if (null !== callback_renderColumn) {
-      this.uiRenderer = new UIRenderer(this.id + '-UIRenderer', callback_renderColumn);
+    if (GridCommonFunctions.checkObjectAvailability(renderer)) {
+      this.uiRenderer = new UIRenderer(this.id + '-UIRenderer', renderer);
     }
     this.eventHandler = null;
-    if (null !== clickEvent) {
+    if (GridCommonFunctions.checkObjectAvailability(clickEvent)) {
       this.eventHandler = new EventHandler(this.id + '-EventHandler', clickEvent);
     }        
   }

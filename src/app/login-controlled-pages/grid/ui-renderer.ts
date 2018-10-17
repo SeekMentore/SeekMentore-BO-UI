@@ -1,4 +1,5 @@
 import { Column } from './column';
+import { GridCommonFunctions } from './grid-common-functions';
 import { Record } from './record';
 
 export class UIRenderer {
@@ -11,7 +12,7 @@ export class UIRenderer {
   }  
 
   public renderColumn(record: Record, column: Column) {
-    if (null !== this.callback_renderColumn) {
+    if (GridCommonFunctions.checkObjectAvailability(this.callback_renderColumn)) {
       return this.callback_renderColumn(record, column);      
     }    
     return column.getValueForColumn(record);

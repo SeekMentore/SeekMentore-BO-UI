@@ -1,4 +1,5 @@
-import {Component, Input, OnInit, SimpleChange, OnChanges, Output, EventEmitter} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange } from '@angular/core';
+import { GridCommonFunctions } from '../../login-controlled-pages/grid/grid-common-functions';
 
 @Component({
   selector: 'app-multi-select-input',
@@ -26,7 +27,7 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     for (const propName in changes) {
-      if (null !== propName) {
+      if (GridCommonFunctions.checkObjectAvailability(propName)) {
         const changedProp = changes[propName];
         if (propName === 'data' && changedProp.currentValue !== null) {
           this.data = changedProp.currentValue;

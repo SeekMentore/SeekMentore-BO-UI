@@ -45,7 +45,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   public init() {
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
     this.grid = null;
-    if (null !== this.gridMetaData.grid) {
+    if (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid)) {
       const pagingCapable = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true;
       const hasSelectionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false;
       const hasActionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false  

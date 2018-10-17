@@ -4,6 +4,7 @@ import { Paginator } from "./paginator";
 import { Sorter } from "./sorter";
 import { Filter } from "./filter";
 import { Column } from "./column";
+import { GridCommonFunctions } from './grid-common-functions';
 import { Store } from "./store";
 import { Record } from './record';
 import { GridComponent } from "./grid.component";
@@ -44,18 +45,18 @@ export class Grid {
       this.id = id;
       this.title = title;
       this.store = null;
-      if (null !== storeMetaData) {
+      if (GridCommonFunctions.checkObjectAvailability(storeMetaData)) {
           this.store = new Store(this.id + '-Store', storeMetaData.isStatic, storeMetaData.restURL, storeMetaData.downloadURL);
       }
       this.isSortingCapable = isSortingCapable;
       this.isFilterCapable = isFilterCapable;
       this.columns = [];
-      if (null !== columnsMetadata && columnsMetadata.length > 0) {
+      if (GridCommonFunctions.checkObjectAvailability(columnsMetadata) && columnsMetadata.length > 0) {
           for (var i = 0; i < columnsMetadata.length; i++) {
               var columnMetadata:any = columnsMetadata[i];
-              if (null !== columnMetadata) {
-                    const columnSortable = this.isSortingCapable ? ((null !== columnMetadata.sortable) ? columnMetadata.sortable : true) : false;
-                    const columnFilterable = this.isFilterCapable ? ((null !== columnMetadata.filterable) ? columnMetadata.filterable : true) : false
+              if (GridCommonFunctions.checkObjectAvailability(columnMetadata)) {
+                    const columnSortable = this.isSortingCapable ? (GridCommonFunctions.checkObjectAvailability(columnMetadata.sortable) ? columnMetadata.sortable : true) : false;
+                    const columnFilterable = this.isFilterCapable ? (GridCommonFunctions.checkObjectAvailability(columnMetadata.filterable) ? columnMetadata.filterable : true) : false
                     this.columns.push(new Column(
                                         this.id + '-Column-' + columnMetadata.id,
                                         columnMetadata.headerName,
@@ -63,11 +64,11 @@ export class Grid {
                                         columnMetadata.mapping,
                                         columnSortable,
                                         columnFilterable,
-                                        (null !== columnMetadata.hideable) ? columnMetadata.hideable : true,
-                                        (null !== columnMetadata.hidden) ? columnMetadata.hidden : false,
-                                        (null !== columnMetadata.filterOptions) ? columnMetadata.filterOptions : [],
-                                        (null !== columnMetadata.renderer) ? columnMetadata.renderer : null,
-                                        (null !== columnMetadata.clickEvent) ? columnMetadata.clickEvent : null,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.hideable) ? columnMetadata.hideable : true,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.hidden) ? columnMetadata.hidden : false,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.filterOptions) ? columnMetadata.filterOptions : [],
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.renderer) ? columnMetadata.renderer : null,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.clickEvent) ? columnMetadata.clickEvent : null,
                                 ));
               }
           }
@@ -75,7 +76,7 @@ export class Grid {
       this.isPagingCapable = isPagingCapable;
       this.paginator = null;
       if (this.isPagingCapable) {
-        if (null !== numberOfRecordsPerPage) {
+        if (GridCommonFunctions.checkObjectAvailability(numberOfRecordsPerPage)) {
             this.paginator = new Paginator(this.id + '-Paginator', numberOfRecordsPerPage);
         } else {
             this.paginator = new Paginator(this.id + '-Paginator');
@@ -85,8 +86,8 @@ export class Grid {
       this.hasSelectionColumn = hasSelectionColumn;
       this.selectionColumn = null;
       if (this.hasSelectionColumn) {
-        if (null !== selectionColumnMetadata) {
-            if (null != selectionColumnMetadata.mapping) {
+        if (GridCommonFunctions.checkObjectAvailability(selectionColumnMetadata)) {
+            if (GridCommonFunctions.checkObjectAvailability(selectionColumnMetadata.mapping)) {
                 this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn', selectionColumnMetadata.mapping);
             } else {
                 this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn');
@@ -98,8 +99,8 @@ export class Grid {
       this.hasActionColumn = hasActionColumn;
       this.actionColumn = null;
       if (this.hasActionColumn) {
-        if (null !== actionColumnMetadata) {
-            if (null !== actionColumnMetadata.label) {
+        if (GridCommonFunctions.checkObjectAvailability(actionColumnMetadata)) {
+            if (GridCommonFunctions.checkObjectAvailability(actionColumnMetadata.label)) {
                 this.actionColumn = new ActionColumn(this.id + '-ActionColumn', actionColumnMetadata.buttons, actionColumnMetadata.label);
             } else {
                 this.actionColumn = new ActionColumn(this.id + '-ActionColumn', actionColumnMetadata.buttons);

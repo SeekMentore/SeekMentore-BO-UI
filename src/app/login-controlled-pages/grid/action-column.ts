@@ -1,4 +1,5 @@
 import { ActionButton } from './action-button';
+import { GridCommonFunctions } from './grid-common-functions';
 
 export class ActionColumn {
   id: string;
@@ -14,11 +15,11 @@ export class ActionColumn {
     this.id = id;
     this.label = label;
     this.buttons = [];
-    if (null !== buttonsMetadata && buttonsMetadata.length > 0) {
+    if (GridCommonFunctions.checkObjectAvailability(buttonsMetadata) && buttonsMetadata.length > 0) {
       for (var i = 0; i < buttonsMetadata.length; i++) {
         var buttonMetadata:any = buttonsMetadata[i];
-        if (null !== buttonMetadata) {
-          if (null !== buttonMetadata.btnclass) {
+        if (GridCommonFunctions.checkObjectAvailability(buttonMetadata)) {
+          if (GridCommonFunctions.checkObjectAvailability(buttonMetadata.btnclass)) {
             this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonMetadata.id, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.btnclass));
           } else {
             this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonMetadata.id, buttonMetadata.label, buttonMetadata.clickEvent));

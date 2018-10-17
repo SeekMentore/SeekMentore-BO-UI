@@ -1,3 +1,4 @@
+import { GridCommonFunctions } from './grid-common-functions';
 export class Record {
   id: string;
   property: Object;
@@ -9,6 +10,6 @@ export class Record {
   }
 
   public getProperty(propertyName: string) {
-    return (null !== this.property[propertyName] || undefined !== this.property[propertyName]) ? this.property[propertyName] : '';
+    return GridCommonFunctions.checkObjectAvailability(this.property[propertyName]) ? this.property[propertyName] : '';
   }
 }

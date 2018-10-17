@@ -19,10 +19,11 @@ export class ActionColumn {
       for (var i = 0; i < buttonsMetadata.length; i++) {
         var buttonMetadata:any = buttonsMetadata[i];
         if (GridCommonFunctions.checkObjectAvailability(buttonMetadata)) {
+          const buttonId = GridCommonFunctions.checkObjectAvailability(buttonMetadata.id) ? buttonMetadata.id : i.toString();
           if (GridCommonFunctions.checkObjectAvailability(buttonMetadata.btnclass)) {
-            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonMetadata.id, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.btnclass));
+            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.btnclass));
           } else {
-            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonMetadata.id, buttonMetadata.label, buttonMetadata.clickEvent));
+            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent));
           }
         }
       }

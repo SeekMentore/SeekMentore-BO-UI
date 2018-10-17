@@ -56,9 +56,10 @@ export class Grid {
               var columnMetadata:any = columnsMetadata[i];
               if (GridCommonFunctions.checkObjectAvailability(columnMetadata)) {
                     const columnSortable = this.isSortingCapable ? (GridCommonFunctions.checkObjectAvailability(columnMetadata.sortable) ? columnMetadata.sortable : true) : false;
-                    const columnFilterable = this.isFilterCapable ? (GridCommonFunctions.checkObjectAvailability(columnMetadata.filterable) ? columnMetadata.filterable : true) : false
+                    const columnFilterable = this.isFilterCapable ? (GridCommonFunctions.checkObjectAvailability(columnMetadata.filterable) ? columnMetadata.filterable : true) : false;
+                    const columnId = GridCommonFunctions.checkObjectAvailability(columnMetadata.id) ? columnMetadata.id : i.toString();
                     this.columns.push(new Column(
-                                        this.id + '-Column-' + columnMetadata.id,
+                                        this.id + '-Column-' + columnId,
                                         columnMetadata.headerName,
                                         columnMetadata.dataType,
                                         columnMetadata.mapping,

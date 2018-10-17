@@ -53,8 +53,9 @@ export class Column {
       for (var i = 0; i < filterOptionsMetadata.length; i++) {
         var filterOptionMetadata:any = filterOptionsMetadata[i];
         if (GridCommonFunctions.checkObjectAvailability(filterOptionMetadata)) {
+          const filterId = GridCommonFunctions.checkObjectAvailability(filterOptionMetadata.id) ? filterOptionMetadata.id : i.toString();
           this.filterOptions.push(
-            new FilterOption(this.id + '-FilterOption-' + filterOptionMetadata.value, filterOptionMetadata.label, filterOptionMetadata.value)
+            new FilterOption(this.id + '-FilterOption-' + filterId, filterOptionMetadata.label, filterOptionMetadata.value)
           );
         }
       }

@@ -184,7 +184,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.taskGridMetaData = {
       grid : {
         id : 'taskGrid',
-        title : 'Tasks',
+        /*title : 'Tasks',*/
         store : {
           isStatic : false,
           restURL : '/rest/employee/tasksGrid'

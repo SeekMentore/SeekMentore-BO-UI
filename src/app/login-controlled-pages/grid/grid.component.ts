@@ -46,6 +46,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
     this.grid = null;
     if (null !== this.gridMetaData.grid) {
+      alert((undefined !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title');
       this.grid = new Grid(
                     (null !== this.gridMetaData.grid.id || '' !== this.gridMetaData.grid.id.trim()) ? this.gridMetaData.grid.id : this.htmlDomElementId,
                     (null !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title', 

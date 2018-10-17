@@ -41,6 +41,8 @@ export class Grid {
         actionColumnMetadata: any = null,
         offline: boolean = false
     ) {
+        alert(1);
+        alert(title);
       this.id = id;
       this.title = title;
       this.store = null;

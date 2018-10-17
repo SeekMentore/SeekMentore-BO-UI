@@ -16,6 +16,8 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
   @Output()
   close: EventEmitter<any> = new EventEmitter();
 
+  title = '';
+
   constructor() {
   }
 
@@ -28,6 +30,7 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
         const changedProp = changes[propName];
         if (propName === 'data' && changedProp.currentValue !== null) {
           this.data = changedProp.currentValue;
+          this.title = this.data.meta_data['title'];
         }
       }
     }
@@ -35,6 +38,14 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
 
   dataOptionToggled(index: number) {
     this.data.data[index].selected = !(this.data.data[index].selected);
+  }
+
+  selectUnselectAll(element: HTMLInputElement) {
+    for (const list_option of this.data.data) {
+      if (list_option.enabled === true) {
+        list_option.selected = element.checked;
+      }
+    }
   }
 
   applySelected() {

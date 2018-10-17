@@ -6,6 +6,7 @@ label {
   border: solid 0.5pt var(--cellBorderColor);
   border-collapse: collapse;
   margin: 20px 20px 50px;
+  position: relative;
 }
 
 .span-title {
@@ -128,6 +129,8 @@ label {
 .ui-grid-clear-filter-button {
   position: relative;
   margin-right: 5px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .remove {
@@ -273,13 +276,13 @@ i {
   padding: 0 8px;
 }
 
-.tab_checkmark.left {
+.tab_checkmark.left, .tab_checkmark_search.left{
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   margin: 0 0 0 8px;
 }
 
-.tab_checkmark.right {
+.tab_checkmark.right, .tab_checkmark_search.right {
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   margin: 0 8px 0 0;
@@ -312,6 +315,23 @@ i {
 }
 
 .tab_container input:checked ~ .tab_checkmark {
+  color: rgb(255, 255, 255);
+  background: #20A843;
+  transition: 0.5s ease;
+}
+
+.tab_checkmark_search {
+  padding: 3px 6px;
+  display: block;
+  outline: none;
+  text-align: center;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.80);
+  transition: 0.5s ease;
+  background-color: #4350a8;
+}
+
+.tab_container input:checked ~ .tab_checkmark_search {
   color: rgb(255, 255, 255);
   background: #20A843;
   transition: 0.5s ease;
@@ -381,7 +401,17 @@ i {
 }
 
 .column-header-filter {
-  background-color: darkgoldenrod;
+  background-color: #e6b00b;
   height: 1.6em;
   border-radius: 4px;
+}
+
+.grid-mask {
+  background-color: rgba(0,0,0,0.4);
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

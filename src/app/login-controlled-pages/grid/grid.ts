@@ -25,24 +25,24 @@ export class Grid {
     store: Store;
     filtered_records: Record[] = [];
     offline: boolean;
-  
+
     constructor(
-        id: string, 
-        title: string, 
+        id: string,
+        title: string,
         storeMetaData: any,
-        columnsMetadata: Object[] = [], 
+        columnsMetadata: Object[] = [],
         isPagingCapable: boolean = false,
         numberOfRecordsPerPage: number = null,
         isSortingCapable: boolean = false,
-        isFilterCapable: boolean = false,        
-        hasSelectionColumn: boolean = false, 
-        selectionColumnMetadata: any = null, 
-        hasActionColumn: boolean = false, 
+        isFilterCapable: boolean = false,
+        hasSelectionColumn: boolean = false,
+        selectionColumnMetadata: any = null,
+        hasActionColumn: boolean = false,
         actionColumnMetadata: any = null,
         offline: boolean = false
     ) {
-        alert(1);
-        alert(title);
+        // alert(1);
+        // alert(title);
       this.id = id;
       this.title = title;
       this.store = null;
@@ -50,18 +50,18 @@ export class Grid {
           this.store = new Store(this.id + '-Store', storeMetaData.isStatic, storeMetaData.restURL, storeMetaData.downloadURL);
       }
       this.isSortingCapable = isSortingCapable;
-      this.isFilterCapable = isFilterCapable;  
+      this.isFilterCapable = isFilterCapable;
       this.columns = [];
       if (null !== columnsMetadata && columnsMetadata.length > 0) {
           for (var i = 0; i < columnsMetadata.length; i++) {
               var columnMetadata:any = columnsMetadata[i];
               if (null !== columnMetadata) {
                     const columnSortable = this.isSortingCapable ? ((null !== columnMetadata.sortable) ? columnMetadata.sortable : true) : false;
-                    const columnFilterable = this.isFilterCapable ? ((null !== columnMetadata.filterable) ? columnMetadata.filterable : true) : false                 
+                    const columnFilterable = this.isFilterCapable ? ((null !== columnMetadata.filterable) ? columnMetadata.filterable : true) : false
                     this.columns.push(new Column(
-                                        this.id + '-Column-' + columnMetadata.id, 
-                                        columnMetadata.headerName, 
-                                        columnMetadata.dataType, 
+                                        this.id + '-Column-' + columnMetadata.id,
+                                        columnMetadata.headerName,
+                                        columnMetadata.dataType,
                                         columnMetadata.mapping,
                                         columnSortable,
                                         columnFilterable,
@@ -78,12 +78,12 @@ export class Grid {
       this.paginator = null;
       if (this.isPagingCapable) {
         if (null !== numberOfRecordsPerPage) {
-            this.paginator = new Paginator(this.id + '-Paginator', numberOfRecordsPerPage);             
+            this.paginator = new Paginator(this.id + '-Paginator', numberOfRecordsPerPage);
         } else {
             this.paginator = new Paginator(this.id + '-Paginator');
         }
         this.paginator.init();
-      }          
+      }
       this.hasSelectionColumn = hasSelectionColumn;
       this.selectionColumn = null;
       if (this.hasSelectionColumn) {
@@ -108,10 +108,10 @@ export class Grid {
             }
         }
       }
-      this.offline = offline;      
+      this.offline = offline;
     }
 
-    public loadData(gridObject: GridComponent) {    
+    public loadData(gridObject: GridComponent) {
         this.store.load(this, gridObject);
     }
 

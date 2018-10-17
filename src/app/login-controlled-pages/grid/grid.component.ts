@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { AppUtilityService } from '../../utils/app-utility.service';
-import { MultiSelectInputData } from '../../utils/multi-select-input/multi-select-input.component';
-import { Column } from './column';
-import { Record } from './record';
-import { Sorter, SortingOrder } from './sorter';
-import { ActionButton } from './action-button';
-import { HelperService, AlertDialogEvent } from 'src/app/utils/helper.service';
-import { Grid } from './grid';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {AppUtilityService} from '../../utils/app-utility.service';
+import {MultiSelectInputData} from '../../utils/multi-select-input/multi-select-input.component';
+import {Column} from './column';
+import {Record} from './record';
+import {Sorter, SortingOrder} from './sorter';
+import {ActionButton} from './action-button';
+import {HelperService, AlertDialogEvent} from 'src/app/utils/helper.service';
+import {Grid} from './grid';
 
 @Component({
   selector: 'app-grid',
@@ -24,13 +24,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   @Input()
   gridMetaData: GridDataInterface;
 
-  constructor(
-    public utility_service: AppUtilityService,
-    private helperService: HelperService
-  ) {
+  constructor(public utility_service: AppUtilityService,
+              private helperService: HelperService) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -46,22 +45,22 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
     this.grid = null;
     if (null !== this.gridMetaData.grid) {
-      alert((undefined !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title');
+      // alert((undefined !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title');
       this.grid = new Grid(
-                    (null !== this.gridMetaData.grid.id || '' !== this.gridMetaData.grid.id.trim()) ? this.gridMetaData.grid.id : this.htmlDomElementId,
-                    (null !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title', 
-                    this.gridMetaData.grid.store,/**Assign a default store here */
-                    (null !== this.gridMetaData.grid.columns) ? this.gridMetaData.grid.columns : [], 
-                    (null !== this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true, 
-                    ((null !== this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true) ? this.gridMetaData.grid.recordsPerPage : null, 
-                    (null !== this.gridMetaData.grid.sortable) ? this.gridMetaData.grid.sortable : true, 
-                    (null !== this.gridMetaData.grid.filterable) ? this.gridMetaData.grid.filterable : true, 
-                    (null !== this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false, 
-                    ((null !== this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false) ? this.gridMetaData.grid.selectionColumn : null, 
-                    (null !== this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false, 
-                    ((null !== this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false) ? this.gridMetaData.grid.actionColumn : null,
-                    (null !== this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false
-                  );
+        (null !== this.gridMetaData.grid.id || '' !== this.gridMetaData.grid.id.trim()) ? this.gridMetaData.grid.id : this.htmlDomElementId,
+        (null !== this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : 'Default Grid Title',
+        this.gridMetaData.grid.store, /**Assign a default store here */
+        (null !== this.gridMetaData.grid.columns) ? this.gridMetaData.grid.columns : [],
+        (null !== this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true,
+        ((null !== this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true) ? this.gridMetaData.grid.recordsPerPage : null,
+        (null !== this.gridMetaData.grid.sortable) ? this.gridMetaData.grid.sortable : true,
+        (null !== this.gridMetaData.grid.filterable) ? this.gridMetaData.grid.filterable : true,
+        (null !== this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false,
+        ((null !== this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false) ? this.gridMetaData.grid.selectionColumn : null,
+        (null !== this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false,
+        ((null !== this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false) ? this.gridMetaData.grid.actionColumn : null,
+        (null !== this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false
+      );
     }
     this.hidden = this.gridMetaData.hidden;
     this.idForModalPopUp = this.grid.id;
@@ -390,6 +389,11 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
+  public toggleCaseSensitiveSearch(column: Column, caseSensitive: boolean) {
+    column.filter.textCaseSensitiveSearch = caseSensitive;
+    // console.log("My Input", column);
+  }
+
   /**REVIEW */
   public columnFilteredGreaterNumberChanged(column: Column, element: HTMLInputElement) {
     if (this.grid.isFilterCapable) {
@@ -664,7 +668,8 @@ export class GridComponent implements OnInit, AfterViewInit {
       operation: 'column_filter',
       meta_data: {
         columnId: column.id,
-        sourceButton: sourceButton
+        sourceButton: sourceButton,
+        title: column.headerName
       },
       data: []
     };
@@ -683,7 +688,9 @@ export class GridComponent implements OnInit, AfterViewInit {
   public showColumnHideComponentPopup() {
     const columnData: MultiSelectInputData = {
       operation: 'hide_show_column',
-      meta_data: null,
+      meta_data: {
+        title: 'Column Show/Hide'
+      },
       data: []
     };
     for (const column of this.grid.columns) {
@@ -866,7 +873,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   /*
   * Offline Sorting
   */
- private sortRowRecordData() {
+  private sortRowRecordData() {
     this.grid.filtered_records.sort((a, b) => {
       for (const sorter of this.grid.sorters) {
         const propertyA = a.getProperty(sorter.mapping);

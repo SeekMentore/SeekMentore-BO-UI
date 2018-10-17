@@ -1,6 +1,6 @@
-import { GridComponent } from './grid.component';
-import { Record } from './record';
-import { Grid } from './grid';
+import {GridComponent} from './grid.component';
+import {Record} from './record';
+import {Grid} from './grid';
 
 export class Store {
   id: string;
@@ -17,8 +17,8 @@ export class Store {
     this.id = id;
     this.restURL = restURL;
     this.downloadURL = downloadURL;
-    this.isStatic = isStatic;    
-    this.data = [];     
+    this.isStatic = isStatic;
+    this.data = [];
   }
 
   public load(grid: Grid, gridObject: GridComponent) {
@@ -35,20 +35,27 @@ export class Store {
         sorter: (grid.isSortingCapable) ? grid.sorters : null,
         filter: (grid.isFilterCapable) ? grid.filters : null
       };
+      const grid_mask_loader = document.getElementById('uigrid-' + grid.id + 'mask-loader');
+      if (grid_mask_loader) {
+        grid_mask_loader.hidden = false;
+      }
       gridObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', JSON.stringify(params)).subscribe(
         result => {
           let response = result['response'];
-          response = gridObject.utility_service.decodeObjectFromJSON(response);          
+          response = gridObject.utility_service.decodeObjectFromJSON(response);
           this.restData = response['data'];
           this.data = [];
           this.totalRecords = response['totalRecords'];
           this.convertIntoRecordData(this.getRestData());
+          if (grid_mask_loader) {
+            grid_mask_loader.hidden = true;
+          }
           grid.setData();
         },
         error2 => {
 
         }
-      );      
+      );
     }
   }
 
@@ -85,5 +92,5 @@ export class Store {
     for (const record of this.data) {
       record.selectionModelCheck = selected;
     }
-  }  
+  }
 }

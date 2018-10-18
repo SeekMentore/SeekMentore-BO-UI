@@ -22,7 +22,7 @@
           <span id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-span-Offline'}}" class="tab_checkmark right">Offline</span>
         </label>
         <i id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-showColumnHideComponentPopup'}}" class="fas fa-cogs uigrid-order-icon-button" style="padding: 2px" (click)="showColumnHideComponentPopup()"></i>
-        <i id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-helpDialogPopup'}}" class="fas fa-info uigrid-order-icon-button" style="margin-left: 8px !important; text-align: center; padding: 2px"></i>
+        <i id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-helpDialogPopup'}}" class="fas fa-info uigrid-order-icon-button" (click)="showGridHelpComponentPopup()" style="margin-left: 8px !important; text-align: center; padding: 2px"></i>
       </div>
     </div>
   </div>

@@ -141,6 +141,28 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
+  public downloadGridData() {        
+    if (!this.grid.store.downloadGridData(this.grid, this)) {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Download capability not coded',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+    }
+  }
+
+  public showGridHelpComponentPopup() {
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: 'Help component unavailable right now',
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+  }
+
   public applyFilter() {
     if (this.grid.isFilterCapable) {
       if (!this.grid.offline) {
@@ -149,8 +171,7 @@ export class GridComponent implements OnInit, AfterViewInit {
           if (column.isFiltered) {
             this.grid.filters.push(column.filter);
           }
-        }
-        alert(JSON.stringify(this.grid.filters));
+        }        
         this.grid.loadData(this);
       } else {
         this.filterRecords();

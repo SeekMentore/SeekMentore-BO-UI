@@ -32,9 +32,9 @@ export class Store {
         start: (grid.isPagingCapable) ? grid.paginator.startRecordNumber : 1,
         limit: (grid.isPagingCapable) ? grid.paginator.numberOfRecordsPerPage : -1,
         otherParams: JSON.stringify(this.extraParams),
-        sorter: (grid.isSortingCapable) ? grid.sorters : null,
-        filter: (grid.isFilterCapable) ? grid.filters : null
-      };
+        sorters: (grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null,
+        filters: (grid.isFilterCapable) ? JSON.stringify(grid.filters) : null
+      };      
       const grid_mask_loader = document.getElementById('uigrid-' + grid.id + 'mask-loader');
       if (grid_mask_loader) {
         grid_mask_loader.hidden = false;
@@ -56,6 +56,15 @@ export class Store {
 
         }
       );
+    }
+  }
+
+  public downloadGridData(grid: Grid, gridObject: GridComponent) {
+    if (this.isStatic) {
+      return false;
+    } else {
+      /** Code to download data */
+      return true;
     }
   }
 

@@ -9,7 +9,6 @@ import { LcpRestUrls } from '../utils/lcp-rest-urls';
 import { EmailInterface } from './create-email/create-email.component';
 import { ActionButton } from './grid/action-button';
 import { Column } from './grid/column';
-import { Grid } from './grid/grid';
 import { GridComponent, GridDataInterface } from './grid/grid.component';
 import { Record } from './grid/record';
 import { GridCommonFunctions } from './grid/grid-common-functions';
@@ -179,7 +178,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.taskGridMetaData = {
       grid : {
         id : 'taskGrid',
-        /*title : 'Tasks',*/
+        title : 'Tasks',
         store : {
           isStatic : false,
           restURL : '/rest/employee/tasksGrid'

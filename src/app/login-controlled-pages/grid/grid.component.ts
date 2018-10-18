@@ -67,6 +67,8 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
     this.hidden = this.gridMetaData.hidden;
     this.idForModalPopUp = this.grid.id;
+
+    this.createGrid();
   }
 
   public loadNextPage() {

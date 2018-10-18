@@ -42,6 +42,10 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   taskGridObject: GridComponent;
   taskGridMetaData: GridDataInterface;
 
+  @ViewChild('workflowGrid')
+  workflowGridObject: GridComponent;
+  workflowGridMetaData: GridDataInterface;
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -51,6 +55,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.emailData = null;
     this.alertGridMetaData = null;
     this.taskGridMetaData = null;
+    this.workflowGridMetaData = null;
     this.setUpGridMetaData();
   }
 
@@ -119,10 +124,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.alertGridObject.init();
-      this.alertGridObject.createGrid();
-
-      this.taskGridObject.init();
-      this.taskGridObject.createGrid();
+      this.taskGridObject.init();   
+      this.workflowGridObject.init();     
     }, 0);
   }
 
@@ -142,11 +145,18 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             mapping : 'initiatedDateMillis',
             renderer : GridCommonFunctions.renderDateFromMillis            
           },{
-            id : 'actionDate',
-            headerName : 'Action Date',
-            dataType : 'date',
-            mapping : 'actionDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
+            id : 'subject',
+            headerName : 'Subject',
+            dataType : 'string',
+            mapping : 'subject',
+            clickEvent : function(record: Record, column: Column) {
+                                    alert(record.id + ' ' + column.headerName);
+                        }          
+          },{
+            id : 'initiatedBy',
+            headerName : 'Initiated By',
+            dataType : 'string',
+            mapping : 'initiatedBy'            
           },{
             id : 'dueDate',
             headerName : 'Due Date',
@@ -154,24 +164,71 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             mapping : 'dueDateMillis',
             renderer : GridCommonFunctions.renderDateFromMillis            
           },{
-            id : 'initiatedBy',
-            headerName : 'Initiated By',
-            dataType : 'string',
-            mapping : 'initiatedBy'            
+            id : 'actionDate',
+            headerName : 'Action Date',
+            dataType : 'date',
+            mapping : 'actionDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
           },{
             id : 'actionBy',
             headerName : 'Action By',
             dataType : 'string',
             mapping : 'actionBy'            
-          },{
-            id : 'subject',
-            headerName : 'Subject',
-            dataType : 'string',
-            mapping : 'subject'            
           }
         ]
       },
       htmlDomElementId : 'alert-grid',
+      hidden : false
+    };
+
+    this.workflowGridMetaData = {
+      grid : {
+        id : 'workflowGrid',
+        title : 'Workflows', 
+        store : {
+          isStatic : false,
+          restURL : '/rest/employee/workflowsGrid'
+        },
+        columns : [{
+            id : 'initiatedDate',
+            headerName : 'Initiated Date',
+            dataType : 'date',
+            mapping : 'initiatedDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
+          },{
+            id : 'subject',
+            headerName : 'Subject',
+            dataType : 'string',
+            mapping : 'subject',
+            clickEvent : function(record: Record, column: Column) {
+                                    alert(record.id + ' ' + column.headerName);
+                        }          
+          },{
+            id : 'initiatedBy',
+            headerName : 'Initiated By',
+            dataType : 'string',
+            mapping : 'initiatedBy'            
+          },{
+            id : 'dueDate',
+            headerName : 'Due Date',
+            dataType : 'date',
+            mapping : 'dueDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
+          },{
+            id : 'actionDate',
+            headerName : 'Action Date',
+            dataType : 'date',
+            mapping : 'actionDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
+          },{
+            id : 'actionBy',
+            headerName : 'Action By',
+            dataType : 'string',
+            mapping : 'actionBy'            
+          }
+        ]
+      },
+      htmlDomElementId : 'workflow-grid',
       hidden : false
     };
 
@@ -188,89 +245,44 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             headerName : 'Initiated Date',
             dataType : 'date',
             mapping : 'initiatedDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillisWithTime
+            renderer : GridCommonFunctions.renderDateFromMillis            
           },{
-            id : 'actionDate',
-            headerName : 'Action Date',
-            dataType : 'date',
-            mapping : 'actionDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillisWithTime
+            id : 'subject',
+            headerName : 'Subject',
+            dataType : 'string',
+            mapping : 'subject',
+            clickEvent : function(record: Record, column: Column) {
+                                    alert(record.id + ' ' + column.headerName);
+                        }          
+          },{
+            id : 'initiatedBy',
+            headerName : 'Initiated By',
+            dataType : 'string',
+            mapping : 'initiatedBy'            
           },{
             id : 'dueDate',
             headerName : 'Due Date',
             dataType : 'date',
             mapping : 'dueDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillisWithTime
+            renderer : GridCommonFunctions.renderDateFromMillis            
           },{
-            id : 'initiatedBy',
-            headerName : 'Initiated By',
-            dataType : 'string',
-            mapping : 'initiatedBy'
+            id : 'actionDate',
+            headerName : 'Action Date',
+            dataType : 'date',
+            mapping : 'actionDateMillis',
+            renderer : GridCommonFunctions.renderDateFromMillis            
           },{
             id : 'actionBy',
             headerName : 'Action By',
             dataType : 'string',
-            mapping : 'actionBy'
-          },{
-            id : 'subjectList',
-            headerName : 'Subject List',
-            dataType : 'list',
-            mapping : 'subject',
-            filterOptions : [{
-                  value : 'phy',
-                  label : 'Physics'
-                },{
-                  value : 'chem',
-                  label : 'Chemimstry'
-                },{
-                  value : 'bio',
-                  label : 'Biology'
-                },{
-                  value : 'maths',
-                  label : 'Mathematics'
-                }
-            ],
-            renderer : function(record: Record, column: Column) {
-                        return column.getValueForColumn(record) + 'External';
-            },
-            clickEvent : function(record: Record, column: Column) {
-                        alert(record.id + ' ' + column.headerName);
-            }            
-          } 
-        ],
-        recordsPerPage : 20,
-        hasSelectionColumn : true,
-        hasActionColumn : true,
-        actionColumn : {
-          label : 'Modified Actions',
-          buttons : [{
-            id : 'openBtn',
-            label : 'Open',
-            clickEvent : function(record: Record, button: ActionButton) {
-                                alert(record.id + ' ' + button.label);
-                        }
-          },{
-            id : 'updateBtn',
-            label : 'Update',
-            btnclass : 'btnReset',
-            clickEvent : function(record: Record, button: ActionButton) {
-                                alert(record.id + ' ' + button.label);
-                        }
-          },{
-            id : 'removeBtn',
-            label : 'Remove',
-            btnclass : 'btnReject',
-            clickEvent : function(record: Record, button: ActionButton) {
-                                alert(record.id + ' ' + button.label);
-                        }
-          }]
-        }
+            mapping : 'actionBy'            
+          }
+        ]
       },
       htmlDomElementId: 'task-grid',
       hidden: false
     };
   }
-
 
   public parseMenu() {
     this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');

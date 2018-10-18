@@ -150,6 +150,15 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
             dataType : 'string',
             mapping : 'subject',
             clickEvent : function(record: Record, column: Column) {
+              /**
+               * Utilise this function in all 3 grids to open the modal to show the below data
+               * Initiate Date : new Date(property->initiatedDateMillis)
+               * Subject : property->subject
+               * Initiated By : property->initiatedBy
+               * Due Date : new Date(property->dueDateMillis)
+               * Action Date : new Date(property->actionDateMillis)
+               * Action By : property->actionBy
+               */
                                     alert(record.id + ' ' + column.headerName);
                         }          
           },{

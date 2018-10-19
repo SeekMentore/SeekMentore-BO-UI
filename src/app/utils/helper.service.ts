@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/index';
-import { EmailInterface } from '../login-controlled-pages/create-email/create-email.component';
+import { EmailInterface } from '../login-controlled-pages/email/create-email.component';
 import { CkeditorConfig } from './ckeditor-config';
 
 declare var CKEDITOR: any;

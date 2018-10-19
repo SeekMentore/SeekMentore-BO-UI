@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
-import { CreateEmailComponent } from './login-controlled-pages/create-email/create-email.component';
-import { CreateGridComponent } from './login-controlled-pages/create-grid/create-grid.component';
+import { EmailComponent } from './login-controlled-pages/email/create-email.component';
 import { GridComponent } from './login-controlled-pages/grid/grid.component';
 import { LoginControlledPagesComponent } from './login-controlled-pages/login-controlled-pages.component';
 import { ErrorComponent } from './non-login-pages/error/error.component';
@@ -16,6 +15,9 @@ import { AppUtilityService } from './utils/app-utility.service';
 import { HelperService } from './utils/helper.service';
 import { MultiSelectInputComponent } from './utils/multi-select-input/multi-select-input.component';
 import { RoutingModule } from './utils/routing.module';
+import { EmployeeHomeComponent } from './login-controlled-pages/employee-home/employee-home.component';
+import { TutorHomeComponent } from './login-controlled-pages/tutor-home/tutor-home.component';
+import { CustomerHomeComponent } from './login-controlled-pages/customer-home/customer-home.component';
 
 @NgModule({
   declarations: [
@@ -25,10 +27,12 @@ import { RoutingModule } from './utils/routing.module';
     ResetPasswordComponent,
     NonLoginPagesComponent,
     LoginControlledPagesComponent,
-    CreateEmailComponent,
-    CreateGridComponent,
+    EmailComponent,
     GridComponent,
-    MultiSelectInputComponent
+    MultiSelectInputComponent,
+    EmployeeHomeComponent,
+    TutorHomeComponent,
+    CustomerHomeComponent
   ],
   imports: [
     BrowserModule,

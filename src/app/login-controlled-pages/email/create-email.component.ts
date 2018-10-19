@@ -10,7 +10,7 @@ import {LcpRestUrls} from '../../utils/lcp-rest-urls';
   templateUrl: './create-email.component.html',
   styleUrls: ['./create-email.component.css']
 })
-export class CreateEmailComponent implements OnInit, OnChanges {
+export class EmailComponent implements OnInit, OnChanges {
 
   title = LcpConstants.email_dialog_title;
   attachments: File[] = [];

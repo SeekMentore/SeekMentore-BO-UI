@@ -15,4 +15,7 @@ export class LcpConstants {
   static email_dismiss_data_exists_error = 'You have data on the form which you have not sent out as email.' +
     ' Do you still want to dismiss?';
   static auth_token_key = 'client_authentication_token';
+  static grid_column_list_filter_dialog_header_suffix = ' - Filter Options';
+  static user_type_key = 'user_type';
+  static user_type_admin = 'admin';
 }

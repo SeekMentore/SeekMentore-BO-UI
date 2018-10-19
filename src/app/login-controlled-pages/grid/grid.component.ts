@@ -8,6 +8,7 @@ import {ActionButton} from './action-button';
 import {HelperService, AlertDialogEvent} from 'src/app/utils/helper.service';
 import {Grid} from './grid';
 import { GridCommonFunctions } from './grid-common-functions';
+import {LcpConstants} from "../../utils/lcp-constants";
 
 @Component({
   selector: 'app-grid',
@@ -40,7 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public createGrid() {
     this.grid.loadData(this);
-  }  
+  }
 
   public init() {
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
@@ -48,7 +49,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid)) {
       const pagingCapable = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.pagingCapable) ? this.gridMetaData.grid.pagingCapable : true;
       const hasSelectionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasSelectionColumn) ? this.gridMetaData.grid.hasSelectionColumn : false;
-      const hasActionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false  
+      const hasActionColumn = GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.hasActionColumn) ? this.gridMetaData.grid.hasActionColumn : false
       this.grid = new Grid(
         GridCommonFunctions.checkStringAvailability(this.gridMetaData.grid.id) ? this.gridMetaData.grid.id : this.htmlDomElementId,
         GridCommonFunctions.checkStringAvailability(this.gridMetaData.grid.title) ? this.gridMetaData.grid.title : this.htmlDomElementId,
@@ -143,7 +144,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  public downloadGridData() {        
+  public downloadGridData() {
     if (!this.grid.store.downloadGridData(this.grid, this)) {
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -173,7 +174,7 @@ export class GridComponent implements OnInit, AfterViewInit {
           if (column.isFiltered) {
             this.grid.filters.push(column.filter);
           }
-        }        
+        }
         this.grid.loadData(this);
       } else {
         this.filterRecords();
@@ -695,7 +696,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       meta_data: {
         columnId: column.id,
         sourceButton: sourceButton,
-        title: column.headerName
+        title: column.headerName + LcpConstants.grid_column_list_filter_dialog_header_suffix
       },
       data: []
     };

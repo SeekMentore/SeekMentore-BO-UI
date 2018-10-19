@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateEmailComponent } from '../login-controlled-pages/create-email/create-email.component';
+import { EmailComponent } from '../login-controlled-pages/email/create-email.component';
 import { LoginControlledPagesComponent } from '../login-controlled-pages/login-controlled-pages.component';
 import { ErrorComponent } from '../non-login-pages/error/error.component';
 import { LoginComponent } from '../non-login-pages/login/login.component';
@@ -15,7 +15,7 @@ const routes: Routes = [
     path: 'lp', component: LoginControlledPagesComponent,
     // canActivate: [RoutingGuardService],
     children: [
-      {path: 'email', component: CreateEmailComponent}
+      {path: 'email', component: EmailComponent}
     ]
   },
   {

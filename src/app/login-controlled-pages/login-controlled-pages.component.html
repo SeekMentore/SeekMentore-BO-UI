@@ -39,12 +39,15 @@
   </div>
   <button (click)="askForConfirmation()">Show confirmation dialog</button>
   <button (click)="showAlertDialog()">Show alert dialog</button>
-  <app-grid #alertGrid id="alert-grid" [gridMetaData]="alertGridMetaData"></app-grid>
-  <app-grid #taskGrid id="task-grid" [gridMetaData]="taskGridMetaData"></app-grid>
-  <app-grid #workflowGrid id="workflow-grid" [gridMetaData]="workflowGridMetaData"></app-grid>
 
 
-  <router-outlet></router-outlet>
+  <!--<router-outlet></router-outlet>-->
+  <div id="lcp-view-port" class="view-port">
+    <app-employee-home *ngIf="userType === 'admin'"></app-employee-home>
+    <app-customer-home *ngIf="userType === 'customer'"></app-customer-home>
+    <app-tutor-home *ngIf="userType === 'tutor'"></app-tutor-home>
+    <span *ngIf="!userType">User Not Logged In.</span>
+  </div>
 
 
 </div>

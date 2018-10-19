@@ -1,17 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppConstants } from '../utils/app-constants';
-import { AppUtilityService } from '../utils/app-utility.service';
-import { EnvironmentConstants } from '../utils/environment-constants';
-import { AlertDialogEvent, ConfirmationDialogEvent, HelperService } from '../utils/helper.service';
-import { LcpConstants } from '../utils/lcp-constants';
-import { LcpRestUrls } from '../utils/lcp-rest-urls';
-import { EmailInterface } from './create-email/create-email.component';
-import { ActionButton } from './grid/action-button';
-import { Column } from './grid/column';
-import { GridComponent, GridDataInterface } from './grid/grid.component';
-import { Record } from './grid/record';
-import { GridCommonFunctions } from './grid/grid-common-functions';
+import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {Router} from "@angular/router";
+import {AppConstants} from "../utils/app-constants";
+import {AppUtilityService} from "../utils/app-utility.service";
+import {EnvironmentConstants} from "../utils/environment-constants";
+import {AlertDialogEvent, ConfirmationDialogEvent, HelperService} from "../utils/helper.service";
+import {LcpConstants} from "../utils/lcp-constants";
+import {LcpRestUrls} from "../utils/lcp-rest-urls";
+import {EmailInterface} from "./email/create-email.component";
 
 @Component({
   selector: 'app-login-controlled-pages',
@@ -33,18 +28,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   alertDialog: HTMLDivElement;
   emailData: EmailInterface;
   emailDialog: HTMLDivElement;
+  userType = null;
 
-  @ViewChild('alertGrid')
-  alertGridObject: GridComponent;
-  alertGridMetaData: GridDataInterface;
-
-  @ViewChild('taskGrid')
-  taskGridObject: GridComponent;
-  taskGridMetaData: GridDataInterface;
-
-  @ViewChild('workflowGrid')
-  workflowGridObject: GridComponent;
-  workflowGridMetaData: GridDataInterface;
 
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
@@ -53,10 +38,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.idleTime = 0;
     this.setActivityTimer();
     this.emailData = null;
-    this.alertGridMetaData = null;
-    this.taskGridMetaData = null;
-    this.workflowGridMetaData = null;
-    this.setUpGridMetaData();
+    this.userType = localStorage.getItem(LcpConstants.user_type_key);
+
   }
 
   ngOnInit(): void {
@@ -122,176 +105,9 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.alertGridObject.init();
-      this.taskGridObject.init();   
-      this.workflowGridObject.init();     
-    }, 0);
+
   }
 
-  public setUpGridMetaData() {
-    this.alertGridMetaData = {
-      grid : {
-        id : 'alertGrid',
-        title : 'Alerts & Reminders', 
-        store : {
-          isStatic : false,
-          restURL : '/rest/employee/alertsRemindersGrid'
-        },
-        columns : [{
-            id : 'initiatedDate',
-            headerName : 'Initiated Date',
-            dataType : 'date',
-            mapping : 'initiatedDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'subject',
-            headerName : 'Subject',
-            dataType : 'string',
-            mapping : 'subject',
-            clickEvent : function(record: Record, column: Column) {
-              /**
-               * Utilise this function in all 3 grids to open the modal to show the below data
-               * Initiate Date : new Date(property->initiatedDateMillis)
-               * Subject : property->subject
-               * Initiated By : property->initiatedBy
-               * Due Date : new Date(property->dueDateMillis)
-               * Action Date : new Date(property->actionDateMillis)
-               * Action By : property->actionBy
-               */
-                                    alert(record.id + ' ' + column.headerName);
-                        }          
-          },{
-            id : 'initiatedBy',
-            headerName : 'Initiated By',
-            dataType : 'string',
-            mapping : 'initiatedBy'            
-          },{
-            id : 'dueDate',
-            headerName : 'Due Date',
-            dataType : 'date',
-            mapping : 'dueDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'actionDate',
-            headerName : 'Action Date',
-            dataType : 'date',
-            mapping : 'actionDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'actionBy',
-            headerName : 'Action By',
-            dataType : 'string',
-            mapping : 'actionBy'            
-          }
-        ]
-      },
-      htmlDomElementId : 'alert-grid',
-      hidden : false
-    };
-
-    this.workflowGridMetaData = {
-      grid : {
-        id : 'workflowGrid',
-        title : 'Workflows', 
-        store : {
-          isStatic : false,
-          restURL : '/rest/employee/workflowsGrid'
-        },
-        columns : [{
-            id : 'initiatedDate',
-            headerName : 'Initiated Date',
-            dataType : 'date',
-            mapping : 'initiatedDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'subject',
-            headerName : 'Subject',
-            dataType : 'string',
-            mapping : 'subject',
-            clickEvent : function(record: Record, column: Column) {
-                                    alert(record.id + ' ' + column.headerName);
-                        }          
-          },{
-            id : 'initiatedBy',
-            headerName : 'Initiated By',
-            dataType : 'string',
-            mapping : 'initiatedBy'            
-          },{
-            id : 'dueDate',
-            headerName : 'Due Date',
-            dataType : 'date',
-            mapping : 'dueDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'actionDate',
-            headerName : 'Action Date',
-            dataType : 'date',
-            mapping : 'actionDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'actionBy',
-            headerName : 'Action By',
-            dataType : 'string',
-            mapping : 'actionBy'            
-          }
-        ]
-      },
-      htmlDomElementId : 'workflow-grid',
-      hidden : false
-    };
-
-    this.taskGridMetaData = {
-      grid : {
-        id : 'taskGrid',
-        title : 'Tasks',
-        store : {
-          isStatic : false,
-          restURL : '/rest/employee/tasksGrid'
-        },
-        columns : [{
-            id : 'initiatedDate',
-            headerName : 'Initiated Date',
-            dataType : 'date',
-            mapping : 'initiatedDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'subject',
-            headerName : 'Subject',
-            dataType : 'string',
-            mapping : 'subject',
-            clickEvent : function(record: Record, column: Column) {
-                                    alert(record.id + ' ' + column.headerName);
-                        }          
-          },{
-            id : 'initiatedBy',
-            headerName : 'Initiated By',
-            dataType : 'string',
-            mapping : 'initiatedBy'            
-          },{
-            id : 'dueDate',
-            headerName : 'Due Date',
-            dataType : 'date',
-            mapping : 'dueDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'actionDate',
-            headerName : 'Action Date',
-            dataType : 'date',
-            mapping : 'actionDateMillis',
-            renderer : GridCommonFunctions.renderDateFromMillis            
-          },{
-            id : 'actionBy',
-            headerName : 'Action By',
-            dataType : 'string',
-            mapping : 'actionBy'            
-          }
-        ]
-      },
-      htmlDomElementId: 'task-grid',
-      hidden: false
-    };
-  }
 
   public parseMenu() {
     this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');

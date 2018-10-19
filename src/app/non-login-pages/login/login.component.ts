@@ -12,7 +12,6 @@ import { NlpRestUrls } from '../../utils/nlp-rest-urls';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   username;
   password;
   userType = 'Blank';
@@ -88,6 +87,7 @@ export class LoginComponent implements OnInit {
       // window.location.href = result['redirectTo'];
       const authToken = response['clientAuthToken'];
       localStorage.setItem(LcpConstants.auth_token_key, authToken);
+      localStorage.setItem(LcpConstants.user_type_key, context.userType);
       context.router.navigateByUrl('/lp');
     } else {
       context.errorAjaxResponse = response['message'];

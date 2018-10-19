@@ -1,6 +1,6 @@
-import {GridComponent} from './grid.component';
-import {Record} from './record';
-import {Grid} from './grid';
+import {GridComponent} from "./grid.component";
+import {Record} from "./record";
+import {Grid} from "./grid";
 
 export class Store {
   id: string;
@@ -34,7 +34,7 @@ export class Store {
         otherParams: JSON.stringify(this.extraParams),
         sorters: (grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null,
         filters: (grid.isFilterCapable) ? JSON.stringify(grid.filters) : null
-      };      
+      };
       const grid_mask_loader = document.getElementById('uigrid-' + grid.id + 'mask-loader');
       if (grid_mask_loader) {
         grid_mask_loader.hidden = false;
@@ -53,7 +53,9 @@ export class Store {
           grid.setData();
         },
         error2 => {
-
+          if (grid_mask_loader) {
+            grid_mask_loader.hidden = true;
+          }
         }
       );
     }

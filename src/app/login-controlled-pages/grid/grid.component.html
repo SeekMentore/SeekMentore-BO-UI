@@ -83,21 +83,21 @@
         <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-span-uigrid-cell-select-box'}}" *ngIf="grid.hasSelectionColumn" class="uigrid-cell select_box"></span>
         <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id}}" *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}" class="uigrid-cell uigrid-cell-column-filter">
           <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'}}" *ngIf="grid.isFilterCapable && !(column.hidden) && column.filterable" style="width:100%;"><!--REVIEW-->
-            <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'}}" *ngIf="column.dataType == 'string'" style="flex: 1 1 auto" >
+            <div id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'}}" *ngIf="column.dataType == 'string'">
               <i id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-i-search'}}" class="fas fa-search"></i>
               <input id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-input-search'}}"
                       type="text" placeholder="search" #filterStringBox class="{{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
                      (input)="columnFilteredTextChanged(column, $event.target)" />
 
-
               <label id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS'}}" class="tab_container" (change)="toggleCaseSensitiveSearch(column,true)">
                 <input id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}" type="radio" name="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}">
-                <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS-span-CS'}}" class="tab_checkmark_search left">CS</span>
+                <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS-span-CS'}}" class="tab_checkmark left">CS</span>
               </label>
               <label id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-NCS'}}" class="tab_container" (change)="toggleCaseSensitiveSearch(column, false)">
                 <input id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-NcsBtn'}}" type="radio" name="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}" checked>
-                <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-NCS-span-CS'}}" class="tab_checkmark_search right">NCS</span>
+                <span id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-NCS-span-CS'}}" class="tab_checkmark right">NCS</span>
               </label>
+
 
 
             </div>
@@ -222,3 +222,5 @@
                             (close)="closeMultiSelectInput()" style="width: 100%"></app-multi-select-input>
   </div>
 </div>
+
+

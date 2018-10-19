@@ -61,12 +61,11 @@ export class GridCommonFunctions {
       document.body.removeChild(dialog);
     };
     closeButton.style.padding = '4px';
-    dialogModal.appendChild(closeButton);
-
 
     const dialogTitle: HTMLSpanElement = document.createElement('div');
     dialogTitle.innerText = 'Record Details';
     dialogTitle.style.fontWeight = '600';
+    dialogTitle.style.flex = '1 1 auto';
     dialogTitle.style.alignSelf = 'centre';
 
     const headerDiv: HTMLDivElement = document.createElement('div');
@@ -93,10 +92,9 @@ export class GridCommonFunctions {
 
     for (const key in displayData) {
       const dataDiv = document.createElement('div');
-      dataDiv.innerHTML = key + ' : ' + displayData[key];
+      dataDiv.innerHTML = '<b>' + key + ' :</b> ' + displayData[key];
       dataDiv.style.margin = '5px 10px';
-      dataDiv.style.padding = '10px';
-      dataDiv.style.border = '1px solid var(--colorPrimary)';
+      dataDiv.style.padding = '3px';
       dataDiv.noWrap = false;
       // dataDiv.style.maxHeight = '40px';
       contentDiv.appendChild(dataDiv);

@@ -165,18 +165,26 @@
             <div
               id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'}}"
               *ngIf="column.dataType == 'string'">
-              <i
-                id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-i-search'}}"
-                class="fas fa-search"></i>
+              <span>
+                <i
+                  id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-i-search'}}"
+                  class="fas fa-search"></i>
+              </span>
 
-              <input style="max-width: 120px"
-                     id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-input-search'}}"
-                     type="text" placeholder="search" #filterStringBox
-                     class="{{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                     (input)="columnFilteredTextChanged(column, $event.target)"/>
-              <label
-                id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS'}}"
-                class="tab_container" (change)="toggleCaseSensitiveSearch(column,true)">
+              <span style="flex: 1 1 auto">
+                <input style="width: 100%"
+                       id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-input-search'}}"
+                       type="text" placeholder="search" #filterStringBox
+                       class="{{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
+                       (input)="columnFilteredTextChanged(column, $event.target)"/>
+              </span>
+
+
+              <span style="display: flex">
+
+                <label
+                  id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS'}}"
+                  class="tab_container" (change)="toggleCaseSensitiveSearch(column,true)">
                 <input
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}"
                   type="radio"
@@ -197,6 +205,9 @@
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-NCS-span-CS'}}"
                   class="tab_checkmark right">NCS</span>
               </label>
+
+              </span>
+
 
 
             </div>

@@ -30,10 +30,10 @@ export class EmailComponent implements OnInit, OnChanges {
     this.setDefaultData();
   }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.helperService.makeRichEditor(this.emailBodyEditorId);
     this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
-    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');    
+    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -133,7 +133,7 @@ export class EmailComponent implements OnInit, OnChanges {
     const formData = new URLSearchParams();
     formData.set('templateId', templateValue);
     this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
-      'application/x-www-form-urlencoded');   
+      'application/x-www-form-urlencoded');
   }
 
   onSuccessTemplateData(context: any, response: any) {
@@ -199,7 +199,7 @@ export class EmailComponent implements OnInit, OnChanges {
     context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
-      onOk: () => {
+      onButtonClicked: () => {
         context.setDefaultData();
         context.helperService.setDataForRichEditor(context.emailBodyEditorId, '');
       }

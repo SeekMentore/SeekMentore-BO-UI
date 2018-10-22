@@ -109,6 +109,7 @@ export class AppUtilityService {
           }
         },
         error2 => {
+          console.log('error in route checking', error2);
           observer.next(false);
         }
       );

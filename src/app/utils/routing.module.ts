@@ -13,6 +13,7 @@ import { RoutingGuardService } from './routing-guard.service';
 const routes: Routes = [
   {
     path: 'lp', component: LoginControlledPagesComponent,
+    // canActivate: [RoutingGuardService],
     children: [
       {path: 'email', component: EmailComponent}
     ]
@@ -22,7 +23,7 @@ const routes: Routes = [
     children: [
       {path: 'error', component: ErrorComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'resetpassword', component: ResetPasswordComponent},
+      {path: 'resetpassword', component: ResetPasswordComponent, canActivate: [RoutingGuardService]},
       {path: '', redirectTo: 'login', pathMatch: 'full'},
       {path: '**', redirectTo: 'login', pathMatch: 'full'}
     ]

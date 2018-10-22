@@ -30,6 +30,18 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
     this.setUpGridMetaData();
   }
 
+  public static displayDetailsForRecord(record: Record, column: Column) {
+    const displayData = {
+      'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
+      'Subject': record.getProperty('subject'),
+      'Initiated By': record.getProperty('initiatedBy'),
+      'Due Date': (new Date(record.getProperty('dueDateMillis'))).toDateString(),
+      'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),
+      'Action By': record.getProperty('actionBy')
+    };
+    GridCommonFunctions.displayDetailsForRecord('Record Details', displayData);
+  }
+
   ngOnInit() {
   }
 
@@ -41,209 +53,154 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public static displayDetailsForRecord(record: Record, column: Column) {
-    const dialog: HTMLDivElement = document.createElement('div');
-    dialog.setAttribute('class', 'dialog');
-    const dialogModal: HTMLDivElement = document.createElement('div');
-    dialog.appendChild(dialogModal);
-    dialogModal.setAttribute('class', 'dialog_modal');
-
-    const closeButton: HTMLSpanElement = document.createElement('span');
-    closeButton.innerHTML = '<i class=\'fas fa-times\' style=\'color: var(--colorPrimary); align-self: flex-end; margin: 0px; cursor: pointer;\'></i>';
-    closeButton.onclick = (ev) => {
-      document.body.removeChild(dialog);
-    };
-    closeButton.style.padding = '4px';
-
-    const dialogTitle: HTMLSpanElement = document.createElement('div');
-    dialogTitle.innerText = 'Record Details';
-    dialogTitle.style.fontWeight = '600';
-    dialogTitle.style.flex = '1 1 auto';
-    dialogTitle.style.alignSelf = 'centre';
-
-    const headerDiv: HTMLDivElement = document.createElement('div');
-    headerDiv.style.display = 'flex';
-    headerDiv.style.width = '100%';
-    headerDiv.appendChild(dialogTitle);
-    headerDiv.appendChild(closeButton);
-    dialogModal.appendChild(headerDiv);
-
-    const contentDiv = document.createElement('div');
-    dialogModal.appendChild(contentDiv);
-    contentDiv.style.maxHeight = '400px';
-    contentDiv.style.overflowY = 'auto';
-    contentDiv.style.width = '100%';
-
-    const displayData = {
-      'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
-      'Subject': record.getProperty('subject'),
-      'Initiated By': record.getProperty('initiatedBy'),
-      'Due Date': (new Date(record.getProperty('dueDateMillis'))).toDateString(),
-      'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),
-      'Action By': record.getProperty('actionBy')
-    };
-
-    for (const key in displayData) {
-      const dataDiv = document.createElement('div');
-      dataDiv.innerHTML = '<b>' + key + ' :</b> ' + displayData[key];
-      dataDiv.style.margin = '5px 10px';
-      dataDiv.style.padding = '3px';
-      //dataDiv.noWrap = false;
-      //dataDiv.style.maxHeight = '40px';
-      contentDiv.appendChild(dataDiv);
-    }
-
-
-    document.body.appendChild(dialog);
-  }
 
   public setUpGridMetaData() {
     this.alertGridMetaData = {
-      grid : {
-        id : 'alertGrid',
-        title : 'Alerts & Reminders',
-        store : {
-          isStatic : false,
-          restURL : '/rest/employee/alertsRemindersGrid'
+      grid: {
+        id: 'alertGrid',
+        title: 'Alerts & Reminders',
+        store: {
+          isStatic: false,
+          restURL: '/rest/employee/alertsRemindersGrid'
         },
-        columns : [{
-          id : 'initiatedDate',
-          headerName : 'Initiated Date',
-          dataType : 'date',
-          mapping : 'initiatedDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+        columns: [{
+          id: 'initiatedDate',
+          headerName: 'Initiated Date',
+          dataType: 'date',
+          mapping: 'initiatedDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'subject',
-          headerName : 'Subject',
-          dataType : 'string',
-          mapping : 'subject',
-          clickEvent : function(record: Record, column: Column) {            
+          id: 'subject',
+          headerName: 'Subject',
+          dataType: 'string',
+          mapping: 'subject',
+          clickEvent: function (record: Record, column: Column) {
             EmployeeHomeComponent.displayDetailsForRecord(record, column);
           }
         }, {
-          id : 'initiatedBy',
-          headerName : 'Initiated By',
-          dataType : 'string',
-          mapping : 'initiatedBy'
+          id: 'initiatedBy',
+          headerName: 'Initiated By',
+          dataType: 'string',
+          mapping: 'initiatedBy'
         }, {
-          id : 'dueDate',
-          headerName : 'Due Date',
-          dataType : 'date',
-          mapping : 'dueDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+          id: 'dueDate',
+          headerName: 'Due Date',
+          dataType: 'date',
+          mapping: 'dueDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'actionDate',
-          headerName : 'Action Date',
-          dataType : 'date',
-          mapping : 'actionDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+          id: 'actionDate',
+          headerName: 'Action Date',
+          dataType: 'date',
+          mapping: 'actionDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'actionBy',
-          headerName : 'Action By',
-          dataType : 'string',
-          mapping : 'actionBy'
+          id: 'actionBy',
+          headerName: 'Action By',
+          dataType: 'string',
+          mapping: 'actionBy'
         }
         ]
       },
-      htmlDomElementId : 'alert-grid',
-      hidden : false
+      htmlDomElementId: 'alert-grid',
+      hidden: false
     };
 
     this.workflowGridMetaData = {
-      grid : {
-        id : 'workflowGrid',
-        title : 'Workflows',
-        store : {
-          isStatic : false,
-          restURL : '/rest/employee/workflowsGrid'
+      grid: {
+        id: 'workflowGrid',
+        title: 'Workflows',
+        store: {
+          isStatic: false,
+          restURL: '/rest/employee/workflowsGrid'
         },
-        columns : [{
-          id : 'initiatedDate',
-          headerName : 'Initiated Date',
-          dataType : 'date',
-          mapping : 'initiatedDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+        columns: [{
+          id: 'initiatedDate',
+          headerName: 'Initiated Date',
+          dataType: 'date',
+          mapping: 'initiatedDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'subject',
-          headerName : 'Subject',
-          dataType : 'string',
-          mapping : 'subject',
-          clickEvent : function(record: Record, column: Column) {
+          id: 'subject',
+          headerName: 'Subject',
+          dataType: 'string',
+          mapping: 'subject',
+          clickEvent: function (record: Record, column: Column) {
             EmployeeHomeComponent.displayDetailsForRecord(record, column);
           }
         }, {
-          id : 'initiatedBy',
-          headerName : 'Initiated By',
-          dataType : 'string',
-          mapping : 'initiatedBy'
+          id: 'initiatedBy',
+          headerName: 'Initiated By',
+          dataType: 'string',
+          mapping: 'initiatedBy'
         }, {
-          id : 'dueDate',
-          headerName : 'Due Date',
-          dataType : 'date',
-          mapping : 'dueDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+          id: 'dueDate',
+          headerName: 'Due Date',
+          dataType: 'date',
+          mapping: 'dueDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'actionDate',
-          headerName : 'Action Date',
-          dataType : 'date',
-          mapping : 'actionDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+          id: 'actionDate',
+          headerName: 'Action Date',
+          dataType: 'date',
+          mapping: 'actionDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'actionBy',
-          headerName : 'Action By',
-          dataType : 'string',
-          mapping : 'actionBy'
+          id: 'actionBy',
+          headerName: 'Action By',
+          dataType: 'string',
+          mapping: 'actionBy'
         }
         ]
       },
-      htmlDomElementId : 'workflow-grid',
-      hidden : false
+      htmlDomElementId: 'workflow-grid',
+      hidden: false
     };
 
     this.taskGridMetaData = {
-      grid : {
-        id : 'taskGrid',
-        title : 'Tasks',
-        store : {
-          isStatic : false,
-          restURL : '/rest/employee/tasksGrid'
+      grid: {
+        id: 'taskGrid',
+        title: 'Tasks',
+        store: {
+          isStatic: false,
+          restURL: '/rest/employee/tasksGrid'
         },
-        columns : [{
-          id : 'initiatedDate',
-          headerName : 'Initiated Date',
-          dataType : 'date',
-          mapping : 'initiatedDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+        columns: [{
+          id: 'initiatedDate',
+          headerName: 'Initiated Date',
+          dataType: 'date',
+          mapping: 'initiatedDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'subject',
-          headerName : 'Subject',
-          dataType : 'string',
-          mapping : 'subject',
-          clickEvent : function(record: Record, column: Column) {
+          id: 'subject',
+          headerName: 'Subject',
+          dataType: 'string',
+          mapping: 'subject',
+          clickEvent: function (record: Record, column: Column) {
             EmployeeHomeComponent.displayDetailsForRecord(record, column);
           }
         }, {
-          id : 'initiatedBy',
-          headerName : 'Initiated By',
-          dataType : 'string',
-          mapping : 'initiatedBy'
+          id: 'initiatedBy',
+          headerName: 'Initiated By',
+          dataType: 'string',
+          mapping: 'initiatedBy'
         }, {
-          id : 'dueDate',
-          headerName : 'Due Date',
-          dataType : 'date',
-          mapping : 'dueDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+          id: 'dueDate',
+          headerName: 'Due Date',
+          dataType: 'date',
+          mapping: 'dueDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'actionDate',
-          headerName : 'Action Date',
-          dataType : 'date',
-          mapping : 'actionDateMillis',
-          renderer : GridCommonFunctions.renderDateFromMillis
+          id: 'actionDate',
+          headerName: 'Action Date',
+          dataType: 'date',
+          mapping: 'actionDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
         }, {
-          id : 'actionBy',
-          headerName : 'Action By',
-          dataType : 'string',
-          mapping : 'actionBy'
+          id: 'actionBy',
+          headerName: 'Action By',
+          dataType: 'string',
+          mapping: 'actionBy'
         }
         ]
       },

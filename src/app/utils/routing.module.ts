@@ -13,7 +13,6 @@ import { RoutingGuardService } from './routing-guard.service';
 const routes: Routes = [
   {
     path: 'lp', component: LoginControlledPagesComponent,
-    // canActivate: [RoutingGuardService],
     children: [
       {path: 'email', component: EmailComponent}
     ]

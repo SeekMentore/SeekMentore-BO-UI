@@ -56,8 +56,6 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
   closeDialog() {
     this.close.emit();
   }
-
-
 }
 
 export interface MultiSelectInputData {

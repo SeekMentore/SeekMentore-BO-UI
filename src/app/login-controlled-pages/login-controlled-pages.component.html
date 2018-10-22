@@ -14,7 +14,6 @@
     <div class="dropdown">
       <i class="fas fa-cog"></i>
       <div class="dropdown-content" style="left: -100px">
-        <!--<button *ngFor="let element of settingMenu">{{element.name}}</button>-->
         <div *ngFor="let element of settingMenu">
           <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name }}</button>
           <button *ngIf="!element.functioncall">{{element.name}}</button>
@@ -37,10 +36,7 @@
       </div>
     </div>
   </div>
-  <button (click)="askForConfirmation()">Show confirmation dialog</button>
-  <button (click)="showAlertDialog()">Show alert dialog</button>
-
-
+  
   <!--<router-outlet></router-outlet>-->
   <div id="lcp-view-port" class="view-port">
     <app-employee-home *ngIf="userType === 'admin'"></app-employee-home>
@@ -49,23 +45,18 @@
     <span *ngIf="!userType">User Not Logged In.</span>
   </div>
 
-
 </div>
 
 <!--Email Dialog-->
 <div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">
-
   <app-create-email [emailData]="emailData" style="min-width: 70%; margin: auto"></app-create-email>
-
 </div>
 
 <!--Confirmation Dialog-->
 <div id="confirmation-dialog" class="dialog" style="display: none;">
   <div class="dialog_modal">
-
     <span class="title">Confirmation Message</span>
     <span class="message"> This is message text..</span>
-
     <div class="modal_control">
       <button class="ok-button">ok</button>
       <button class="cancel-button">cancel</button>
@@ -76,13 +67,10 @@
 <!--Alert Dialog-->
 <div id="alert-dialog" class="dialog" style="display: none;">
   <div class="dialog_modal">
-
     <span class="title">Positive Title</span>
     <span class="message"> This is positive message text..</span>
-
     <div class="modal_control">
       <button class="action-button">ok</button>
     </div>
   </div>
 </div>
-

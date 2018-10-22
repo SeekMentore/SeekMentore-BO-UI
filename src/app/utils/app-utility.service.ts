@@ -71,17 +71,11 @@ export class AppUtilityService {
   private getRequestHeaders(isMultipart = false, contentType = 'application/json') {
     let headers: HttpHeaders;
     const token = localStorage.getItem(LcpConstants.auth_token_key);
-    // console.log(token);
     headers = new HttpHeaders({
-      // 'Access-Control-Allow-Origin': '*',
     });
-    // headers = headers.append('origin-client', AppConstants.ORIGIN_CLIENT);
     if (!isMultipart) {
       headers = headers.append('Content-Type', contentType);
     }
-    // if (token) {
-    //   headers = headers.append('client-auth-token', token);
-    // }
     return headers;
   }
 
@@ -91,9 +85,7 @@ export class AppUtilityService {
       formElement.action = url;
       formElement.method = method;
       formElement.submit();
-    } else {
-      // show validation error
-    }
+    } else { }
   }
 
 

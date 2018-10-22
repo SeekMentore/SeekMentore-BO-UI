@@ -30,26 +30,10 @@ export class EmailComponent implements OnInit, OnChanges {
     this.setDefaultData();
   }
 
-  ngOnInit() {
-    // this.helperService.makeRichEditor('#email-body', '#email-toolbar-container',
-    //   (editor: any) => {
-    //     this.emailBodyEditor = editor;
-    //   });
+  ngOnInit() {    
     this.helperService.makeRichEditor(this.emailBodyEditorId);
     this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
-    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');
-    // .subscribe(result => {
-    //   let response = result['response'];
-    //   response = this.utilityService.decodeObjectFromJSON(response);
-    //   if (response != null) {
-    //     this.emailTemplatesArray = response['emailTemplates'];
-    //     this.filteredTemplateArray = this.emailTemplatesArray;
-    //     console.log(this.emailTemplatesArray);
-    //   }
-    // },
-    // error => {
-    //
-    // });
+    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');    
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -69,14 +53,9 @@ export class EmailComponent implements OnInit, OnChanges {
   onSuccessEmailTemplates(context: any, response: any) {
     context.emailTemplatesArray = response['emailTemplates'];
     context.filteredTemplateArray = context.emailTemplatesArray;
-    // console.log(this.emailTemplatesArray);
   }
 
   onAttachmentSelected(event) {
-    // console.log(value);
-
-    // show error if more than permitted number of files are selected
-
     if ((<any>event.target).files.length > LcpConstants.email_attachments_max_number) {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -95,7 +74,6 @@ export class EmailComponent implements OnInit, OnChanges {
         totalSize = totalSize + value2.size / 1024;
       }));
       totalSize += attachment.size / 1024;
-      // console.log(totalSize);
       if (totalSize > LcpConstants.email_attachemnts_max_size_MB * 1024) {
         errorMessage = LcpConstants.email_attachment_size_error;
       } else if (attachmentsNumber >= LcpConstants.email_attachments_max_number) {
@@ -113,9 +91,7 @@ export class EmailComponent implements OnInit, OnChanges {
         this.attachments.push(attachment);
       }
     }
-
     (<any>event.target).value = '';
-
   }
 
   emailTemplateSelected(emailTemplate: EmailTemplateInterface) {
@@ -139,7 +115,6 @@ export class EmailComponent implements OnInit, OnChanges {
           this.loadEmailDataFromServer(this.selectedEmailTemplate.value);
         },
         onCancel: () => {
-          // this.selectedEmailTemplate = this.defaultValueEmailTemplate;
         }
       });
     } else {
@@ -158,31 +133,15 @@ export class EmailComponent implements OnInit, OnChanges {
     const formData = new URLSearchParams();
     formData.set('templateId', templateValue);
     this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
-      'application/x-www-form-urlencoded');
-    // this.getDataForTemplate(this.onSuccessTemplateData, templateValue);
-    // .subscribe(result => {
-    //   let response = result['response'];
-    //   response = this.utilityService.decodeObjectFromJSON(response);
-    //   if (response != null) {
-    //     this.emailData = response;
-    //     this.emailBodyEditor.setData(this.emailData.body);
-    //   }
-    // },
-    // error => {
-    //
-    // });
+      'application/x-www-form-urlencoded');   
   }
 
   onSuccessTemplateData(context: any, response: any) {
     context.emailData = response;
-    // context.emailBodyEditor.setData(context.emailData.body);
     context.helperService.setDataForRichEditor(context.emailBodyEditorId, context.emailData.body);
   }
 
   hideDialog() {
-
-    // check if data is present
-
     if (this.isFormDirty()) {
       this.helperService.showConfirmationDialog({
         message: LcpConstants.email_dismiss_data_exists_error,
@@ -192,7 +151,6 @@ export class EmailComponent implements OnInit, OnChanges {
           this.helperService.hideEmailDialog();
         },
         onCancel: () => {
-
         }
       });
     } else {
@@ -205,7 +163,6 @@ export class EmailComponent implements OnInit, OnChanges {
 
 
   isFormDirty(): boolean {
-    // console.log(this.helperService.getDataFromRichEditor(this.emailBodyEditorId));
     let isDataEntered = false;
     for (const key in this.emailData) {
       if (this.emailData[key].trim() !== '') {
@@ -236,24 +193,6 @@ export class EmailComponent implements OnInit, OnChanges {
     }
     this.utilityService.makerequest(this, this.onSuccessEmailSent, LcpRestUrls.sendMailUrl, 'POST', formData,
       'multipart/form-data', true);
-    //   .subscribe(
-    //   result => {
-    //     // let response = result['response'];
-    //     // console.log(response);
-    //     // response = this.utilityService.decodeObjectFromJSON(response);
-    //     this.helperService.showAlertDialog({
-    //       isSuccess: true,
-    //       message: LcpConstants.email_sent_success_message,
-    //       onOk: () => {
-    //         this.setDefaultData();
-    //         this.emailBodyEditor.setData('');
-    //       }
-    //     });
-    //   },
-    //   error2 => {
-    //
-    //   }
-    // );
   }
 
   onSuccessEmailSent(context: any, response: any) {

@@ -36,19 +36,6 @@ export class ResetPasswordComponent implements OnInit {
 
     this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.resetPasswordURL, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
-    //   .subscribe(result => {
-    //   let response = result['response'];
-    //   response = this.utilityService.decodeObjectFromJSON(response);
-    //   if (response != null) {
-    //     if (response['success'] === true) {
-    //       this.successMessage = response['message'];
-    //     } else {
-    //       this.errorAjaxResponse = response['message'];
-    //     }
-    //   }
-    // }, error => {
-    //
-    // });
   }
 
   onSuccess(context: any, response: any) {
@@ -81,5 +68,4 @@ export class ResetPasswordComponent implements OnInit {
     this.errorUserType = null;
     this.successMessage = null;
   }
-
 }

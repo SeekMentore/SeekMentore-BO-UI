@@ -38,20 +38,6 @@ export class LoginComponent implements OnInit {
     formData.set('userType', this.userType);
     this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.loginURL, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
-    //   .subscribe(result => {
-    //   let response = result['response'];
-    //   response = this.utilityService.decodeObjectFromJSON(response);
-    //   if (response != null) {
-    //     if (response['success'] === true) {
-    //       // window.location.href = result['redirectTo'];
-    //       this.router.navigateByUrl('/lp');
-    //     } else {
-    //       this.errorAjaxResponse = response['message'];
-    //     }
-    //   }
-    //
-    // }, error => {
-    // });
   }
 
   isValidLoginData(): boolean {
@@ -84,7 +70,6 @@ export class LoginComponent implements OnInit {
   onSuccess(context: any, response: any) {
 
     if (response['success'] === true) {
-      // window.location.href = result['redirectTo'];
       const authToken = response['clientAuthToken'];
       localStorage.setItem(LcpConstants.auth_token_key, authToken);
       localStorage.setItem(LcpConstants.user_type_key, context.userType);

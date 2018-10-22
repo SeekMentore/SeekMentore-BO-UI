@@ -21,6 +21,7 @@ export class Column {
   filter: Filter;
   isFiltered: boolean = false; // Do not set in constructor
   shouldHide: boolean = false; // Do not set in constructor
+  appliedClassNames: string = ''; // Do not set in constructor
 
 
   constructor(
@@ -67,6 +68,7 @@ export class Column {
     this.eventHandler = null;
     if (GridCommonFunctions.checkObjectAvailability(clickEvent)) {
       this.eventHandler = new EventHandler(this.id + '-EventHandler', clickEvent);
+      this.appliedClassNames = this.appliedClassNames + 'column-pointer';
     }        
   }
 

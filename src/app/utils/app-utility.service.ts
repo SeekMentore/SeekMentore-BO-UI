@@ -15,12 +15,12 @@ export class AppUtilityService {
   constructor(private http: HttpClient) {
   }
 
-  public makeRequestWithoutResponseHandler(url: string,
-                     requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-                     data: any = null,
-                     contentType: string = 'application/json',
-                     isMultipart: boolean = false,
-                     params: HttpParams = null) {
+  public makeRequestWithoutResponseHandler( url: string,
+                                            requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+                                            data: any = null,
+                                            contentType: string = 'application/json',
+                                            isMultipart: boolean = false,
+                                            params: HttpParams = null) {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
@@ -37,12 +37,14 @@ export class AppUtilityService {
     return this.http.request(requestType, url, requestOptions);
   }
 
-  public makerequest(context: any, response_handler: any, url: string,
-                     requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-                     data: any = null,
-                     contentType: string = 'application/json',
-                     isMultipart: boolean = false,
-                     params: HttpParams = null) {
+  public makerequest( context: any, 
+                      response_handler: any, 
+                      url: string,
+                      requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+                      data: any = null,
+                      contentType: string = 'application/json',
+                      isMultipart: boolean = false,
+                      params: HttpParams = null) {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }

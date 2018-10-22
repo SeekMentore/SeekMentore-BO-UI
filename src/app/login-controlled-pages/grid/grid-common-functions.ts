@@ -65,7 +65,7 @@ export class GridCommonFunctions {
     closeButton.style.paddingRight = '0';
 
     const dialogTitle: HTMLSpanElement = document.createElement('div');
-    dialogTitle.innerHTML = '<b>' + dialogTitleText + '</b>';
+    dialogTitle.innerHTML = '<b><u>' + dialogTitleText + '</u></b>';
     dialogTitle.style.width = '100%';
     dialogTitle.style.marginTop = '10px';
     dialogTitle.style.marginBottom = '10px';
@@ -83,18 +83,29 @@ export class GridCommonFunctions {
     contentTable.style.maxHeight = '400px';
     contentTable.style.overflowY = 'auto';
     contentTable.style.width = '95%';
+    contentTable.cellPadding = '5';
+    contentTable.style.border = '1px solid blue';
 
-
+    var counter = 0;
     for (const key in dialogData) {
       const dataRow = document.createElement('tr');
-      dataRow.innerHTML = '<td><b>' + key + ' :</b></td> ' + '<td>' + dialogData[key] + '</td>';
+      dataRow.innerHTML = '<td width="25%"><b>' + key + '</b></td><td>' + dialogData[key] + '</td>';
       dataRow.style.margin = '5px 10px';
-      dataRow.style.padding = '3px';
-      // dataDiv.noWrap = false;
-      // dataDiv.style.maxHeight = '40px';
+      dataRow.style.padding = '3px';     
+      if (counter%2 == 0) {
+        dataRow.style.backgroundColor = 'lightgray';
+      } 
       contentTable.appendChild(dataRow);
+      counter++;
     }
 
+    const dismissButton = document.createElement('button');
+    dialogModal.appendChild(dismissButton);
+    dismissButton.className = 'cancel-button';
+    dismissButton.innerHTML = 'Dismiss';
+    dismissButton.onclick = (ev) => {
+      document.body.removeChild(dialog);
+    };
 
     document.body.appendChild(dialog);
   }

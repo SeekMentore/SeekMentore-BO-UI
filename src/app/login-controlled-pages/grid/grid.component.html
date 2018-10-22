@@ -320,7 +320,7 @@
             [ngStyle]="{'display' : getColumnDisplayStyle(column)}">
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}"
-          *ngIf="!(column.hidden)" (click)="columnClicked(record, column)">
+          *ngIf="!(column.hidden)" (click)="columnClicked(record, column)" class="{{column.appliedClassNames}}">
           {{defaultColumnValueRenderer(record, column)}}
         </span>
       </span>

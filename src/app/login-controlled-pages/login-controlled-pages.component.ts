@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnInit} from "@angular/core";
-import {Router} from "@angular/router";
-import {AppConstants} from "../utils/app-constants";
-import {AppUtilityService} from "../utils/app-utility.service";
-import {EnvironmentConstants} from "../utils/environment-constants";
-import {AlertDialogEvent, ConfirmationDialogEvent, HelperService} from "../utils/helper.service";
-import {LcpConstants} from "../utils/lcp-constants";
-import {LcpRestUrls} from "../utils/lcp-rest-urls";
-import {EmailInterface} from "./email/create-email.component";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { AppConstants } from "../utils/app-constants";
+import { AppUtilityService } from "../utils/app-utility.service";
+import { EnvironmentConstants } from "../utils/environment-constants";
+import { AlertDialogEvent, ConfirmationDialogEvent, HelperService } from "../utils/helper.service";
+import { LcpConstants } from "../utils/lcp-constants";
+import { LcpRestUrls } from "../utils/lcp-rest-urls";
+import { EmailInterface } from "./email/create-email.component";
 
 @Component({
   selector: 'app-login-controlled-pages',
@@ -30,7 +30,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   emailDialog: HTMLDivElement;
   userType = null;
 
-
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -39,7 +38,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.setActivityTimer();
     this.emailData = null;
     this.userType = localStorage.getItem(LcpConstants.user_type_key);
-
   }
 
   ngOnInit(): void {
@@ -105,9 +103,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
   }
-
 
   public parseMenu() {
     this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');
@@ -140,31 +136,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
         this.doLogout();
         break;
     }
-  }
-
-  public askForConfirmation() {
-    const myListener: ConfirmationDialogEvent = {
-      message: 'hello there',
-      onOk: () => {
-        // console.log('ok button clicked');
-      },
-      onCancel: () => {
-        // console.log('cancel button clicked');
-      }
-    };
-    this.helperService.showConfirmationDialog(myListener);
-  }
-
-  public showAlertDialog() {
-    const myListener: AlertDialogEvent = {
-      isSuccess: true,
-      message: 'this is message for dialog',
-      onButtonClicked: () => {
-
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
+  } 
 
   public showEmailDialog() {
     this.helperService.showEmailDialog();
@@ -175,11 +147,9 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   onSuccessLogout(context: any, response: any) {
-
     if (response['success'] === true) {
       context.router.navigateByUrl('/');
     } else {
-
     }
   }
 
@@ -201,8 +171,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       this.doLogout();
     }
   }
-
-
 }
 
 interface SubMenuItem {
@@ -220,5 +188,4 @@ interface MenuItem {
 interface AccessOptions {
   impersonationaccess: boolean;
   emailformaccess: boolean;
-
 }

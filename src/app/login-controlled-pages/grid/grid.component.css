@@ -415,3 +415,8 @@ i {
   top: 0;
   left: 0;
 }
+
+.column-pointer {
+  cursor: pointer;
+  color: blue;
+}

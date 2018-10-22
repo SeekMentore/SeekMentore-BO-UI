@@ -33,7 +33,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
   public static displayDetailsForRecord(record: Record, column: Column) {
     const displayData = {
       'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
-      'Subject': record.getProperty('subject'),
+      'Subject': record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject'),
       'Initiated By': record.getProperty('initiatedBy'),
       'Due Date': (new Date(record.getProperty('dueDateMillis'))).toDateString(),
       'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),

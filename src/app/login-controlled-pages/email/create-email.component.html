@@ -33,22 +33,15 @@
             {{element.label}}
           </button>
         </div>
-      </div>
-      <!--<select class="selectpicker input_field" data-live-search="true" style="margin-top: 0; min-width: 225px"-->
-      <!--name="user-type" required [(ngModel)]="selectedEmailTemplate" (change)="emailTemplateSelected()">-->
-      <!--<option [ngValue]="defaultValueEmailTemplate">Select E-mail template</option>-->
-      <!--<option [ngValue]="element" *ngFor="let element of emailTemplatesArray">{{element.label}}</option>-->
-      <!--</select>-->
+      </div>      
     </div>
 
     <input [(ngModel)]="emailData.to" name="to_email" placeholder="To" required type="text">
     <input [(ngModel)]="emailData.cc" name="cc_email" placeholder="CC" type="text">
     <input [(ngModel)]="emailData.bcc" name="bcc_email" placeholder="BCC" type="text">
-    <input [(ngModel)]="emailData.subject" name="email_subject" placeholder="Subject" required type="text">
-    <!--<div id="email-toolbar-container"></div>-->
+    <input [(ngModel)]="emailData.subject" name="email_subject" placeholder="Subject" required type="text">    
     <textarea style="min-height: 200px; max-height: 200px; border: solid 1px var(--divider)" id="email_body"
-              name="email_body">
-      <!--this email id is being used in typescript file-->
+              name="email_body">      
     </textarea>
     <div style="display: flex;flex-direction: row;">
       <button class="ok-button" style="margin: 8px" type="submit">Send</button>

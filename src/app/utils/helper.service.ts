@@ -58,7 +58,7 @@ export class HelperService {
   }
 
   public makeRichEditor(editorId: string) {
-    CKEDITOR.replace(editorId, CkeditorConfig.configuration);
+    CKEDITOR.replace(editorId, CkeditorConfig.emailConfiguration);
   }
 }
 

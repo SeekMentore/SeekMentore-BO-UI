@@ -9,7 +9,7 @@
     <input name="password" placeholder="Password" required type="password" [(ngModel)]="password">
     <span class="validation-error" *ngIf="errorPassword">{{errorPassword}}</span>
     <select class="input_field" name="user-type" required [(ngModel)]="userType">
-      <option value="Blank">User Type</option>
+      <option value="">User Type</option>
       <option value="admin">Employee</option>
       <option value="tutor">Tutor</option>
       <option value="customer">Parent &amp; Students</option>

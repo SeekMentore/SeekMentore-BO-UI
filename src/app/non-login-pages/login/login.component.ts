@@ -14,7 +14,7 @@ import { NlpRestUrls } from '../../utils/nlp-rest-urls';
 export class LoginComponent implements OnInit {
   username;
   password;
-  userType = 'Blank';
+  userType = '';
   errorAjaxResponse: string;
   errorUsername: string;
   errorPassword: string;
@@ -68,7 +68,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSuccess(context: any, response: any) {
-
     if (response['success'] === true) {
       const authToken = response['clientAuthToken'];
       localStorage.setItem(LcpConstants.auth_token_key, authToken);

@@ -78,7 +78,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
       'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
       'Subject': record.getProperty('subject'),
       'Initiated By': record.getProperty('initiatedBy'),
-      'Due Date': new Date(record.getProperty('dueDateMillis')),
+      'Due Date': (new Date(record.getProperty('dueDateMillis'))).toDateString(),
       'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),
       'Action By': record.getProperty('actionBy')
     };

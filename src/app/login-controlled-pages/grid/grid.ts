@@ -119,4 +119,8 @@ export class Grid {
         this.filtered_records = this.store.data;
         this.paginator.setTotalPages(this.store.totalRecords);
     }
+
+    public addExtraParams(paramKey: string, paramValue: Object) {
+        this.store.addExtraParams(paramKey, paramValue);
+    }
 }

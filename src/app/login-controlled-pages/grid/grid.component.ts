@@ -72,6 +72,10 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.createGrid();
   }
 
+  public addExtraParams(paramKey: string, paramValue: Object) {
+      this.grid.addExtraParams(paramKey, paramValue);
+  }
+
   public loadNextPage() {
     if (this.grid.isPagingCapable) {
       if (this.grid.paginator.navigateNextPage()) {

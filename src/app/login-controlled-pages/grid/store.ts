@@ -104,4 +104,8 @@ export class Store {
       record.selectionModelCheck = selected;
     }
   }
+
+  public addExtraParams(paramKey: string, paramValue: Object) {
+    this.extraParams[paramKey] = paramValue;
+  }
 }

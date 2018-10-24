@@ -626,7 +626,6 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  /** REVIEW */
   public addListFilterQuery(column: Column) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
@@ -714,8 +713,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     });
     this.showMulitSelectInput(filterData);
   }
-
-  /** REVIEW */
+  
   public showColumnHideComponentPopup() {
     const columnData: MultiSelectInputData = {
       operation: 'hide_show_column',

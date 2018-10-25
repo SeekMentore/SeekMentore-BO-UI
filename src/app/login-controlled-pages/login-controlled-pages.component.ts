@@ -41,16 +41,15 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.userType = localStorage.getItem(LcpConstants.user_type_key);      
+    if (!('admin' === this.userType || 'customer' === this.userType || 'tutor' === this.userType)) {
+      this.router.navigateByUrl('/public/login');
+    }
 
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
     });
-    this.parseMenu(); 
-
-    this.userType = localStorage.getItem(LcpConstants.user_type_key);      
-    if (!('admin' === this.userType || 'customer' === this.userType || 'tutor' === this.userType)) {
-      this.router.navigateByUrl('/public/login');
-    }   
+    this.parseMenu();        
     // set event handler for confirmation dialog
     this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
     this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {

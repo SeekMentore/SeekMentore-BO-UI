@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { EmailComponent } from '../login-controlled-pages/email/create-email.component';
 import { LoginControlledPagesComponent } from '../login-controlled-pages/login-controlled-pages.component';
 import { ErrorComponent } from '../non-login-pages/error/error.component';
 import { LoginComponent } from '../non-login-pages/login/login.component';
@@ -9,29 +8,32 @@ import { NonLoginPagesComponent } from '../non-login-pages/non-login-pages.compo
 import { ResetPasswordComponent } from '../non-login-pages/reset-password/reset-password.component';
 import { RoutingGuardService } from './routing-guard.service';
 import { RegisteredTutorComponent } from '../login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
+import { HomeComponent } from '../login-controlled-pages/home/home.component';
 
 
 const routes: Routes = [
   {
-    path: 'lp', component: LoginControlledPagesComponent,
+    path: 'user', component: LoginControlledPagesComponent,
     // canActivate: [RoutingGuardService],
     children: [
-      {path: 'email', component: EmailComponent},
-      {path: 'registeredTutor', component: RegisteredTutorComponent}
+      {path: 'home', component: HomeComponent},
+      {path: 'registeredTutor', component: RegisteredTutorComponent},
+      {path: '', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'},
+      {path: '**', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'}
     ]
   },
   {
-    path: 'nlp', component: NonLoginPagesComponent,
+    path: 'public', component: NonLoginPagesComponent,
     children: [
       {path: 'error', component: ErrorComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'resetpassword', component: ResetPasswordComponent, canActivate: [RoutingGuardService]},
+      {path: 'resetpassword', component: ResetPasswordComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'},
       {path: '**', redirectTo: 'login', pathMatch: 'full'}
     ]
   },
-  {path: '', redirectTo: 'nlp', pathMatch: 'full'},
-  {path: '**', redirectTo: 'nlp', pathMatch: 'full'}
+  {path: '', redirectTo: 'public', pathMatch: 'full'},
+  {path: '**', redirectTo: 'public', pathMatch: 'full'}
 ];
 
 

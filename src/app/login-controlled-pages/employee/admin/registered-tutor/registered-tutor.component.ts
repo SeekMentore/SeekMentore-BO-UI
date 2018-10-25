@@ -18,6 +18,7 @@ export class RegisteredTutorComponent implements OnInit {
 
   constructor() {
     this.registeredTutorGridMetaData = null;
+    this.setUpGridMetaData();
   }
 
   ngOnInit() {

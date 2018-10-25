@@ -27,17 +27,17 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   confirmationDialog: HTMLDivElement;
   alertDialog: HTMLDivElement;
   emailData: EmailInterface;
-  emailDialog: HTMLDivElement;
-  userType = null;
+  emailDialog: HTMLDivElement; 
+  userType: string = ''; 
 
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
+    this.userType = localStorage.getItem(LcpConstants.user_type_key);
     this.staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
     this.idleTime = 0;
     this.setActivityTimer();
-    this.emailData = null;
-    this.userType = localStorage.getItem(LcpConstants.user_type_key);
+    this.emailData = null;    
   }
 
   ngOnInit(): void {
@@ -45,7 +45,12 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
     });
-    this.parseMenu();
+    this.parseMenu(); 
+
+    this.userType = localStorage.getItem(LcpConstants.user_type_key);      
+    if (!('admin' === this.userType || 'customer' === this.userType || 'tutor' === this.userType)) {
+      this.router.navigateByUrl('/public/login');
+    }   
     // set event handler for confirmation dialog
     this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
     this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
@@ -148,9 +153,15 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
   onSuccessLogout(context: any, response: any) {
     if (response['success'] === true) {
-      context.router.navigateByUrl('/');
+      context.clearLocalStorageSession();
+      context.router.navigateByUrl('/public/login');
     } else {
     }
+  }
+
+  public clearLocalStorageSession() {
+    localStorage.setItem(LcpConstants.auth_token_key, null);
+    localStorage.setItem(LcpConstants.user_type_key, null);
   }
 
   public setActivityTimer() {

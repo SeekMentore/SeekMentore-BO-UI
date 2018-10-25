@@ -21,11 +21,17 @@ export class LoginComponent implements OnInit {
   errorUserType: string;
 
   constructor(private helperService: HelperService, private utilityService: AppUtilityService, private router: Router) {
-    this.resetErrorMessages();
+    this.resetErrorMessages();    
   }
 
   ngOnInit() {
     this.helperService.setTitle('Login');
+    this.userType = localStorage.getItem(LcpConstants.user_type_key);
+    if ('admin' === this.userType || 'customer' === this.userType || 'tutor' === this.userType) {
+      this.router.navigateByUrl('/user/home');
+    } else {
+      this.userType = '';
+    }
   }
 
   login() {
@@ -72,7 +78,7 @@ export class LoginComponent implements OnInit {
       const authToken = response['clientAuthToken'];
       localStorage.setItem(LcpConstants.auth_token_key, authToken);
       localStorage.setItem(LcpConstants.user_type_key, context.userType);
-      context.router.navigateByUrl('/lp');
+      context.router.navigateByUrl('/user/home');
     } else {
       context.errorAjaxResponse = response['message'];
     }

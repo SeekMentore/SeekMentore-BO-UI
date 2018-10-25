@@ -25,7 +25,6 @@
 
 <!--Main Content-->
 <div class="main_content" style="padding: 0; display: flex; flex-direction: column">
-
   <div class="menu-container">
     <div class="menu-container-2">
       <div class="dropdown" *ngFor="let element of menu; let i = index">
@@ -35,14 +34,10 @@
         </div>
       </div>
     </div>
-  </div>
-  
+  </div>  
   <!--<router-outlet></router-outlet>-->
   <div id="lcp-view-port" class="view-port">
-    <app-employee-home *ngIf="userType === 'admin'"></app-employee-home>
-    <app-customer-home *ngIf="userType === 'customer'"></app-customer-home>
-    <app-tutor-home *ngIf="userType === 'tutor'"></app-tutor-home>
-    <span *ngIf="!userType">User Not Logged In.</span>
+    <router-outlet></router-outlet>
   </div>
 </div>
 

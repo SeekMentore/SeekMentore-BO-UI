@@ -19,6 +19,7 @@ import { EmployeeHomeComponent } from './login-controlled-pages/employee-home/em
 import { TutorHomeComponent } from './login-controlled-pages/tutor-home/tutor-home.component';
 import { CustomerHomeComponent } from './login-controlled-pages/customer-home/customer-home.component';
 import { RegisteredTutorComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
+import { HomeComponent } from './login-controlled-pages/home/home.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { RegisteredTutorComponent } from './login-controlled-pages/employee/admi
     EmployeeHomeComponent,
     TutorHomeComponent,
     CustomerHomeComponent,
-    RegisteredTutorComponent
+    RegisteredTutorComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

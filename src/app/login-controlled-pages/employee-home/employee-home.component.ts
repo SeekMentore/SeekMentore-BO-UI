@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {GridComponent, GridDataInterface} from '../grid/grid.component';
-import {GridCommonFunctions} from '../grid/grid-common-functions';
-import {Column} from '../grid/column';
-import {Record} from '../grid/record';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Column } from '../grid/column';
+import { GridCommonFunctions } from '../grid/grid-common-functions';
+import { GridComponent, GridDataInterface } from '../grid/grid.component';
+import { Record } from '../grid/record';
 
 @Component({
   selector: 'app-employee-home',

@@ -18,6 +18,7 @@ import { RoutingModule } from './utils/routing.module';
 import { EmployeeHomeComponent } from './login-controlled-pages/employee-home/employee-home.component';
 import { TutorHomeComponent } from './login-controlled-pages/tutor-home/tutor-home.component';
 import { CustomerHomeComponent } from './login-controlled-pages/customer-home/customer-home.component';
+import { RegisteredTutorComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { CustomerHomeComponent } from './login-controlled-pages/customer-home/cu
     MultiSelectInputComponent,
     EmployeeHomeComponent,
     TutorHomeComponent,
-    CustomerHomeComponent
+    CustomerHomeComponent,
+    RegisteredTutorComponent
   ],
   imports: [
     BrowserModule,

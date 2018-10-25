@@ -8,6 +8,7 @@ import { LoginComponent } from '../non-login-pages/login/login.component';
 import { NonLoginPagesComponent } from '../non-login-pages/non-login-pages.component';
 import { ResetPasswordComponent } from '../non-login-pages/reset-password/reset-password.component';
 import { RoutingGuardService } from './routing-guard.service';
+import { RegisteredTutorComponent } from '../login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
 
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
     path: 'lp', component: LoginControlledPagesComponent,
     // canActivate: [RoutingGuardService],
     children: [
-      {path: 'email', component: EmailComponent}
+      {path: 'email', component: EmailComponent},
+      {path: 'registeredTutor', component: RegisteredTutorComponent}
     ]
   },
   {

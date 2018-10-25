@@ -21,6 +21,7 @@ import { CustomerHomeComponent } from './login-controlled-pages/customer-home/cu
 import { RegisteredTutorComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
 import { HomeComponent } from './login-controlled-pages/home/home.component';
 import { AlertDialogComponent } from './utils/alert-dialog/alert-dialog.component';
+import { ConfirmationDialogComponent } from './utils/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AlertDialogComponent } from './utils/alert-dialog/alert-dialog.componen
     CustomerHomeComponent,
     RegisteredTutorComponent,
     HomeComponent,
-    AlertDialogComponent
+    AlertDialogComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,

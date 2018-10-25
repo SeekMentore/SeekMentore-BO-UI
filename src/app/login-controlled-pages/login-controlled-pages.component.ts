@@ -23,8 +23,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   userMenu: SubMenuItem[] = [];
   accessOptions: AccessOptions;
   logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
-  idleTime: number;
-  confirmationDialog: HTMLDivElement;  
+  idleTime: number;    
   emailData: EmailInterface;
   emailDialog: HTMLDivElement; 
   userType: string = ''; 
@@ -48,26 +47,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
     });
-    this.parseMenu();        
-    // set event handler for confirmation dialog
-    this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
-    this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
-      const okButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('ok-button')[0];
-      const cancelButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('cancel-button')[0];
-      const messageElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('message')[0];
-      const titleElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('title')[0];
-      titleElement.innerText = LcpConstants.confirmation_dialog_title;
-      messageElement.innerText = eventListener.message;
-      okButton.onclick = (ev: Event) => {
-        eventListener.onOk();
-        this.confirmationDialog.style.display = 'none';
-      };
-      cancelButton.onclick = (ev: Event) => {
-        eventListener.onCancel();
-        this.confirmationDialog.style.display = 'none';
-      };
-      this.confirmationDialog.style.display = 'flex';
-    });    
+    this.parseMenu(); 
     // set event handler for email
     this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
     this.helperService.emailDialogState.subscribe((data: EmailInterface) => {

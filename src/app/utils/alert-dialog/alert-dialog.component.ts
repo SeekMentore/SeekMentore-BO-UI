@@ -14,7 +14,6 @@ export class AlertDialogComponent implements OnInit {
   constructor(private helperService: HelperService) { }
 
   ngOnInit() {
-    // set event handler for alert dialog
     this.alertDialog = <HTMLDivElement>document.getElementById('alert-dialog');
     this.helperService.alertDialogState.subscribe((eventListener: AlertDialogEvent) => {
       const actionButton = <HTMLButtonElement>this.alertDialog.getElementsByClassName('action-button')[0];

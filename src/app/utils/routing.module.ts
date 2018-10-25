@@ -10,7 +10,6 @@ import { RoutingGuardService } from './routing-guard.service';
 import { RegisteredTutorComponent } from '../login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
 import { HomeComponent } from '../login-controlled-pages/home/home.component';
 
-
 const routes: Routes = [
   {
     path: 'user', component: LoginControlledPagesComponent,

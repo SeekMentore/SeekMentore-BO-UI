@@ -24,8 +24,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   accessOptions: AccessOptions;
   logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
   idleTime: number;
-  confirmationDialog: HTMLDivElement;
-  alertDialog: HTMLDivElement;
+  confirmationDialog: HTMLDivElement;  
   emailData: EmailInterface;
   emailDialog: HTMLDivElement; 
   userType: string = ''; 
@@ -68,32 +67,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
         this.confirmationDialog.style.display = 'none';
       };
       this.confirmationDialog.style.display = 'flex';
-    });
-    // set event handler for alert dialog
-    this.alertDialog = <HTMLDivElement>document.getElementById('alert-dialog');
-    this.helperService.alertDialogState.subscribe((eventListener: AlertDialogEvent) => {
-      const actionButton = <HTMLButtonElement>this.alertDialog.getElementsByClassName('action-button')[0];
-      const titleElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('title')[0];
-      const messageElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('message')[0];
-      actionButton.classList.remove('cancel-button');
-      actionButton.classList.remove('ok-button');
-      if (eventListener.isSuccess) {
-        titleElement.innerText = LcpConstants.success_alert_title;
-        actionButton.innerText = 'ok';
-        actionButton.classList.add('ok-button');
-      } else {
-        titleElement.innerText = LcpConstants.failure_alert_title;
-        actionButton.innerText = 'Dismiss';
-        actionButton.classList.add('cancel-button');
-      }
-      messageElement.innerText = eventListener.message;
-
-      actionButton.onclick = (ev: Event) => {
-        eventListener.onButtonClicked();
-        this.alertDialog.style.display = 'none';
-      };
-      this.alertDialog.style.display = 'flex';
-    });
+    });    
     // set event handler for email
     this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
     this.helperService.emailDialogState.subscribe((data: EmailInterface) => {

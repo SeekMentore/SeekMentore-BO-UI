@@ -20,6 +20,7 @@ import { TutorHomeComponent } from './login-controlled-pages/tutor-home/tutor-ho
 import { CustomerHomeComponent } from './login-controlled-pages/customer-home/customer-home.component';
 import { RegisteredTutorComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
 import { HomeComponent } from './login-controlled-pages/home/home.component';
+import { AlertDialogComponent } from './utils/alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { HomeComponent } from './login-controlled-pages/home/home.component';
     TutorHomeComponent,
     CustomerHomeComponent,
     RegisteredTutorComponent,
-    HomeComponent
+    HomeComponent,
+    AlertDialogComponent
   ],
   imports: [
     BrowserModule,

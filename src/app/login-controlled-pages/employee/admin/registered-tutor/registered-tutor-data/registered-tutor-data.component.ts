@@ -180,6 +180,7 @@ export class RegisteredTutorDataComponent implements OnInit {
             id : 'approveMultiple',
             label : 'Approve',
             clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+              alert(selectedRecords.length);
               // Refer document
             }
           }, {

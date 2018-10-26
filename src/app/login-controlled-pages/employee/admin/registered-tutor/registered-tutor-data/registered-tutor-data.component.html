@@ -4,33 +4,8 @@
           class="ok-button" (click)="backToListing()">
           Back To Listing
     </button>
-    <app-grid #uploadedDocumentGrid id="uploaded-document-grid" [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>
-    <button
-          id="approve-multiple-document-button"
-          class="ok-button" (click)="approveMultipleDocument()">
-          Approve
-    </button>
-    <button
-          id="send-reminder-multiple-document-button"
-          class="ok-button" (click)="sendReminderForMultipleDocument()">
-          Send Reminder
-    </button>
-    <button
-          id="reject-multiple-document-button"
-          class="cancel-button" (click)="rejectMultipleDocument()">
-          Reject
-    </button>
-    <app-grid #bankDetailGrid id="bank-detail-grid" [gridMetaData]="bankDetailGridMetaData"></app-grid>
-    <button
-          id="approve-multiple-bank-account-button"
-          class="ok-button" (click)="approveMultipleBankAccount()">
-          Approve
-    </button>
-    <button
-          id="reject-multiple-bank-account-button"
-          class="cancel-button" (click)="rejectMultipleBankAccount()">
-          Reject
-    </button>
+    <app-grid #uploadedDocumentGrid id="uploaded-document-grid" [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>    
+    <app-grid #bankDetailGrid id="bank-detail-grid" [gridMetaData]="bankDetailGridMetaData"></app-grid>    
     <app-grid #currentPackagesGrid id="current-packages-grid" [gridMetaData]="currentPackagesGridMetaData"></app-grid>
     <app-grid #historyPackagesGrid id="history-packages-grid" [gridMetaData]="historyPackagesGridMetaData"></app-grid>
 </div>

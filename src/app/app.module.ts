@@ -22,6 +22,7 @@ import { ConfirmationDialogComponent } from './utils/confirmation-dialog/confirm
 import { CustomerHomeComponent } from './login-controlled-pages/customer/customer-home/customer-home.component';
 import { EmployeeHomeComponent } from './login-controlled-pages/employee/employee-home/employee-home.component';
 import { TutorHomeComponent } from './login-controlled-pages/tutor/tutor-home/tutor-home.component';
+import { RegisteredTutorDataComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor-data/registered-tutor-data.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { TutorHomeComponent } from './login-controlled-pages/tutor/tutor-home/tu
     RegisteredTutorComponent,
     HomeComponent,
     AlertDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    RegisteredTutorDataComponent
   ],
   imports: [
     BrowserModule,

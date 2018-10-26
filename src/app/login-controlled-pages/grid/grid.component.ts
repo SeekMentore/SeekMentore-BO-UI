@@ -357,6 +357,11 @@ export class GridComponent implements OnInit, AfterViewInit {
         const columnFilter = column.filter;
         column.isFiltered = false;
         columnFilter.nullifyFilterProperties();
+        if (column.dataType === 'list') {
+          column.filterOptions.forEach(filterOption => {
+            filterOption.isSelected = false;
+          });
+        }
         this.hideShowRemoveFilterTab(column);
         return;
       }

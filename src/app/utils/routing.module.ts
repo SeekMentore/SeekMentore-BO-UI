@@ -31,8 +31,8 @@ const routes: Routes = [
       {path: '**', redirectTo: 'login', pathMatch: 'full'}
     ]
   },
-  {path: '', redirectTo: 'public', pathMatch: 'full'},
-  {path: '**', redirectTo: 'public', pathMatch: 'full'}
+  {path: '', redirectTo: '/public/login', pathMatch: 'full'},
+  {path: '**', redirectTo: '/public/login', pathMatch: 'full'}
 ];
 
 

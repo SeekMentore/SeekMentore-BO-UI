@@ -13,10 +13,10 @@ import { HomeComponent } from 'src/app/login-controlled-pages/home/home.componen
 const routes: Routes = [
   {
     path: 'user', component: LoginControlledPagesComponent,
-    // canActivate: [RoutingGuardService],
+    canActivate: [RoutingGuardService],
     children: [
       {path: 'home', component: HomeComponent},
-      {path: 'registeredtutor', component: RegisteredTutorComponent},
+      {path: 'registeredTutor', component: RegisteredTutorComponent},
       {path: '', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'},
       {path: '**', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'}
     ]

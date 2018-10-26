@@ -11,8 +11,14 @@ export class RoutingGuardService implements CanActivate {
   constructor(private utilityService: AppUtilityService) {
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  // canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  //   const url: string = state.url;
+  //   return this.utilityService.checkUIPathAccess(url);
+  // }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
-    return this.utilityService.checkUIPathAccess(url);
+    console.log(url);
+    return true;
   }
 }

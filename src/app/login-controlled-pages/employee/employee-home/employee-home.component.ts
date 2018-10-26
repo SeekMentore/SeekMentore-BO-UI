@@ -154,7 +154,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         ]
       },
       htmlDomElementId: 'workflow-grid',
-      hidden: false
+      hidden: false,
+
     };
 
     this.taskGridMetaData = {

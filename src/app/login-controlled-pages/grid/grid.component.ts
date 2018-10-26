@@ -718,7 +718,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     });
     this.showMulitSelectInput(filterData);
   }
-  
+
   public showColumnHideComponentPopup() {
     const columnData: MultiSelectInputData = {
       operation: 'hide_show_column',
@@ -809,7 +809,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public selectionColumnActionButtonClicked(button: ActionButton) {
-    if (button.eventHandler !== null) {      
+    if (button.eventHandler !== null) {
       button.eventHandler.clickEventSelectionColumnMultipleActionButton(this.grid.getSelectedRecords(), button);
     } else {
       const myListener: AlertDialogEvent = {

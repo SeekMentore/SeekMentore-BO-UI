@@ -18,4 +18,7 @@ export class LcpConstants {
   static grid_column_list_filter_dialog_header_suffix = ' - Filter Options';
   static user_type_key = 'user_type';
   static user_type_admin = 'admin';
+  static tutor_grid_no_mail_selected = 'Please select some tutors to send email';
+  static tutor_grid_no_record_selected_blacklist = 'Please select some tutors to black list';
+  static grid_generic_no_record_selected_error = 'No record selected for operation';
 }

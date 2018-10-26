@@ -1,8 +1,13 @@
 <div>
   <div id="tutor-list-page">
-    <app-grid #registeredTutorGrid id="registered-tutor-grid" [gridMetaData]="registeredTutorGridMetaData"></app-grid>    
+    <app-grid #registeredTutorGrid id="registered-tutor-grid" [gridMetaData]="registeredTutorGridMetaData"></app-grid>
   </div>
-  <div id="tutor-data-page">
-    <app-registered-tutor-data></app-registered-tutor-data>
+  <div id="tutor-data-page" *ngIf="showTutorData">
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="showTutorData = false; selectedTutorRecord = null; registeredTutorGridObject.refreshGridData();">
+      Back To Listing
+    </button>
+    <app-registered-tutor-data [tutorRecord]="selectedTutorRecord" [tutorDataAccess]="tutorDataAccess"></app-registered-tutor-data>
   </div>
 </div>

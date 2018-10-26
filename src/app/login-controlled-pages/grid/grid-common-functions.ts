@@ -50,7 +50,7 @@ export class GridCommonFunctions {
   }
 
   public static lookupRenderer(record: Record, column: Column, lookupList: any []) {
-    var value = column.getValueForColumn(record);        
+    var value = column.getValueForColumn(record);
     return this.lookupRendererForValue(value, lookupList);
   }
 
@@ -58,13 +58,13 @@ export class GridCommonFunctions {
     lookupList.forEach(filterOption => {
       if (filterOption.value === value) {
         return filterOption.label
-      } 
-    });    
+      }
+    });
     return value;
   }
-  
+
   public static lookupMultiRenderer(record: Record, column: Column, lookupList: any [], valueSplitter: string) {
-    var multivalue = column.getValueForColumn(record);     
+    var multivalue = column.getValueForColumn(record);
     return this.lookupMultiRendererForValue(multivalue.split(valueSplitter), lookupList);
   }
 
@@ -72,13 +72,13 @@ export class GridCommonFunctions {
     var returnHTML = '';
     multivalueSplittedList.forEach(splittedValue => {
       var found: boolean = false;
-      returnHTML += this.lookupRendererForValue(splittedValue, lookupList) + '<br/>';      
-    });    
+      returnHTML += this.lookupRendererForValue(splittedValue, lookupList) + '<br/>';
+    });
     return returnHTML;
   }
-  
+
   public static yesNoRenderer(record, column) {
-    return this.lookupRenderer(record, column, CommonFilterOptions.yesNoFilterOptions); 
+    return this.lookupRenderer(record, column, CommonFilterOptions.yesNoFilterOptions);
   }
 
   public static displayDetailsForRecord(dialogTitleText: string, dialogData: any) {
@@ -124,10 +124,10 @@ export class GridCommonFunctions {
       const dataRow = document.createElement('tr');
       dataRow.innerHTML = '<td width="25%"><b>' + key + '</b></td><td>' + dialogData[key] + '</td>';
       dataRow.style.margin = '5px 10px';
-      dataRow.style.padding = '3px';     
-      if (counter%2 == 0) {
+      dataRow.style.padding = '3px';
+      if (counter%2 === 0) {
         dataRow.style.backgroundColor = 'lightgray';
-      } 
+      }
       contentTable.appendChild(dataRow);
       counter++;
     }
@@ -142,4 +142,14 @@ export class GridCommonFunctions {
 
     document.body.appendChild(dialog);
   }
+
+ public static getSelectedRecordsPropertyList(selectedRecords: Record[], propertyName: string) {
+   const selectedPropertyList: any[] = [];
+   for(const record of selectedRecords) {
+     if (record.selectionModelCheck) {
+       selectedPropertyList.push(record.getProperty(propertyName));
+     }
+   }
+   return selectedPropertyList;
+ }
 }

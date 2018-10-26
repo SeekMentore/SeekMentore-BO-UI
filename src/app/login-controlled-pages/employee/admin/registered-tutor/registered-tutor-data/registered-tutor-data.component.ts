@@ -1,16 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
 import { Record } from 'src/app/login-controlled-pages/grid/record';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { GridCommonFunctions } from 'src/app/login-controlled-pages/grid/grid-common-functions';
 import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button';
+import {RegisterTutorDataAccess} from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
+import {LcpConstants} from "src/app/utils/lcp-constants";
+import {LcpRestUrls} from "src/app/utils/lcp-rest-urls";
+import {HelperService} from "src/app/utils/helper.service";
+import {AppUtilityService} from "src/app/utils/app-utility.service";
 
 @Component({
   selector: 'app-registered-tutor-data',
   templateUrl: './registered-tutor-data.component.html',
   styleUrls: ['./registered-tutor-data.component.css']
 })
-export class RegisteredTutorDataComponent implements OnInit {
+export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   @ViewChild('uploadedDocumentGrid')
   uploadedDocumentGridObject: GridComponent;
@@ -28,23 +33,32 @@ export class RegisteredTutorDataComponent implements OnInit {
   historyPackagesGridObject: GridComponent;
   historyPackagesGridMetaData: GridDataInterface;
 
-  constructor() { 
+  @Input()
+  tutorRecord: Record = null;
+
+  @Input()
+  tutorDataAccess: RegisterTutorDataAccess = null;
+
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
     this.bankDetailGridMetaData = null;
     this.currentPackagesGridMetaData = null;
     this.historyPackagesGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    // console.log('selected tutor record', this.tutorRecord);
+    this.setUpGridMetaData();
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
+      // we might get error because grid extra params are being set after initialisation
       this.uploadedDocumentGridObject.init();
-      this.bankDetailGridObject.init();     
-      this.currentPackagesGridObject.init();   
-      this.historyPackagesGridObject.init();    
+      this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
+      this.bankDetailGridObject.init();
+      this.currentPackagesGridObject.init();
+      this.historyPackagesGridObject.init();
     }, 0);
   }
 
@@ -86,27 +100,27 @@ export class RegisteredTutorDataComponent implements OnInit {
                 mapping: 'actionDateMillis',
                 renderer: GridCommonFunctions.renderDateFromMillisWithTime
         }],
-        hasSelectionColumn : true,
+        hasSelectionColumn : this.tutorDataAccess.documentViewAccess && this.tutorDataAccess.documentHandleAccess,
         selectionColumn : {
           buttons : [{
             id : 'approveMultiple',
             label : 'Approve',
-            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
-              // Refer document
+            clickEvent : (selectedRecords: Record[], button :ActionButton) => {
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_multiple, selectedRecords, 'documentId', this.uploadedDocumentGridObject);
             }
           }, {
             id : 'sendReminderMultiple',
             label : 'Send Reminder',
             btnclass : 'btnReset',
-            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
-              // Refer document
+            clickEvent : (selectedRecords: Record[], button :ActionButton) => {
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_multiple, selectedRecords, 'documentId', this.uploadedDocumentGridObject);
             }
           }, {
             id : 'rejectMultiple',
             label : 'Reject',
             btnclass : 'btnReject',
-            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
-              // Refer document
+            clickEvent : (selectedRecords: Record[], button :ActionButton) => {
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_multiple, selectedRecords, 'documentId', this.uploadedDocumentGridObject);
             }
           }]
         },
@@ -135,7 +149,7 @@ export class RegisteredTutorDataComponent implements OnInit {
         }
       },
       htmlDomElementId: 'uploaded-document-grid',
-      hidden: false
+      hidden: false,
     };
 
     this.bankDetailGridMetaData = {
@@ -174,7 +188,7 @@ export class RegisteredTutorDataComponent implements OnInit {
           mapping: 'isDefault',
           renderer: GridCommonFunctions.yesNoRenderer
         }],
-        hasSelectionColumn : true,
+        hasSelectionColumn : this.tutorDataAccess.bankViewAccess && this.tutorDataAccess.bankHandleAccess,
         selectionColumn : {
           buttons : [{
             id : 'approveMultiple',
@@ -217,7 +231,7 @@ export class RegisteredTutorDataComponent implements OnInit {
           }
       },
       htmlDomElementId: 'bank-detail-grid',
-      hidden: false
+      hidden: false,
     };
 
     this.currentPackagesGridMetaData = {
@@ -249,10 +263,10 @@ export class RegisteredTutorDataComponent implements OnInit {
           headerName: 'Completed Hours',
           dataType: 'number',
           mapping: 'completedHours'
-        }]		
+        }]
       },
       htmlDomElementId: 'current-packages-grid',
-      hidden: false
+      hidden: false,
     };
 
     this.historyPackagesGridMetaData = {
@@ -285,11 +299,51 @@ export class RegisteredTutorDataComponent implements OnInit {
           dataType: 'date',
           mapping: 'endDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillis
-        }]		
+        }]
       },
       htmlDomElementId: 'history-packages-grid',
       hidden: false
     };
   }
+
+
+  makeRestCallForGridOperation(url: string, selectedRecords: Record[], property: string, gridComponent: GridComponent) {
+    const selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
+
+    if (selectedIdsList.length === 0) {
+      this.helperService.showAlertDialog({
+        isSuccess: false,
+        message: LcpConstants.grid_generic_no_record_selected_error,
+        onButtonClicked: () => {
+
+        }
+      });
+    } else {
+      const data = {
+        documentIds: JSON.stringify(selectedIdsList)
+      };
+      this.utilityService.makeRequestWithoutResponseHandler(url, 'POST', data).subscribe(result => {
+
+        let response = result['response'];
+        response = this.utilityService.decodeObjectFromJSON(response);
+        if (response != null) {
+          if (response['success'] === false) {
+            this.helperService.showAlertDialog({
+              isSuccess: response['success'],
+              message: response['message'],
+              onButtonClicked: () => {
+
+              }
+            });
+          }else {
+            gridComponent.refreshGridData();
+          }
+        }
+      }, error2 => {
+      });
+    }
+  }
+
+
 
 }

@@ -15,13 +15,13 @@ import { AppUtilityService } from './utils/app-utility.service';
 import { HelperService } from './utils/helper.service';
 import { MultiSelectInputComponent } from './utils/multi-select-input/multi-select-input.component';
 import { RoutingModule } from './utils/routing.module';
-import { EmployeeHomeComponent } from './login-controlled-pages/employee-home/employee-home.component';
-import { TutorHomeComponent } from './login-controlled-pages/tutor-home/tutor-home.component';
-import { CustomerHomeComponent } from './login-controlled-pages/customer-home/customer-home.component';
 import { RegisteredTutorComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
 import { HomeComponent } from './login-controlled-pages/home/home.component';
 import { AlertDialogComponent } from './utils/alert-dialog/alert-dialog.component';
 import { ConfirmationDialogComponent } from './utils/confirmation-dialog/confirmation-dialog.component';
+import { CustomerHomeComponent } from './login-controlled-pages/customer/customer-home/customer-home.component';
+import { EmployeeHomeComponent } from './login-controlled-pages/employee/employee-home/employee-home.component';
+import { TutorHomeComponent } from './login-controlled-pages/tutor/tutor-home/tutor-home.component';
 
 @NgModule({
   declarations: [

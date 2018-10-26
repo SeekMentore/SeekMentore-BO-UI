@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
 import { Record } from 'src/app/login-controlled-pages/grid/record';
-import { Column } from 'src/app/login-controlled-pages/grid/column';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { GridCommonFunctions } from 'src/app/login-controlled-pages/grid/grid-common-functions';
 import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button';
 
@@ -22,9 +20,19 @@ export class RegisteredTutorDataComponent implements OnInit {
   bankDetailGridObject: GridComponent;
   bankDetailGridMetaData: GridDataInterface;
 
+  @ViewChild('currentPackagesGrid')
+  currentPackagesGridObject: GridComponent;
+  currentPackagesGridMetaData: GridDataInterface;
+
+  @ViewChild('historyPackagesGrid')
+  historyPackagesGridObject: GridComponent;
+  historyPackagesGridMetaData: GridDataInterface;
+
   constructor() { 
     this.uploadedDocumentGridMetaData = null;
     this.bankDetailGridMetaData = null;
+    this.currentPackagesGridMetaData = null;
+    this.historyPackagesGridMetaData = null;
     this.setUpGridMetaData();
   }
 
@@ -34,7 +42,9 @@ export class RegisteredTutorDataComponent implements OnInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.uploadedDocumentGridObject.init();
-      this.bankDetailGridObject.init();      
+      this.bankDetailGridObject.init();     
+      this.currentPackagesGridObject.init();   
+      this.historyPackagesGridObject.init();    
     }, 0);
   }
 
@@ -84,19 +94,19 @@ export class RegisteredTutorDataComponent implements OnInit {
             id : 'approve',
             label : 'Approve',
             clickEvent : function(record : Record, button :ActionButton) {
-              
+              // Refer document
             }
           }, {
             id : 'sendReminder',
             label : 'Send Reminder',
             clickEvent : function(record : Record, button :ActionButton) {
-              
+              // Refer document
             }
           }, {
             id : 'reject',
             label : 'Reject',
             clickEvent : function(record : Record, button :ActionButton) {
-             
+             // Refer document
             }
           }]
         }
@@ -148,25 +158,96 @@ export class RegisteredTutorDataComponent implements OnInit {
             buttons : [{
               id : 'approve',
               label : 'Approve',
-              clickEvent : function(record, button) {
-                
+              clickEvent : function(record : Record, button :ActionButton) {
+                // Refer document
               }
             }, {
               id : 'makeDefault',
               label : 'Make Default',
-              clickEvent : function(record, button) {
-                
+              clickEvent : function(record : Record, button :ActionButton) {
+                // Refer document
               }
             }, {
               id : 'reject',
               label : 'Reject',
-              clickEvent : function(record, button) {
-                
+              clickEvent : function(record : Record, button :ActionButton) {
+                // Refer document
               }
             }]
           }
       },
-      htmlDomElementId: 'uploaded-document-grid',
+      htmlDomElementId: 'bank-detail-grid',
+      hidden: false
+    };
+
+    this.currentPackagesGridMetaData = {
+      grid: {
+        id: 'currentPackagesGrid',
+        title: 'Current Packages',
+        store: {
+          isStatic: false,
+          restURL: '/rest/registeredTutor/currentPackages'
+        },
+        columns: [{
+          id: 'customerName',
+          headerName: 'Customer Name',
+          dataType: 'string',
+          mapping: 'customerName'
+        }, {
+          id: 'totalHours',
+          headerName: 'Total Hours',
+          dataType: 'number',
+          mapping: 'totalHours'
+        }, {
+          id: 'startDate',
+          headerName: 'Start Date',
+          dataType: 'date',
+          mapping: 'startDateMillis',
+		      renderer: GridCommonFunctions.renderDateFromMillis
+        },{
+          id: 'completedHours',
+          headerName: 'Completed Hours',
+          dataType: 'number',
+          mapping: 'completedHours'
+        }]		
+      },
+      htmlDomElementId: 'current-packages-grid',
+      hidden: false
+    };
+
+    this.historyPackagesGridMetaData = {
+      grid: {
+        id: 'historyPackagesGrid',
+        title: 'History Packages',
+        store: {
+          isStatic: false,
+          restURL: '/rest/registeredTutor/historyPackages'
+        },
+        columns: [{
+          id: 'customerName',
+          headerName: 'Customer Name',
+          dataType: 'string',
+          mapping: 'customerName'
+        }, {
+          id: 'totalHours',
+          headerName: 'Total Hours',
+          dataType: 'number',
+          mapping: 'totalHours'
+        }, {
+          id: 'startDate',
+          headerName: 'Start Date',
+          dataType: 'date',
+          mapping: 'startDateMillis',
+		      renderer: GridCommonFunctions.renderDateFromMillis
+        },{
+          id: 'endDate',
+          headerName: 'Completed Hours',
+          dataType: 'date',
+          mapping: 'endDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillis
+        }]		
+      },
+      htmlDomElementId: 'history-packages-grid',
       hidden: false
     };
   }

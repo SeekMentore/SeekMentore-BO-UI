@@ -1,5 +1,5 @@
 <div>
-  <div id="tutor-list-page">
+  <div id="tutor-list-page" *ngIf="!showTutorData">
     <app-grid #registeredTutorGrid id="registered-tutor-grid" [gridMetaData]="registeredTutorGridMetaData"></app-grid>
   </div>
   <div id="tutor-data-page" *ngIf="showTutorData">

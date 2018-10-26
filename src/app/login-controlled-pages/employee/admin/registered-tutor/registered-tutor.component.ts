@@ -1,15 +1,15 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {GridComponent, GridDataInterface} from 'src/app/login-controlled-pages/grid/grid.component';
-import {Column} from 'src/app/login-controlled-pages/grid/column';
-import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
-import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
-import {Record} from 'src/app/login-controlled-pages/grid/record';
-import {ActionButton} from 'src/app/login-controlled-pages/grid/action-button';
-import {AppUtilityService} from 'src/app/utils/app-utility.service';
-import {HelperService} from 'src/app/utils/helper.service';
-import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
-import {LcpConstants} from "src/app/utils/lcp-constants";
-import {GridCommonFunctions} from "src/app/login-controlled-pages/grid/grid-common-functions";
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button';
+import { Column } from 'src/app/login-controlled-pages/grid/column';
+import { GridCommonFunctions } from "src/app/login-controlled-pages/grid/grid-common-functions";
+import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
+import { Record } from 'src/app/login-controlled-pages/grid/record';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpConstants } from "src/app/utils/lcp-constants";
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-registered-tutor',
@@ -24,22 +24,27 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
 
   showTutorData = false;
   selectedTutorRecord: Record = null;
+  interimHoldSelectedTutorRecord: Record = null;
   tutorDataAccess: RegisterTutorDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.registeredTutorGridMetaData = null;
-    this.setUpGridMetaData();
-  }
-
-  ngOnInit() {
     this.showTutorData = false;
     this.selectedTutorRecord = null;
     this.tutorDataAccess = null;
+    this.setUpGridMetaData();
+  }
+
+  ngOnInit() {    
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.registeredTutorGridObject.init();
+    }, 0);
+
+    setTimeout(() => {
+      this.registeredTutorGridObject.refreshGridData();
     }, 0);
   }
 
@@ -59,9 +64,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           mapping: 'name',
           clickEvent: (record: Record, column: Column) => {
             // Open the Data view port
-
-            this.selectedTutorRecord = record;
-            this.showTutorData = true;
+            this.interimHoldSelectedTutorRecord = record;            
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
           }
         }, {
@@ -192,11 +195,22 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
         isSuccess: response['success'],
         message: response['message'],
         onButtonClicked: () => {
-
         }
       });
     } else {
-      context.tutorDataAccess = response;
+      context.tutorDataAccess = {
+        success : response.success,
+        message : response.message,
+        documentViewAccess : response.documentViewAccess,
+        documentHandleAccess : response.documentHandleAccess,
+        bankViewAccess : response.bankViewAccess,
+        formDataEditAccess : response.formDataEditAccess,
+        activePackageViewAccess : response.activePackageViewAccess,
+        historyPackagesViewAccess : response.historyPackagesViewAccess,
+      };
+        
+      context.selectedTutorRecord = context.interimHoldSelectedTutorRecord;   
+      context.showTutorData = true;
     }
   }
 
@@ -206,7 +220,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
         isSuccess: response['success'],
         message: response['message'],
         onButtonClicked: () => {
-
         }
       });
     } else {

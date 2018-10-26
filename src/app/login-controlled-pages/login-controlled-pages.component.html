@@ -30,7 +30,7 @@
       <div class="dropdown" *ngFor="let element of menu; let i = index">
         <button class="dropbtn">{{element.name}}</button>
         <div class="dropdown-content">
-          <button *ngFor="let sub_element of element.subMenuItems" routerLink="/user/{{sub_element.url}}">{{sub_element.name}}</button>
+          <button *ngFor="let sub_element of element.subMenuItems" routerLink="{{sub_element.url}}">{{sub_element.name}}</button>
         </div>
       </div>
     </div>

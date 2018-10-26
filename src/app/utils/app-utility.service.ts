@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/index';
 import { EnvironmentConstants } from './environment-constants';
 import { LcpConstants } from './lcp-constants';
 import { LcpRestUrls } from './lcp-rest-urls';
+import { AlertDialogEvent, HelperService } from './helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AppUtilityService {
 
   type: 'GET' | 'POST' | 'DELETE' | 'PUT';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private helperService: HelperService) {
   }
 
   public makeRequestWithoutResponseHandler( url: string,
@@ -67,6 +68,13 @@ export class AppUtilityService {
         response_handler(context, response);
       }
     }, error2 => {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Communication failure!! Something went wrong',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
     });
   }
 
@@ -111,7 +119,13 @@ export class AppUtilityService {
           }
         },
         error2 => {
-          console.log('error in route checking', error2);
+          const myListener: AlertDialogEvent = {
+            isSuccess: false,
+            message: 'Communication failure!! Error in route checking',
+            onButtonClicked: () => {
+            }
+          };
+          this.helperService.showAlertDialog(myListener);
           observer.next(false);
         }
       );

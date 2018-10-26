@@ -21,7 +21,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   uploadedDocumentGridObject: GridComponent;
   uploadedDocumentGridMetaData: GridDataInterface;
 
-  @ViewChild('bankDetailGrid')
+  /*@ViewChild('bankDetailGrid')
   bankDetailGridObject: GridComponent;
   bankDetailGridMetaData: GridDataInterface;
 
@@ -31,34 +31,37 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   @ViewChild('historyPackagesGrid')
   historyPackagesGridObject: GridComponent;
-  historyPackagesGridMetaData: GridDataInterface;
+  historyPackagesGridMetaData: GridDataInterface;*/
 
   @Input()
-  tutorRecord: Record = null;
+  tutorRecord: Record;
 
   @Input()
-  tutorDataAccess: RegisterTutorDataAccess = null;
+  tutorDataAccess: RegisterTutorDataAccess;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
-    this.bankDetailGridMetaData = null;
-    this.currentPackagesGridMetaData = null;
-    this.historyPackagesGridMetaData = null;
+    //this.bankDetailGridMetaData = null;
+    //this.currentPackagesGridMetaData = null;
+    //this.historyPackagesGridMetaData = null;
+    alert(JSON.stringify(this.tutorRecord))
+    alert(JSON.stringify(this.tutorDataAccess))
+    this.setUpGridMetaData();
   }
 
   ngOnInit() {
-    // console.log('selected tutor record', this.tutorRecord);
-    this.setUpGridMetaData();
+    // console.log('selected tutor record', this.tutorRecord); 
+    alert('A'+JSON.stringify(this.tutorDataAccess))   
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       // we might get error because grid extra params are being set after initialisation
       this.uploadedDocumentGridObject.init();
-      this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
-      this.bankDetailGridObject.init();
-      this.currentPackagesGridObject.init();
-      this.historyPackagesGridObject.init();
+      //this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
+      //this.bankDetailGridObject.init();
+      //this.currentPackagesGridObject.init();
+      //this.historyPackagesGridObject.init();
     }, 0);
   }
 
@@ -100,7 +103,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
                 mapping: 'actionDateMillis',
                 renderer: GridCommonFunctions.renderDateFromMillisWithTime
         }],
-        hasSelectionColumn : this.tutorDataAccess.documentViewAccess && this.tutorDataAccess.documentHandleAccess,
+        hasSelectionColumn : this.tutorDataAccess.documentHandleAccess,
         selectionColumn : {
           buttons : [{
             id : 'approveMultiple',
@@ -130,19 +133,19 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons : [{
             id : 'approve',
             label : 'Approve',
-            clickEvent : function(record : Record, button :ActionButton) {
+            clickEvent : (record : Record, button :ActionButton) => {
               // Refer document
             }
           }, {
             id : 'sendReminder',
             label : 'Send Reminder',
-            clickEvent : function(record : Record, button :ActionButton) {
+            clickEvent : (record : Record, button :ActionButton) => {
               // Refer document
             }
           }, {
             id : 'reject',
             label : 'Reject',
-            clickEvent : function(record : Record, button :ActionButton) {
+            clickEvent : (record : Record, button :ActionButton) => {
              // Refer document
             }
           }]
@@ -152,7 +155,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       hidden: false,
     };
 
-    this.bankDetailGridMetaData = {
+    /*this.bankDetailGridMetaData = {
       grid: {
         id: 'bankDetailGrid',
         title: 'Bank Details',
@@ -303,7 +306,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       },
       htmlDomElementId: 'history-packages-grid',
       hidden: false
-    };
+    };*/
   }
 
 

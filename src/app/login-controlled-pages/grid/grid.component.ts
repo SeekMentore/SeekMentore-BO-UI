@@ -37,11 +37,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.hideShowRemoveFilterTab();
     }, 100);
-  }
-
-  public createGrid() {
-    this.grid.loadData(this);
-  }
+  }  
 
   public init() {
     this.htmlDomElementId = this.gridMetaData.htmlDomElementId;
@@ -67,9 +63,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       );
     }
     this.hidden = this.gridMetaData.hidden;
-    this.idForModalPopUp = this.grid.id;
-
-    this.createGrid();
+    this.idForModalPopUp = this.grid.id;   
   }
 
   public addExtraParams(paramKey: string, paramValue: Object) {

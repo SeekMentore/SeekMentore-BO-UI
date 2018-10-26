@@ -16,7 +16,17 @@ const routes: Routes = [
     canActivate: [RoutingGuardService],
     children: [
       {path: 'home', component: HomeComponent},
-      {path: 'registeredTutor', component: RegisteredTutorComponent},
+      {
+        path: 'employee',
+        children: [
+          {
+            path: 'admin',
+            children: [
+              {path: 'registeredtutor', component: RegisteredTutorComponent},
+            ]
+          }
+        ]
+      },      
       {path: '', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'},
       {path: '**', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'}
     ]

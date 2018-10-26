@@ -51,8 +51,13 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
       this.taskGridObject.init();
       this.workflowGridObject.init();
     }, 0);
-  }
 
+    setTimeout(() => {
+      this.alertGridObject.refreshGridData();
+      this.taskGridObject.refreshGridData();
+      this.workflowGridObject.refreshGridData();
+    }, 100);
+  }
 
   public setUpGridMetaData() {
     this.alertGridMetaData = {
@@ -209,6 +214,4 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
       hidden: false
     };
   }
-
-
 }

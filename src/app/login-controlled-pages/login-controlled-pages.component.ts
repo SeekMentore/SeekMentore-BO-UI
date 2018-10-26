@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppConstants } from "../utils/app-constants";
-import { AppUtilityService } from "../utils/app-utility.service";
-import { EnvironmentConstants } from "../utils/environment-constants";
-import { AlertDialogEvent, ConfirmationDialogEvent, HelperService } from "../utils/helper.service";
-import { LcpConstants } from "../utils/lcp-constants";
-import { LcpRestUrls } from "../utils/lcp-rest-urls";
-import { EmailInterface } from "./email/create-email.component";
+import { AppConstants } from "src/app/utils/app-constants";
+import { AppUtilityService } from "src/app/utils/app-utility.service";
+import { EnvironmentConstants } from "src/app/utils/environment-constants";
+import { AlertDialogEvent, ConfirmationDialogEvent, HelperService } from "src/app/utils/helper.service";
+import { LcpConstants } from "src/app/utils/lcp-constants";
+import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
+import { EmailInterface } from "src/app/login-controlled-pages/email/create-email.component";
 
 @Component({
   selector: 'app-login-controlled-pages',

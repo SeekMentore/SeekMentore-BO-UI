@@ -1,16 +1,6 @@
 <div>
   <div id="tutor-list-page">
-    <app-grid #registeredTutorGrid id="registered-tutor-grid" [gridMetaData]="registeredTutorGridMetaData"></app-grid>
-    <button
-          id="send-email-button"
-          class="ok-button" (click)="sendEmail()">
-          Send Email
-    </button>
-    <button
-          id="blacklist-button"
-          class="cancel-button" (click)="blacklist()">
-          Blacklist
-    </button>
+    <app-grid #registeredTutorGrid id="registered-tutor-grid" [gridMetaData]="registeredTutorGridMetaData"></app-grid>    
   </div>
   <div id="tutor-data-page">
     <app-registered-tutor-data></app-registered-tutor-data>

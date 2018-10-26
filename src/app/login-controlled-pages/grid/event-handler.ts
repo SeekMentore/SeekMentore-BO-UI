@@ -18,9 +18,15 @@ export class EventHandler {
     }    
   }
 
-  public clickEventButton(record: Record, button: ActionButton) {
+  public clickEventActionColumnButton(record: Record, button: ActionButton) {
     if (GridCommonFunctions.checkObjectAvailability(this.callback_clickEvent)) {
       this.callback_clickEvent(record, button);      
+    }    
+  }
+
+  public clickEventSelectionColumnMultipleActionButton(selectedRecords: Record[], button: ActionButton) {
+    if (GridCommonFunctions.checkObjectAvailability(this.callback_clickEvent)) {
+      this.callback_clickEvent(selectedRecords, button);      
     }    
   }
 }

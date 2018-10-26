@@ -89,9 +89,9 @@ export class Grid {
       if (this.hasSelectionColumn) {
         if (GridCommonFunctions.checkObjectAvailability(selectionColumnMetadata)) {
             if (GridCommonFunctions.checkObjectAvailability(selectionColumnMetadata.mapping)) {
-                this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn', selectionColumnMetadata.mapping);
+                this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn', selectionColumnMetadata.buttons, selectionColumnMetadata.mapping);
             } else {
-                this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn');
+                this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn', selectionColumnMetadata.buttons);
             }
         } else {
             this.selectionColumn = new SelectionColumn(this.id + '-SelectionColumn');
@@ -122,5 +122,15 @@ export class Grid {
 
     public addExtraParams(paramKey: string, paramValue: Object) {
         this.store.addExtraParams(paramKey, paramValue);
+    }
+
+    public getSelectedRecords() {
+        var selectedRecords = [];
+        for(var i = 0; i<this.store.data.length; i++) {
+            if (this.store.data[i].selectionModelCheck) {
+                selectedRecords.push(this.store.data[i]);
+            }
+        }
+        return selectedRecords;
     }
 }

@@ -4,6 +4,7 @@ import { Column } from 'src/app/login-controlled-pages/grid/column';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { Record } from 'src/app/login-controlled-pages/grid/record';
+import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button';
 
 @Component({
   selector: 'app-registered-tutor',
@@ -117,7 +118,23 @@ export class RegisteredTutorComponent implements OnInit {
                 dataType: 'string',
                 mapping: 'additionalDetails'
               }],
-          hasSelectionColumn : true		
+          hasSelectionColumn : true,
+          selectionColumn : {
+            buttons : [{
+              id : 'sendEmail',
+              label : 'Send Email',
+              clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+                // Refer document
+              }
+            }, {
+              id : 'blacklist',
+              label : 'Blacklist',
+              btnclass : 'btnReject',
+              clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+                // Refer document
+              }
+            }]
+          }
       },
       htmlDomElementId: 'registered-tutor-grid',
       hidden: false

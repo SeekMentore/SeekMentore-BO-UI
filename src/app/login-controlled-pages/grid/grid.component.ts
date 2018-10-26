@@ -789,9 +789,23 @@ export class GridComponent implements OnInit, AfterViewInit {
   /*
   * All Event Handlers
    */
-  public actionButtonClicked(record: Record, button: ActionButton) {
+  public actionColumnActionButtonClicked(record: Record, button: ActionButton) {
     if (button.eventHandler !== null) {
-      button.eventHandler.clickEventButton(record, button);
+      button.eventHandler.clickEventActionColumnButton(record, button);
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'No EventHandler defined for "' + button.label.toUpperCase() + '"',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+    }
+  }
+
+  public selectionColumnActionButtonClicked(button: ActionButton) {
+    if (button.eventHandler !== null) {      
+      button.eventHandler.clickEventSelectionColumnMultipleActionButton(this.grid.getSelectedRecords(), button);
     } else {
       const myListener: AlertDialogEvent = {
         isSuccess: false,

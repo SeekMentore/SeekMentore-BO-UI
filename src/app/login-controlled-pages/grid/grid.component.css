@@ -388,7 +388,7 @@ i {
   align-self: stretch;
 }
 
-.uigrid-title-toolbar, .uigrid-sorter-toolbar, .uigrid-pagination-toolbar, .select_box, .grid_actions {
+.uigrid-title-toolbar, .uigrid-sorter-toolbar, .uigrid-pagination-toolbar, .uigrid-selection-model-button-toolbar, .select_box, .grid_actions {
   background-color: beige;
 }
 

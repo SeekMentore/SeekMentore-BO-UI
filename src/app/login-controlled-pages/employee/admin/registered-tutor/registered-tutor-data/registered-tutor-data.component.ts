@@ -87,6 +87,29 @@ export class RegisteredTutorDataComponent implements OnInit {
                 renderer: GridCommonFunctions.renderDateFromMillisWithTime
         }],
         hasSelectionColumn : true,
+        selectionColumn : {
+          buttons : [{
+            id : 'approveMultiple',
+            label : 'Approve',
+            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+              // Refer document
+            }
+          }, {
+            id : 'sendReminderMultiple',
+            label : 'Send Reminder',
+            btnclass : 'btnReset',
+            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+              // Refer document
+            }
+          }, {
+            id : 'rejectMultiple',
+            label : 'Reject',
+            btnclass : 'btnReject',
+            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+              // Refer document
+            }
+          }]
+        },
         hasActionColumn : true,
         actionColumn : {
           label : 'Take Action',
@@ -152,6 +175,22 @@ export class RegisteredTutorDataComponent implements OnInit {
           renderer: GridCommonFunctions.yesNoRenderer
         }],
         hasSelectionColumn : true,
+        selectionColumn : {
+          buttons : [{
+            id : 'approveMultiple',
+            label : 'Approve',
+            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+              // Refer document
+            }
+          }, {
+            id : 'rejectMultiple',
+            label : 'Reject',
+            btnclass : 'btnReject',
+            clickEvent : function(selectedRecords: Record[], button :ActionButton) {
+              // Refer document
+            }
+          }]
+        },
         hasActionColumn : true,
           actionColumn : {
             label : 'Take Action',

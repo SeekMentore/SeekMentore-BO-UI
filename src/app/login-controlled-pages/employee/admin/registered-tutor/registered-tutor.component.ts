@@ -190,7 +190,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
 
 
   handleDataAccessRequest(context: any, response: any) {
-    if (response['success'] === false) {
+    if (response['success'] === true) {
       context.helperService.showAlertDialog({
         isSuccess: response['success'],
         message: response['message'],

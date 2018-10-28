@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppUtilityService } from '../../utils/app-utility.service';
-import { HelperService } from '../../utils/helper.service';
-import { LcpConstants } from '../../utils/lcp-constants';
-import { NlpConstants } from '../../utils/nlp-constants';
-import { NlpRestUrls } from '../../utils/nlp-rest-urls';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AppUtilityService} from '../../utils/app-utility.service';
+import {HelperService} from '../../utils/helper.service';
+import {LcpConstants} from '../../utils/lcp-constants';
+import {NlpConstants} from '../../utils/nlp-constants';
+import {NlpRestUrls} from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   errorUserType: string;
 
   constructor(private helperService: HelperService, private utilityService: AppUtilityService, private router: Router) {
-    this.resetErrorMessages();    
+    this.resetErrorMessages();
   }
 
   ngOnInit() {
@@ -38,11 +38,14 @@ export class LoginComponent implements OnInit {
     if (this.isValidLoginData() === false) {
       return;
     }
-    const formData = new URLSearchParams();
-    formData.set('userId', this.username);
-    formData.set('password', this.password);
-    formData.set('userType', this.userType);
-    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.loginURL, 'POST', formData.toString(),
+    const data = {
+      userId: this.username,
+      password: this.password,
+      userType: this.userType
+    };
+
+    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.loginURL, 'POST',
+      this.utilityService.urlEncodeData(data),
       'application/x-www-form-urlencoded');
   }
 

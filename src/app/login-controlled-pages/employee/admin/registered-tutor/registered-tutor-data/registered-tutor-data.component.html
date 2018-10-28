@@ -1,6 +1,34 @@
 <div>
     <app-grid *ngIf="tutorDataAccess.documentViewAccess" #uploadedDocumentGrid id="uploaded-document-grid" [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>
-    <!--<app-grid *ngIf="tutorDataAccess.bankViewAccess" #bankDetailGrid id="bank-detail-grid" [gridMetaData]="bankDetailGridMetaData"></app-grid>
+    <app-grid *ngIf="tutorDataAccess.bankViewAccess" #bankDetailGrid id="bank-detail-grid" [gridMetaData]="bankDetailGridMetaData"></app-grid>
+
+  <div *ngIf="renderTutorRecordForm"
+    style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
+  <form class="form-container">
+    <div *ngIf="tutorDataAccess.formDataEditAccess" style="display: flex; flex-direction: row; justify-content: flex-end">
+      <label class="tab_container" (change)="editRecordForm = false;">
+        <input type="radio" checked name="editFormChoice">
+        <span class="tab_checkmark left">View</span>
+      </label>
+      <label class="tab_container" (change)="editRecordForm = true;">
+        <input type="radio" name="editFormChoice">
+        <span class="tab_checkmark right">Edit</span>
+      </label>
+    </div>
+    <table>
+      <tr *ngFor="let key of getPropertiesToBeDisaplyedInForm()">
+        <td><label>{{key}}</label></td>
+        <td><input type="text" value="{{tutorRecord.property[key]}}" [disabled]="!editRecordForm" (change)="updateTutorProperty(key, $event.target.value)"></td>
+      </tr>
+    </table>
+    <button *ngIf="tutorDataAccess.formDataEditAccess" type="submit"
+            class="button-primary" style="display: flex; align-self: flex-end;"  [disabled]="!editRecordForm" (click)="updateTutorRecord()">
+      Update
+    </button>
+    <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->
+  </form>
+  </div>
+
     <app-grid *ngIf="tutorDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid" [gridMetaData]="currentPackagesGridMetaData"></app-grid>
-    <app-grid *ngIf="tutorDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid" [gridMetaData]="historyPackagesGridMetaData"></app-grid>-->
+    <app-grid *ngIf="tutorDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid" [gridMetaData]="historyPackagesGridMetaData"></app-grid>
 </div>

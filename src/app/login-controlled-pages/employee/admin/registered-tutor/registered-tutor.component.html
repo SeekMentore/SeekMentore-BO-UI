@@ -5,7 +5,7 @@
   <div id="tutor-data-page" *ngIf="showTutorData">
     <button
       id="back-to-tutor-listing-button"
-      class="ok-button" (click)="showTutorData = false; selectedTutorRecord = null; registeredTutorGridObject.refreshGridData();">
+      class="ok-button" (click)="toggleVisibilityRegisterTutorGrid()">
       Back To Listing
     </button>
     <app-registered-tutor-data [tutorRecord]="selectedTutorRecord" [tutorDataAccess]="tutorDataAccess"></app-registered-tutor-data>

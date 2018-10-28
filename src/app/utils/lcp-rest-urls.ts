@@ -10,4 +10,7 @@ export class LcpRestUrls {
   static tutor_document_grid_approve_multiple = '/rest/registeredTutor/approveMultipleTutorDocument';
   static tutor_document_grid_reminder_multiple = '/rest/registeredTutor/sendReminderMultipleTutorDocument';
   static tutor_document_grid_reject_multiple = '/rest/registeredTutor/rejectMultipleTutorDocument';
+  static tutor_bank_grid_approve_multiple = '/rest/registeredTutor/approveMultipleBankAccount';
+  static tutor_bank_grid_reject_multiple = '/rest/registeredTutor/rejectMultipleBankAccount';
+  static tutor_update_record = '/rest/registeredTutor/updateTutorRecord';
 }

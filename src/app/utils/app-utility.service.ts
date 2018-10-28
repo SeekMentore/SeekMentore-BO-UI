@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/index';
-import { EnvironmentConstants } from './environment-constants';
-import { LcpConstants } from './lcp-constants';
-import { LcpRestUrls } from './lcp-rest-urls';
-import { AlertDialogEvent, HelperService } from './helper.service';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/index';
+import {EnvironmentConstants} from './environment-constants';
+import {LcpConstants} from './lcp-constants';
+import {LcpRestUrls} from './lcp-rest-urls';
+import {AlertDialogEvent, HelperService} from './helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,12 @@ export class AppUtilityService {
   constructor(private http: HttpClient, private helperService: HelperService) {
   }
 
-  public makeRequestWithoutResponseHandler( url: string,
-                                            requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-                                            data: any = null,
-                                            contentType: string = 'application/json',
-                                            isMultipart: boolean = false,
-                                            params: HttpParams = null) {
+  public makeRequestWithoutResponseHandler(url: string,
+                                           requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+                                           data: any = null,
+                                           contentType: string = 'application/json',
+                                           isMultipart: boolean = false,
+                                           params: HttpParams = null) {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
@@ -38,14 +38,14 @@ export class AppUtilityService {
     return this.http.request(requestType, url, requestOptions);
   }
 
-  public makerequest( context: any, 
-                      response_handler: any, 
-                      url: string,
-                      requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-                      data: any = null,
-                      contentType: string = 'application/json',
-                      isMultipart: boolean = false,
-                      params: HttpParams = null) {
+  public makerequest(context: any,
+                     response_handler: any,
+                     url: string,
+                     requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+                     data: any = null,
+                     contentType: string = 'application/json',
+                     isMultipart: boolean = false,
+                     params: HttpParams = null) {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
@@ -81,8 +81,7 @@ export class AppUtilityService {
   private getRequestHeaders(isMultipart = false, contentType = 'application/json') {
     let headers: HttpHeaders;
     const token = localStorage.getItem(LcpConstants.auth_token_key);
-    headers = new HttpHeaders({
-    });
+    headers = new HttpHeaders({});
     if (!isMultipart) {
       headers = headers.append('Content-Type', contentType);
     }
@@ -95,7 +94,8 @@ export class AppUtilityService {
       formElement.action = url;
       formElement.method = method;
       formElement.submit();
-    } else { }
+    } else {
+    }
   }
 
 
@@ -103,12 +103,20 @@ export class AppUtilityService {
     return null != json ? JSON.parse(json) : null;
   }
 
+  public urlEncodeData(data: any) {
+    const encodedData = new URLSearchParams();
+    for (const key in data) {
+      encodedData.set(key, data[key]);
+    }
+    return encodedData.toString();
+  }
+
   public checkUIPathAccess(path: string): Observable<boolean> {
-    const params = {
-      urlPath: path
-    };
+    const paramsData = new URLSearchParams();
+    paramsData.set('urlPath', path);
     const _observable = new Observable<boolean>(observer => {
-      this.makeRequestWithoutResponseHandler(LcpRestUrls.uiAccessUrl, 'POST', JSON.stringify(params)).subscribe(
+      this.makeRequestWithoutResponseHandler(LcpRestUrls.uiAccessUrl, 'POST', paramsData.toString(),
+        'application/x-www-form-urlencoded').subscribe(
         result => {
           let response = result['response'];
           response = this.decodeObjectFromJSON(response);

@@ -19,6 +19,7 @@ export class Store {
     this.downloadURL = downloadURL;
     this.isStatic = isStatic;
     this.data = [];
+    this.extraParams = {};
   }
 
   public load(grid: Grid, gridObject: GridComponent) {

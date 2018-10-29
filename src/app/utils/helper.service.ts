@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/index';
-import { EmailInterface } from '../login-controlled-pages/email/create-email.component';
 import { CkeditorConfig } from './ckeditor-config';
+import { EmailInterface } from './email/email.component';
 
 declare var CKEDITOR: any;
 

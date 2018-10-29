@@ -1,0 +1,55 @@
+<div
+  style="width: 100%;display: flex; flex-direction: column; margin: 20px; justify-content: center; align-items: center">
+  <form #emailForm="ngForm" ngNativeValidate class="form-container" (ngSubmit)="sendEmail()"
+        style="max-width: 70%; min-width: 700px; width: 70%">
+    <h1>{{title}}</h1>
+
+    <div style="display: flex; flex-direction: row; align-items: center;">
+      <!--Attachements-->
+      <div style="display: flex; flex-direction: row; flex-wrap: wrap; flex: 1 1 auto">
+        <div *ngFor="let attachment of attachments; let i = index;" class="attachment_layout">
+          <span title="{{attachment.name.split('/').pop()}}" style="cursor: default">{{attachment.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+          <span style="cursor: pointer" (click)="removeAttachment(i)">&times;</span>
+        </div>
+      </div>
+
+      <i class="icon_button fas fa-paperclip" onclick="document.getElementById('select_attachments').click()"></i>
+
+      <div class="dropdown" style="min-width: 225px;">
+        <span class="input_field" (click)="$event.stopPropagation(); toggleDropDown();"
+              style="margin: 0; width: 100%; background-color: white; cursor:pointer;">
+          {{selectedEmailTemplate.label}}
+          <i class="fas fa-caret-down"></i>
+        </span>
+        <div class="dropdown-select-content" id="email_template_dropdown">
+          <input class="input_field" name="template_search_query" placeholder="Enter text"
+                 style="width: calc(100% - 10px)" (click)="$event.stopPropagation()"
+                 (input)="searchTemplate($event.target.value)">
+          <button type="button" (click)="$event.stopPropagation(); emailTemplateSelected(defaultValueEmailTemplate)">
+            - Select E-mail template -
+          </button>
+          <button type="button" *ngFor="let element of filteredTemplateArray"
+                  (click)="$event.stopPropagation(); emailTemplateSelected(element)">
+            {{element.label}}
+          </button>
+        </div>
+      </div>      
+    </div>
+
+    <input [(ngModel)]="emailData.to" name="to_email" placeholder="To" required type="text">
+    <input [(ngModel)]="emailData.cc" name="cc_email" placeholder="CC" type="text">
+    <input [(ngModel)]="emailData.bcc" name="bcc_email" placeholder="BCC" type="text">
+    <input [(ngModel)]="emailData.subject" name="email_subject" placeholder="Subject" required type="text">    
+    <textarea style="min-height: 200px; max-height: 200px; border: solid 1px var(--divider)" id="email_body"
+              name="email_body">      
+    </textarea>
+    <div style="display: flex;flex-direction: row;">
+      <button class="ok-button" style="margin: 8px" type="submit">Send</button>
+      <button type="button" class="cancel-button" style="margin: 8px" (click)="hideDialog()">Dismiss</button>
+    </div>
+  </form>
+
+  <input class="hidden_input" value="Attachments" id="select_attachments" multiple type="file" name="attachment"
+         accept="{{allowedFileTypes}}"
+         (change)="onAttachmentSelected($event)">
+</div>

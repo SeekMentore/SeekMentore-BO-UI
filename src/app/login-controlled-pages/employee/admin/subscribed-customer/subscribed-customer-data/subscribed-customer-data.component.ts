@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { GridRecord } from 'src/app/login-controlled-pages/grid/grid-record';
-import { SubscribedCustomerDataAccess } from '../subscribed-customer.component';
-import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { GridCommonFunctions } from 'src/app/login-controlled-pages/grid/grid-common-functions';
+import { SubscribedCustomerDataAccess } from '../subscribed-customer.component';
 
 @Component({
   selector: 'app-subscribed-customer-data',

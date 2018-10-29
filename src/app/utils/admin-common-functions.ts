@@ -1,5 +1,5 @@
-import { GridCommonFunctions } from "../login-controlled-pages/grid/grid-common-functions";
 import { CommonFilterOptions } from "./common-filter-options";
+import { GridCommonFunctions } from "./grid/grid-common-functions";
 
 export class AdminCommonFunctions {
     public static genderRenderer(record, column) {			

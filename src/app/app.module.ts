@@ -5,7 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { EmailComponent } from './login-controlled-pages/email/create-email.component';
-import { GridComponent } from './login-controlled-pages/grid/grid.component';
 import { LoginControlledPagesComponent } from './login-controlled-pages/login-controlled-pages.component';
 import { ErrorComponent } from './non-login-pages/error/error.component';
 import { LoginComponent } from './non-login-pages/login/login.component';
@@ -35,6 +34,7 @@ import { MapTutorToEnquiryComponent } from './login-controlled-pages/employee/sa
 import { DemoTrackerComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker.component';
 import { SubscriptionPackagesComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-packages.component';
 import { ControlPanelComponent } from './login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
+import { GridComponent } from './utils/grid/grid.component';
 
 @NgModule({
   declarations: [

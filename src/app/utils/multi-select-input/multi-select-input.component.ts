@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange } from '@angular/core';
-import { GridCommonFunctions } from '../../login-controlled-pages/grid/grid-common-functions';
+import { GridCommonFunctions } from '../grid/grid-common-functions';
 
 @Component({
   selector: 'app-multi-select-input',

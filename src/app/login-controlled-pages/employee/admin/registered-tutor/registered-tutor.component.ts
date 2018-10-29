@@ -1,15 +1,15 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ActionButton} from 'src/app/login-controlled-pages/grid/action-button';
-import {Column} from 'src/app/login-controlled-pages/grid/column';
-import {GridCommonFunctions} from "src/app/login-controlled-pages/grid/grid-common-functions";
-import {GridComponent, GridDataInterface} from 'src/app/login-controlled-pages/grid/grid.component';
-import {Record} from 'src/app/login-controlled-pages/grid/record';
-import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
-import {AppUtilityService} from 'src/app/utils/app-utility.service';
-import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
-import {HelperService} from 'src/app/utils/helper.service';
-import {LcpConstants} from "src/app/utils/lcp-constants";
-import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button';
+import { Column } from 'src/app/login-controlled-pages/grid/column';
+import { GridCommonFunctions } from "src/app/login-controlled-pages/grid/grid-common-functions";
+import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
+import { Record } from 'src/app/login-controlled-pages/grid/record';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpConstants } from "src/app/utils/lcp-constants";
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-registered-tutor',
@@ -119,23 +119,23 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           id: 'interestedStudentGrades',
           headerName: 'Interested Student Grades',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.interestedStudentGradesFilterOptions,
+          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
           mapping: 'interestedStudentGrades',
-          renderer: AdminCommonFunctions.interestedStudentGradesMultiRenderer
+          renderer: AdminCommonFunctions.studentGradesMultiRenderer
         }, {
           id: 'interestedSubjects',
           headerName: 'Interested Subjects',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.interestedSubjectsFilterOptions,
+          filterOptions: CommonFilterOptions.subjectsFilterOptions,
           mapping: 'interestedSubjects',
-          renderer: AdminCommonFunctions.interestedSubjectsMultiRenderer
+          renderer: AdminCommonFunctions.subjectsMultiRenderer
         }, {
           id: 'comfortableLocations',
           headerName: 'Comfortable Locations',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.comfortableLocationsFilterOptions,
+          filterOptions: CommonFilterOptions.locationsFilterOptions,
           mapping: 'comfortableLocations',
-          renderer: AdminCommonFunctions.comfortableLocationsMultiRenderer
+          renderer: AdminCommonFunctions.locationsMultiRenderer
         }, {
           id: 'additionalDetails',
           headerName: 'Additional Details',
@@ -153,7 +153,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               if (selectedEmailsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
-                  message: LcpConstants.tutor_grid_no_mail_selected,
+                  message: LcpConstants.tutor_grid_no_tutors_selected,
                   onButtonClicked: () => {
 
                   }

@@ -13,4 +13,6 @@ export class LcpRestUrls {
   static tutor_bank_grid_approve_multiple = '/rest/registeredTutor/approveMultipleBankAccount';
   static tutor_bank_grid_reject_multiple = '/rest/registeredTutor/rejectMultipleBankAccount';
   static tutor_update_record = '/rest/registeredTutor/updateTutorRecord';
+  static customerDataAccess = '/rest/admin/subscribedCustomerCheckDataAccess';
+  static blackListSubscribedCustomers = '/rest/admin/blacklistSubscribedCustomers';
 }

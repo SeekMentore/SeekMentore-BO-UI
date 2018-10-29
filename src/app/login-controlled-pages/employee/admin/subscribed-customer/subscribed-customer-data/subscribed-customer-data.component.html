@@ -1,0 +1,4 @@
+<div>
+  <app-grid *ngIf="customerDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid" [gridMetaData]="currentPackagesGridMetaData"></app-grid>
+  <app-grid *ngIf="customerDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid" [gridMetaData]="historyPackagesGridMetaData"></app-grid>
+</div>

@@ -23,6 +23,18 @@ import { CustomerHomeComponent } from './login-controlled-pages/customer/custome
 import { EmployeeHomeComponent } from './login-controlled-pages/employee/employee-home/employee-home.component';
 import { TutorHomeComponent } from './login-controlled-pages/tutor/tutor-home/tutor-home.component';
 import { RegisteredTutorDataComponent } from './login-controlled-pages/employee/admin/registered-tutor/registered-tutor-data/registered-tutor-data.component';
+import { SubscribedCustomerComponent } from './login-controlled-pages/employee/admin/subscribed-customer/subscribed-customer.component';
+import { SubscribedCustomerDataComponent } from './login-controlled-pages/employee/admin/subscribed-customer/subscribed-customer-data/subscribed-customer-data.component';
+import { TutorRegistrationComponent } from './login-controlled-pages/employee/support/tutor-registration/tutor-registration.component';
+import { EnquiryRegistrationComponent } from './login-controlled-pages/employee/support/enquiry-registration/enquiry-registration.component';
+import { QuerySubmittedComponent } from './login-controlled-pages/employee/support/query-submitted/query-submitted.component';
+import { SubscriptionRequestedComponent } from './login-controlled-pages/employee/support/subscription-requested/subscription-requested.component';
+import { ComplaintsComponent } from './login-controlled-pages/employee/support/complaints/complaints.component';
+import { AllEnquiriesComponent } from './login-controlled-pages/employee/sales/all-enquiries/all-enquiries.component';
+import { MapTutorToEnquiryComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry.component';
+import { DemoTrackerComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker.component';
+import { SubscriptionPackagesComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-packages.component';
+import { ControlPanelComponent } from './login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +54,19 @@ import { RegisteredTutorDataComponent } from './login-controlled-pages/employee/
     HomeComponent,
     AlertDialogComponent,
     ConfirmationDialogComponent,
-    RegisteredTutorDataComponent
+    RegisteredTutorDataComponent,
+    SubscribedCustomerComponent,
+    SubscribedCustomerDataComponent,
+    TutorRegistrationComponent,
+    EnquiryRegistrationComponent,
+    QuerySubmittedComponent,
+    SubscriptionRequestedComponent,
+    ComplaintsComponent,
+    AllEnquiriesComponent,
+    MapTutorToEnquiryComponent,
+    DemoTrackerComponent,
+    SubscriptionPackagesComponent,
+    ControlPanelComponent
   ],
   imports: [
     BrowserModule,

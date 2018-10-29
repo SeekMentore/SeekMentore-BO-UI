@@ -23,15 +23,15 @@ export class CommonFilterOptions {
   // Leave it blank right now , I will write this content later
   ];
   
-  static interestedStudentGradesFilterOptions: any [] = [
+  static studentGradesFilterOptions: any [] = [
   // Leave it blank right now , I will write this content later
   ];
   
-  static interestedSubjectsFilterOptions: any [] = [
+  static subjectsFilterOptions: any [] = [
   // Leave it blank right now , I will write this content later
   ];
   
-  static comfortableLocationsFilterOptions: any [] = [
+  static locationsFilterOptions: any [] = [
   // Leave it blank right now , I will write this content later
   ];  
 }

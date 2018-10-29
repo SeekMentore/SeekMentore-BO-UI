@@ -35,6 +35,7 @@ import { DemoTrackerComponent } from './login-controlled-pages/employee/sales/de
 import { SubscriptionPackagesComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-packages.component';
 import { ControlPanelComponent } from './login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
 import { GridComponent } from './utils/grid/grid.component';
+import { GridRecordPopUpComponent } from './utils/grid/grid-record-pop-up/grid-record-pop-up.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { GridComponent } from './utils/grid/grid.component';
     MapTutorToEnquiryComponent,
     DemoTrackerComponent,
     SubscriptionPackagesComponent,
-    ControlPanelComponent
+    ControlPanelComponent,
+    GridRecordPopUpComponent
   ],
   imports: [
     BrowserModule,

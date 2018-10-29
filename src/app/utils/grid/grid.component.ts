@@ -9,6 +9,7 @@ import { Grid } from './grid';
 import { GridCommonFunctions } from './grid-common-functions';
 import { GridRecord } from './grid-record';
 import { Sorter, SortingOrder } from './sorter';
+import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
 
 @Component({
   selector: 'app-grid',
@@ -21,6 +22,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   idForModalPopUp: string;
   hidden = true;
   mulit_select_input_data: MultiSelectInputData = null;
+  record_display_input_data: RecordDisplayInputData = null;
   grid: Grid;
 
   @Input()
@@ -31,6 +33,11 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const recordDisplayInput: RecordDisplayInputData = {
+      titleText: 'Record Details', 
+      data: []
+    };   
+    this.record_display_input_data = recordDisplayInput;
   }
 
   ngAfterViewInit() {
@@ -731,14 +738,38 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
     this.showMulitSelectInput(columnData);
   }
-
+  
   public closeMultiSelectInput() {
     document.getElementById('multi-select-' + this.idForModalPopUp + '-dialog').hidden = true;
-  }
+  }  
 
   public showMulitSelectInput(data: MultiSelectInputData) {
     this.mulit_select_input_data = data;
     document.getElementById('multi-select-' + this.idForModalPopUp + '-dialog').hidden = false;
+  }
+
+  public displayRecordAsPopUp(titleText: string = 'Record Data', dialogData: any) {
+    let data :any [] = [];
+    for (const key in dialogData) {
+      data.push({
+        label: key,
+        value: dialogData[key]
+      });
+    }
+    const recordDisplayInput: RecordDisplayInputData = {
+      titleText: titleText, 
+      data: data
+    };    
+    this.showRecordDisplayPopUp(recordDisplayInput);
+  }
+
+  public dismissRecordDisplayPopUp() {
+    document.getElementById('record-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = true;
+  }
+
+  public showRecordDisplayPopUp(recordDisplayInput: RecordDisplayInputData) {
+    this.record_display_input_data = recordDisplayInput;
+    document.getElementById('record-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = false;
   }
 
   /** REVIEW */

@@ -407,11 +407,17 @@
     <div class="loader"></div>
   </div>
 </div>
-<!--Popup Dialog-->
+<!--Multi Select Popup Dialog-->
 <div id="{{'multi-select-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
   <div id="{{'multi-select-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
     <app-multi-select-input [data]="mulit_select_input_data" (apply)="handleMulitSelectApply($event)"
                             (close)="closeMultiSelectInput()" style="width: 100%"></app-multi-select-input>
+  </div>
+</div>
+<!--Record Display Popup Dialog-->
+<div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
+  <div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
+    <app-grid-record-pop-up [recordDisplayInput]="record_display_input_data" (close)="dismissRecordDisplayPopUp()" style="width: 100%"></app-grid-record-pop-up>
   </div>
 </div>
 

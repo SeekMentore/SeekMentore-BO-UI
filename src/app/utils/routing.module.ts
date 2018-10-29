@@ -20,6 +20,7 @@ import { QuerySubmittedComponent } from 'src/app/login-controlled-pages/employee
 import { SubscriptionRequestedComponent } from 'src/app/login-controlled-pages/employee/support/subscription-requested/subscription-requested.component';
 import { ComplaintsComponent } from 'src/app/login-controlled-pages/employee/support/complaints/complaints.component';
 import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
+import { GridRecordPopUpComponent } from './grid/grid-record-pop-up/grid-record-pop-up.component';
 
 const routes: Routes = [
   {

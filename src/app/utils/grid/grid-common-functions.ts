@@ -79,77 +79,15 @@ export class GridCommonFunctions {
 
   public static yesNoRenderer(record, column) {
     return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.yesNoFilterOptions);
-  }
+  }  
 
-  public static displayDetailsForRecord(dialogTitleText: string, dialogData: any) {
-    const dialog: HTMLDivElement = document.createElement('div');
-    dialog.setAttribute('class', 'dialog');
-    const dialogModal: HTMLDivElement = document.createElement('div');
-    dialog.appendChild(dialogModal);
-    dialogModal.setAttribute('class', 'dialog_modal');
-
-    const closeButton: HTMLSpanElement = document.createElement('span');
-    closeButton.innerHTML = '<i class=\'fas fa-times\' style=\'color: var(--colorPrimary); align-self: flex-end; margin: 0px; cursor: pointer;\'></i>';
-    closeButton.onclick = (ev) => {
-      document.body.removeChild(dialog);
-    };
-    closeButton.style.cssFloat = 'right';
-    closeButton.style.paddingTop = '0';
-    closeButton.style.paddingRight = '0';
-
-    const dialogTitle: HTMLSpanElement = document.createElement('div');
-    dialogTitle.innerHTML = '<b><u>' + dialogTitleText + '</u></b>';
-    dialogTitle.style.width = '100%';
-    dialogTitle.style.marginTop = '10px';
-    dialogTitle.style.marginBottom = '10px';
-    dialogTitle.style.textAlign = 'center';
-
-    const headerDiv: HTMLDivElement = document.createElement('div');
-    headerDiv.style.display = 'block';
-    headerDiv.style.width = '100%';
-    headerDiv.appendChild(closeButton);
-    headerDiv.appendChild(dialogTitle);
-    dialogModal.appendChild(headerDiv);
-
-    const contentTable = document.createElement('table');
-    dialogModal.appendChild(contentTable);
-    contentTable.style.maxHeight = '400px';
-    contentTable.style.overflowY = 'auto';
-    contentTable.style.width = '95%';
-    contentTable.cellPadding = '5';
-    contentTable.style.border = '1px solid blue';
-
-    var counter = 0;
-    for (const key in dialogData) {
-      const dataRow = document.createElement('tr');
-      dataRow.innerHTML = '<td width="25%"><b>' + key + '</b></td><td>' + dialogData[key] + '</td>';
-      dataRow.style.margin = '5px 10px';
-      dataRow.style.padding = '3px';
-      if (counter%2 === 0) {
-        dataRow.style.backgroundColor = 'lightgray';
+  public static getSelectedRecordsPropertyList(selectedRecords: GridRecord[], propertyName: string) {
+    const selectedPropertyList: any[] = [];
+    for(const record of selectedRecords) {
+      if (record.selectionModelCheck) {
+        selectedPropertyList.push(record.getProperty(propertyName));
       }
-      contentTable.appendChild(dataRow);
-      counter++;
     }
-
-    const dismissButton = document.createElement('button');
-    dialogModal.appendChild(dismissButton);
-    dismissButton.className = 'cancel-button';
-    dismissButton.innerHTML = 'Dismiss';
-    dismissButton.onclick = (ev) => {
-      document.body.removeChild(dialog);
-    };
-
-    document.body.appendChild(dialog);
+    return selectedPropertyList;
   }
-
- public static getSelectedRecordsPropertyList(selectedRecords: GridRecord[], propertyName: string) {
-   const selectedPropertyList: any[] = [];
-   for(const record of selectedRecords) {
-     if (record.selectionModelCheck) {
-       selectedPropertyList.push(record.getProperty(propertyName));
-     }
-   }
-   return selectedPropertyList;
- }
 }

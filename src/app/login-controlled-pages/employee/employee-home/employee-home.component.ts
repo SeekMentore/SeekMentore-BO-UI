@@ -30,7 +30,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
     this.setUpGridMetaData();
   }
 
-  public static displayDetailsForRecord(record: GridRecord, column: Column) {
+  public getDisplayDataForRecord(record: GridRecord, column: Column) {
     const displayData = {
       'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
       'Subject': record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject'),
@@ -39,7 +39,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
       'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),
       'Action By': record.getProperty('actionBy')
     };
-    GridCommonFunctions.displayDetailsForRecord('Record Details', displayData);
+    return displayData;
   }
 
   ngOnInit() {
@@ -79,8 +79,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: function (record: GridRecord, column: Column) {
-            EmployeeHomeComponent.displayDetailsForRecord(record, column);
+          clickEvent: (record: GridRecord, column: Column) => {            
+            this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column));            
           }
         }, {
           id: 'initiatedBy',
@@ -130,8 +130,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: function (record: GridRecord, column: Column) {
-            EmployeeHomeComponent.displayDetailsForRecord(record, column);
+          clickEvent: (record: GridRecord, column: Column) => {
+            this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column)); 
           }
         }, {
           id: 'initiatedBy',
@@ -182,8 +182,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: function (record: GridRecord, column: Column) {
-            EmployeeHomeComponent.displayDetailsForRecord(record, column);
+          clickEvent: (record: GridRecord, column: Column) => {
+            this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column)); 
           }
         }, {
           id: 'initiatedBy',

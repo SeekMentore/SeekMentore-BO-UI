@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {GridComponent, GridDataInterface} from 'src/app/login-controlled-pages/grid/grid.component';
-import {Record} from 'src/app/login-controlled-pages/grid/record';
+import {GridRecord} from 'src/app/login-controlled-pages/grid/grid-record';
 import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 import {GridCommonFunctions} from 'src/app/login-controlled-pages/grid/grid-common-functions';
 import {ActionButton} from 'src/app/login-controlled-pages/grid/action-button';
@@ -34,7 +34,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   historyPackagesGridMetaData: GridDataInterface;
 
   @Input()
-  tutorRecord: Record = null;
+  tutorRecord: GridRecord = null;
 
   @Input()
   tutorDataAccess: RegisterTutorDataAccess = null;
@@ -151,7 +151,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approveMultiple',
             label: 'Approve',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_multiple, selectedRecords,
                 'documentId', 'documentIds', this.uploadedDocumentGridObject);
             }
@@ -159,7 +159,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'sendReminderMultiple',
             label: 'Send Reminder',
             btnclass: 'btnReset',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_multiple, selectedRecords,
                 'documentId', 'documentIds', this.uploadedDocumentGridObject);
             }
@@ -167,7 +167,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'rejectMultiple',
             label: 'Reject',
             btnclass: 'btnReject',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_multiple, selectedRecords,
                 'documentId', 'documentIds', this.uploadedDocumentGridObject);
             }
@@ -179,19 +179,19 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approve',
             label: 'Approve',
-            clickEvent: (record: Record, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton) => {
               // Refer document
             }
           }, {
             id: 'sendReminder',
             label: 'Send Reminder',
-            clickEvent: (record: Record, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton) => {
               // Refer document
             }
           }, {
             id: 'reject',
             label: 'Reject',
-            clickEvent: (record: Record, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton) => {
               // Refer document
             }
           }]
@@ -242,7 +242,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons : [{
             id : 'approveMultiple',
             label : 'Approve',
-            clickEvent : (selectedRecords: Record[], button :ActionButton) => {
+            clickEvent : (selectedRecords: GridRecord[], button :ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_multiple, selectedRecords,
                 'bankAccountId', 'bankAccountIds', this.bankDetailGridObject);
 
@@ -251,7 +251,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id : 'rejectMultiple',
             label : 'Reject',
             btnclass : 'btnReject',
-            clickEvent : (selectedRecords: Record[], button :ActionButton) => {
+            clickEvent : (selectedRecords: GridRecord[], button :ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_multiple, selectedRecords,
                 'bankAccountId', 'bankAccountIds', this.bankDetailGridObject);
             }
@@ -263,19 +263,19 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             buttons : [{
               id : 'approve',
               label : 'Approve',
-              clickEvent : function(record : Record, button :ActionButton) {
+              clickEvent : function(record : GridRecord, button :ActionButton) {
                 // Refer document
               }
             }, {
               id : 'makeDefault',
               label : 'Make Default',
-              clickEvent : function(record : Record, button :ActionButton) {
+              clickEvent : function(record : GridRecord, button :ActionButton) {
                 // Refer document
               }
             }, {
               id : 'reject',
               label : 'Reject',
-              clickEvent : function(record : Record, button :ActionButton) {
+              clickEvent : function(record : GridRecord, button :ActionButton) {
                 // Refer document
               }
             }]
@@ -360,7 +360,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
 
-  makeRestCallForGridOperation(url: string, selectedRecords: Record[], property: string, paramKey: string, gridComponent: GridComponent) {
+  makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, paramKey: string, gridComponent: GridComponent) {
     const selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
 
     if (selectedIdsList.length === 0) {

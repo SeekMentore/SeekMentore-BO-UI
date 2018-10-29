@@ -1,5 +1,5 @@
 import {GridComponent} from "./grid.component";
-import {Record} from "./record";
+import {GridRecord} from "./grid-record";
 import {Grid} from "./grid";
 
 export class Store {
@@ -7,7 +7,7 @@ export class Store {
   isStatic: boolean = true;
   restURL: string;
   downloadURL: string;
-  data: Record[]; // Each Object here will have a property 'id'
+  data: GridRecord[]; // Each Object here will have a property 'id'
   staticData: Object[]; // list of Objects that should be provided in static manner
   restData: Object[]; // list of Objects that should be fetched in REST call
   totalRecords: number = -1;
@@ -74,7 +74,7 @@ export class Store {
   public convertIntoRecordData(objectList: Object[]) {
     const storeRecordIdentifierId = this.id + ((this.isStatic) ? '-Static' : '-Rest');
     objectList.forEach((value, index) => {
-      const record = new Record(storeRecordIdentifierId + '-R-' + index.toString(), value);
+      const record = new GridRecord(storeRecordIdentifierId + '-R-' + index.toString(), value);
       this.data.push(record);
     });
   }

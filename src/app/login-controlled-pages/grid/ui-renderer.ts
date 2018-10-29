@@ -1,6 +1,6 @@
 import { Column } from './column';
 import { GridCommonFunctions } from './grid-common-functions';
-import { Record } from './record';
+import { GridRecord } from './grid-record';
 
 export class UIRenderer {
   id: string;  
@@ -11,7 +11,7 @@ export class UIRenderer {
     this.callback_renderColumn =  callback_renderColumn;
   }  
 
-  public renderColumn(record: Record, column: Column) {
+  public renderColumn(record: GridRecord, column: Column) {
     if (GridCommonFunctions.checkObjectAvailability(this.callback_renderColumn)) {
       return this.callback_renderColumn(record, column);      
     }    

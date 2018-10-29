@@ -3,7 +3,7 @@ import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button'
 import { Column } from 'src/app/login-controlled-pages/grid/column';
 import { GridCommonFunctions } from 'src/app/login-controlled-pages/grid/grid-common-functions';
 import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
-import { Record } from 'src/app/login-controlled-pages/grid/record';
+import { GridRecord } from 'src/app/login-controlled-pages/grid/grid-record';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
@@ -21,8 +21,8 @@ export class SubscribedCustomerComponent implements OnInit {
   subscribedCustomerGridMetaData: GridDataInterface;
 
   showCustomerData = false;
-  selectedCustomerRecord: Record = null;
-  interimHoldSelectedCustomerRecord: Record = null;
+  selectedCustomerRecord: GridRecord = null;
+  interimHoldSelectedCustomerRecord: GridRecord = null;
   customerDataAccess: SubscribedCustomerDataAccess = null;
   utilityService: any;
   helperService: any;
@@ -62,7 +62,7 @@ export class SubscribedCustomerComponent implements OnInit {
           headerName: 'Name',
           dataType: 'string',
           mapping: 'name',
-          clickEvent: (record: Record, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
             this.interimHoldSelectedCustomerRecord = record;
             if (this.customerDataAccess === null) {
@@ -119,7 +119,7 @@ export class SubscribedCustomerComponent implements OnInit {
           buttons: [{
             id: 'sendEmail',
             label: 'Send Email',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               // Refer document
               const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
               if (selectedEmailsList.length === 0) {
@@ -137,7 +137,7 @@ export class SubscribedCustomerComponent implements OnInit {
             id: 'blacklist',
             label: 'Blacklist',
             btnclass: 'btnReject',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               const customerIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerId');
               if (customerIdsList.length === 0) {
                 this.helperService.showAlertDialog({

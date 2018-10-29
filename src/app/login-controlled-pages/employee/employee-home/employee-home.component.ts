@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Column } from '../../grid/column';
 import { GridCommonFunctions } from '../../grid/grid-common-functions';
 import { GridComponent, GridDataInterface } from '../../grid/grid.component';
-import { Record } from '../../grid/record';
+import { GridRecord } from '../../grid/grid-record';
 
 @Component({
   selector: 'app-employee-home',
@@ -30,7 +30,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
     this.setUpGridMetaData();
   }
 
-  public static displayDetailsForRecord(record: Record, column: Column) {
+  public static displayDetailsForRecord(record: GridRecord, column: Column) {
     const displayData = {
       'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
       'Subject': record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject'),
@@ -79,7 +79,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: function (record: Record, column: Column) {
+          clickEvent: function (record: GridRecord, column: Column) {
             EmployeeHomeComponent.displayDetailsForRecord(record, column);
           }
         }, {
@@ -130,7 +130,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: function (record: Record, column: Column) {
+          clickEvent: function (record: GridRecord, column: Column) {
             EmployeeHomeComponent.displayDetailsForRecord(record, column);
           }
         }, {
@@ -182,7 +182,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: function (record: Record, column: Column) {
+          clickEvent: function (record: GridRecord, column: Column) {
             EmployeeHomeComponent.displayDetailsForRecord(record, column);
           }
         }, {

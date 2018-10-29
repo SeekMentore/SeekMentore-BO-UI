@@ -6,7 +6,7 @@ import { Filter } from "./filter";
 import { Column } from "./column";
 import { GridCommonFunctions } from './grid-common-functions';
 import { Store } from "./store";
-import { Record } from './record';
+import { GridRecord } from './grid-record';
 import { GridComponent } from "./grid.component";
 
 export class Grid {
@@ -24,7 +24,7 @@ export class Grid {
     filters: Filter[] = [];
     columns: Column[];
     store: Store;
-    filtered_records: Record[] = [];
+    filtered_records: GridRecord[] = [];
     offline: boolean;
 
     constructor(

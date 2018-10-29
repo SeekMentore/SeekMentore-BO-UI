@@ -2,7 +2,7 @@ import { EventHandler } from './event-handler';
 import { Filter } from './filter';
 import { FilterOption } from './filter-option';
 import { GridCommonFunctions } from './grid-common-functions';
-import { Record } from './record';
+import { GridRecord } from './grid-record';
 import { UIRenderer } from './ui-renderer';
 
 export class Column {
@@ -72,7 +72,7 @@ export class Column {
     }        
   }
 
-  public getValueForColumn(record: Record) {
+  public getValueForColumn(record: GridRecord) {
     return record.getProperty(this.mapping);
   }
 }

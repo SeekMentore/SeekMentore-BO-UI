@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Record } from 'src/app/login-controlled-pages/grid/record';
+import { GridRecord } from 'src/app/login-controlled-pages/grid/grid-record';
 import { SubscribedCustomerDataAccess } from '../subscribed-customer.component';
 import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
@@ -22,7 +22,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   historyPackagesGridMetaData: GridDataInterface;
 
   @Input()
-  customerRecord: Record = null;
+  customerRecord: GridRecord = null;
 
   @Input()
   customerDataAccess: SubscribedCustomerDataAccess = null;

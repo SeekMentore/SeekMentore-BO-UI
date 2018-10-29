@@ -1,5 +1,5 @@
 import { Column } from './column';
-import { Record } from './record';
+import { GridRecord } from './grid-record';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 
 export class GridCommonFunctions {
@@ -22,7 +22,7 @@ export class GridCommonFunctions {
   }
 
   /** Common Renderer functions */
-  public static renderDateFromMillis(record: Record, column: Column) {
+  public static renderDateFromMillis(record: GridRecord, column: Column) {
     const datemillis = column.getValueForColumn(record);
     if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
@@ -34,7 +34,7 @@ export class GridCommonFunctions {
     return '';
   }
 
-  public static renderDateFromMillisWithTime(record: Record, column: Column) {
+  public static renderDateFromMillisWithTime(record: GridRecord, column: Column) {
     const datemillis = column.getValueForColumn(record);
     if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
@@ -49,7 +49,7 @@ export class GridCommonFunctions {
     return '';
   }
 
-  public static lookupRenderer(record: Record, column: Column, lookupList: any []) {
+  public static lookupRenderer(record: GridRecord, column: Column, lookupList: any []) {
     var value = column.getValueForColumn(record);
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
@@ -63,7 +63,7 @@ export class GridCommonFunctions {
     return value;
   }
 
-  public static lookupMultiRenderer(record: Record, column: Column, lookupList: any [], valueSplitter: string) {
+  public static lookupMultiRenderer(record: GridRecord, column: Column, lookupList: any [], valueSplitter: string) {
     var multivalue = column.getValueForColumn(record);
     return GridCommonFunctions.lookupMultiRendererForValue(multivalue.split(valueSplitter), lookupList);
   }
@@ -143,7 +143,7 @@ export class GridCommonFunctions {
     document.body.appendChild(dialog);
   }
 
- public static getSelectedRecordsPropertyList(selectedRecords: Record[], propertyName: string) {
+ public static getSelectedRecordsPropertyList(selectedRecords: GridRecord[], propertyName: string) {
    const selectedPropertyList: any[] = [];
    for(const record of selectedRecords) {
      if (record.selectionModelCheck) {

@@ -1,5 +1,5 @@
 import { GridCommonFunctions } from './grid-common-functions';
-export class Record {
+export class GridRecord {
   id: string;
   property: Object;
   selectionModelCheck: boolean = false;

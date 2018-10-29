@@ -7,7 +7,7 @@ import { ActionButton } from './action-button';
 import { Column } from './column';
 import { Grid } from './grid';
 import { GridCommonFunctions } from './grid-common-functions';
-import { Record } from './record';
+import { GridRecord } from './grid-record';
 import { Sorter, SortingOrder } from './sorter';
 
 @Component({
@@ -661,7 +661,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  public selectionButtonCheckedUnchecked(record: Record, element: HTMLInputElement) {
+  public selectionButtonCheckedUnchecked(record: GridRecord, element: HTMLInputElement) {
     if (this.grid.hasSelectionColumn) {
       if (record !== null) {
         record.selectionModelCheck = element.checked;
@@ -788,7 +788,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   /*
   * All Event Handlers
    */
-  public actionColumnActionButtonClicked(record: Record, button: ActionButton) {
+  public actionColumnActionButtonClicked(record: GridRecord, button: ActionButton) {
     if (button.eventHandler !== null) {
       button.eventHandler.clickEventActionColumnButton(record, button);
     } else {
@@ -816,7 +816,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public columnClicked(record: Record, column: Column) {
+  public columnClicked(record: GridRecord, column: Column) {
     if (column.eventHandler !== null) {
       column.eventHandler.clickEventColumn(record, column);
     }
@@ -827,7 +827,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   /**
    * Paint Filter Tabs
    */
-  public defaultColumnValueRenderer(record: Record, column: Column) {
+  public defaultColumnValueRenderer(record: GridRecord, column: Column) {
     if (column.uiRenderer === null) {
       return column.getValueForColumn(record);
     }

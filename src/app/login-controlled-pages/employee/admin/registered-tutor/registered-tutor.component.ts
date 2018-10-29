@@ -3,7 +3,7 @@ import { ActionButton } from 'src/app/login-controlled-pages/grid/action-button'
 import { Column } from 'src/app/login-controlled-pages/grid/column';
 import { GridCommonFunctions } from "src/app/login-controlled-pages/grid/grid-common-functions";
 import { GridComponent, GridDataInterface } from 'src/app/login-controlled-pages/grid/grid.component';
-import { Record } from 'src/app/login-controlled-pages/grid/record';
+import { GridRecord } from 'src/app/login-controlled-pages/grid/grid-record';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
@@ -23,8 +23,8 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   registeredTutorGridMetaData: GridDataInterface;
 
   showTutorData = false;
-  selectedTutorRecord: Record = null;
-  interimHoldSelectedTutorRecord: Record = null;
+  selectedTutorRecord: GridRecord = null;
+  interimHoldSelectedTutorRecord: GridRecord = null;
   tutorDataAccess: RegisterTutorDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -62,7 +62,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           headerName: 'Name',
           dataType: 'string',
           mapping: 'name',
-          clickEvent: (record: Record, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
             this.interimHoldSelectedTutorRecord = record;
             if (this.tutorDataAccess === null) {
@@ -147,7 +147,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'sendEmail',
             label: 'Send Email',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               // Refer document
               const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
               if (selectedEmailsList.length === 0) {
@@ -166,7 +166,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             id: 'blacklist',
             label: 'Blacklist',
             btnclass: 'btnReject',
-            clickEvent: (selectedRecords: Record[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorId');
               if (tutorIdsList.length === 0) {
                 this.helperService.showAlertDialog({

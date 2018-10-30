@@ -17,6 +17,7 @@ export class Column {
   toBeHidden: boolean = false;
   filterOptions: FilterOption[];
   lengthyData: boolean = false;
+  multiList: boolean = false;
   uiRenderer: UIRenderer;
   eventHandler: EventHandler;
   filter: Filter;
@@ -35,6 +36,7 @@ export class Column {
           hideable: boolean = true, 
           hidden: boolean = false,
           lengthyData: boolean = false,
+          multiList: boolean = false,
           filterOptionsMetadata: Object[] = [],
           renderer: any = null, 
           clickEvent: any = null
@@ -52,7 +54,8 @@ export class Column {
     this.hideable = hideable;
     this.hidden = hidden;
     this.lengthyData = lengthyData;
-    if (this.lengthyData) {
+    this.multiList = multiList;
+    if (this.lengthyData || this.multiList) {
       this.appliedClassNames = this.appliedClassNames + ' ' + 'column-pointer';
     }
     this.filterOptions = [];

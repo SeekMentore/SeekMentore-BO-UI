@@ -19,6 +19,10 @@ export class GridColumnExtraDataComponent implements OnInit {
   @Output()
   proceedWithEvent: EventEmitter<any> = new EventEmitter();
 
+  rowClasses : any = ['color-lightgray',''];
+
+  listdata: string[] = [];
+
   constructor() { }
 
   ngOnInit() {
@@ -28,8 +32,11 @@ export class GridColumnExtraDataComponent implements OnInit {
     for (const propName in changes) {
       if (GridCommonFunctions.checkObjectAvailability(propName)) {
         const changedProp = changes[propName];
-        if (propName === 'recordDisplayInput' && changedProp.currentValue !== null) {
-          this.columnExtraDataDisplayInput = changedProp.currentValue;
+        if (propName === 'columnExtraDataDisplayInput' && changedProp.currentValue !== null) {
+          this.columnExtraDataDisplayInput = changedProp.currentValue;          
+          if (this.columnExtraDataDisplayInput.multiList) {
+            this.listdata = this.columnExtraDataDisplayInput.dataText.split('; ');
+          }
         }
       }
     }
@@ -49,5 +56,6 @@ export interface ColumnExtraDataDisplayInputData {
   dataText : string;
   column: Column;
   record: GridRecord;
+  multiList: boolean;
   hasClickEventHandlerAttached: boolean;
 }

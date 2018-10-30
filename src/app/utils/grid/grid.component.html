@@ -322,7 +322,7 @@
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}"
           *ngIf="!(column.hidden)" class="{{column.appliedClassNames}}">
           {{defaultColumnValueRenderer(record, column)}}
-          <a href="javascript:void(0);" style="color: blue;" *ngIf="(column.lengthyData)" (click)="columnClicked(record, column)">more...</a>
+          <a href="javascript:void(0);" style="color: blue;" *ngIf="(column.lengthyData || column.multiList)" (click)="columnClicked(record, column)">more...</a>
         </span>
       </div>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'}}"

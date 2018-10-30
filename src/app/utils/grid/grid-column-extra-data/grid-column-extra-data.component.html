@@ -7,10 +7,17 @@
       <b><u>{{columnExtraDataDisplayInput.titleText}}</u></b>
     </div>
   </div>
-  <table style="max-height: 400px; overflow-y: auto; width: 100%; border: 1px solid blue;" cellPadding="5">
+  <table *ngIf="!columnExtraDataDisplayInput.multiList" style="max-height: 400px; overflow-y: auto; width: 100%; border: 1px solid blue;" cellPadding="5">
     <tr style="margin: 5px 10px; padding: 3px;" class="color-lightgray">        
         <td>
             {{columnExtraDataDisplayInput.dataText}}
+        </td>
+    </tr>
+  </table>
+  <table *ngIf="columnExtraDataDisplayInput.multiList" style="max-height: 400px; overflow-y: auto; width: 100%; border: 1px solid blue;" cellPadding="5">
+    <tr style="margin: 5px 10px; padding: 3px;" class="{{rowClasses[i%2]}}" *ngFor="let data of listdata; let i = index">
+        <td>
+            {{data}}
         </td>
     </tr>
   </table>

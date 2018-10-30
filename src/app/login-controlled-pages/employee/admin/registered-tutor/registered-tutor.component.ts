@@ -121,6 +121,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.studentGradesFilterOptions,
           mapping: 'interestedStudentGrades',
+          multiList: true,
           renderer: AdminCommonFunctions.studentGradesMultiRenderer
         }, {
           id: 'interestedSubjects',
@@ -128,6 +129,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.subjectsFilterOptions,
           mapping: 'interestedSubjects',
+          multiList: true,
           renderer: AdminCommonFunctions.subjectsMultiRenderer
         }, {
           id: 'comfortableLocations',
@@ -135,6 +137,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.locationsFilterOptions,
           mapping: 'comfortableLocations',
+          multiList: true,
           renderer: AdminCommonFunctions.locationsMultiRenderer
         }, {
           id: 'additionalDetails',

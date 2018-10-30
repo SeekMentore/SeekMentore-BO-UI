@@ -68,6 +68,7 @@ export class Grid {
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.hideable) ? columnMetadata.hideable : true,
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.hidden) ? columnMetadata.hidden : false,
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.lengthyData) ? columnMetadata.lengthyData : false,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.multiList) ? columnMetadata.multiList : false,
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.filterOptions) ? columnMetadata.filterOptions : [],
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.renderer) ? columnMetadata.renderer : null,
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.clickEvent) ? columnMetadata.clickEvent : null,

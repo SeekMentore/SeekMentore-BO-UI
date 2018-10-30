@@ -50,31 +50,33 @@ export class GridCommonFunctions {
   }
 
   public static lookupRenderer(record: GridRecord, column: Column, lookupList: any []) {
-    var value = column.getValueForColumn(record);
+    var value = column.getValueForColumn(record);    	
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
   private static lookupRendererForValue(value: any, lookupList: any []) {
-    lookupList.forEach(filterOption => {
-      if (filterOption.value === value) {
-        return filterOption.label
-      }
-    });
-    return value;
+    let returnValue = value;
+    for (var i  = 0; i < lookupList.length; i++) {
+      let filterOption = lookupList[i];
+      if (filterOption.value === value) {        
+        returnValue = filterOption.label; 
+        break;      
+      } 
+    }       	
+    return returnValue;
   }
 
   public static lookupMultiRenderer(record: GridRecord, column: Column, lookupList: any [], valueSplitter: string) {
-    var multivalue = column.getValueForColumn(record);
+    var multivalue = column.getValueForColumn(record);    
     return GridCommonFunctions.lookupMultiRendererForValue(multivalue.split(valueSplitter), lookupList);
   }
 
   private static lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: any []) {
-    var returnHTML = '';
+    var returnHTMLList = [];
     multivalueSplittedList.forEach(splittedValue => {
-      var found: boolean = false;
-      returnHTML += GridCommonFunctions.lookupRendererForValue(splittedValue, lookupList) + '<br/>';
+      returnHTMLList.push(GridCommonFunctions.lookupRendererForValue(splittedValue, lookupList));
     });
-    return returnHTML;
+    return returnHTMLList.join('; ');
   }
 
   public static yesNoRenderer(record, column) {

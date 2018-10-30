@@ -182,7 +182,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approve',
             label: 'Approve',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton) => {              
               // '/rest/registeredTutor/approveTutorDocument'
               // param name - 'selectedId'
               // param value - record.property('documentId')
@@ -192,7 +192,8 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             }
           }, {
             id: 'sendReminder',
-            label: 'Send Reminder',
+            label: 'Remind',
+            btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
               // '/rest/registeredTutor/sendReminderTutorDocument'
               // param name - 'selectedId'
@@ -204,6 +205,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           }, {
             id: 'reject',
             label: 'Reject',
+            btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
               // '/rest/registeredTutor/rejectTutorDocument'
               // param name - 'selectedId'
@@ -291,7 +293,8 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             }
           }, {
             id: 'makeDefault',
-            label: 'Make Default',
+            label: 'Default',
+            btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
               // '/rest/registeredTutor/makeDefaultBankAccount'
               // param name - 'selectedId'
@@ -304,6 +307,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           }, {
             id: 'reject',
             label: 'Reject',
+            btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
               // '/rest/registeredTutor/rejectBankAccount'
               // param name - 'selectedId'

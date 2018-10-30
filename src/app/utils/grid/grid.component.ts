@@ -47,6 +47,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       dataText: '',
       column: null,
       record: null,
+      multiList: false,
       hasClickEventHandlerAttached: false
     };   
     this.column_extra_data_display_input = columnExtraDataDisplayInput;
@@ -784,12 +785,13 @@ export class GridComponent implements OnInit, AfterViewInit {
     document.getElementById('record-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = false;
   }
 
-  public displayColumnExtraDataAsPopUp(titleText: string = 'Column Data', dataText: string, record: GridRecord, column: Column, hasClickEventHandlerAttached: boolean) {    
+  public displayColumnExtraDataAsPopUp(titleText: string = 'Column Data', dataText: string, record: GridRecord, column: Column, hasClickEventHandlerAttached: boolean) {   
     const columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData = {
       titleText: titleText, 
       dataText: dataText,
       column: column,
       record: record,
+      multiList: column.multiList,
       hasClickEventHandlerAttached: hasClickEventHandlerAttached
     };    
     this.showColumnExtraDataDisplayPopUp(columnExtraDataDisplayInput);
@@ -892,7 +894,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public columnClicked(record: GridRecord, column: Column) {
-    if (column.lengthyData) {
+    if (column.lengthyData || column.multiList) {
       let hasClickEventHandlerAttached: boolean = false
       if (column.eventHandler !== null) {
         hasClickEventHandlerAttached = true;
@@ -918,7 +920,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       data = column.uiRenderer.renderColumn(record, column);
     }
     if (!returnCompleteData) {
-      if (column.lengthyData) {
+      if (column.lengthyData || column.multiList) {
         data = data.substring(0, 21);
       }
     }

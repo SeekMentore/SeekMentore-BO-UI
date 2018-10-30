@@ -89,6 +89,7 @@ export class SubscribedCustomerComponent implements OnInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.studentGradesFilterOptions,
           mapping: 'studentGrades',
+          multiList: true,
           renderer: AdminCommonFunctions.studentGradesMultiRenderer
         }, {
           id: 'interestedSubjects',
@@ -96,6 +97,7 @@ export class SubscribedCustomerComponent implements OnInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.subjectsFilterOptions,
           mapping: 'interestedSubjects',
+          multiList: true,
           renderer: AdminCommonFunctions.subjectsMultiRenderer
         }, {
           id: 'location',

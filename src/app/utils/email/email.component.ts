@@ -3,6 +3,7 @@ import { LcpConstants } from '../lcp-constants';
 import { AppUtilityService } from '../app-utility.service';
 import { HelperService } from '../helper.service';
 import { LcpRestUrls } from '../lcp-rest-urls';
+import { CkeditorConfig } from '../ckeditor-config';
 
 @Component({
   selector: 'app-email',
@@ -30,7 +31,7 @@ export class EmailComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.helperService.makeRichEditor(this.emailBodyEditorId);
+    this.helperService.makeRichEditor(this.emailBodyEditorId, CkeditorConfig.emailConfiguration);
     this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
     this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');
   }

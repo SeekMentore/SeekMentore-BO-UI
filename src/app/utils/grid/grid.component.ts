@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { AppUtilityService } from '../../utils/app-utility.service';
-import { AlertDialogEvent, HelperService } from '../../utils/helper.service';
+import { HelperService } from '../../utils/helper.service';
 import { LcpConstants } from "../../utils/lcp-constants";
 import { MultiSelectInputData } from '../../utils/multi-select-input/multi-select-input.component';
 import { ActionButton } from './action-button';
@@ -10,6 +10,8 @@ import { GridCommonFunctions } from './grid-common-functions';
 import { GridRecord } from './grid-record';
 import { Sorter, SortingOrder } from './sorter';
 import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
+import { AlertDialogEvent } from '../alert-dialog/alert-dialog.component';
+import { ColumnExtraDataDisplayInputData } from './grid-column-extra-data/grid-column-extra-data.component';
 
 @Component({
   selector: 'app-grid',
@@ -23,6 +25,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   hidden = true;
   mulit_select_input_data: MultiSelectInputData = null;
   record_display_input_data: RecordDisplayInputData = null;
+  column_extra_data_display_input: ColumnExtraDataDisplayInputData = null;
   grid: Grid;
 
   @Input()
@@ -38,6 +41,15 @@ export class GridComponent implements OnInit, AfterViewInit {
       data: []
     };   
     this.record_display_input_data = recordDisplayInput;
+
+    const columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData = {
+      titleText: 'Record Details', 
+      dataText: '',
+      column: null,
+      record: null,
+      hasClickEventHandlerAttached: false
+    };   
+    this.column_extra_data_display_input = columnExtraDataDisplayInput;
   }
 
   ngAfterViewInit() {
@@ -772,6 +784,38 @@ export class GridComponent implements OnInit, AfterViewInit {
     document.getElementById('record-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = false;
   }
 
+  public displayColumnExtraDataAsPopUp(titleText: string = 'Column Data', dataText: string, record: GridRecord, column: Column, hasClickEventHandlerAttached: boolean) {    
+    const columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData = {
+      titleText: titleText, 
+      dataText: dataText,
+      column: column,
+      record: record,
+      hasClickEventHandlerAttached: hasClickEventHandlerAttached
+    };    
+    this.showColumnExtraDataDisplayPopUp(columnExtraDataDisplayInput);
+  }
+
+  public dismissColumnExtraDataDisplayPopUp() {
+    document.getElementById('column-extra-data-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = true;
+  }
+
+  public showColumnExtraDataDisplayPopUp(columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData) {
+    this.column_extra_data_display_input = columnExtraDataDisplayInput;
+    document.getElementById('column-extra-data-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = false;
+  }
+
+  public handleProceedWithEventOnColumnExtraDataPopUpDismiss(columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData) {
+    const column: Column = columnExtraDataDisplayInput.column;
+    const record: GridRecord = columnExtraDataDisplayInput.record;   
+    const hasClickEventHandlerAttached: boolean = columnExtraDataDisplayInput.hasClickEventHandlerAttached;   
+    this.dismissColumnExtraDataDisplayPopUp();
+    if (hasClickEventHandlerAttached) {
+      if (column.eventHandler !== null) {
+        column.eventHandler.clickEventColumn(record, column);
+      }
+    }
+  }
+
   /** REVIEW */
   public handleMulitSelectApply(data: MultiSelectInputData) {
     switch (data.operation) {
@@ -848,8 +892,16 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public columnClicked(record: GridRecord, column: Column) {
-    if (column.eventHandler !== null) {
-      column.eventHandler.clickEventColumn(record, column);
+    if (column.lengthyData) {
+      let hasClickEventHandlerAttached: boolean = false
+      if (column.eventHandler !== null) {
+        hasClickEventHandlerAttached = true;
+      }
+      this.displayColumnExtraDataAsPopUp(column.headerName + ' - Complete Data', this.defaultColumnValueRenderer(record, column, true), record, column, hasClickEventHandlerAttached);
+    } else {
+      if (column.eventHandler !== null) {
+        column.eventHandler.clickEventColumn(record, column);
+      }
     }
   }
 
@@ -858,11 +910,19 @@ export class GridComponent implements OnInit, AfterViewInit {
   /**
    * Paint Filter Tabs
    */
-  public defaultColumnValueRenderer(record: GridRecord, column: Column) {
+  public defaultColumnValueRenderer(record: GridRecord, column: Column, returnCompleteData: boolean = false) {
+    let data: string = '';
     if (column.uiRenderer === null) {
-      return column.getValueForColumn(record);
+      data = column.getValueForColumn(record);
+    } else {
+      data = column.uiRenderer.renderColumn(record, column);
     }
-    return column.uiRenderer.renderColumn(record, column);
+    if (!returnCompleteData) {
+      if (column.lengthyData) {
+        data = data.substring(0, 21);
+      }
+    }
+    return data;
   }
 
   private hideShowRemoveFilterTab(column: Column = null) {

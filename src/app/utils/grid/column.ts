@@ -15,7 +15,8 @@ export class Column {
   hideable: boolean = true;
   hidden: boolean = false;
   toBeHidden: boolean = false;
-  filterOptions: FilterOption[]; 
+  filterOptions: FilterOption[];
+  lengthyData: boolean = false;
   uiRenderer: UIRenderer;
   eventHandler: EventHandler;
   filter: Filter;
@@ -33,6 +34,7 @@ export class Column {
           filterable: boolean = true, 
           hideable: boolean = true, 
           hidden: boolean = false,
+          lengthyData: boolean = false,
           filterOptionsMetadata: Object[] = [],
           renderer: any = null, 
           clickEvent: any = null
@@ -49,6 +51,10 @@ export class Column {
     }
     this.hideable = hideable;
     this.hidden = hidden;
+    this.lengthyData = lengthyData;
+    if (this.lengthyData) {
+      this.appliedClassNames = this.appliedClassNames + ' ' + 'column-pointer';
+    }
     this.filterOptions = [];
     if (GridCommonFunctions.checkObjectAvailability(filterOptionsMetadata) && filterOptionsMetadata.length > 0) {
       for (var i = 0; i < filterOptionsMetadata.length; i++) {
@@ -68,7 +74,8 @@ export class Column {
     this.eventHandler = null;
     if (GridCommonFunctions.checkObjectAvailability(clickEvent)) {
       this.eventHandler = new EventHandler(this.id + '-EventHandler', clickEvent);
-      this.appliedClassNames = this.appliedClassNames + 'column-pointer';
+      this.appliedClassNames = this.appliedClassNames + ' ' + 'column-pointer';
+      this.appliedClassNames = this.appliedClassNames + ' ' + 'text-color-blue';
     }        
   }
 

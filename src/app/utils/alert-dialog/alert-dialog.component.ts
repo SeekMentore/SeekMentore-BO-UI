@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HelperService, AlertDialogEvent } from '../helper.service';
+import { HelperService } from '../helper.service';
 import { LcpConstants } from '../lcp-constants';
 
 @Component({
@@ -39,4 +39,10 @@ export class AlertDialogComponent implements OnInit {
       this.alertDialog.style.display = 'flex';
     });
   }
+}
+
+export interface AlertDialogEvent {
+  isSuccess: boolean;
+  message: string;
+  onButtonClicked(): void;
 }

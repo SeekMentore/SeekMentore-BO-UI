@@ -308,22 +308,23 @@
     <!--Grid Records-->
     <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id}}" *ngFor="let record of grid.filtered_records"
          class="uigrid-row">
-      <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'}}"
+      <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'}}"
             class="uigrid-cell select_box" *ngIf="grid.hasSelectionColumn">
         <input
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'+'-input-checkbox'}}"
           title="select" type="checkbox"
           (change)="selectionButtonCheckedUnchecked(record, $event.target)">
-      </span>
-      <span id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}"
+      </div>
+      <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}"
             class="uigrid-cell" *ngFor="let column of grid.columns"
-            [ngStyle]="{'display' : getColumnDisplayStyle(column)}">
+            [ngStyle]="{'display' : getColumnDisplayStyle(column)}" (click)="columnClicked(record, column)">
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}"
-          *ngIf="!(column.hidden)" (click)="columnClicked(record, column)" class="{{column.appliedClassNames}}">
+          *ngIf="!(column.hidden)" class="{{column.appliedClassNames}}">
           {{defaultColumnValueRenderer(record, column)}}
+          <a href="javascript:void(0);" style="color: blue;" *ngIf="(column.lengthyData)" (click)="columnClicked(record, column)">more...</a>
         </span>
-      </span>
+      </div>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'}}"
            *ngIf="grid.hasActionColumn" class="uigrid-cell grid_actions">
         <span
@@ -418,6 +419,12 @@
 <div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
   <div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
     <app-grid-record-pop-up [recordDisplayInput]="record_display_input_data" (close)="dismissRecordDisplayPopUp()" style="width: 100%"></app-grid-record-pop-up>
+  </div>
+</div>
+<!--Column Extra Data Display Popup Dialog-->
+<div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
+  <div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
+    <app-grid-column-extra-data [columnExtraDataDisplayInput]="column_extra_data_display_input" (proceedWithEvent)="handleProceedWithEventOnColumnExtraDataPopUpDismiss($event)" (close)="dismissColumnExtraDataDisplayPopUp()" style="width: 100%"></app-grid-column-extra-data>
   </div>
 </div>
 

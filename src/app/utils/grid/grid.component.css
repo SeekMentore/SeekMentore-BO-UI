@@ -374,5 +374,8 @@ i {
 
 .column-pointer {
   cursor: pointer;
+}
+
+.text-color-blue {  
   color: blue;
 }

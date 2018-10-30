@@ -1,0 +1,23 @@
+<div style="display: flex; flex-direction: column; width: 100%">
+  <div style="display: block; width: 100%;">
+    <span style="float: right; padding-top: 0; padding-right: 0;" (click)="dismissClicked()">
+      <i class="fas fa-times" style="color: var(--colorPrimary); align-self: flex-end; margin: 0px; cursor: pointer;"></i>
+    </span>
+    <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; text-align: center">
+      <b><u>{{columnExtraDataDisplayInput.titleText}}</u></b>
+    </div>
+  </div>
+  <table style="max-height: 400px; overflow-y: auto; width: 100%; border: 1px solid blue;" cellPadding="5">
+    <tr style="margin: 5px 10px; padding: 3px;" class="color-lightgray">        
+        <td>
+            {{columnExtraDataDisplayInput.dataText}}
+        </td>
+    </tr>
+  </table>
+  <button class="ok-button" *ngIf="columnExtraDataDisplayInput.hasClickEventHandlerAttached" style="align-self: flex-end" (click)="proceedClicked()">
+    Proceed
+  </button>
+  <button class="cancel-button" (click)="dismissClicked()">
+    Dismiss
+  </button> 
+</div>

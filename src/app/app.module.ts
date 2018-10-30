@@ -36,6 +36,7 @@ import { ControlPanelComponent } from './login-controlled-pages/employee/super-a
 import { GridComponent } from './utils/grid/grid.component';
 import { GridRecordPopUpComponent } from './utils/grid/grid-record-pop-up/grid-record-pop-up.component';
 import { EmailComponent } from './utils/email/email.component';
+import { GridColumnExtraDataComponent } from './utils/grid/grid-column-extra-data/grid-column-extra-data.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { EmailComponent } from './utils/email/email.component';
     DemoTrackerComponent,
     SubscriptionPackagesComponent,
     ControlPanelComponent,
-    GridRecordPopUpComponent
+    GridRecordPopUpComponent,
+    GridColumnExtraDataComponent
   ],
   imports: [
     BrowserModule,

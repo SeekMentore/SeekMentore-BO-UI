@@ -140,7 +140,8 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           id: 'additionalDetails',
           headerName: 'Additional Details',
           dataType: 'string',
-          mapping: 'additionalDetails'
+          mapping: 'additionalDetails',
+          lengthyData: true
         }],
         hasSelectionColumn: true,
         selectionColumn: {

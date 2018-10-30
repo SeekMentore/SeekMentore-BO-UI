@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/index';
+import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
 import { CkeditorConfig } from './ckeditor-config';
 import { EmailInterface } from './email/email.component';
+import { ConfirmationDialogEvent } from './confirmation-dialog/confirmation-dialog.component';
 
 declare var CKEDITOR: any;
 
@@ -57,19 +59,11 @@ export class HelperService {
     CKEDITOR.instances[editorId].setData(data);
   }
 
-  public makeRichEditor(editorId: string) {
-    CKEDITOR.replace(editorId, CkeditorConfig.emailConfiguration);
+  public makeRichEditor(editorId: string, configuration: any) {
+    CKEDITOR.replace(editorId, configuration);
   }
-}
 
-export interface ConfirmationDialogEvent {
-  message: string;
-  onOk(): void;
-  onCancel(): void;
-}
-
-export interface AlertDialogEvent {
-  isSuccess: boolean;
-  message: string;
-  onButtonClicked(): void;
+  public makeRichEditorWithDefaultConfiguration(editorId: string) {
+    CKEDITOR.replace(editorId, CkeditorConfig.defaultConfiguration);
+  }
 }

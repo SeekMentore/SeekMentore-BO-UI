@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HelperService, ConfirmationDialogEvent } from '../helper.service';
+import { HelperService } from '../helper.service';
 import { LcpConstants } from '../lcp-constants';
 
 @Component({
@@ -35,3 +35,10 @@ export class ConfirmationDialogComponent implements OnInit {
   }
 
 }
+
+export interface ConfirmationDialogEvent {
+  message: string;
+  onOk(): void;
+  onCancel(): void;
+}
+

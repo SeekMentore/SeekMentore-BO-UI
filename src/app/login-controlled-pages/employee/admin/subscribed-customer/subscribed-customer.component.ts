@@ -108,12 +108,14 @@ export class SubscribedCustomerComponent implements OnInit {
           id: 'addressDetails',
           headerName: 'Address Details',
           dataType: 'string',
-          mapping: 'addressDetails'
+          mapping: 'addressDetails',
+          lengthyData: true
         }, {
           id: 'additionalDetails',
           headerName: 'Additional Details',
           dataType: 'string',
-          mapping: 'additionalDetails'
+          mapping: 'additionalDetails',
+          lengthyData: true
         }],
         hasSelectionColumn: true,
         selectionColumn: {

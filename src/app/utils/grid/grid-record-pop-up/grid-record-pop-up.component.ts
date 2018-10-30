@@ -8,8 +8,6 @@ import { GridCommonFunctions } from '../grid-common-functions';
 })
 export class GridRecordPopUpComponent implements OnInit {
 
-  titleText: string = '';  
-
   @Input('recordDisplayInput')
   recordDisplayInput: RecordDisplayInputData = null;
 
@@ -29,7 +27,6 @@ export class GridRecordPopUpComponent implements OnInit {
         const changedProp = changes[propName];
         if (propName === 'recordDisplayInput' && changedProp.currentValue !== null) {
           this.recordDisplayInput = changedProp.currentValue;
-          this.titleText = this.recordDisplayInput.titleText;
         }
       }
     }

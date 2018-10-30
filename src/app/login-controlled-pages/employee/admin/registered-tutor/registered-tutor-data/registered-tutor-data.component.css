@@ -1,0 +1,11 @@
+table label {
+  width: 100%;
+  padding-right: 20px;
+  text-align: right;
+}
+
+table .input_field {
+  width: calc(100% - 20px);
+  padding: 3px;
+  margin: 0;
+}

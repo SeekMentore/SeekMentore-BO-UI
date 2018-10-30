@@ -1,4 +1,60 @@
 <div>
   <app-grid *ngIf="customerDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid" [gridMetaData]="currentPackagesGridMetaData"></app-grid>
   <app-grid *ngIf="customerDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid" [gridMetaData]="historyPackagesGridMetaData"></app-grid>
+
+  <div *ngIf="renderCustomerRecordForm"
+       style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
+    <form class="form-container" style="max-width: 700px">
+      <div *ngIf="customerDataAccess.formDataEditAccess" style="display: flex; flex-direction: row; justify-content: flex-end">
+        <label class="tab_container" (change)="editRecordForm = false;">
+          <input type="radio" checked name="editFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="editRecordForm = true;">
+          <input type="radio" name="editFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
+      <table style="width: 100%;" >
+        <tr>
+          <td width="40%"><label>Customer Number</label></td>
+          <td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}" [disabled]="!editRecordForm" (change)="updateCustomerProperty('contactNumber', $event.target.value, 'string')"></td>
+        </tr>
+        <tr>
+          <td ><label>Name</label></td>
+          <td><input class="input_field" type="text" value="{{customerRecord.property['name']}}" [disabled]="!editRecordForm" (change)="updateCustomerProperty('name', $event.target.value, 'string')"></td>
+        </tr>
+        <tr>
+          <td><label>Email</label></td>
+          <td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}" [disabled]="!editRecordForm" (change)="updateCustomerProperty('emailId', $event.target.value, 'string')"></td>
+        </tr>
+        <tr>
+          <td><label>Location</label></td>
+          <td>
+            <select class="input_field" value="{{customerRecord.property['location']}}" [disabled]="!editRecordForm" (change)="updateCustomerProperty('location', $event.target.value, 'string')">
+              <option *ngFor="let element of locationsFilterOptions" value="{{element.value}}">
+                {{element.label}}
+              </option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label>Interested Subjects</label></td>
+          <td>
+            <div *ngFor="let element of subjectsFilterOptions">
+              <input type="checkbox" name="{{element.value}}" value="{{element.value}}" [disabled]="!editRecordForm"
+                     [checked]="isSubjectSelected(element.value)" (change)="updateCustomerProperty('interestedSubjects', $event.target.value, 'list')"> {{element.label}}
+            </div>
+          </td>
+        </tr>
+
+      </table>
+      <button *ngIf="customerDataAccess.formDataEditAccess" type="submit"
+              class="button-primary" style="display: flex; align-self: center; margin-top: 10px"  [disabled]="!editRecordForm" (click)="updateCustomerRecord()">
+        Update
+      </button>
+      <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->
+    </form>
+  </div>
+
 </div>

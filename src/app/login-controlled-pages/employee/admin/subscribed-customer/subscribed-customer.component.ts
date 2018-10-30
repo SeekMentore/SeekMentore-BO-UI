@@ -8,6 +8,8 @@ import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import {AppUtilityService} from "src/app/utils/app-utility.service";
+import {HelperService} from "src/app/utils/helper.service";
 
 @Component({
   selector: 'app-subscribed-customer',
@@ -24,10 +26,9 @@ export class SubscribedCustomerComponent implements OnInit {
   selectedCustomerRecord: GridRecord = null;
   interimHoldSelectedCustomerRecord: GridRecord = null;
   customerDataAccess: SubscribedCustomerDataAccess = null;
-  utilityService: any;
-  helperService: any;
 
-  constructor() { 
+
+  constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.subscribedCustomerGridMetaData = null;
     this.showCustomerData = false;
     this.selectedCustomerRecord = null;
@@ -195,7 +196,7 @@ export class SubscribedCustomerComponent implements OnInit {
       };
 
       context.selectedCustomerRecord = context.interimHoldSelectedCustomerRecord;
-      context.toggleVisibilityRegisterTutorGrid();
+      context.toggleVisibilitySubscribedCustomerGrid();
     }
   }
 

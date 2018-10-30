@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { RegisterTutorDataAccess } from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
-import { AppUtilityService } from "src/app/utils/app-utility.service";
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { HelperService, AlertDialogEvent } from "src/app/utils/helper.service";
-import { LcpConstants } from "src/app/utils/lcp-constants";
-import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {RegisterTutorDataAccess} from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {HelperService, AlertDialogEvent} from 'src/app/utils/helper.service';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-registered-tutor-data',
@@ -44,6 +44,11 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   tutorUpdatedData = {};
 
+  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
+  qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
     this.bankDetailGridMetaData = null;
@@ -58,24 +63,24 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if( this.tutorDataAccess.documentViewAccess ) {
+      if (this.tutorDataAccess.documentViewAccess) {
         this.uploadedDocumentGridObject.init();
         this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
 
       }
-      if( this.tutorDataAccess.bankViewAccess ) {
+      if (this.tutorDataAccess.bankViewAccess) {
         this.bankDetailGridObject.init();
         this.bankDetailGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
       }
 
       this.renderTutorRecordForm = true;
 
-      if( this.tutorDataAccess.activePackageViewAccess ) {
+      if (this.tutorDataAccess.activePackageViewAccess) {
         this.currentPackagesGridObject.init();
         this.currentPackagesGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
       }
 
-      if( this.tutorDataAccess.historyPackagesViewAccess ) {
+      if (this.tutorDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.init();
         this.historyPackagesGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
       }
@@ -83,16 +88,16 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     }, 0);
 
     setTimeout(() => {
-      if( this.tutorDataAccess.documentViewAccess ) {
+      if (this.tutorDataAccess.documentViewAccess) {
         this.uploadedDocumentGridObject.refreshGridData();
       }
-      if( this.tutorDataAccess.bankViewAccess ) {
+      if (this.tutorDataAccess.bankViewAccess) {
         this.bankDetailGridObject.refreshGridData();
       }
-      if( this.tutorDataAccess.activePackageViewAccess ) {
+      if (this.tutorDataAccess.activePackageViewAccess) {
         this.currentPackagesGridObject.refreshGridData();
       }
-      if( this.tutorDataAccess.historyPackagesViewAccess) {
+      if (this.tutorDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.refreshGridData();
       }
 
@@ -145,7 +150,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Approve',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_multiple, selectedRecords,
-                'documentId', this.uploadedDocumentGridObject);
+                'documentId', this.uploadedDocumentGridObject, true);
             }
           }, {
             id: 'sendReminderMultiple',
@@ -153,7 +158,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             btnclass: 'btnReset',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_multiple, selectedRecords,
-                'documentId', this.uploadedDocumentGridObject);
+                'documentId', this.uploadedDocumentGridObject, true);
             }
           }, {
             id: 'rejectMultiple',
@@ -161,7 +166,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             btnclass: 'btnReject',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_multiple, selectedRecords,
-                'documentId', this.uploadedDocumentGridObject);
+                'documentId', this.uploadedDocumentGridObject, true);
             }
           }]
         },
@@ -172,28 +177,34 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approve',
             label: 'Approve',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-                // '/rest/registeredTutor/approveTutorDocument'
-                // param name - 'selectedId'
-                // param value - record.property('documentId')
-                // response - If success = true -> refresh grid if false - show Alert Failure with message
+              // '/rest/registeredTutor/approveTutorDocument'
+              // param name - 'selectedId'
+              // param value - record.property('documentId')
+              // response - If success = true -> refresh grid if false - show Alert Failure with message
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_single, [record],
+                'documentId', this.uploadedDocumentGridObject);
             }
           }, {
             id: 'sendReminder',
             label: 'Send Reminder',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-                // '/rest/registeredTutor/sendReminderTutorDocument'
-                // param name - 'selectedId'
-                // param value - record.property('documentId')
-                // response - If success = true -> refresh grid if false - show Alert Failure with message
+              // '/rest/registeredTutor/sendReminderTutorDocument'
+              // param name - 'selectedId'
+              // param value - record.property('documentId')
+              // response - If success = true -> refresh grid if false - show Alert Failure with message
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_single, [record],
+                'documentId', this.uploadedDocumentGridObject);
             }
           }, {
             id: 'reject',
             label: 'Reject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-                // '/rest/registeredTutor/rejectTutorDocument'
-                // param name - 'selectedId'
-                // param value - record.property('documentId')
-                // response - If success = true -> refresh grid if false - show Alert Failure with message
+              // '/rest/registeredTutor/rejectTutorDocument'
+              // param name - 'selectedId'
+              // param value - record.property('documentId')
+              // response - If success = true -> refresh grid if false - show Alert Failure with message
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_single, [record],
+                'documentId', this.uploadedDocumentGridObject);
             }
           }]
         }
@@ -225,7 +236,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           headerName: 'IFSC Code',
           dataType: 'string',
           mapping: 'ifscCode'
-        },{
+        }, {
           id: 'accountHolderName',
           headerName: 'Account Holder Name',
           dataType: 'string',
@@ -234,68 +245,75 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           id: 'isDefault',
           headerName: 'Is Default',
           dataType: 'list',
-		      filterOptions : CommonFilterOptions.yesNoFilterOptions,
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
           mapping: 'isDefault',
           renderer: GridCommonFunctions.yesNoRenderer
         }],
-        hasSelectionColumn : this.tutorDataAccess.bankHandleAccess,
-        selectionColumn : {
-          buttons : [{
-            id : 'approveMultiple',
-            label : 'Approve',
-            clickEvent : (selectedRecords: GridRecord[], button :ActionButton) => {
+        hasSelectionColumn: this.tutorDataAccess.bankHandleAccess,
+        selectionColumn: {
+          buttons: [{
+            id: 'approveMultiple',
+            label: 'Approve',
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_multiple, selectedRecords,
+                'bankAccountId', this.bankDetailGridObject, true);
+
+            }
+          }, {
+            id: 'rejectMultiple',
+            label: 'Reject',
+            btnclass: 'btnReject',
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_multiple, selectedRecords,
+                'bankAccountId', this.bankDetailGridObject, true);
+            }
+          }]
+        },
+        hasActionColumn: true,
+        actionColumn: {
+          label: 'Take Action',
+          buttons: [{
+            id: 'approve',
+            label: 'Approve',
+            clickEvent: (record: GridRecord, button: ActionButton) => {
+              // '/rest/registeredTutor/approveBankAccount'
+              // param name - 'selectedId'
+              // param value - record.property('bankAccountId')
+              // response - If success = true -> refresh grid if false - show Alert Failure with message
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_single, [record],
+                'bankAccountId', this.bankDetailGridObject);
+            }
+          }, {
+            id: 'makeDefault',
+            label: 'Make Default',
+            clickEvent: (record: GridRecord, button: ActionButton) => {
+              // '/rest/registeredTutor/makeDefaultBankAccount'
+              // param name - 'selectedId'
+              // param value - record.property('bankAccountId')
+              // response - If success = true -> refresh grid if false - show Alert Failure with message
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_make_default, [record],
                 'bankAccountId', this.bankDetailGridObject);
 
             }
           }, {
-            id : 'rejectMultiple',
-            label : 'Reject',
-            btnclass : 'btnReject',
-            clickEvent : (selectedRecords: GridRecord[], button :ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_multiple, selectedRecords,
+            id: 'reject',
+            label: 'Reject',
+            clickEvent: (record: GridRecord, button: ActionButton) => {
+              // '/rest/registeredTutor/rejectBankAccount'
+              // param name - 'selectedId'
+              // param value - record.property('bankAccountId')
+              // response - If success = true -> refresh grid if false - show Alert Failure with message
+              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_single, [record],
                 'bankAccountId', this.bankDetailGridObject);
             }
           }]
-        },
-        hasActionColumn : true,
-          actionColumn : {
-            label : 'Take Action',
-            buttons : [{
-              id : 'approve',
-              label : 'Approve',
-              clickEvent : (record : GridRecord, button :ActionButton) => {
-                // '/rest/registeredTutor/approveBankAccount'
-                // param name - 'selectedId'
-                // param value - record.property('bankAccountId')
-                // response - If success = true -> refresh grid if false - show Alert Failure with message
-              }
-            }, {
-              id : 'makeDefault',
-              label : 'Make Default',
-              clickEvent : (record : GridRecord, button :ActionButton) => {
-                // '/rest/registeredTutor/makeDefaultBankAccount'
-                // param name - 'selectedId'
-                // param value - record.property('bankAccountId')
-                // response - If success = true -> refresh grid if false - show Alert Failure with message
-              }
-            }, {
-              id : 'reject',
-              label : 'Reject',
-              clickEvent : (record : GridRecord, button :ActionButton) => {
-                // '/rest/registeredTutor/rejectBankAccount'
-                // param name - 'selectedId'
-                // param value - record.property('bankAccountId')
-                // response - If success = true -> refresh grid if false - show Alert Failure with message
-              }
-            }]
-          }
+        }
       },
       htmlDomElementId: 'bank-detail-grid',
       hidden: false,
     };
 
-   this.currentPackagesGridMetaData = {
+    this.currentPackagesGridMetaData = {
       grid: {
         id: 'currentPackagesGrid',
         title: 'Current Packages',
@@ -318,8 +336,8 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           headerName: 'Start Date',
           dataType: 'date',
           mapping: 'startDateMillis',
-		      renderer: GridCommonFunctions.renderDateFromMillis
-        },{
+          renderer: GridCommonFunctions.renderDateFromMillis
+        }, {
           id: 'completedHours',
           headerName: 'Completed Hours',
           dataType: 'number',
@@ -353,8 +371,8 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           headerName: 'Start Date',
           dataType: 'date',
           mapping: 'startDateMillis',
-		      renderer: GridCommonFunctions.renderDateFromMillis
-        },{
+          renderer: GridCommonFunctions.renderDateFromMillis
+        }, {
           id: 'endDate',
           headerName: 'Completed Hours',
           dataType: 'date',
@@ -367,8 +385,14 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     };
   }
 
-  makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, gridComponent: GridComponent) {
-    const selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
+  makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, gridComponent: GridComponent, multipleRecords: boolean = false) {
+
+    let selectedIdsList = [];
+    if (multipleRecords) {
+      selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
+    } else {
+      selectedIdsList = [selectedRecords[0].getProperty(property)];
+    }
     if (selectedIdsList.length === 0) {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -378,7 +402,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       });
     } else {
       const data = {
-        selectedIdsList: selectedIdsList.join(';')
+        params: selectedIdsList.join(';')
       };
       this.utilityService.makeRequestWithoutResponseHandler(url, 'POST', this.utilityService.urlEncodeData(data),
         'application/x-www-form-urlencoded').subscribe(result => {
@@ -408,27 +432,51 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getPropertiesToBeDisaplyedInForm() {
-    return Object.keys(this.tutorRecord.property);
+
+  isLocationSelected(value: string) {
+    return this.tutorRecord.property['comfortableLocations'].split(';').includes(value);
   }
 
-  updateTutorProperty(key: string, value: string) {
-    this.tutorUpdatedData[key] = value;
+  getFormattedDate(date: string) {
+    const date_object = new Date(date);
+    return date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate();
   }
 
-  updateTutorRecord() {    
+  updateTutorProperty(key: string, value: string, date_type: string) {
+    switch (date_type) {
+      case 'list':
+        let previous_value = this.tutorUpdatedData[key];
+        if (!previous_value) {
+          previous_value = this.tutorRecord.property[key];
+        }
+        const previous_value_array = previous_value.split(';');
+        if (previous_value_array.includes(value)) {
+          previous_value_array.splice(previous_value_array.indexOf(value), 1);
+
+        } else {
+          previous_value_array.push(value);
+        }
+        this.tutorUpdatedData[key] = previous_value_array.join(';');
+        break;
+      default:
+        this.tutorUpdatedData[key] = value;
+    }
+    console.log(this.tutorUpdatedData);
+  }
+
+  updateTutorRecord() {
     const data = {
       completeTutorRecord: JSON.stringify(this.tutorUpdatedData)
     };
-    alert(JSON.stringify(this.tutorUpdatedData))
+    // alert(JSON.stringify(this.tutorUpdatedData))
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.tutor_update_record, 'POST',
-                                          this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+      this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
   }
 
   onUpdateTutorRecord(context: any, data: any) {
-    if(data['success'] === true) {
+    if (data['success'] === true) {
 
-    }else {
+    } else {
 
     }
   }

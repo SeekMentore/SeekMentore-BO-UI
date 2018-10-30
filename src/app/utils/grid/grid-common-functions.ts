@@ -79,7 +79,7 @@ export class GridCommonFunctions {
 
   public static yesNoRenderer(record, column) {
     return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.yesNoFilterOptions);
-  }  
+  }
 
   public static getSelectedRecordsPropertyList(selectedRecords: GridRecord[], propertyName: string) {
     const selectedPropertyList: any[] = [];

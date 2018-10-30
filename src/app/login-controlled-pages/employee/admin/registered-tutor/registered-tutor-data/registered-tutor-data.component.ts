@@ -172,19 +172,28 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approve',
             label: 'Approve',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // Refer document
+                // '/rest/registeredTutor/approveTutorDocument'
+                // param name - 'selectedId'
+                // param value - record.property('documentId')
+                // response - If success = true -> refresh grid if false - show Alert Failure with message
             }
           }, {
             id: 'sendReminder',
             label: 'Send Reminder',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // Refer document
+                // '/rest/registeredTutor/sendReminderTutorDocument'
+                // param name - 'selectedId'
+                // param value - record.property('documentId')
+                // response - If success = true -> refresh grid if false - show Alert Failure with message
             }
           }, {
             id: 'reject',
             label: 'Reject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // Refer document
+                // '/rest/registeredTutor/rejectTutorDocument'
+                // param name - 'selectedId'
+                // param value - record.property('documentId')
+                // response - If success = true -> refresh grid if false - show Alert Failure with message
             }
           }]
         }
@@ -255,20 +264,29 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             buttons : [{
               id : 'approve',
               label : 'Approve',
-              clickEvent : function(record : GridRecord, button :ActionButton) {
-                // Refer document
+              clickEvent : (record : GridRecord, button :ActionButton) => {
+                // '/rest/registeredTutor/approveBankAccount'
+                // param name - 'selectedId'
+                // param value - record.property('bankAccountId')
+                // response - If success = true -> refresh grid if false - show Alert Failure with message
               }
             }, {
               id : 'makeDefault',
               label : 'Make Default',
-              clickEvent : function(record : GridRecord, button :ActionButton) {
-                // Refer document
+              clickEvent : (record : GridRecord, button :ActionButton) => {
+                // '/rest/registeredTutor/makeDefaultBankAccount'
+                // param name - 'selectedId'
+                // param value - record.property('bankAccountId')
+                // response - If success = true -> refresh grid if false - show Alert Failure with message
               }
             }, {
               id : 'reject',
               label : 'Reject',
-              clickEvent : function(record : GridRecord, button :ActionButton) {
-                // Refer document
+              clickEvent : (record : GridRecord, button :ActionButton) => {
+                // '/rest/registeredTutor/rejectBankAccount'
+                // param name - 'selectedId'
+                // param value - record.property('bankAccountId')
+                // response - If success = true -> refresh grid if false - show Alert Failure with message
               }
             }]
           }
@@ -350,10 +368,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, gridComponent: GridComponent) {
-    alert(property);
     const selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
-    console.log(JSON.stringify(selectedIdsList))
-    console.log(JSON.stringify(selectedRecords))
     if (selectedIdsList.length === 0) {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -401,11 +416,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     this.tutorUpdatedData[key] = value;
   }
 
-  updateTutorRecord() {
-    const paramsData = new URLSearchParams();
-    paramsData.set('completeTutorRecord', JSON.stringify(this.tutorUpdatedData));
+  updateTutorRecord() {    
+    const data = {
+      completeTutorRecord: JSON.stringify(this.tutorUpdatedData)
+    };
+    alert(JSON.stringify(this.tutorUpdatedData))
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.tutor_update_record, 'POST',
-                                                            paramsData, 'application/x-www-form-urlencoded');
+                                          this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
   }
 
   onUpdateTutorRecord(context: any, data: any) {

@@ -316,11 +316,11 @@
           (change)="selectionButtonCheckedUnchecked(record, $event.target)">
       </div>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}"
-            class="uigrid-cell" *ngFor="let column of grid.columns"
+            class="uigrid-cell {{column.appliedClassNames}}" *ngFor="let column of grid.columns"
             [ngStyle]="{'display' : getColumnDisplayStyle(column)}" (click)="columnClicked(record, column)">
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column'+column.id+'-span-column'}}"
-          *ngIf="!(column.hidden)" class="{{column.appliedClassNames}}">
+          *ngIf="!(column.hidden)">
           {{defaultColumnValueRenderer(record, column)}}
           <a href="javascript:void(0);" style="color: blue;" *ngIf="(column.lengthyData || column.multiList)" (click)="columnClicked(record, column)">more...</a>
         </span>

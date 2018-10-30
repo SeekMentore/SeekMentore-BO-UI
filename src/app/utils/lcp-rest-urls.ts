@@ -21,5 +21,5 @@ export class LcpRestUrls {
   static tutor_update_record = '/rest/registeredTutor/updateTutorRecord';
   static customerDataAccess = '/rest/admin/subscribedCustomerCheckDataAccess';
   static blackListSubscribedCustomers = '/rest/admin/blacklistSubscribedCustomers';
-  static customer_update_record = '/rest/subscribedCustomer/updateCustomerRecord';// param name - 'completeCustomerRecord' send same as the Tutor form
+  static customer_update_record = '/rest/subscribedCustomer/updateCustomerRecord';
 }

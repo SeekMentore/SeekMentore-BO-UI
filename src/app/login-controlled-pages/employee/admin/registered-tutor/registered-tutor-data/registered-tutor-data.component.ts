@@ -384,7 +384,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           renderer: GridCommonFunctions.renderDateFromMillis
         }, {
           id: 'endDate',
-          headerName: 'Completed Hours',
+          headerName: 'End Date',
           dataType: 'date',
           mapping: 'endDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillis

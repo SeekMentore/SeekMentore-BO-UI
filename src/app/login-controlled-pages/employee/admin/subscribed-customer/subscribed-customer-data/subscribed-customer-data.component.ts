@@ -131,7 +131,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
 		      renderer: GridCommonFunctions.renderDateFromMillis
         },{
           id: 'endDate',
-          headerName: 'Completed Hours',
+          headerName: 'End Date',
           dataType: 'date',
           mapping: 'endDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillis
@@ -172,13 +172,12 @@ export class SubscribedCustomerDataComponent implements OnInit {
   updateCustomerRecord() {
     const data = {
       completeCustomerRecord: JSON.stringify(this.customerUpdatedData)
-    };
-    // alert(JSON.stringify(this.tutorUpdatedData))
-    this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.customer_update_record, 'POST',
+    };    
+    this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
   }
 
-  onUpdateTutorRecord(context: any, data: any) {
+  onUpdateCustomerRecord(context: any, data: any) {
     if (data['success'] === true) {
 
     } else {

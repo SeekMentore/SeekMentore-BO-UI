@@ -14,10 +14,15 @@
         </td>
     </tr>
   </table>
-  <button class="ok-button" *ngIf="columnExtraDataDisplayInput.hasClickEventHandlerAttached" style="align-self: flex-end" (click)="proceedClicked()">
-    Proceed
-  </button>
-  <button class="cancel-button" (click)="dismissClicked()">
+  <span *ngIf="columnExtraDataDisplayInput.hasClickEventHandlerAttached">
+    <button class="ok-button" style="align-self: flex-start; width: 45%;" (click)="proceedClicked()">
+      Proceed
+    </button>
+    <button class="cancel-button" style="align-self: flex-end; width: 45%;" (click)="dismissClicked()">
+      Dismiss
+    </button> 
+  </span>
+  <button class="cancel-button" *ngIf="!columnExtraDataDisplayInput.hasClickEventHandlerAttached" (click)="dismissClicked()">
     Dismiss
-  </button> 
+  </button>
 </div>

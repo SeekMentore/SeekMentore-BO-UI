@@ -6,7 +6,7 @@ import { ActionButton } from 'src/app/utils/grid/action-button';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { HelperService } from "src/app/utils/helper.service";
+import { HelperService, AlertDialogEvent } from "src/app/utils/helper.service";
 import { LcpConstants } from "src/app/utils/lcp-constants";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
 
@@ -44,28 +44,20 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   tutorUpdatedData = {};
 
-
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
     this.bankDetailGridMetaData = null;
     this.currentPackagesGridMetaData = null;
     this.historyPackagesGridMetaData = null;
     this.tutorUpdatedData = {};
-
-    // console.log('selected tutor record', this.tutorRecord, this.tutorDataAccess);
-
-
   }
 
   ngOnInit() {
-    // console.log('selected tutor record', this.tutorRecord, this.tutorDataAccess);
     this.setUpGridMetaData();
-    // alert('A'+JSON.stringify(this.tutorDataAccess))
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      // we might get error because grid extra params are being set after initialisation
       if( this.tutorDataAccess.documentViewAccess ) {
         this.uploadedDocumentGridObject.init();
         this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
@@ -153,7 +145,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Approve',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_multiple, selectedRecords,
-                'documentId', 'documentIds', this.uploadedDocumentGridObject);
+                'documentId', this.uploadedDocumentGridObject);
             }
           }, {
             id: 'sendReminderMultiple',
@@ -161,7 +153,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             btnclass: 'btnReset',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_multiple, selectedRecords,
-                'documentId', 'documentIds', this.uploadedDocumentGridObject);
+                'documentId', this.uploadedDocumentGridObject);
             }
           }, {
             id: 'rejectMultiple',
@@ -169,7 +161,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             btnclass: 'btnReject',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_multiple, selectedRecords,
-                'documentId', 'documentIds', this.uploadedDocumentGridObject);
+                'documentId', this.uploadedDocumentGridObject);
             }
           }]
         },
@@ -237,14 +229,14 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           mapping: 'isDefault',
           renderer: GridCommonFunctions.yesNoRenderer
         }],
-        hasSelectionColumn : (this.tutorDataAccess.bankViewAccess && this.tutorDataAccess.bankHandleAccess),
+        hasSelectionColumn : this.tutorDataAccess.bankHandleAccess,
         selectionColumn : {
           buttons : [{
             id : 'approveMultiple',
             label : 'Approve',
             clickEvent : (selectedRecords: GridRecord[], button :ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_multiple, selectedRecords,
-                'bankAccountId', 'bankAccountIds', this.bankDetailGridObject);
+                'bankAccountId', this.bankDetailGridObject);
 
             }
           }, {
@@ -253,7 +245,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             btnclass : 'btnReject',
             clickEvent : (selectedRecords: GridRecord[], button :ActionButton) => {
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_multiple, selectedRecords,
-                'bankAccountId', 'bankAccountIds', this.bankDetailGridObject);
+                'bankAccountId', this.bankDetailGridObject);
             }
           }]
         },
@@ -285,9 +277,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       hidden: false,
     };
 
-    // console.log(this.tutorDataAccess, (this.tutorDataAccess.bankViewAccess && this.tutorDataAccess.bankHandleAccess),this.bankDetailGridMetaData);
-
-    this.currentPackagesGridMetaData = {
+   this.currentPackagesGridMetaData = {
       grid: {
         id: 'currentPackagesGrid',
         title: 'Current Packages',
@@ -359,25 +349,24 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     };
   }
 
-
-  makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, paramKey: string, gridComponent: GridComponent) {
+  makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, gridComponent: GridComponent) {
+    alert(property);
     const selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
-
+    console.log(JSON.stringify(selectedIdsList))
+    console.log(JSON.stringify(selectedRecords))
     if (selectedIdsList.length === 0) {
       this.helperService.showAlertDialog({
         isSuccess: false,
         message: LcpConstants.grid_generic_no_record_selected_error,
         onButtonClicked: () => {
-
         }
       });
     } else {
       const data = {
-        paramKey: selectedIdsList.join(';')
+        selectedIdsList: selectedIdsList.join(';')
       };
       this.utilityService.makeRequestWithoutResponseHandler(url, 'POST', this.utilityService.urlEncodeData(data),
         'application/x-www-form-urlencoded').subscribe(result => {
-
         let response = result['response'];
         response = this.utilityService.decodeObjectFromJSON(response);
         if (response != null) {
@@ -386,7 +375,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
               isSuccess: response['success'],
               message: response['message'],
               onButtonClicked: () => {
-
               }
             });
           } else {
@@ -394,6 +382,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           }
         }
       }, error2 => {
+        const myListener: AlertDialogEvent = {
+          isSuccess: false,
+          message: 'Communication failure!! Something went wrong',
+          onButtonClicked: () => {
+          }
+        };
+        this.helperService.showAlertDialog(myListener);
       });
     }
   }
@@ -404,12 +399,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   updateTutorProperty(key: string, value: string) {
     this.tutorUpdatedData[key] = value;
-    // console.log(this.tutorUpdatedData);
   }
 
   updateTutorRecord() {
+    const paramsData = new URLSearchParams();
+    paramsData.set('completeTutorRecord', JSON.stringify(this.tutorUpdatedData));
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.tutor_update_record, 'POST',
-      this.utilityService.urlEncodeData(this.tutorUpdatedData), 'application/x-www-form-urlencoded');
+                                                            paramsData, 'application/x-www-form-urlencoded');
   }
 
   onUpdateTutorRecord(context: any, data: any) {

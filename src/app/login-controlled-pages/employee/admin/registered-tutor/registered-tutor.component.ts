@@ -155,7 +155,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
                   isSuccess: false,
                   message: LcpConstants.tutor_grid_no_tutors_selected,
                   onButtonClicked: () => {
-
                   }
                 });
               } else {
@@ -173,12 +172,11 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
                   isSuccess: false,
                   message: LcpConstants.tutor_grid_no_record_selected_blacklist,
                   onButtonClicked: () => {
-
                   }
                 });
               } else {
                 const data = {
-                  params: tutorIdsList.join(';'),
+                  tutorIdsList: tutorIdsList.join(';'),
                   comments: ''
                 };
                 this.utilityService.makerequest(this, this.handleBlackListRequest,
@@ -210,6 +208,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
         documentViewAccess: response.documentViewAccess,
         documentHandleAccess: response.documentHandleAccess,
         bankViewAccess: response.bankViewAccess,
+        bankHandleAccess: response.bankHandleAccess,
         formDataEditAccess: response.formDataEditAccess,
         activePackageViewAccess: response.activePackageViewAccess,
         historyPackagesViewAccess: response.historyPackagesViewAccess,
@@ -263,5 +262,4 @@ export interface RegisterTutorDataAccess {
   formDataEditAccess: boolean;
   activePackageViewAccess: boolean;
   historyPackagesViewAccess: boolean;
-
 }

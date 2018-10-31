@@ -39,6 +39,7 @@ import { EmailComponent } from './utils/email/email.component';
 import { GridColumnExtraDataComponent } from './utils/grid/grid-column-extra-data/grid-column-extra-data.component';
 import { BecomeTutorDataComponent } from './login-controlled-pages/employee/support/tutor-registration/become-tutor-data/become-tutor-data.component';
 import { EnquiryDataComponent } from './login-controlled-pages/employee/support/enquiry-registration/enquiry-data/enquiry-data.component';
+import { SubscriptionDataComponent } from './login-controlled-pages/employee/support/subscription-requested/subscription-data/subscription-data.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { EnquiryDataComponent } from './login-controlled-pages/employee/support/
     GridRecordPopUpComponent,
     GridColumnExtraDataComponent,
     BecomeTutorDataComponent,
-    EnquiryDataComponent
+    EnquiryDataComponent,
+    SubscriptionDataComponent
   ],
   imports: [
     BrowserModule,

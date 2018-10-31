@@ -68,7 +68,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       if (this.tutorDataAccess.documentViewAccess) {
         this.uploadedDocumentGridObject.init();
         this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
-
       }
       if (this.tutorDataAccess.bankViewAccess) {
         this.bankDetailGridObject.init();

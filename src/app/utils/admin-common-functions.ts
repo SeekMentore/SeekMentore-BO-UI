@@ -59,4 +59,28 @@ export class AdminCommonFunctions {
     public static locationsMultiRenderer(record: GridRecord, column: Column) {
         return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.locationsFilterOptions, ';'); 
     }
+
+    public static preferredTimeToCallRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.preferredTimeToCallFilterOptions); 
+    }
+    
+    public static preferredTimeToCallMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.preferredTimeToCallFilterOptions, ';'); 
+    }
+
+    public static referenceRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.referenceFilterOptions); 
+    }
+    
+    public static referenceMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.referenceFilterOptions, ';'); 
+    }
+
+    public static preferredTeachingTypeRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.preferredTeachingTypeFilterOptions); 
+    }
+    
+    public static preferredTeachingTypeMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.preferredTeachingTypeFilterOptions, ';'); 
+    }
 }

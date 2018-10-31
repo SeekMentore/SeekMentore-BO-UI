@@ -74,6 +74,22 @@ export class CommonFilterOptions {
       value : '06',
       label : 'location6'
     }];
+
+    static preferredTimeToCallFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
+
+    static referenceFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
+
+    static preferredTeachingTypeFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
+
+    static applicationStatusFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
 }
 
 

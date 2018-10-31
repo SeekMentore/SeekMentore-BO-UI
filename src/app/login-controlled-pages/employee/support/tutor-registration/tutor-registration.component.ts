@@ -265,7 +265,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           label: 'Blacklist',
           btnclass: 'btnReject',
           clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorId');
+            const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeTutorId');
             if (tutorIdsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,

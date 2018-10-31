@@ -90,6 +90,10 @@ export class CommonFilterOptions {
     static applicationStatusFilterOptions: any [] = [
     // Leave it blank right now , I will write this content later
     ];
+
+    static enquiryStatusFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
 }
 
 

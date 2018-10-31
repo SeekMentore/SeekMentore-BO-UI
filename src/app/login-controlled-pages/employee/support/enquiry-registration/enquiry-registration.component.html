@@ -1,3 +1,19 @@
-<p>
-  enquiry-registration works!
-</p>
+<div>
+  <div id="enquiry-list-page" *ngIf="!showEnquiryData">
+    <app-grid #nonContactedEnquiryGrid id="non-contacted-enquiry-grid" [gridMetaData]="nonContactedEnquiryGridMetaData"></app-grid>
+    <app-grid #nonVerifiedEnquiryGrid id="non-verified-enquiry-grid" [gridMetaData]="nonVerifiedEnquiryGridMetaData"></app-grid>
+    <app-grid #verifiedEnquiryGrid id="verified-enquiry-grid" [gridMetaData]="verifiedEnquiryGridMetaData"></app-grid>
+    <app-grid #verificationFailedEnquiryGrid id="verification-failed-enquiry-grid" [gridMetaData]="verificationFailedEnquiryGridMetaData"></app-grid>
+    <app-grid #toBeReContactedEnquiryGrid id="to-be-recontacted-enquiry-grid" [gridMetaData]="toBeReContactedEnquiryGridMetaData"></app-grid>
+    <app-grid #selectedEnquiryGrid id="selected-enquiry-grid" [gridMetaData]="selectedEnquiryGridMetaData"></app-grid>
+    <app-grid #rejectedEnquiryGrid id="rejected-enquiry-grid" [gridMetaData]="rejectedEnquiryGridMetaData"></app-grid>    
+  </div>
+  <div id="enquiry-data-page" *ngIf="showEnquiryData">
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="toggleVisibilityEnquiryGrid()">
+      Back To Listing
+    </button>
+    <app-enquiry-data [enquiryRecord]="selectedEnquiryRecord" [enquiryDataAccess]="enquiryDataAccess"></app-enquiry-data>
+  </div>
+</div>

@@ -38,6 +38,7 @@ import { GridRecordPopUpComponent } from './utils/grid/grid-record-pop-up/grid-r
 import { EmailComponent } from './utils/email/email.component';
 import { GridColumnExtraDataComponent } from './utils/grid/grid-column-extra-data/grid-column-extra-data.component';
 import { BecomeTutorDataComponent } from './login-controlled-pages/employee/support/tutor-registration/become-tutor-data/become-tutor-data.component';
+import { EnquiryDataComponent } from './login-controlled-pages/employee/support/enquiry-registration/enquiry-data/enquiry-data.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { BecomeTutorDataComponent } from './login-controlled-pages/employee/supp
     ControlPanelComponent,
     GridRecordPopUpComponent,
     GridColumnExtraDataComponent,
-    BecomeTutorDataComponent
+    BecomeTutorDataComponent,
+    EnquiryDataComponent
   ],
   imports: [
     BrowserModule,

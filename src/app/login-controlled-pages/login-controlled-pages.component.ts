@@ -39,6 +39,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.log('LCP');
     this.userType = localStorage.getItem(LcpConstants.user_type_key);      
     if (!('admin' === this.userType || 'customer' === this.userType || 'tutor' === this.userType)) {
       this.router.navigateByUrl('/public/login');

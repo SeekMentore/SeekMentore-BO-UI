@@ -36,6 +36,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    console.log('Registered Tutor');
   }
 
   ngAfterViewInit() {

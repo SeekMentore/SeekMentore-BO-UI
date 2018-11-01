@@ -40,6 +40,7 @@ import { GridColumnExtraDataComponent } from './utils/grid/grid-column-extra-dat
 import { BecomeTutorDataComponent } from './login-controlled-pages/employee/support/tutor-registration/become-tutor-data/become-tutor-data.component';
 import { EnquiryDataComponent } from './login-controlled-pages/employee/support/enquiry-registration/enquiry-data/enquiry-data.component';
 import { SubscriptionDataComponent } from './login-controlled-pages/employee/support/subscription-requested/subscription-data/subscription-data.component';
+import { QueryDataComponent } from './login-controlled-pages/employee/support/query-submitted/query-data/query-data.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { SubscriptionDataComponent } from './login-controlled-pages/employee/sup
     GridColumnExtraDataComponent,
     BecomeTutorDataComponent,
     EnquiryDataComponent,
-    SubscriptionDataComponent
+    SubscriptionDataComponent,
+    QueryDataComponent
   ],
   imports: [
     BrowserModule,

@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('Home');
     this.userType = localStorage.getItem(LcpConstants.user_type_key);    
   }
 }

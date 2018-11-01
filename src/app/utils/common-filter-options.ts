@@ -94,6 +94,10 @@ export class CommonFilterOptions {
     static enquiryStatusFilterOptions: any [] = [
     // Leave it blank right now , I will write this content later
     ];
+
+    static queryStatusFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
 }
 
 

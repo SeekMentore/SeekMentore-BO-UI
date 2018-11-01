@@ -98,6 +98,14 @@ export class CommonFilterOptions {
     static queryStatusFilterOptions: any [] = [
     // Leave it blank right now , I will write this content later
     ];
+
+    static complaintStatusFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
+
+    static complaintUserFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
 }
 
 

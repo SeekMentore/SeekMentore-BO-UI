@@ -1,3 +1,16 @@
-<p>
-  complaints works!
-</p>
+<div>
+  <div id="complaint-list-page" *ngIf="!showComplaintData">
+    <app-grid #customerComplaintGrid id="customer-complaint-grid" [gridMetaData]="customerComplaintGridMetaData"></app-grid>
+    <app-grid #tutorComplaintGrid id="tutor-complaint-grid" [gridMetaData]="tutorComplaintGridMetaData"></app-grid>
+    <app-grid #employeeComplaintGrid id="employee-complaint-grid" [gridMetaData]="employeeComplaintGridMetaData"></app-grid>
+    <app-grid #resolvedComplaintGrid id="resolved-complaint-grid" [gridMetaData]="resolvedComplaintGridMetaData"></app-grid>
+  </div>
+  <div id="complaint-data-page" *ngIf="showComplaintData">
+    <button
+      id="back-to-complaint-listing-button"
+      class="ok-button" (click)="toggleVisibilityComplaintGrid()">
+      Back To Listing
+    </button>
+    <app-complaint-data [complaintRecord]="selectedComplaintRecord" [complaintDataAccess]="complaintDataAccess"></app-complaint-data>
+  </div>
+</div>

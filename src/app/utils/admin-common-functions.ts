@@ -83,4 +83,12 @@ export class AdminCommonFunctions {
     public static preferredTeachingTypeMultiRenderer(record: GridRecord, column: Column) {
         return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.preferredTeachingTypeFilterOptions, ';'); 
     }
+
+    public static complaintUserRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.complaintUserFilterOptions); 
+    }
+    
+    public static complaintUserMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.complaintUserFilterOptions, ';'); 
+    }
 }

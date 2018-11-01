@@ -41,6 +41,7 @@ import { BecomeTutorDataComponent } from './login-controlled-pages/employee/supp
 import { EnquiryDataComponent } from './login-controlled-pages/employee/support/enquiry-registration/enquiry-data/enquiry-data.component';
 import { SubscriptionDataComponent } from './login-controlled-pages/employee/support/subscription-requested/subscription-data/subscription-data.component';
 import { QueryDataComponent } from './login-controlled-pages/employee/support/query-submitted/query-data/query-data.component';
+import { ComplaintDataComponent } from './login-controlled-pages/employee/support/complaints/complaint-data/complaint-data.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { QueryDataComponent } from './login-controlled-pages/employee/support/qu
     BecomeTutorDataComponent,
     EnquiryDataComponent,
     SubscriptionDataComponent,
-    QueryDataComponent
+    QueryDataComponent,
+    ComplaintDataComponent
   ],
   imports: [
     BrowserModule,

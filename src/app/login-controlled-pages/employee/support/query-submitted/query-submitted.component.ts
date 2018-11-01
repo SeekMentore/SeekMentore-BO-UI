@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
@@ -7,7 +7,6 @@ import { Column } from 'src/app/utils/grid/column';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 
@@ -16,7 +15,7 @@ import { LcpConstants } from 'src/app/utils/lcp-constants';
   templateUrl: './query-submitted.component.html',
   styleUrls: ['./query-submitted.component.css']
 })
-export class QuerySubmittedComponent implements OnInit {
+export class QuerySubmittedComponent implements OnInit, AfterViewInit {
 
   @ViewChild('nonContactedQueryGrid')
   nonContactedQueryGridObject: GridComponent;
@@ -52,7 +51,6 @@ export class QuerySubmittedComponent implements OnInit {
       this.nonAnsweredQueryGridObject.init();
       this.answeredQueryGridObject.init();
     }, 0);
-
     setTimeout(() => {
       this.nonContactedQueryGridObject.refreshGridData();
       this.nonAnsweredQueryGridObject.refreshGridData();
@@ -72,7 +70,7 @@ export class QuerySubmittedComponent implements OnInit {
         id: 'queryRequestedDate',
         headerName: 'Query Requested Date',
         dataType: 'date',
-        mapping: 'queryRequestedDate',
+        mapping: 'queryRequestedDateMillis',
         renderer: GridCommonFunctions.renderDateFromMillisWithTime,
         clickEvent: (record: GridRecord, column: Column) => {
           // Open the Data view port

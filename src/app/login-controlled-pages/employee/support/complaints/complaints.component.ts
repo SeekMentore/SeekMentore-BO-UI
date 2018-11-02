@@ -79,7 +79,6 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
         headerName: 'Name',
         dataType: 'string',
         mapping: 'name',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime,
         clickEvent: (record: GridRecord, column: Column) => {
           // Open the Data view port
           this.interimHoldSelectedComplaintRecord = record;
@@ -156,25 +155,25 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   public setUpGridMetaData() {
     this.customerComplaintGridMetaData = {
       grid: this.getGridObject('customerComplaintGrid', 'Customer Complaints', '/rest/support/customerComplaintList', this.customerComplaintGridObject),
-      htmlDomElementId: 'non-contacted-query-grid',
+      htmlDomElementId: 'customer-complaint-grid',
       hidden: false
     };
 
     this.tutorComplaintGridMetaData = {
       grid: this.getGridObject('tutorComplaintGrid', 'Tutor Complaints', '/rest/support/tutorComplaintList', this.tutorComplaintGridObject),
-      htmlDomElementId: 'non-answered-query-grid',
+      htmlDomElementId: 'tutor-complaint-grid',
       hidden: false
     };
 
     this.employeeComplaintGridMetaData = {
       grid: this.getGridObject('employeeComplaintGrid', 'Employee Complaints', '/rest/support/employeeComplaintList', this.employeeComplaintGridObject),
-      htmlDomElementId: 'answered-query-grid',
+      htmlDomElementId: 'employee-complaint-grid',
       hidden: false
     };   
     
     this.resolvedComplaintGridMetaData = {
       grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList', this.resolvedComplaintGridObject),
-      htmlDomElementId: 'answered-query-grid',
+      htmlDomElementId: 'resolved-complaint-grid',
       hidden: false
     };   
   }

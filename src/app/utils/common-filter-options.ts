@@ -106,6 +106,10 @@ export class CommonFilterOptions {
     static complaintUserFilterOptions: any [] = [
     // Leave it blank right now , I will write this content later
     ];
+
+    static matchStatusFilterOptions: any [] = [
+    // Leave it blank right now , I will write this content later
+    ];
 }
 
 

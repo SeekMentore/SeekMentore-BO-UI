@@ -42,6 +42,7 @@ import { EnquiryDataComponent } from './login-controlled-pages/employee/support/
 import { SubscriptionDataComponent } from './login-controlled-pages/employee/support/subscription-requested/subscription-data/subscription-data.component';
 import { QueryDataComponent } from './login-controlled-pages/employee/support/query-submitted/query-data/query-data.component';
 import { ComplaintDataComponent } from './login-controlled-pages/employee/support/complaints/complaint-data/complaint-data.component';
+import { EnquiriesDataComponent } from './login-controlled-pages/employee/sales/all-enquiries/enquiries-data/enquiries-data.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { ComplaintDataComponent } from './login-controlled-pages/employee/suppor
     EnquiryDataComponent,
     SubscriptionDataComponent,
     QueryDataComponent,
-    ComplaintDataComponent
+    ComplaintDataComponent,
+    EnquiriesDataComponent
   ],
   imports: [
     BrowserModule,

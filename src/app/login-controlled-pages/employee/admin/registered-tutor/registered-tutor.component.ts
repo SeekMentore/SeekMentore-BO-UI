@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { Column } from 'src/app/utils/grid/column';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { HelperService } from 'src/app/utils/helper.service';
-import { LcpConstants } from "src/app/utils/lcp-constants";
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {Column} from 'src/app/utils/grid/column';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {HelperService} from 'src/app/utils/helper.service';
+import {LcpConstants} from "src/app/utils/lcp-constants";
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-registered-tutor',
@@ -58,95 +58,108 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           isStatic: false,
           restURL: '/rest/admin/registeredTutorsList'
         },
-        columns: [{
-          id: 'name',
-          headerName: 'Name',
-          dataType: 'string',
-          mapping: 'name',
-          clickEvent: (record: GridRecord, column: Column) => {
-            // Open the Data view port
-            this.interimHoldSelectedTutorRecord = record;
-            if (this.tutorDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
-            } else {
-              this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
-              this.toggleVisibilityRegisterTutorGrid();
+        columns: [
+          {
+            id: 'name',
+            headerName: 'Name',
+            dataType: 'string',
+            mapping: 'name',
+            clickEvent: (record: GridRecord, column: Column) => {
+              // Open the Data view port
+              this.interimHoldSelectedTutorRecord = record;
+              if (this.tutorDataAccess === null) {
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+              } else {
+                this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
+                this.toggleVisibilityRegisterTutorGrid();
+              }
             }
+          },
+          {
+            id: 'contactNumber',
+            headerName: 'Contact Number',
+            dataType: 'string',
+            mapping: 'contactNumber'
+          },
+          {
+            id: 'emailId',
+            headerName: 'Email Id',
+            dataType: 'string',
+            mapping: 'emailId'
+          },
+          {
+            id: 'gender',
+            headerName: 'Gender',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.genderFilterOptions,
+            mapping: 'gender',
+            renderer: AdminCommonFunctions.genderRenderer
+          },
+          {
+            id: 'qualification',
+            headerName: 'Qualification',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.qualificationFilterOptions,
+            mapping: 'qualification',
+            renderer: AdminCommonFunctions.qualificationRenderer
+          },
+          {
+            id: 'primaryProfession',
+            headerName: 'Primary Profession',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.primaryProfessionFilterOptions,
+            mapping: 'primaryProfession',
+            renderer: AdminCommonFunctions.primaryProfessionRenderer
+          },
+          {
+            id: 'transportMode',
+            headerName: 'Transport Mode',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.transportModeFilterOptions,
+            mapping: 'transportMode',
+            renderer: AdminCommonFunctions.transportModeRenderer
+          },
+          {
+            id: 'teachingExp',
+            headerName: 'Teaching Experience',
+            dataType: 'number',
+            mapping: 'teachingExp'
+          },
+          {
+            id: 'interestedStudentGrades',
+            headerName: 'Interested Student Grades',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+            mapping: 'interestedStudentGrades',
+            multiList: true,
+            renderer: AdminCommonFunctions.studentGradesMultiRenderer
+          },
+          {
+            id: 'interestedSubjects',
+            headerName: 'Interested Subjects',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.subjectsFilterOptions,
+            mapping: 'interestedSubjects',
+            multiList: true,
+            renderer: AdminCommonFunctions.subjectsMultiRenderer
+          },
+          {
+            id: 'comfortableLocations',
+            headerName: 'Comfortable Locations',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.locationsFilterOptions,
+            mapping: 'comfortableLocations',
+            multiList: true,
+            renderer: AdminCommonFunctions.locationsMultiRenderer
+          },
+          {
+            id: 'additionalDetails',
+            headerName: 'Additional Details',
+            dataType: 'string',
+            mapping: 'additionalDetails',
+            lengthyData: true
           }
-        }, {
-          id: 'contactNumber',
-          headerName: 'Contact Number',
-          dataType: 'string',
-          mapping: 'contactNumber'
-        }, {
-          id: 'emailId',
-          headerName: 'Email Id',
-          dataType: 'string',
-          mapping: 'emailId'
-        }, {
-          id: 'gender',
-          headerName: 'Gender',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.genderFilterOptions,
-          mapping: 'gender',
-          renderer: AdminCommonFunctions.genderRenderer
-        }, {
-          id: 'qualification',
-          headerName: 'Qualification',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.qualificationFilterOptions,
-          mapping: 'qualification',
-          renderer: AdminCommonFunctions.qualificationRenderer
-        }, {
-          id: 'primaryProfession',
-          headerName: 'Primary Profession',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.primaryProfessionFilterOptions,
-          mapping: 'primaryProfession',
-          renderer: AdminCommonFunctions.primaryProfessionRenderer
-        }, {
-          id: 'transportMode',
-          headerName: 'Transport Mode',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.transportModeFilterOptions,
-          mapping: 'transportMode',
-          renderer: AdminCommonFunctions.transportModeRenderer
-        }, {
-          id: 'teachingExp',
-          headerName: 'Teaching Experience',
-          dataType: 'number',
-          mapping: 'teachingExp'
-        }, {
-          id: 'interestedStudentGrades',
-          headerName: 'Interested Student Grades',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
-          mapping: 'interestedStudentGrades',
-          multiList: true,
-          renderer: AdminCommonFunctions.studentGradesMultiRenderer
-        }, {
-          id: 'interestedSubjects',
-          headerName: 'Interested Subjects',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.subjectsFilterOptions,
-          mapping: 'interestedSubjects',
-          multiList: true,
-          renderer: AdminCommonFunctions.subjectsMultiRenderer
-        }, {
-          id: 'comfortableLocations',
-          headerName: 'Comfortable Locations',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.locationsFilterOptions,
-          mapping: 'comfortableLocations',
-          multiList: true,
-          renderer: AdminCommonFunctions.locationsMultiRenderer
-        }, {
-          id: 'additionalDetails',
-          headerName: 'Additional Details',
-          dataType: 'string',
-          mapping: 'additionalDetails',
-          lengthyData: true
-        }],
+        ],
         hasSelectionColumn: true,
         selectionColumn: {
           buttons: [{

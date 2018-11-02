@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { RegisterTutorDataAccess } from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { HelperService } from 'src/app/utils/helper.service';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
-import { Column } from 'src/app/utils/grid/column';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {RegisterTutorDataAccess} from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {HelperService} from 'src/app/utils/helper.service';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import {AlertDialogEvent} from 'src/app/utils/alert-dialog/alert-dialog.component';
+import {Column} from 'src/app/utils/grid/column';
 
 @Component({
   selector: 'app-registered-tutor-data',
@@ -49,6 +49,24 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+
+  singleSelectOptions = {
+    singleSelection: true,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
+  multiSelectOptions = {
+    singleSelection: false,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
 
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -181,7 +199,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approve',
             label: 'Approve',
-            clickEvent: (record: GridRecord, button: ActionButton) => {              
+            clickEvent: (record: GridRecord, button: ActionButton) => {
               // '/rest/registeredTutor/approveTutorDocument'
               // param name - 'selectedId'
               // param value - record.property('documentId')

@@ -1,15 +1,15 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { Column } from 'src/app/utils/grid/column';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import {Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {HelperService} from 'src/app/utils/helper.service';
+import {Column} from 'src/app/utils/grid/column';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-complaints',
@@ -40,11 +40,11 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   interimHoldSelectedComplaintGridObject: GridComponent = null;
   complaintDataAccess: ComplaintDataAccess = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.customerComplaintGridMetaData = null;
     this.tutorComplaintGridMetaData = null;
     this.employeeComplaintGridMetaData = null;
-    this.resolvedComplaintGridMetaData = null;    
+    this.resolvedComplaintGridMetaData = null;
     this.setUpGridMetaData();
   }
 
@@ -74,59 +74,67 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [{
-        id: 'name',
-        headerName: 'Name',
-        dataType: 'string',
-        mapping: 'name',
-        clickEvent: (record: GridRecord, column: Column) => {
-          // Open the Data view port
-          this.interimHoldSelectedComplaintRecord = record;
-          this.interimHoldSelectedComplaintGridObject = gridObject;
-          if (this.complaintDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
-          } else {
-            this.selectedComplaintRecord = this.interimHoldSelectedComplaintRecord;            
-            this.toggleVisibilityComplaintGrid();
+      columns: [
+        {
+          id: 'name',
+          headerName: 'Name',
+          dataType: 'string',
+          mapping: 'name',
+          clickEvent: (record: GridRecord, column: Column) => {
+            // Open the Data view port
+            this.interimHoldSelectedComplaintRecord = record;
+            this.interimHoldSelectedComplaintGridObject = gridObject;
+            if (this.complaintDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+            } else {
+              this.selectedComplaintRecord = this.interimHoldSelectedComplaintRecord;
+              this.toggleVisibilityComplaintGrid();
+            }
           }
+        },
+        {
+          id: 'complaintFiledDate',
+          headerName: 'Complaint Filed Date',
+          dataType: 'date',
+          mapping: 'complaintFiledDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillisWithTime
+        },
+        {
+          id: 'complaintStatus',
+          headerName: 'Complaint Status',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.complaintStatusFilterOptions,
+          mapping: 'complaintStatus'
+        },
+        {
+          id: 'emailId',
+          headerName: 'Email Id',
+          dataType: 'string',
+          mapping: 'emailId'
+        },
+        {
+          id: 'complaintDetails',
+          headerName: 'Complaint Details',
+          dataType: 'string',
+          mapping: 'complaintDetails',
+          lengthyData: true
+        },
+        {
+          id: 'complaintResponse',
+          headerName: 'Complaint Response',
+          dataType: 'string',
+          mapping: 'complaintResponse',
+          lengthyData: true
+        },
+        {
+          id: 'complaintUser',
+          headerName: 'Complaint User',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.complaintUserFilterOptions,
+          mapping: 'complaintUser',
+          renderer: AdminCommonFunctions.complaintUserRenderer
         }
-      }, {
-        id: 'complaintFiledDate',
-        headerName: 'Complaint Filed Date',
-        dataType: 'date',
-        mapping: 'complaintFiledDateMillis',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime
-      }, {
-        id: 'complaintStatus',
-        headerName: 'Complaint Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.complaintStatusFilterOptions,
-        mapping: 'complaintStatus'
-      }, {
-        id: 'emailId',
-        headerName: 'Email Id',
-        dataType: 'string',
-        mapping: 'emailId'
-      }, {
-        id: 'complaintDetails',
-        headerName: 'Complaint Details',
-        dataType: 'string',
-        mapping: 'complaintDetails',
-        lengthyData: true
-      }, {
-        id: 'complaintResponse',
-        headerName: 'Complaint Response',
-        dataType: 'string',
-        mapping: 'complaintResponse',
-        lengthyData: true
-      }, {
-        id: 'complaintUser',
-        headerName: 'Complaint User',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.complaintUserFilterOptions,
-        mapping: 'complaintUser',
-        renderer: AdminCommonFunctions.complaintUserRenderer
-      }],
+      ],
       hasSelectionColumn: true,
       selectionColumn: {
         buttons: [{
@@ -169,13 +177,13 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
       grid: this.getGridObject('employeeComplaintGrid', 'Employee Complaints', '/rest/support/employeeComplaintList', this.employeeComplaintGridObject),
       htmlDomElementId: 'employee-complaint-grid',
       hidden: false
-    };   
-    
+    };
+
     this.resolvedComplaintGridMetaData = {
       grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList', this.resolvedComplaintGridObject),
       htmlDomElementId: 'resolved-complaint-grid',
       hidden: false
-    };   
+    };
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -202,8 +210,8 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
       this.showComplaintData = false;
       this.selectedComplaintRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedComplaintGridObject.init();        
-      }, 0);  
+        this.interimHoldSelectedComplaintGridObject.init();
+      }, 0);
       setTimeout(() => {
         this.interimHoldSelectedComplaintGridObject.refreshGridData();
       }, 0);

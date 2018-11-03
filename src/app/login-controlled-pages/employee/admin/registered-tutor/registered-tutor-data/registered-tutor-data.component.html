@@ -40,7 +40,7 @@
         <tr>
           <td><label>Gender</label></td>
           <td>
-            <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions" [(ngModel)]="selectedItems"
+            <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('gender', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -50,7 +50,6 @@
           <td><label>Qualification</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
-                                     [(ngModel)]="selectedItems"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('qualification', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -60,7 +59,6 @@
           <td><label>Primary Profession</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
-                                     [(ngModel)]="selectedItems"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('primaryProfession', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -70,7 +68,6 @@
           <td><label>Transport Mode</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
-                                     [(ngModel)]="selectedItems"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('transportMode', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -86,7 +83,6 @@
           <td><label>Interested Student Grades</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Interested Student Grades'" [data]="studentGradesFilterOptions"
-                                     [(ngModel)]="selectedItems"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('interestedStudentGrades', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -96,7 +92,6 @@
           <td><label>Interested Subjects</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
-                                     [(ngModel)]="selectedItems"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('interestedSubjects', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -106,13 +101,11 @@
           <td><label>Comfortable Locations</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Comfortable Locations'" [data]="locationsFilterOptions"
-                                     [(ngModel)]="selectedItems"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('comfortableLocations', $event.value, 'list')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
-
         <tr>
           <td><label>Additional Details</label></td>
           <td><input class="input_field" type="text" [disabled]="!editRecordForm"
@@ -120,8 +113,45 @@
                      (change)="updateTutorProperty('additionalDetails', $event.target.value, 'string')"></td>
 
         </tr>
-
       </table>
+
+      <div class="attachments">
+
+        <!--Aadhar Card-->
+        <div class="file_chooser_container">
+          <span>Attach Aadhar card:</span>
+          <label for="aadhar_card_file" class="choose_file_container">
+            <input required name="id_proof" type="file" accept="file/*" id="aadhar_card_file"
+                   (change)="attachFile($event,'aadhar_card')">
+            <span class="button-primary"> click to upload </span>
+            <span *ngIf="aadharCard">{{aadharCard.name}}</span>
+          </label>
+        </div>
+
+        <!--Pan Card-->
+        <div class="file_chooser_container">
+          <span>Attach PAN card:</span>
+          <label for="pan_card_file" class="choose_file_container">
+            <input required name="id_proof" type="file" accept="file/*" id="pan_card_file"
+                   (change)="attachFile($event,'pan_card')">
+            <span class="button-primary"> click to upload </span>
+            <span *ngIf="panCard">{{panCard.name}}</span>
+          </label>
+        </div>
+
+
+        <!--Photo-->
+        <div class="file_chooser_container">
+          <span>Attach Photo:</span>
+          <label for="photo_file" class="choose_file_container">
+            <input required name="id_proof" type="file" accept="file/*" id="photo_file"
+                   (change)="attachFile($event,'photo')">
+            <span class="button-primary"> click to upload </span>
+            <span *ngIf="photograph">{{photograph.name}}</span>
+          </label>
+        </div>
+
+      </div>
       <button *ngIf="tutorDataAccess.formDataEditAccess" type="submit"
               class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
               [disabled]="!editRecordForm" (click)="updateTutorRecord()">

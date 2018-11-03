@@ -1,3 +1,121 @@
-<p>
-  enquiry-data works!
-</p>
+<!--*ngIf="renderenquiryRecordForm"-->
+<div
+  style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
+  <form class="form-container" style="max-width: 700px">
+    <div *ngIf="enquiryDataAccess.formDataEditAccess"
+         style="display: flex; flex-direction: row; justify-content: flex-end">
+      <label class="tab_container" (change)="editRecordForm = false;">
+        <input type="radio" checked name="editFormChoice">
+        <span class="tab_checkmark left">View</span>
+      </label>
+      <label class="tab_container" (change)="editRecordForm = true;">
+        <input type="radio" name="editFormChoice">
+        <span class="tab_checkmark right">Edit</span>
+      </label>
+    </div>
+    <table style="width: 100%;">
+      <tr>
+        <td width="40%"><label>Name</label></td>
+        <td><input class="input_field" type="text" value="{{enquiryRecord.property['name']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('name', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Enquiry Date</label></td>
+        <td><input class="input_field" type="date" value="{{enquiryRecord.property['enquiryDate']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('enquiryDate', $event.target.value, 'date')"></td>
+      </tr>
+      <tr>
+        <td><label>Enquiry Status</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Enquiry Status'" [data]="enquiryStatusFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('enquiryStatus', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Contact Number</label></td>
+        <td><input class="input_field" type="text" value="{{enquiryRecord.property['contactNumber']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('contactNumber', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Email Id</label></td>
+        <td><input class="input_field" type="email" value="{{enquiryRecord.property['emailId']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('emailId', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td><label>Student Grades</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Subjects</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('subjects', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Locations</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('locations', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Preferred Time To Call</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('preferredTimeToCall', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Additional Details</label></td>
+        <td><input class="input_field" type="text" [disabled]="!editRecordForm"
+                   value="{{getFormattedDate(enquiryRecord.property['additionalDetails'])}}"
+                   (change)="updateCustomerProperty('additionalDetails', $event.target.value, 'string')"></td>
+
+      </tr>
+      <tr>
+        <td><label>Address Details</label></td>
+        <td><input class="input_field" type="text" [disabled]="!editRecordForm"
+                   value="{{getFormattedDate(enquiryRecord.property['addressDetails'])}}"
+                   (change)="updateCustomerProperty('addressDetails', $event.target.value, 'string')"></td>
+
+      </tr>
+      <tr>
+        <td><label>Reference</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('reference', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+
+    </table>
+    <button *ngIf="enquiryDataAccess.formDataEditAccess" type="submit"
+            class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
+            [disabled]="!editRecordForm" (click)="updateenquiryRecord()">
+      Update
+    </button>
+    <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->
+  </form>
+</div>

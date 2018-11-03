@@ -51,6 +51,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  referenceFilterOptions = CommonFilterOptions.referenceFilterOptions;
+  preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
   singleSelectOptions = {
     singleSelection: true,
@@ -67,6 +70,10 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     itemsShowLimit: 3,
     allowSearchFilter: true
   };
+
+  aadharCard;
+  panCard;
+  photograph;
 
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -472,6 +479,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   updateTutorProperty(key: string, value: string, date_type: string) {
     switch (date_type) {
       case 'list':
+        console.log(value);
         let previous_value = this.tutorUpdatedData[key];
         if (!previous_value) {
           previous_value = this.tutorRecord.property[key];
@@ -508,5 +516,18 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     }
   }
 
+  attachFile(event, type) {
+    if (type === 'pan_card') {
+      this.panCard = event.target.files[0];
+    }
+    if (type === 'aadhar_card') {
+      this.aadharCard = event.target.files[0];
+    }
+    if (type === 'photo') {
+      this.photograph = event.target.files[0];
+    }
 
+    console.log(this.photograph);
+
+  }
 }

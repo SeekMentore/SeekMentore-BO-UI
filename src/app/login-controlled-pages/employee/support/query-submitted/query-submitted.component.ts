@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { Column } from 'src/app/utils/grid/column';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
+import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {HelperService} from 'src/app/utils/helper.service';
+import {Column} from 'src/app/utils/grid/column';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
 
 @Component({
   selector: 'app-query-submitted',
@@ -35,10 +35,10 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
   interimHoldSelectedQueryGridObject: GridComponent = null;
   queryDataAccess: QueryDataAccess = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedQueryGridMetaData = null;
     this.nonAnsweredQueryGridMetaData = null;
-    this.answeredQueryGridMetaData = null;    
+    this.answeredQueryGridMetaData = null;
     this.setUpGridMetaData();
   }
 
@@ -66,67 +66,76 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [{
-        id: 'queryRequestedDate',
-        headerName: 'Query Requested Date',
-        dataType: 'date',
-        mapping: 'queryRequestedDateMillis',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime,
-        clickEvent: (record: GridRecord, column: Column) => {
-          // Open the Data view port
-          this.interimHoldSelectedQueryRecord = record;
-          this.interimHoldSelectedQueryGridObject = gridObject;
-          if (this.queryDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
-          } else {
-            this.selectedQueryRecord = this.interimHoldSelectedQueryRecord;            
-            this.toggleVisibilityQueryGrid();
+      columns: [
+        {
+          id: 'queryRequestedDate',
+          headerName: 'Query Requested Date',
+          dataType: 'date',
+          mapping: 'queryRequestedDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillisWithTime,
+          clickEvent: (record: GridRecord, column: Column) => {
+            // Open the Data view port
+            this.interimHoldSelectedQueryRecord = record;
+            this.interimHoldSelectedQueryGridObject = gridObject;
+            if (this.queryDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+            } else {
+              this.selectedQueryRecord = this.interimHoldSelectedQueryRecord;
+              this.toggleVisibilityQueryGrid();
+            }
           }
+        },
+        {
+          id: 'queryStatus',
+          headerName: 'Query Status',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.queryStatusFilterOptions,
+          mapping: 'queryStatus'
+        },
+        {
+          id: 'emailId',
+          headerName: 'Email Id',
+          dataType: 'string',
+          mapping: 'emailId'
+        },
+        {
+          id: 'queryDetails',
+          headerName: 'Query Details',
+          dataType: 'string',
+          mapping: 'queryDetails',
+          lengthyData: true
+        },
+        {
+          id: 'queryResponse',
+          headerName: 'Query Response',
+          dataType: 'string',
+          mapping: 'queryResponse',
+          lengthyData: true
+        },
+        {
+          id: 'notAnsweredReason',
+          headerName: 'Not Answered Reason',
+          dataType: 'string',
+          mapping: 'notAnsweredReason',
+          lengthyData: true
+        },
+        {
+          id: 'registeredTutor',
+          headerName: 'Is Registered Tutor',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'registeredTutor',
+          renderer: GridCommonFunctions.yesNoRenderer
+        },
+        {
+          id: 'subscribedCustomer',
+          headerName: 'Is Subscribed Customer',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'subscribedCustomer',
+          renderer: GridCommonFunctions.yesNoRenderer
         }
-      }, {
-        id: 'queryStatus',
-        headerName: 'Query Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.queryStatusFilterOptions,
-        mapping: 'queryStatus'
-      }, {
-        id: 'emailId',
-        headerName: 'Email Id',
-        dataType: 'string',
-        mapping: 'emailId'
-      }, {
-        id: 'queryDetails',
-        headerName: 'Query Details',
-        dataType: 'string',
-        mapping: 'queryDetails',
-        lengthyData: true
-      }, {
-        id: 'queryResponse',
-        headerName: 'Query Response',
-        dataType: 'string',
-        mapping: 'queryResponse',
-        lengthyData: true
-      }, {
-        id: 'notAnsweredReason',
-        headerName: 'Not Answered Reason',
-        dataType: 'string',
-        mapping: 'notAnsweredReason',
-        lengthyData: true
-      }, {
-        id: 'registeredTutor',
-        headerName: 'Is Registered Tutor',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'registeredTutor',
-        renderer: GridCommonFunctions.yesNoRenderer
-      }, {
-        id: 'subscribedCustomer',
-        headerName: 'Is Subscribed Customer',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'subscribedCustomer',
-        renderer: GridCommonFunctions.yesNoRenderer
-      }],
+      ],
       hasSelectionColumn: true,
       selectionColumn: {
         buttons: [{
@@ -169,7 +178,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
       grid: this.getGridObject('answeredQueryGrid', 'Answered Queries', '/rest/support/answeredQueryList', this.answeredQueryGridObject),
       htmlDomElementId: 'answered-query-grid',
       hidden: false
-    };    
+    };
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -196,8 +205,8 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
       this.showQueryData = false;
       this.selectedQueryRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedQueryGridObject.init();        
-      }, 0);  
+        this.interimHoldSelectedQueryGridObject.init();
+      }, 0);
       setTimeout(() => {
         this.interimHoldSelectedQueryGridObject.refreshGridData();
       }, 0);

@@ -1,3 +1,176 @@
-<p>
-  become-tutor-data works!
-</p>
+<!--*ngIf="rendertutorRecordForm"-->
+<div
+  style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
+  <form class="form-container" style="max-width: 700px">
+    <div *ngIf="tutorDataAccess.formDataEditAccess"
+         style="display: flex; flex-direction: row; justify-content: flex-end">
+      <label class="tab_container" (change)="editRecordForm = false;">
+        <input type="radio" checked name="editFormChoice">
+        <span class="tab_checkmark left">View</span>
+      </label>
+      <label class="tab_container" (change)="editRecordForm = true;">
+        <input type="radio" name="editFormChoice">
+        <span class="tab_checkmark right">Edit</span>
+      </label>
+    </div>
+    <table style="width: 100%;">
+      <tr>
+        <td width="40%"><label>Name</label></td>
+        <td><input class="input_field" type="text" value="{{tutorRecord.property['name']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('name', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Application Date</label></td>
+        <td><input class="input_field" type="date" value="{{tutorRecord.property['applicationDate']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('applicationDate', $event.target.value, 'date')"></td>
+      </tr>
+      <tr>
+        <td><label>Application Status</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Application Status'" [data]="applicationStatusFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('applicationStatus', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Contact Number</label></td>
+        <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('contactNumber', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Email Id</label></td>
+        <td><input class="input_field" type="email" value="{{tutorRecord.property['emailId']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('emailId', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td><label>Gender</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateTutorProperty('gender', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Qualification</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateTutorProperty('qualification', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Primary Profession</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateTutorProperty('primaryProfession', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Transport Mode</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateTutorProperty('transportMode', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Teaching Experience</label></td>
+        <td><input class="input_field" type="number" value="{{tutorRecord.property['teachingExp']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateTutorProperty('contactNumber', $event.target.value, 'number')"></td>
+      </tr>
+      <tr>
+        <td><label>Student Grades</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Subjects</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('subjects', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Locations</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('locations', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Preferred Time To Call</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('preferredTimeToCall', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Additional Details</label></td>
+        <td><input class="input_field" type="text" [disabled]="!editRecordForm"
+                   value="{{getFormattedDate(tutorRecord.property['additionalDetails'])}}"
+                   (change)="updateCustomerProperty('additionalDetails', $event.target.value, 'string')"></td>
+
+      </tr>
+      <tr>
+        <td><label>Reference</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('reference', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Preferred Teaching Type</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('preferredTeachingType', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+
+      <tr>
+        <td><label>reApplied</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Re-applied'" [data]="yesNoFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('reApplied', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+
+
+    </table>
+    <button *ngIf="tutorDataAccess.formDataEditAccess" type="submit"
+            class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
+            [disabled]="!editRecordForm" (click)="updatetutorRecord()">
+      Update
+    </button>
+    <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->
+  </form>
+</div>

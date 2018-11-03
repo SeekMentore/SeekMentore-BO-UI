@@ -1,9 +1,10 @@
-import { Component, OnInit, OnChanges, Input, SimpleChange } from '@angular/core';
-import { LcpConstants } from '../lcp-constants';
-import { AppUtilityService } from '../app-utility.service';
-import { HelperService } from '../helper.service';
-import { LcpRestUrls } from '../lcp-rest-urls';
-import { CkeditorConfig } from '../ckeditor-config';
+import {Component, OnInit, OnChanges, Input, SimpleChange} from '@angular/core';
+import {LcpConstants} from '../lcp-constants';
+import {AppUtilityService} from '../app-utility.service';
+import {HelperService} from '../helper.service';
+import {LcpRestUrls} from '../lcp-rest-urls';
+import {CkeditorConfig} from '../ckeditor-config';
+import {tryCatch} from "rxjs/internal/util/tryCatch";
 
 @Component({
   selector: 'app-email',
@@ -137,7 +138,19 @@ export class EmailComponent implements OnInit, OnChanges {
   }
 
   onSuccessTemplateData(context: any, response: any) {
-    context.emailData = response;
+    for (const element in context.emailData) {
+      try {
+        if (element === 'to') {
+          if (context.emailData['to'].trim() === '') {
+            context.emailData['to'] = response[element];
+          }
+        } else {
+          context.emailData[element] = response[element];
+        }
+      } catch (Error) {
+        console.log(Error.message);
+      }
+    }
     context.helperService.setDataForRichEditor(context.emailBodyEditorId, context.emailData.body);
   }
 
@@ -163,8 +176,9 @@ export class EmailComponent implements OnInit, OnChanges {
 
   isFormDirty(): boolean {
     let isDataEntered = false;
+    // console.log(this.emailData);
     for (const key in this.emailData) {
-      if (this.emailData[key].trim() !== '') {
+      if ((this.emailData[key] + '').trim() !== '') {
         isDataEntered = true;
       }
     }

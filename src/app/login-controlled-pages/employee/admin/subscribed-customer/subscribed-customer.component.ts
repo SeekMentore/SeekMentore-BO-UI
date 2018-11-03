@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { Column } from 'src/app/utils/grid/column';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {Column} from 'src/app/utils/grid/column';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 import {AppUtilityService} from "src/app/utils/app-utility.service";
 import {HelperService} from "src/app/utils/helper.service";
 
@@ -58,67 +58,76 @@ export class SubscribedCustomerComponent implements OnInit {
           isStatic: false,
           restURL: '/rest/admin/subscribedCustomersList'
         },
-        columns: [{
-          id: 'name',
-          headerName: 'Name',
-          dataType: 'string',
-          mapping: 'name',
-          clickEvent: (record: GridRecord, column: Column) => {
-            // Open the Data view port
-            this.interimHoldSelectedCustomerRecord = record;
-            if (this.customerDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customerDataAccess, 'POST');
-            } else {
-              this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
-              this.toggleVisibilitySubscribedCustomerGrid();
+        columns: [
+          {
+            id: 'name',
+            headerName: 'Name',
+            dataType: 'string',
+            mapping: 'name',
+            clickEvent: (record: GridRecord, column: Column) => {
+              // Open the Data view port
+              this.interimHoldSelectedCustomerRecord = record;
+              if (this.customerDataAccess === null) {
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customerDataAccess, 'POST');
+              } else {
+                this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
+                this.toggleVisibilitySubscribedCustomerGrid();
+              }
             }
+          },
+          {
+            id: 'contactNumber',
+            headerName: 'Contact Number',
+            dataType: 'string',
+            mapping: 'contactNumber'
+          },
+          {
+            id: 'emailId',
+            headerName: 'Email Id',
+            dataType: 'string',
+            mapping: 'emailId'
+          },
+          {
+            id: 'studentGrades',
+            headerName: 'Student Grades',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+            mapping: 'studentGrades',
+            multiList: true,
+            renderer: AdminCommonFunctions.studentGradesMultiRenderer
+          },
+          {
+            id: 'interestedSubjects',
+            headerName: 'Interested Subjects',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.subjectsFilterOptions,
+            mapping: 'interestedSubjects',
+            multiList: true,
+            renderer: AdminCommonFunctions.subjectsMultiRenderer
+          },
+          {
+            id: 'location',
+            headerName: 'Location',
+            dataType: 'list',
+            filterOptions: CommonFilterOptions.locationsFilterOptions,
+            mapping: 'location',
+            renderer: AdminCommonFunctions.locationsRenderer
+          },
+          {
+            id: 'addressDetails',
+            headerName: 'Address Details',
+            dataType: 'string',
+            mapping: 'addressDetails',
+            lengthyData: true
+          },
+          {
+            id: 'additionalDetails',
+            headerName: 'Additional Details',
+            dataType: 'string',
+            mapping: 'additionalDetails',
+            lengthyData: true
           }
-        }, {
-          id: 'contactNumber',
-          headerName: 'Contact Number',
-          dataType: 'string',
-          mapping: 'contactNumber'
-        }, {
-          id: 'emailId',
-          headerName: 'Email Id',
-          dataType: 'string',
-          mapping: 'emailId'
-        }, {
-          id: 'studentGrades',
-          headerName: 'Student Grades',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
-          mapping: 'studentGrades',
-          multiList: true,
-          renderer: AdminCommonFunctions.studentGradesMultiRenderer
-        }, {
-          id: 'interestedSubjects',
-          headerName: 'Interested Subjects',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.subjectsFilterOptions,
-          mapping: 'interestedSubjects',
-          multiList: true,
-          renderer: AdminCommonFunctions.subjectsMultiRenderer
-        }, {
-          id: 'location',
-          headerName: 'Location',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.locationsFilterOptions,
-          mapping: 'location',
-          renderer: AdminCommonFunctions.locationsRenderer
-        }, {
-          id: 'addressDetails',
-          headerName: 'Address Details',
-          dataType: 'string',
-          mapping: 'addressDetails',
-          lengthyData: true
-        }, {
-          id: 'additionalDetails',
-          headerName: 'Additional Details',
-          dataType: 'string',
-          mapping: 'additionalDetails',
-          lengthyData: true
-        }],
+        ],
         hasSelectionColumn: true,
         selectionColumn: {
           buttons: [{

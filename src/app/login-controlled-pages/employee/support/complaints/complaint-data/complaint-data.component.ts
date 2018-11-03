@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { ComplaintDataAccess } from '../complaints.component';
+import {CommonFilterOptions} from "../../../../../utils/common-filter-options";
 
 @Component({
   selector: 'app-complaint-data',
@@ -14,6 +15,31 @@ export class ComplaintDataComponent implements OnInit {
 
   @Input()
   complaintDataAccess: ComplaintDataAccess = null;
+  editRecordForm = false;
+
+  complaintStatusFilterOptions = CommonFilterOptions.complaintStatusFilterOptions;
+  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
+  qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  complaintUserFilterOptions = CommonFilterOptions.complaintUserFilterOptions;
+
+  singleSelectOptions = {
+    singleSelection: true,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
+  multiSelectOptions = {
+    singleSelection: false,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
 
   constructor() { }
 

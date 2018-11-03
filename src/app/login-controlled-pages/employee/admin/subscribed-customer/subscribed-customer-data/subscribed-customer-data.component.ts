@@ -1,12 +1,12 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { HelperService } from 'src/app/utils/helper.service';
-import { SubscribedCustomerDataAccess } from '../subscribed-customer.component';
-import {CommonFilterOptions} from "../../../../../utils/common-filter-options";
-import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {HelperService} from 'src/app/utils/helper.service';
+import {SubscribedCustomerDataAccess} from '../subscribed-customer.component';
+import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
+import {LcpRestUrls} from '../../../../../utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-subscribed-customer-data',
@@ -37,6 +37,22 @@ export class SubscribedCustomerDataComponent implements OnInit {
 
   customerUpdatedData = {};
 
+  singleSelectOptions = {
+    singleSelection: true,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
+  multiSelectOptions = {
+    singleSelection: false,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.currentPackagesGridMetaData = null;
     this.historyPackagesGridMetaData = null;
@@ -48,11 +64,11 @@ export class SubscribedCustomerDataComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if( this.customerDataAccess.activePackageViewAccess ) {
+      if (this.customerDataAccess.activePackageViewAccess) {
         this.currentPackagesGridObject.init();
         this.currentPackagesGridObject.addExtraParams('customerId', this.customerRecord.getProperty('customerId'));
       }
-      if( this.customerDataAccess.historyPackagesViewAccess ) {
+      if (this.customerDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.init();
         this.historyPackagesGridObject.addExtraParams('customerId', this.customerRecord.getProperty('customerId'));
       }
@@ -60,10 +76,10 @@ export class SubscribedCustomerDataComponent implements OnInit {
       this.renderCustomerRecordForm = true;
     }, 0);
     setTimeout(() => {
-      if( this.customerDataAccess.activePackageViewAccess ) {
+      if (this.customerDataAccess.activePackageViewAccess) {
         this.currentPackagesGridObject.refreshGridData();
       }
-      if( this.customerDataAccess.historyPackagesViewAccess) {
+      if (this.customerDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.refreshGridData();
       }
     }, 0);
@@ -93,8 +109,8 @@ export class SubscribedCustomerDataComponent implements OnInit {
           headerName: 'Start Date',
           dataType: 'date',
           mapping: 'startDateMillis',
-		      renderer: GridCommonFunctions.renderDateFromMillis
-        },{
+          renderer: GridCommonFunctions.renderDateFromMillis
+        }, {
           id: 'completedHours',
           headerName: 'Completed Hours',
           dataType: 'number',
@@ -128,8 +144,8 @@ export class SubscribedCustomerDataComponent implements OnInit {
           headerName: 'Start Date',
           dataType: 'date',
           mapping: 'startDateMillis',
-		      renderer: GridCommonFunctions.renderDateFromMillis
-        },{
+          renderer: GridCommonFunctions.renderDateFromMillis
+        }, {
           id: 'endDate',
           headerName: 'End Date',
           dataType: 'date',
@@ -172,7 +188,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   updateCustomerRecord() {
     const data = {
       completeCustomerRecord: JSON.stringify(this.customerUpdatedData)
-    };    
+    };
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
   }
@@ -185,5 +201,9 @@ export class SubscribedCustomerDataComponent implements OnInit {
     }
   }
 
+  getFormattedDate(date: string) {
+    const date_object = new Date(date);
+    return date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate();
+  }
 
 }

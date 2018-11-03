@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { EnquiryDataAccess } from '../enquiry-registration.component';
+import {Component, Input, OnInit} from '@angular/core';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {EnquiryDataAccess} from '../enquiry-registration.component';
+import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
 
 @Component({
   selector: 'app-enquiry-data',
@@ -15,7 +16,34 @@ export class EnquiryDataComponent implements OnInit {
   @Input()
   enquiryDataAccess: EnquiryDataAccess = null;
 
-  constructor() { }
+  editRecordForm = false;
+
+  enquiryStatusFilterOptions = CommonFilterOptions.enquiryStatusFilterOptions;
+  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
+  qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  preferredTimeToCallFilterOptions = CommonFilterOptions.preferredTimeToCallFilterOptions;
+
+  singleSelectOptions = {
+    singleSelection: true,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
+  multiSelectOptions = {
+    singleSelection: false,
+    idField: 'value',
+    textField: 'label',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
+  constructor() {
+  }
 
   ngOnInit() {
   }

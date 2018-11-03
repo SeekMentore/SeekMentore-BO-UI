@@ -5,7 +5,7 @@ table label {
 }
 
 table .input_field {
-  width: calc(100% - 20px);
-  padding: 3px;
-  margin: 0;
+  width: calc(100% - 20px) !important;
+  padding: 3px !important;
+  margin: 0 !important;
 }

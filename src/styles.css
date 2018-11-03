@@ -186,17 +186,18 @@ body {
 .form-container input[type=text],
 .form-container input[type=password],
 .form-container input[type=number],
-.input_field, textarea {
-  padding: 8px 16px;
-  margin: 10px 0;
-  box-shadow: none;
-  outline: none;
-  border: 1px solid var(--divider);
+.input_field, textarea, .dropdown-btn {
+  padding: 8px 16px !important;
+  margin: 10px 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: 1px solid var(--divider) !important;
   font-family: "Open Sans", sans-serif !important;
   font-size: 15px !important;
-  color: var(--textColor);
-  transition: all 0.4s;
-  text-align: start;
+  color: var(--textColor) !important;
+  transition: all 0.4s !important;
+  text-align: start !important;
+  border-radius: 0 !important;
 }
 
 .form-container input[type=email]:focus,
@@ -240,6 +241,17 @@ textarea {
   resize: vertical;
   height: 200px;
 }
+
+.form-container input:disabled, .input_field:disabled {
+  background-color: #eceeef;
+}
+
+table .input_field, table .dropdown-btn {
+  width: calc(100% - 20px) !important;
+  padding: 3px !important;
+  margin: 0 !important;
+}
+
 
 .responsive-row-column {
   display: flex;
@@ -485,16 +497,24 @@ textarea {
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.tab_checkmark.left, .tab_checkmark_search.left{
+.tab_checkmark.left, .tab_checkmark_search.left {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   margin: 0 0 0 8px;

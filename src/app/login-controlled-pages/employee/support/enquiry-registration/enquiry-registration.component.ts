@@ -1,15 +1,15 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { Column } from 'src/app/utils/grid/column';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {HelperService} from 'src/app/utils/helper.service';
+import {Column} from 'src/app/utils/grid/column';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
 
 @Component({
   selector: 'app-enquiry-registration',
@@ -17,7 +17,7 @@ import { LcpConstants } from 'src/app/utils/lcp-constants';
   styleUrls: ['./enquiry-registration.component.css']
 })
 export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
-  
+
   @ViewChild('nonContactedEnquiryGrid')
   nonContactedEnquiryGridObject: GridComponent;
   nonContactedEnquiryGridMetaData: GridDataInterface;
@@ -99,93 +99,106 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [{
-        id: 'name',
-        headerName: 'Name',
-        dataType: 'string',
-        mapping: 'name',
-        clickEvent: (record: GridRecord, column: Column) => {
-          // Open the Data view port
-          this.interimHoldSelectedEnquiryRecord = record;
-          this.interimHoldSelectedEnquiryGridObject = gridObject;
-          if (this.enquiryDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
-          } else {
-            this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;            
-            this.toggleVisibilityEnquiryGrid();
+      columns: [
+        {
+          id: 'name',
+          headerName: 'Name',
+          dataType: 'string',
+          mapping: 'name',
+          clickEvent: (record: GridRecord, column: Column) => {
+            // Open the Data view port
+            this.interimHoldSelectedEnquiryRecord = record;
+            this.interimHoldSelectedEnquiryGridObject = gridObject;
+            if (this.enquiryDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+            } else {
+              this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;
+              this.toggleVisibilityEnquiryGrid();
+            }
           }
+        },
+        {
+          id: 'enquiryDate',
+          headerName: 'Enquiry Date',
+          dataType: 'date',
+          mapping: 'enquiryDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillisWithTime
+        },
+        {
+          id: 'enquiryStatus',
+          headerName: 'Enquiry Status',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.enquiryStatusFilterOptions,
+          mapping: 'enquiryStatus'
+        },
+        {
+          id: 'contactNumber',
+          headerName: 'Contact Number',
+          dataType: 'string',
+          mapping: 'contactNumber'
+        },
+        {
+          id: 'emailId',
+          headerName: 'Email Id',
+          dataType: 'string',
+          mapping: 'emailId'
+        },
+        {
+          id: 'studentGrade',
+          headerName: 'Student Grades',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+          mapping: 'studentGrade',
+          renderer: AdminCommonFunctions.studentGradesRenderer
+        },
+        {
+          id: 'subjects',
+          headerName: 'Subjects',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.subjectsFilterOptions,
+          mapping: 'subjects',
+          renderer: AdminCommonFunctions.subjectsRenderer
+        },
+        {
+          id: 'locations',
+          headerName: 'Locations',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.locationsFilterOptions,
+          mapping: 'locations',
+          renderer: AdminCommonFunctions.locationsRenderer
+        },
+        {
+          id: 'preferredTimeToCall',
+          headerName: 'Preferred Time To Call',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.preferredTimeToCallFilterOptions,
+          mapping: 'preferredTimeToCall',
+          multiList: true,
+          renderer: AdminCommonFunctions.preferredTimeToCallMultiRenderer
+        },
+        {
+          id: 'additionalDetails',
+          headerName: 'Additional Details',
+          dataType: 'string',
+          mapping: 'additionalDetails',
+          lengthyData: true
+        },
+        {
+          id: 'addressDetails',
+          headerName: 'Address Details',
+          dataType: 'string',
+          mapping: 'addressDetails',
+          lengthyData: true
+        },
+        {
+          id: 'reference',
+          headerName: 'Reference',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.referenceFilterOptions,
+          mapping: 'reference',
+          renderer: AdminCommonFunctions.referenceRenderer
         }
-      }, {
-        id: 'enquiryDate',
-        headerName: 'Enquiry Date',
-        dataType: 'date',
-        mapping: 'enquiryDateMillis',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime
-      }, {
-        id: 'enquiryStatus',
-        headerName: 'Enquiry Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.enquiryStatusFilterOptions,
-        mapping: 'enquiryStatus'
-      }, {
-        id: 'contactNumber',
-        headerName: 'Contact Number',
-        dataType: 'string',
-        mapping: 'contactNumber'
-      }, {
-        id: 'emailId',
-        headerName: 'Email Id',
-        dataType: 'string',
-        mapping: 'emailId'
-      }, {
-        id: 'studentGrade',
-        headerName: 'Student Grades',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
-        mapping: 'studentGrade',
-        renderer: AdminCommonFunctions.studentGradesRenderer
-      }, {
-        id: 'subjects',
-        headerName: 'Subjects',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.subjectsFilterOptions,
-        mapping: 'subjects',
-        renderer: AdminCommonFunctions.subjectsRenderer
-      }, {
-        id: 'locations',
-        headerName: 'Locations',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.locationsFilterOptions,
-        mapping: 'locations',
-        renderer: AdminCommonFunctions.locationsRenderer
-      }, {
-        id: 'preferredTimeToCall',
-        headerName: 'Preferred Time To Call',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.preferredTimeToCallFilterOptions,
-        mapping: 'preferredTimeToCall',
-        multiList: true,
-        renderer: AdminCommonFunctions.preferredTimeToCallMultiRenderer
-      }, {
-        id: 'additionalDetails',
-        headerName: 'Additional Details',
-        dataType: 'string',
-        mapping: 'additionalDetails',
-        lengthyData: true
-      }, {
-        id: 'addressDetails',
-        headerName: 'Address Details',
-        dataType: 'string',
-        mapping: 'addressDetails',
-        lengthyData: true
-      }, {
-        id: 'reference',
-        headerName: 'Reference',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.referenceFilterOptions,
-        mapping: 'reference',
-        renderer: AdminCommonFunctions.referenceRenderer
-      }],
+      ],
       hasSelectionColumn: true,
       selectionColumn: {
         buttons: [{
@@ -276,7 +289,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquirysList', this.rejectedEnquiryGridObject),
       htmlDomElementId: 'rejected-enquiry-grid',
       hidden: false
-    };    
+    };
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -316,8 +329,8 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       this.showEnquiryData = false;
       this.selectedEnquiryRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedEnquiryGridObject.init();        
-      }, 0);  
+        this.interimHoldSelectedEnquiryGridObject.init();
+      }, 0);
       setTimeout(() => {
         this.interimHoldSelectedEnquiryGridObject.refreshGridData();
       }, 0);

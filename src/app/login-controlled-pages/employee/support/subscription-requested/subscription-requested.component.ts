@@ -1,15 +1,15 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { Column } from 'src/app/utils/grid/column';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {AppUtilityService} from 'src/app/utils/app-utility.service';
+import {HelperService} from 'src/app/utils/helper.service';
+import {Column} from 'src/app/utils/grid/column';
+import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
+import {ActionButton} from 'src/app/utils/grid/action-button';
+import {LcpConstants} from 'src/app/utils/lcp-constants';
 
 @Component({
   selector: 'app-subscription-requested',
@@ -52,7 +52,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
   interimHoldSelectedSubscriptionGridObject: GridComponent = null;
   subscriptionDataAccess: SubscriptionDataAccess = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedSubscriptionGridMetaData = null;
     this.nonVerifiedSubscriptionGridMetaData = null;
     this.verifiedSubscriptionGridMetaData = null;
@@ -99,98 +99,111 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [{
-        id: 'name',
-        headerName: 'Name',
-        dataType: 'string',
-        mapping: 'firstName',
-        renderer: (record: GridRecord, column: Column) => {
-          return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
-        },
-        clickEvent: (record: GridRecord, column: Column) => {
-          // Open the Data view port
-          this.interimHoldSelectedSubscriptionRecord = record;
-          this.interimHoldSelectedSubscriptionGridObject = gridObject;
-          if (this.subscriptionDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
-          } else {
-            this.selectedSubscriptionRecord = this.interimHoldSelectedSubscriptionRecord;            
-            this.toggleVisibilitySubscriptionGrid();
+      columns: [
+        {
+          id: 'name',
+          headerName: 'Name',
+          dataType: 'string',
+          mapping: 'firstName',
+          renderer: (record: GridRecord, column: Column) => {
+            return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
+          },
+          clickEvent: (record: GridRecord, column: Column) => {
+            // Open the Data view port
+            this.interimHoldSelectedSubscriptionRecord = record;
+            this.interimHoldSelectedSubscriptionGridObject = gridObject;
+            if (this.subscriptionDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+            } else {
+              this.selectedSubscriptionRecord = this.interimHoldSelectedSubscriptionRecord;
+              this.toggleVisibilitySubscriptionGrid();
+            }
           }
+        },
+        {
+          id: 'applicationDate',
+          headerName: 'Application Date',
+          dataType: 'date',
+          mapping: 'applicationDateMillis',
+          renderer: GridCommonFunctions.renderDateFromMillisWithTime
+        },
+        {
+          id: 'applicationStatus',
+          headerName: 'Application Status',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.applicationStatusFilterOptions,
+          mapping: 'applicationStatus'
+        },
+        {
+          id: 'contactNumber',
+          headerName: 'Contact Number',
+          dataType: 'string',
+          mapping: 'contactNumber'
+        },
+        {
+          id: 'emailId',
+          headerName: 'Email Id',
+          dataType: 'string',
+          mapping: 'emailId'
+        },
+        {
+          id: 'studentGrade',
+          headerName: 'Student Grades',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+          mapping: 'studentGrade',
+          multiList: true,
+          renderer: AdminCommonFunctions.studentGradesMultiRenderer
+        },
+        {
+          id: 'subjects',
+          headerName: 'Subjects',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.subjectsFilterOptions,
+          mapping: 'subjects',
+          multiList: true,
+          renderer: AdminCommonFunctions.subjectsMultiRenderer
+        },
+        {
+          id: 'locations',
+          headerName: 'Locations',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.locationsFilterOptions,
+          mapping: 'locations',
+          renderer: AdminCommonFunctions.locationsRenderer
+        },
+        {
+          id: 'preferredTimeToCall',
+          headerName: 'Preferred Time To Call',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.preferredTimeToCallFilterOptions,
+          mapping: 'preferredTimeToCall',
+          multiList: true,
+          renderer: AdminCommonFunctions.preferredTimeToCallMultiRenderer
+        },
+        {
+          id: 'additionalDetails',
+          headerName: 'Additional Details',
+          dataType: 'string',
+          mapping: 'additionalDetails',
+          lengthyData: true
+        },
+        {
+          id: 'addressDetails',
+          headerName: 'Address Details',
+          dataType: 'string',
+          mapping: 'addressDetails',
+          lengthyData: true
+        },
+        {
+          id: 'reference',
+          headerName: 'Reference',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.referenceFilterOptions,
+          mapping: 'reference',
+          renderer: AdminCommonFunctions.referenceRenderer
         }
-      }, {
-        id: 'applicationDate',
-        headerName: 'Application Date',
-        dataType: 'date',
-        mapping: 'applicationDateMillis',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime
-      }, {
-        id: 'applicationStatus',
-        headerName: 'Application Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.applicationStatusFilterOptions,
-        mapping: 'applicationStatus'
-      }, {
-        id: 'contactNumber',
-        headerName: 'Contact Number',
-        dataType: 'string',
-        mapping: 'contactNumber'
-      }, {
-        id: 'emailId',
-        headerName: 'Email Id',
-        dataType: 'string',
-        mapping: 'emailId'
-      }, {
-        id: 'studentGrade',
-        headerName: 'Student Grades',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
-        mapping: 'studentGrade',
-        multiList: true,
-        renderer: AdminCommonFunctions.studentGradesMultiRenderer
-      }, {
-        id: 'subjects',
-        headerName: 'Subjects',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.subjectsFilterOptions,
-        mapping: 'subjects',
-        multiList: true,
-        renderer: AdminCommonFunctions.subjectsMultiRenderer
-      }, {
-        id: 'locations',
-        headerName: 'Locations',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.locationsFilterOptions,
-        mapping: 'locations',
-        renderer: AdminCommonFunctions.locationsRenderer
-      }, {
-        id: 'preferredTimeToCall',
-        headerName: 'Preferred Time To Call',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.preferredTimeToCallFilterOptions,
-        mapping: 'preferredTimeToCall',
-        multiList: true,
-        renderer: AdminCommonFunctions.preferredTimeToCallMultiRenderer
-      }, {
-        id: 'additionalDetails',
-        headerName: 'Additional Details',
-        dataType: 'string',
-        mapping: 'additionalDetails',
-        lengthyData: true
-      }, {
-        id: 'addressDetails',
-        headerName: 'Address Details',
-        dataType: 'string',
-        mapping: 'addressDetails',
-        lengthyData: true
-      }, {
-        id: 'reference',
-        headerName: 'Reference',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.referenceFilterOptions,
-        mapping: 'reference',
-        renderer: AdminCommonFunctions.referenceRenderer
-      }],
+      ],
       hasSelectionColumn: true,
       selectionColumn: {
         buttons: [{
@@ -281,7 +294,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList', this.rejectedSubscriptionGridObject),
       htmlDomElementId: 'rejected-subscription-grid',
       hidden: false
-    };    
+    };
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -321,8 +334,8 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       this.showSubscriptionData = false;
       this.selectedSubscriptionRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedSubscriptionGridObject.init();        
-      }, 0);  
+        this.interimHoldSelectedSubscriptionGridObject.init();
+      }, 0);
       setTimeout(() => {
         this.interimHoldSelectedSubscriptionGridObject.refreshGridData();
       }, 0);

@@ -1,3 +1,85 @@
-<p>
-  complaint-data works!
-</p>
+<!--*ngIf="rendercomplaintRecordForm"-->
+<div
+  style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
+  <form class="form-container" style="max-width: 700px">
+    <div *ngIf="subscriptionDataAccess.formDataEditAccess"
+         style="display: flex; flex-direction: row; justify-content: flex-end">
+      <label class="tab_container" (change)="editRecordForm = false;">
+        <input type="radio" checked name="editFormChoice">
+        <span class="tab_checkmark left">View</span>
+      </label>
+      <label class="tab_container" (change)="editRecordForm = true;">
+        <input type="radio" name="editFormChoice">
+        <span class="tab_checkmark right">Edit</span>
+      </label>
+    </div>
+    <table style="width: 100%;">
+      <tr>
+        <td width="40%"><label>Name</label></td>
+        <td><input class="input_field" type="text" value="{{complaintRecord.property['name']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('name', $event.target.value, 'text')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Complaint Filed Date</label></td>
+        <td><input class="input_field" type="date" value="{{complaintRecord.property['complaintFiledDate']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('complaintFiledDate', $event.target.value, 'date')">
+        </td>
+      </tr>
+      <tr>
+        <td><label>Complaint Status</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Query Status'" [data]="complaintStatusFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('complaintStatus', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Email Id</label></td>
+        <td><input class="input_field" type="email" value="{{complaintRecord.property['emailId']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('emailId', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Complaint Details</label></td>
+        <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintDetails']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('complaintDetails', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Complaint Details</label></td>
+        <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintDetails']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('complaintDetails', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td width="40%"><label>Complaint Response</label></td>
+        <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintResponse']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateCustomerProperty('complaintResponse', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td><label>Is Registered Tutor</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Complaint User'" [data]="complaintUserFilterOptions"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateCustomerProperty('complaintUser', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+    </table>
+    <button *ngIf="subscriptionDataAccess.formDataEditAccess" type="submit"
+            class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
+            [disabled]="!editRecordForm" (click)="updatecomplaintRecord()">
+      Update
+    </button>
+    <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->
+  </form>
+</div>

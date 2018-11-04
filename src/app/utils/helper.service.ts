@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/index';
-import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
-import { CkeditorConfig } from './ckeditor-config';
-import { EmailInterface } from './email/email.component';
-import { ConfirmationDialogEvent } from './confirmation-dialog/confirmation-dialog.component';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs/index';
+import {AlertDialogEvent} from './alert-dialog/alert-dialog.component';
+import {CkeditorConfig} from './ckeditor-config';
+import {EmailInterface} from './email/email.component';
+import {ConfirmationDialogEvent} from './confirmation-dialog/confirmation-dialog.component';
 
 declare var CKEDITOR: any;
 
@@ -65,5 +65,12 @@ export class HelperService {
 
   public makeRichEditorWithDefaultConfiguration(editorId: string) {
     CKEDITOR.replace(editorId, CkeditorConfig.defaultConfiguration);
+  }
+
+  public encodedGridFormData(updatedValues: any, parentId: any) {
+    const formData = new FormData();
+    formData.append('completeUpdatedRecord', JSON.stringify(updatedValues));
+    formData.append('parentId', parentId);
+    return formData;
   }
 }

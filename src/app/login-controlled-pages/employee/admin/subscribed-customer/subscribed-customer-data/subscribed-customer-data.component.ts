@@ -34,24 +34,16 @@ export class SubscribedCustomerDataComponent implements OnInit {
 
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  gradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
   customerUpdatedData = {};
 
-  singleSelectOptions = {
-    singleSelection: true,
-    idField: 'value',
-    textField: 'label',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
+  selectedGradesOptions: any[] = [];
+  selectedSubjectOptions: any[] = [];
 
-  multiSelectOptions = {
-    singleSelection: false,
-    idField: 'value',
-    textField: 'label',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
+  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+
+  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.currentPackagesGridMetaData = null;
@@ -59,6 +51,8 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.selectedGradesOptions = CommonFilterOptions.getSelectedFilterItems(this.gradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
+    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.gradesFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
     this.setUpGridMetaData();
   }
 
@@ -158,39 +152,16 @@ export class SubscribedCustomerDataComponent implements OnInit {
     };
   }
 
-  isSubjectSelected(value: string) {
-    return this.customerRecord.property['interestedSubjects'].split(';').includes(value);
-  }
 
 
-  updateCustomerProperty(key: string, value: string, date_type: string) {
-    switch (date_type) {
-      case 'list':
-        let previous_value = this.customerUpdatedData[key];
-        if (!previous_value) {
-          previous_value = this.customerRecord.property[key];
-        }
-        const previous_value_array = previous_value.split(';');
-        if (previous_value_array.includes(value)) {
-          previous_value_array.splice(previous_value_array.indexOf(value), 1);
-
-        } else {
-          previous_value_array.push(value);
-        }
-        this.customerUpdatedData[key] = previous_value_array.join(';');
-        break;
-      default:
-        this.customerUpdatedData[key] = value;
-    }
-    console.log(this.customerUpdatedData);
+  updateCustomerProperty(key: string, value: string, data_type: string) {
+    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.customerUpdatedData, this.customerRecord);
   }
 
   updateCustomerRecord() {
-    const data = {
-      completeCustomerRecord: JSON.stringify(this.customerUpdatedData)
-    };
+    const data = this.helperService.encodedGridFormData(this.customerUpdatedData, this.customerRecord.getProperty('customerId'));
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
-      this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+      data, 'multipart/form-data', true);
   }
 
   onUpdateCustomerRecord(context: any, data: any) {

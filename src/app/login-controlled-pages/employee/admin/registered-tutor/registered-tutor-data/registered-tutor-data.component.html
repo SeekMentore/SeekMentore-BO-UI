@@ -42,7 +42,7 @@
           <td>
             <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('gender', $event.value, 'list')">
+                                     (onSelect)="updateTutorProperty('gender', $event.value, 'string')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -51,7 +51,7 @@
           <td>
             <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('qualification', $event.value, 'list')">
+                                     (onSelect)="updateTutorProperty('qualification', $event.value, 'string')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -82,7 +82,8 @@
         <tr>
           <td><label>Interested Student Grades</label></td>
           <td>
-            <ng-multiselect-dropdown [placeholder]="'Interested Student Grades'" [data]="studentGradesFilterOptions"
+            <ng-multiselect-dropdown [placeholder]="'Interested Student Grades'" [data]="studentGradesFilterOptions" name="gradeFilter"
+                                     [(ngModel)] = "selectedStudentGrades"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('interestedStudentGrades', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -91,18 +92,22 @@
         <tr>
           <td><label>Interested Subjects</label></td>
           <td>
-            <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
+            <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions" name="subjectFilter"
+                                     [(ngModel)] = "selectedSubjectOptions"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('interestedSubjects', $event.value, 'list')">
+                                     (onSelect)="updateTutorProperty('interestedSubjects', $event.value, 'list')"
+                                     (onDeSelect)="updateTutorProperty('interestedSubjects', $event.value, 'list')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
         <tr>
           <td><label>Comfortable Locations</label></td>
           <td>
-            <ng-multiselect-dropdown [placeholder]="'Comfortable Locations'" [data]="locationsFilterOptions"
+            <ng-multiselect-dropdown [placeholder]="'Comfortable Locations'" [data]="locationsFilterOptions" name="locationFilters"
+                                     [(ngModel)] = "selectedLocationOptions"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('comfortableLocations', $event.value, 'list')">
+                                     (onSelect)="updateTutorProperty('comfortableLocations', $event.value, 'list')"
+                                     (onDeSelect)="updateTutorProperty('comfortableLocations', $event.value, 'list')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -119,9 +124,9 @@
 
         <!--Aadhar Card-->
         <div class="file_chooser_container">
-          <span>Attach Aadhar card:</span>
+          <span>Attach Aadhar card (Optional):</span>
           <label for="aadhar_card_file" class="choose_file_container">
-            <input required name="id_proof" type="file" accept="file/*" id="aadhar_card_file"
+            <input name="id_proof" type="file" accept="file/*" id="aadhar_card_file" [disabled]="!editRecordForm"
                    (change)="attachFile($event,'aadhar_card')">
             <span class="button-primary"> click to upload </span>
             <span *ngIf="aadharCard">{{aadharCard.name}}</span>
@@ -130,9 +135,9 @@
 
         <!--Pan Card-->
         <div class="file_chooser_container">
-          <span>Attach PAN card:</span>
+          <span>Attach PAN card (Optional):</span>
           <label for="pan_card_file" class="choose_file_container">
-            <input required name="id_proof" type="file" accept="file/*" id="pan_card_file"
+            <input name="id_proof" type="file" accept="file/*" id="pan_card_file" [disabled]="!editRecordForm"
                    (change)="attachFile($event,'pan_card')">
             <span class="button-primary"> click to upload </span>
             <span *ngIf="panCard">{{panCard.name}}</span>
@@ -142,9 +147,9 @@
 
         <!--Photo-->
         <div class="file_chooser_container">
-          <span>Attach Photo:</span>
+          <span>Attach Photo (Optional):</span>
           <label for="photo_file" class="choose_file_container">
-            <input required name="id_proof" type="file" accept="file/*" id="photo_file"
+            <input name="id_proof" type="file" accept="file/*" id="photo_file" [disabled]="!editRecordForm"
                    (change)="attachFile($event,'photo')">
             <span class="button-primary"> click to upload </span>
             <span *ngIf="photograph">{{photograph.name}}</span>
@@ -152,9 +157,9 @@
         </div>
 
       </div>
-      <button *ngIf="tutorDataAccess.formDataEditAccess" type="submit"
+      <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
               class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-              [disabled]="!editRecordForm" (click)="updateTutorRecord()">
+              (click)="updateTutorRecord()">
         Update
       </button>
       <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->

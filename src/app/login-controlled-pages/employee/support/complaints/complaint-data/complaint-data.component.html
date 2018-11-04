@@ -18,14 +18,14 @@
         <td width="40%"><label>Name</label></td>
         <td><input class="input_field" type="text" value="{{complaintRecord.property['name']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('name', $event.target.value, 'text')">
+                   (change)="updateComplaintProperty('name', $event.target.value, 'text')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Complaint Filed Date</label></td>
         <td><input class="input_field" type="date" value="{{complaintRecord.property['complaintFiledDate']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('complaintFiledDate', $event.target.value, 'date')">
+                   (change)="updateComplaintProperty('complaintFiledDate', $event.target.value, 'date')">
         </td>
       </tr>
       <tr>
@@ -33,7 +33,7 @@
         <td>
           <ng-multiselect-dropdown [placeholder]="'Query Status'" [data]="complaintStatusFilterOptions"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('complaintStatus', $event.value, 'list')">
+                                   (onSelect)="updateComplaintProperty('complaintStatus', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -41,28 +41,28 @@
         <td width="40%"><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{complaintRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('emailId', $event.target.value, 'string')">
+                   (change)="updateComplaintProperty('emailId', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Complaint Details</label></td>
         <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintDetails']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('complaintDetails', $event.target.value, 'string')">
+                   (change)="updateComplaintProperty('complaintDetails', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Complaint Details</label></td>
         <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintDetails']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('complaintDetails', $event.target.value, 'string')">
+                   (change)="updateComplaintProperty('complaintDetails', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Complaint Response</label></td>
         <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintResponse']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('complaintResponse', $event.target.value, 'string')">
+                   (change)="updateComplaintProperty('complaintResponse', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
@@ -70,14 +70,14 @@
         <td>
           <ng-multiselect-dropdown [placeholder]="'Complaint User'" [data]="complaintUserFilterOptions"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('complaintUser', $event.value, 'list')">
+                                   (onSelect)="updateComplaintProperty('complaintUser', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
     </table>
     <button *ngIf="subscriptionDataAccess.formDataEditAccess" type="submit"
             class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-            [disabled]="!editRecordForm" (click)="updatecomplaintRecord()">
+            [disabled]="!editRecordForm" (click)="updateComplaintRecord()">
       Update
     </button>
     <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->

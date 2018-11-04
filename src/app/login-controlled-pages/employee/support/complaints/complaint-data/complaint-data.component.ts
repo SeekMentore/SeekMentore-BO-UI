@@ -1,7 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { ComplaintDataAccess } from '../complaints.component';
-import {CommonFilterOptions} from "../../../../../utils/common-filter-options";
+import {Component, OnInit, Input} from '@angular/core';
+import {GridRecord} from 'src/app/utils/grid/grid-record';
+import {ComplaintDataAccess} from '../complaints.component';
+import {CommonFilterOptions} from "src/app/utils/common-filter-options";
+import {AppUtilityService} from "src/app/utils/app-utility.service";
+import {HelperService} from "src/app/utils/helper.service";
+import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
 
 @Component({
   selector: 'app-complaint-data',
@@ -17,6 +20,8 @@ export class ComplaintDataComponent implements OnInit {
   complaintDataAccess: ComplaintDataAccess = null;
   editRecordForm = false;
 
+  complaintUpdatedRecord = {};
+
   complaintStatusFilterOptions = CommonFilterOptions.complaintStatusFilterOptions;
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
@@ -25,25 +30,33 @@ export class ComplaintDataComponent implements OnInit {
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   complaintUserFilterOptions = CommonFilterOptions.complaintUserFilterOptions;
 
-  singleSelectOptions = {
-    singleSelection: true,
-    idField: 'value',
-    textField: 'label',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
+  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
 
-  multiSelectOptions = {
-    singleSelection: false,
-    idField: 'value',
-    textField: 'label',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
+  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
+  ngOnInit() {
+
+  }
+
+  updateComplaintProperty(key: string, value: string, data_type: string) {
+    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.complaintUpdatedRecord, this.complaintRecord);
+  }
+
+  updateComplaintRecord() {
+    const data = this.helperService.encodedGridFormData(this.complaintUpdatedRecord, this.complaintRecord.getProperty('tutorId'));
+    this.utilityService.makerequest(this, this.onUpdateComplaintRecord, LcpRestUrls.customer_update_record, 'POST',
+      data, 'multipart/form-data', true);
+  }
+
+  onUpdateComplaintRecord(context: any, data: any) {
+    if (data['success'] === true) {
+
+    } else {
+
+    }
+
+  }
 }

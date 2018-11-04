@@ -52,17 +52,9 @@
           <td><label>Student Grades</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
+                                     [(ngModel)]="selectedGradesOptions"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
-            </ng-multiselect-dropdown>
-          </td>
-        </tr>
-        <tr>
-          <td><label>Interested Student Grades</label></td>
-          <td>
-            <ng-multiselect-dropdown [placeholder]="'Interested Student Grades'" [data]="studentGradesFilterOptions"
-                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('interestedStudentGrades', $event.value, 'list')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -70,6 +62,7 @@
           <td><label>Interested Subjects</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
+                                     [(ngModel)]="selectedSubjectOptions"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateCustomerProperty('interestedSubjects', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -102,9 +95,9 @@
 
 
       </table>
-      <button *ngIf="customerDataAccess.formDataEditAccess" type="submit"
+      <button *ngIf="customerDataAccess.formDataEditAccess && editRecordForm" type="submit"
               class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-              [disabled]="!editRecordForm" (click)="updateCustomerRecord()">
+              (click)="updateCustomerRecord()">
         Update
       </button>
       <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->

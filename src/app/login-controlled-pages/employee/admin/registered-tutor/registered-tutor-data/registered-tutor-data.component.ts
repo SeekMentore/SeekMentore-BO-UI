@@ -55,21 +55,15 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
-  singleSelectOptions = {
-    singleSelection: true,
-    idField: 'value',
-    textField: 'label',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
 
-  multiSelectOptions = {
-    singleSelection: false,
-    idField: 'value',
-    textField: 'label',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
+  selectedStudentGrades: any[] = [];
+  selectedSubjectOptions: any[] = [];
+  selectedLocationOptions: any[] = [];
+
+  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+
+  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+
 
   aadharCard;
   panCard;
@@ -85,6 +79,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('interestedSubjects'));
+    this.selectedLocationOptions = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('comfortableLocations'));
+    this.selectedStudentGrades = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('interestedStudentGrades'));
     this.setUpGridMetaData();
   }
 
@@ -467,45 +464,28 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
 
-  isLocationSelected(value: string) {
-    return this.tutorRecord.property['comfortableLocations'].split(';').includes(value);
-  }
-
   getFormattedDate(date: string) {
     const date_object = new Date(date);
     return date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate();
   }
 
-  updateTutorProperty(key: string, value: string, date_type: string) {
-    switch (date_type) {
-      case 'list':
-        console.log(value);
-        let previous_value = this.tutorUpdatedData[key];
-        if (!previous_value) {
-          previous_value = this.tutorRecord.property[key];
-        }
-        const previous_value_array = previous_value.split(';');
-        if (previous_value_array.includes(value)) {
-          previous_value_array.splice(previous_value_array.indexOf(value), 1);
-
-        } else {
-          previous_value_array.push(value);
-        }
-        this.tutorUpdatedData[key] = previous_value_array.join(';');
-        break;
-      default:
-        this.tutorUpdatedData[key] = value;
-    }
-    console.log(this.tutorUpdatedData);
+  updateTutorProperty(key: string, value: string, data_type: string) {
+    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.tutorUpdatedData, this.tutorRecord);
   }
 
   updateTutorRecord() {
-    const data = {
-      completeTutorRecord: JSON.stringify(this.tutorUpdatedData)
-    };
-    // alert(JSON.stringify(this.tutorUpdatedData))
+    const data = this.helperService.encodedGridFormData(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
+    if (this.panCard) {
+      data.append('inputFilePANCard', this.panCard);
+    }
+    if (this.aadharCard) {
+      data.append('inputFileAadhaarCard', this.aadharCard);
+    }
+    if (this.photograph) {
+      data.append('inputFilePhoto', this.photograph);
+    }
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.tutor_update_record, 'POST',
-      this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+      data, 'multipart/form-data', true);
   }
 
   onUpdateTutorRecord(context: any, data: any) {

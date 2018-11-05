@@ -18,15 +18,16 @@
         <td width="40%"><label>Query Requested Date</label></td>
         <td><input class="input_field" type="date" value="{{queryRecord.property['queryRequestedDate']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('queryRequestedDate', $event.target.value, 'date')">
+                   (change)="updateQueryProperty('queryRequestedDate', $event.target.value, 'date')">
         </td>
       </tr>
       <tr>
         <td><label>Query Status</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Query Status'" [data]="applicationStatusFilterOptions"
+                                   [(ngModel)] = "selectedQueryStatus" name="queryStatus"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('queryStatus', $event.value, 'list')">
+                                   (onSelect)="updateQueryProperty('queryStatus', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -34,36 +35,37 @@
         <td width="40%"><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{queryRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('emailId', $event.target.value, 'string')">
+                   (change)="updateQueryProperty('emailId', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Query Details</label></td>
         <td><input class="input_field" type="text" value="{{queryRecord.property['queryDetails']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('queryDetails', $event.target.value, 'string')">
+                   (change)="updateQueryProperty('queryDetails', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Query Response</label></td>
         <td><input class="input_field" type="text" value="{{queryRecord.property['queryResponse']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('queryResponse', $event.target.value, 'string')">
+                   (change)="updateQueryProperty('queryResponse', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Not Answered Reason</label></td>
         <td><input class="input_field" type="text" value="{{queryRecord.property['notAnsweredReason']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('notAnsweredReason', $event.target.value, 'string')">
+                   (change)="updateQueryProperty('notAnsweredReason', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td><label>Is Registered Tutor</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Is Registered Tutor'" [data]="yesNoFilterOptions"
+                                   [(ngModel)]="selectedTutorRegisteredOption" name="isTutorRegistered"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('registeredTutor', $event.value, 'list')">
+                                   (onSelect)="updateQueryProperty('registeredTutor', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -71,15 +73,16 @@
         <td><label>Is Subscribed Customer</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Is Subscribed Customer'" [data]="yesNoFilterOptions"
+                                   [(ngModel)]="selectedCustomerSubscribedOption" name="isCustomerSubscribed"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('subscribedCustomer', $event.value, 'list')">
+                                   (onSelect)="updateQueryProperty('subscribedCustomer', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess" type="submit"
+    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-            [disabled]="!editRecordForm" (click)="updatequeryRecord()">
+            (click)="updateQueryRecord()">
       Update
     </button>
     <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->

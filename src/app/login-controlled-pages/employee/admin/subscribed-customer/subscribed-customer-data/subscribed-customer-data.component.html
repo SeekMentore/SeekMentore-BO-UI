@@ -43,6 +43,7 @@
           <td><label>Gender</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
+                                     [(ngModel)]="selectedGenderOption" name="genderOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateCustomerProperty('gender', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -52,7 +53,7 @@
           <td><label>Student Grades</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
-                                     [(ngModel)]="selectedGradesOptions"
+                                     [(ngModel)]="selectedGradesOptions" name="studentGrades"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -62,17 +63,18 @@
           <td><label>Interested Subjects</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
-                                     [(ngModel)]="selectedSubjectOptions"
+                                     [(ngModel)]="selectedSubjectOptions" name="interestedSubjects"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateCustomerProperty('interestedSubjects', $event.value, 'list')">
             </ng-multiselect-dropdown>
           </td>
         </tr>
         <tr>
-          <td><label>Comfortable Locations</label></td>
+          <td><label>Location</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
-                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     [(ngModel)]="selectedLocationOption" name="selectedLocation"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateCustomerProperty('location', $event.value, 'list')">
             </ng-multiselect-dropdown>
           </td>

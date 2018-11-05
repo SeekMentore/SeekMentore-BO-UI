@@ -32,12 +32,15 @@ export class SubscribedCustomerDataComponent implements OnInit {
   renderCustomerRecordForm = false;
   editRecordForm = false;
 
+  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   gradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
   customerUpdatedData = {};
 
+  selectedGenderOption: any[] = [];
+  selectedLocationOption: any[] = [];
   selectedGradesOptions: any[] = [];
   selectedSubjectOptions: any[] = [];
 
@@ -51,8 +54,10 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.selectedGenderOption = CommonFilterOptions.getSelectedFilterItems(this.genderFilterOptions, this.customerRecord.getProperty('gender'));
+    this.selectedLocationOption = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.customerRecord.getProperty('location'));
     this.selectedGradesOptions = CommonFilterOptions.getSelectedFilterItems(this.gradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
-    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.gradesFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
+    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
     this.setUpGridMetaData();
   }
 
@@ -153,7 +158,6 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
 
-
   updateCustomerProperty(key: string, value: string, data_type: string) {
     CommonFilterOptions.updateRecordProperty(key, value, data_type, this.customerUpdatedData, this.customerRecord);
   }
@@ -172,9 +176,5 @@ export class SubscribedCustomerDataComponent implements OnInit {
     }
   }
 
-  getFormattedDate(date: string) {
-    const date_object = new Date(date);
-    return date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate();
-  }
 
 }

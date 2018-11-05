@@ -56,6 +56,10 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
 
+  selectedGenderOption: any[] = [];
+  selectedQualificationOption: any[] = [];
+  selectedProfessionOption: any[] = [];
+  selectedTransportOption: any[] = [];
   selectedStudentGrades: any[] = [];
   selectedSubjectOptions: any[] = [];
   selectedLocationOptions: any[] = [];
@@ -79,6 +83,10 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.selectedGenderOption = CommonFilterOptions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
+    this.selectedQualificationOption = CommonFilterOptions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
+    this.selectedProfessionOption = CommonFilterOptions.getSelectedFilterItems(this.selectedProfessionOption, this.tutorRecord.getProperty('primaryProfession'));
+    this.selectedProfessionOption = CommonFilterOptions.getSelectedFilterItems(this.selectedTransportOption, this.tutorRecord.getProperty('transportMode'));
     this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('interestedSubjects'));
     this.selectedLocationOptions = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('comfortableLocations'));
     this.selectedStudentGrades = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('interestedStudentGrades'));
@@ -464,10 +472,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
 
-  getFormattedDate(date: string) {
-    const date_object = new Date(date);
-    return date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate();
-  }
 
   updateTutorProperty(key: string, value: string, data_type: string) {
     CommonFilterOptions.updateRecordProperty(key, value, data_type, this.tutorUpdatedData, this.tutorRecord);

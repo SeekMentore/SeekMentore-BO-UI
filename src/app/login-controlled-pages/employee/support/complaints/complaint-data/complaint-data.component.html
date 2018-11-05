@@ -32,6 +32,7 @@
         <td><label>Complaint Status</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Query Status'" [data]="complaintStatusFilterOptions"
+                                   [(ngModel)]="selectedComplaintStatus" name="complaintStatus"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                    (onSelect)="updateComplaintProperty('complaintStatus', $event.value, 'list')">
           </ng-multiselect-dropdown>
@@ -52,13 +53,6 @@
         </td>
       </tr>
       <tr>
-        <td width="40%"><label>Complaint Details</label></td>
-        <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintDetails']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateComplaintProperty('complaintDetails', $event.target.value, 'string')">
-        </td>
-      </tr>
-      <tr>
         <td width="40%"><label>Complaint Response</label></td>
         <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintResponse']}}"
                    [disabled]="!editRecordForm"
@@ -66,18 +60,19 @@
         </td>
       </tr>
       <tr>
-        <td><label>Is Registered Tutor</label></td>
+        <td><label>Complaint User</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Complaint User'" [data]="complaintUserFilterOptions"
+                                   [(ngModel)]="selectedComplaintUser" name="complaintUser"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                    (onSelect)="updateComplaintProperty('complaintUser', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess" type="submit"
+    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-            [disabled]="!editRecordForm" (click)="updateComplaintRecord()">
+            (click)="updateComplaintRecord()">
       Update
     </button>
     <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->

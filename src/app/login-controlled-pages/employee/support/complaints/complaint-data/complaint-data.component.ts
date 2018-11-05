@@ -34,11 +34,15 @@ export class ComplaintDataComponent implements OnInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptions;
 
+  selectedComplaintStatus: any[] = [];
+  selectedComplaintUser: any[] = [];
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
   ngOnInit() {
-
+    this.selectedComplaintStatus = CommonFilterOptions.getSelectedFilterItems(this.complaintStatusFilterOptions, this.complaintRecord.getProperty('complaintStatus'));
+    this.selectedComplaintUser = CommonFilterOptions.getSelectedFilterItems(this.complaintUserFilterOptions, this.complaintRecord.getProperty('complaintUser'));
   }
 
   updateComplaintProperty(key: string, value: string, data_type: string) {
@@ -46,7 +50,7 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   updateComplaintRecord() {
-    const data = this.helperService.encodedGridFormData(this.complaintUpdatedRecord, this.complaintRecord.getProperty('tutorId'));
+    const data = this.helperService.encodedGridFormData(this.complaintUpdatedRecord, this.complaintRecord.getProperty('complaintId'));
     this.utilityService.makerequest(this, this.onUpdateComplaintRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

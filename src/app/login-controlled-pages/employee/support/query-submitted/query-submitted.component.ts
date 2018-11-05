@@ -35,6 +35,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
   interimHoldSelectedQueryGridObject: GridComponent = null;
   queryDataAccess: QueryDataAccess = null;
 
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedQueryGridMetaData = null;
     this.nonAnsweredQueryGridMetaData = null;
@@ -214,6 +215,9 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
       this.showQueryData = true;
     }
   }
+
+
+
 
 }
 

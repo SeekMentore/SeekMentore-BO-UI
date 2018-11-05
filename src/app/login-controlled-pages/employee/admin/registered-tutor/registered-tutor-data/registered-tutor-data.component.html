@@ -41,6 +41,7 @@
           <td><label>Gender</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
+                                     [(ngModel)] = "selectedGenderOption" name="selectedGender"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('gender', $event.value, 'string')">
             </ng-multiselect-dropdown>
@@ -50,6 +51,7 @@
           <td><label>Qualification</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
+                                     [(ngModel)]="selectedQualificationOption" name="qualificationOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('qualification', $event.value, 'string')">
             </ng-multiselect-dropdown>
@@ -59,6 +61,7 @@
           <td><label>Primary Profession</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
+                                     [(ngModel)]="selectedProfessionOption" name="professionOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('primaryProfession', $event.value, 'list')">
             </ng-multiselect-dropdown>
@@ -68,6 +71,7 @@
           <td><label>Transport Mode</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
+                                     [(ngModel)] = "selectedTransportOption" name="transportOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
                                      (onSelect)="updateTutorProperty('transportMode', $event.value, 'list')">
             </ng-multiselect-dropdown>

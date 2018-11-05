@@ -18,21 +18,22 @@
         <td width="40%"><label>Name</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['name']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('name', $event.target.value, 'string')">
+                   (change)="updateSubscriptionProperty('name', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Application Date</label></td>
         <td><input class="input_field" type="date" value="{{subscriptionRecord.property['applicationDate']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('applicationDate', $event.target.value, 'date')"></td>
+                   (change)="updateSubscriptionProperty('applicationDate', $event.target.value, 'date')"></td>
       </tr>
       <tr>
         <td><label>Application Status</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Application Status'" [data]="applicationStatusFilterOptions"
+                                   [(ngModel)]="selectedApplicationStatus" name="applicationStatus"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('applicationStatus', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('applicationStatus', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -40,22 +41,23 @@
         <td width="40%"><label>Contact Number</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['contactNumber']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('contactNumber', $event.target.value, 'string')">
+                   (change)="updateSubscriptionProperty('contactNumber', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td width="40%"><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{subscriptionRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateCustomerProperty('emailId', $event.target.value, 'string')">
+                   (change)="updateSubscriptionProperty('emailId', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
         <td><label>Student Grades</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
+                                   [(ngModel)]="selectedStudentGradeOptions" name="studentGrades"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('studentGrades', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -63,8 +65,9 @@
         <td><label>Subjects</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
+                                   [(ngModel)]="selectedSubjectOptions" name="subjectOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('subjects', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('subjects', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -72,8 +75,9 @@
         <td><label>Locations</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
+                                   [(ngModel)]="selectedLocationOptions" name="locationOption"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('locations', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('locations', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -81,8 +85,9 @@
         <td><label>Preferred Time To Call</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
+                                   [(ngModel)]="selectedCallTimeOption" name="callTimeOptions"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('preferredTimeToCall', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('preferredTimeToCall', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -90,31 +95,32 @@
         <td><label>Additional Details</label></td>
         <td><input class="input_field" type="text" [disabled]="!editRecordForm"
                    value="{{getFormattedDate(subscriptionRecord.property['additionalDetails'])}}"
-                   (change)="updateCustomerProperty('additionalDetails', $event.target.value, 'string')"></td>
+                   (change)="updateSubscriptionProperty('additionalDetails', $event.target.value, 'string')"></td>
 
       </tr>
       <tr>
         <td><label>Address Details</label></td>
         <td><input class="input_field" type="text" [disabled]="!editRecordForm"
                    value="{{getFormattedDate(subscriptionRecord.property['addressDetails'])}}"
-                   (change)="updateCustomerProperty('addressDetails', $event.target.value, 'string')"></td>
+                   (change)="updateSubscriptionProperty('addressDetails', $event.target.value, 'string')"></td>
 
       </tr>
       <tr>
         <td><label>Reference</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
+                                   [(ngModel)]="selectedReferenceOption" name="referenceOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateCustomerProperty('reference', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('reference', $event.value, 'list')">
           </ng-multiselect-dropdown>
         </td>
       </tr>
 
 
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess" type="submit"
+    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-            [disabled]="!editRecordForm" (click)="updatesubscriptionRecord()">
+             (click)="updateSubscriptionRecord()">
       Update
     </button>
     <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->

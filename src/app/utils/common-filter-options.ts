@@ -138,7 +138,6 @@ export class CommonFilterOptions {
         }
       }
     }
-    console.log(selectedOptionsArray);
     return selectedOptionsArray;
   }
 

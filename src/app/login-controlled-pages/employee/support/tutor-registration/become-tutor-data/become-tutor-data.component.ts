@@ -5,6 +5,8 @@ import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
 import {AppUtilityService} from "../../../../../utils/app-utility.service";
 import {HelperService} from "../../../../../utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-become-tutor-data',
@@ -21,6 +23,8 @@ export class BecomeTutorDataComponent implements OnInit {
 
   updatedTutorRecord = {};
 
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
   editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptions;
@@ -40,7 +44,6 @@ export class BecomeTutorDataComponent implements OnInit {
   preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
-
   selectedApplicationStatus: any[] = [];
   selectedGenderOption: any[] = [];
   selectedQualificationOption: any[] = [];
@@ -54,8 +57,6 @@ export class BecomeTutorDataComponent implements OnInit {
   selectedTeachingTypeOptions: any[] = [];
   selectedReAppliedOptions: any[] = [];
 
-
-
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
@@ -65,13 +66,19 @@ export class BecomeTutorDataComponent implements OnInit {
     this.selectedQualificationOption = CommonFilterOptions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
     this.selectedProfessionOption = CommonFilterOptions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.tutorRecord.getProperty('primaryProfession'));
     this.selectedTransportOption = CommonFilterOptions.getSelectedFilterItems(this.transportModeFilterOptions, this.tutorRecord.getProperty('transportMode'));
-    this.selectedStudentGradeOptions = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('studentGrades'));
+    this.selectedStudentGradeOptions = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('studentGrade'));
     this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('subjects'));
     this.selectedLocationOptions = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('locations'));
     this.selectedCallTimeOption = CommonFilterOptions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.tutorRecord.getProperty('preferredTimeToCall'));
     this.selectedReferenceOption = CommonFilterOptions.getSelectedFilterItems(this.referenceFilterOptions, this.tutorRecord.getProperty('reference'));
     this.selectedTeachingTypeOptions = CommonFilterOptions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
     this.selectedReAppliedOptions = CommonFilterOptions.getSelectedFilterItems(this.yesNoFilterOptions, this.tutorRecord.getProperty('reApplied'));
+
+    console.log(this.tutorRecord);
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
   }
 
   updateTutorProperty(key: string, value: string, data_type: string) {
@@ -85,12 +92,15 @@ export class BecomeTutorDataComponent implements OnInit {
   }
 
   onUpdateTutorRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
-    }
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
+    } 
   }
-
 }

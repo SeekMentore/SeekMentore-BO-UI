@@ -56,7 +56,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
         title: 'Uploaded Documents',
         store: {
           isStatic: false,
-          restURL: '/rest/registeredTutor/uploadedDocuments'
+          restURL: '/rest/sales/currentCustomerAllPendingEnquiries'
         },
         columns: [{
           id: 'subject',

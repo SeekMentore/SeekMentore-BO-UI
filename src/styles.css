@@ -557,3 +557,40 @@ table .input_field, table .dropdown-btn {
   background: #20A843;
   transition: 0.5s ease;
 }
+
+.form-container-generic-table {
+  width: 100%;
+  line-height: 2.5 !important;
+}
+
+.form-container-generic-table .dropdown-btn {
+  line-height: 2.5 !important;
+}
+
+.form-container-generic-table label {
+  font-weight: bold;
+  text-align: left !important;
+}
+
+table.form-container-generic-table td.td-label {
+  width: 25%;
+}
+
+.form-container-update-button {
+  align-self: center; 
+  margin-top: 10px; 
+  line-height: 2.5;
+  font-size: 1.2em;
+}
+
+.form-container-toggle-button {
+  display: flex; 
+  flex-direction: row; 
+  justify-content: flex-end;
+  line-height: 2.5;
+  width: 99%;
+}
+
+.textarea_field {
+  width: 97.8%;
+}

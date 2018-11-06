@@ -76,6 +76,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
           // Open the Data view port
           this.interimHoldSelectedAllEnquiriesRecord = record;
           this.interimHoldSelectedAllEnquiriesGridObject = gridObject;
+          alert(gridObject.grid.title);
           if (this.allEnquiriesDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
           } else {

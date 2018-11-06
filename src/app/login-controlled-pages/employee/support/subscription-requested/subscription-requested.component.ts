@@ -49,7 +49,6 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
   showSubscriptionData = false;
   selectedSubscriptionRecord: GridRecord = null;
   interimHoldSelectedSubscriptionRecord: GridRecord = null;
-  interimHoldSelectedSubscriptionGridObject: GridComponent = null;
   subscriptionDataAccess: SubscriptionDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -91,7 +90,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, gridObject: GridComponent) {
+  public getGridObject(id: string, title: string, restURL: string) {
     let grid = {
       id: id,
       title: title,
@@ -111,7 +110,6 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
             this.interimHoldSelectedSubscriptionRecord = record;
-            this.interimHoldSelectedSubscriptionGridObject = gridObject;
             if (this.subscriptionDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
             } else {
@@ -237,7 +235,6 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
                 }
               });
             } else {
-              this.interimHoldSelectedSubscriptionGridObject = gridObject;
               const data = {
                 tutorIdsList: SubscriptionIdsList.join(';'),
                 comments: ''
@@ -255,43 +252,43 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.nonContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList', this.nonContactedSubscriptionGridObject),
+      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList'),
       htmlDomElementId: 'non-contacted-subscription-grid',
       hidden: false
     };
 
     this.nonVerifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList', this.nonVerifiedSubscriptionGridObject),
+      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList'),
       htmlDomElementId: 'non-verified-subscription-grid',
       hidden: false
     };
 
     this.verifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList', this.verifiedSubscriptionGridObject),
+      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList'),
       htmlDomElementId: 'verified-subscription-grid',
       hidden: false
     };
 
     this.verificationFailedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList', this.verificationFailedSubscriptionGridObject),
+      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList'),
       htmlDomElementId: 'verification-failed-subscription-grid',
       hidden: false
     };
 
     this.toBeReContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList', this.toBeReContactedSubscriptionGridObject),
+      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList'),
       htmlDomElementId: 'to-be-recontacted-subscription-grid',
       hidden: false
     };
 
     this.selectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList', this.selectedSubscriptionGridObject),
+      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList'),
       htmlDomElementId: 'selected-subscription-grid',
       hidden: false
     };
 
     this.rejectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList', this.rejectedSubscriptionGridObject),
+      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList'),
       htmlDomElementId: 'rejected-subscription-grid',
       hidden: false
     };
@@ -334,11 +331,23 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       this.showSubscriptionData = false;
       this.selectedSubscriptionRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedSubscriptionGridObject.init();
-      }, 0);
+        this.nonContactedSubscriptionGridObject.init();
+        this.nonVerifiedSubscriptionGridObject.init();
+        this.verifiedSubscriptionGridObject.init();
+        this.verificationFailedSubscriptionGridObject.init();
+        this.toBeReContactedSubscriptionGridObject.init();
+        this.selectedSubscriptionGridObject.init();
+        this.rejectedSubscriptionGridObject.init();
+      }, 100);   
       setTimeout(() => {
-        this.interimHoldSelectedSubscriptionGridObject.refreshGridData();
-      }, 0);
+        this.nonContactedSubscriptionGridObject.refreshGridData();
+        this.nonVerifiedSubscriptionGridObject.refreshGridData();
+        this.verifiedSubscriptionGridObject.refreshGridData();
+        this.verificationFailedSubscriptionGridObject.refreshGridData();
+        this.toBeReContactedSubscriptionGridObject.refreshGridData();
+        this.selectedSubscriptionGridObject.refreshGridData();
+        this.rejectedSubscriptionGridObject.refreshGridData();
+      }, 200);
     } else {
       this.showSubscriptionData = true;
     }

@@ -32,7 +32,6 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
   showQueryData = false;
   selectedQueryRecord: GridRecord = null;
   interimHoldSelectedQueryRecord: GridRecord = null;
-  interimHoldSelectedQueryGridObject: GridComponent = null;
   queryDataAccess: QueryDataAccess = null;
 
 
@@ -59,7 +58,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, gridObject: GridComponent) {
+  public getGridObject(id: string, title: string, restURL: string) {
     let grid = {
       id: id,
       title: title,
@@ -77,7 +76,6 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
             this.interimHoldSelectedQueryRecord = record;
-            this.interimHoldSelectedQueryGridObject = gridObject;
             if (this.queryDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
             } else {
@@ -164,19 +162,19 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.nonContactedQueryGridMetaData = {
-      grid: this.getGridObject('nonContactedQueryGrid', 'Non Contacted Queries', '/rest/support/nonContactedQueryList', this.nonContactedQueryGridObject),
+      grid: this.getGridObject('nonContactedQueryGrid', 'Non Contacted Queries', '/rest/support/nonContactedQueryList'),
       htmlDomElementId: 'non-contacted-query-grid',
       hidden: false
     };
 
     this.nonAnsweredQueryGridMetaData = {
-      grid: this.getGridObject('nonAnsweredQueryGrid', 'Non Answered Queries', '/rest/support/nonAnsweredQueryList', this.nonAnsweredQueryGridObject),
+      grid: this.getGridObject('nonAnsweredQueryGrid', 'Non Answered Queries', '/rest/support/nonAnsweredQueryList'),
       htmlDomElementId: 'non-answered-query-grid',
       hidden: false
     };
 
     this.answeredQueryGridMetaData = {
-      grid: this.getGridObject('answeredQueryGrid', 'Answered Queries', '/rest/support/answeredQueryList', this.answeredQueryGridObject),
+      grid: this.getGridObject('answeredQueryGrid', 'Answered Queries', '/rest/support/answeredQueryList'),
       htmlDomElementId: 'answered-query-grid',
       hidden: false
     };
@@ -206,11 +204,15 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
       this.showQueryData = false;
       this.selectedQueryRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedQueryGridObject.init();
-      }, 0);
+        this.nonContactedQueryGridObject.init();
+        this.nonAnsweredQueryGridObject.init();
+        this.answeredQueryGridObject.init();
+      }, 100);   
       setTimeout(() => {
-        this.interimHoldSelectedQueryGridObject.refreshGridData();
-      }, 0);
+        this.nonContactedQueryGridObject.refreshGridData();
+        this.nonAnsweredQueryGridObject.refreshGridData();
+        this.answeredQueryGridObject.refreshGridData();
+      }, 200);
     } else {
       this.showQueryData = true;
     }

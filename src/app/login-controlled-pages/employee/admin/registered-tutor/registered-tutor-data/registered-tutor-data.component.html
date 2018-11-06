@@ -118,7 +118,7 @@
         <tr>
           <td><label>Additional Details</label></td>
           <td><input class="input_field" type="text" [disabled]="!editRecordForm"
-                     value="{{getFormattedDate(tutorRecord.property['additionalDetails'])}}"
+                     value="{{tutorRecord.property['additionalDetails']}}"
                      (change)="updateTutorProperty('additionalDetails', $event.target.value, 'string')"></td>
 
         </tr>

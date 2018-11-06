@@ -52,8 +52,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
 
   showTutorData = false;
   selectedTutorRecord: GridRecord = null;
-  interimHoldSelectedTutorRecord: GridRecord = null;
-  interimHoldSelectedTutorGridObject: GridComponent = null;
+  interimHoldSelectedTutorRecord: GridRecord = null;  
   tutorDataAccess: BecomeTutorDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -98,7 +97,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, gridObject: GridComponent) {
+  public getGridObject(id: string, title: string, restURL: string) {
     let grid = {
       id: id,
       title: title,
@@ -115,10 +114,9 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           renderer: (record: GridRecord, column: Column) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
           },
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             // Open the Data view port
-            this.interimHoldSelectedTutorRecord = record;
-            this.interimHoldSelectedTutorGridObject = gridObject;
+            this.interimHoldSelectedTutorRecord = record;            
             if (this.tutorDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
             } else {
@@ -283,7 +281,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           id: 'blacklist',
           label: 'Blacklist',
           btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
             const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeTutorId');
             if (tutorIdsList.length === 0) {
               this.helperService.showAlertDialog({
@@ -293,7 +291,6 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
                 }
               });
             } else {
-              this.interimHoldSelectedTutorGridObject = gridObject;
               const data = {
                 tutorIdsList: tutorIdsList.join(';'),
                 comments: ''
@@ -311,49 +308,49 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.nonContactedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('nonContactedBecomeTutorGrid', 'Non Contacted Tutors', '/rest/support/nonContactedBecomeTutorsList', this.nonContactedBecomeTutorGridObject),
+      grid: this.getGridObject('nonContactedBecomeTutorGrid', 'Non Contacted Tutors', '/rest/support/nonContactedBecomeTutorsList'),
       htmlDomElementId: 'non-contacted-become-tutor-grid',
       hidden: false
     };
 
     this.nonVerifiedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList', this.nonVerifiedBecomeTutorGridObject),
+      grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList'),
       htmlDomElementId: 'non-verified-become-tutor-grid',
       hidden: false
     };
 
     this.verifiedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList', this.verifiedBecomeTutorGridObject),
+      grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList'),
       htmlDomElementId: 'verified-become-tutor-grid',
       hidden: false
     };
 
     this.verificationFailedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList', this.verificationFailedBecomeTutorGridObject),
+      grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList'),
       htmlDomElementId: 'verification-failed-become-tutor-grid',
       hidden: false
     };
 
     this.toBeReContactedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList', this.toBeReContactedBecomeTutorGridObject),
+      grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList'),
       htmlDomElementId: 'to-be-recontacted-become-tutor-grid',
       hidden: false
     };
 
     this.selectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList', this.selectedBecomeTutorGridObject),
+      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList'),
       htmlDomElementId: 'selected-become-tutor-grid',
       hidden: false
     };
 
     this.rejectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList', this.rejectedBecomeTutorGridObject),
+      grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList'),
       htmlDomElementId: 'rejected-become-tutor-grid',
       hidden: false
     };
 
     this.registeredBecomeTutorGridMetaData = {
-      grid: this.getGridObject('registeredBecomeTutorGrid', 'Registered Tutors', '/rest/support/registeredBecomeTutorsList', this.registeredBecomeTutorGridObject),
+      grid: this.getGridObject('registeredBecomeTutorGrid', 'Registered Tutors', '/rest/support/registeredBecomeTutorsList'),
       htmlDomElementId: 'registered-become-tutor-grid',
       hidden: false
     };
@@ -396,11 +393,25 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
       this.showTutorData = false;
       this.selectedTutorRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedTutorGridObject.init();
-      }, 0);
+        this.nonContactedBecomeTutorGridObject.init();
+        this.nonVerifiedBecomeTutorGridObject.init();
+        this.verifiedBecomeTutorGridObject.init();
+        this.verificationFailedBecomeTutorGridObject.init();
+        this.toBeReContactedBecomeTutorGridObject.init();
+        this.selectedBecomeTutorGridObject.init();
+        this.rejectedBecomeTutorGridObject.init();
+        this.registeredBecomeTutorGridObject.init();
+      }, 100);   
       setTimeout(() => {
-        this.interimHoldSelectedTutorGridObject.refreshGridData();
-      }, 0);
+        this.nonContactedBecomeTutorGridObject.refreshGridData();
+        this.nonVerifiedBecomeTutorGridObject.refreshGridData();
+        this.verifiedBecomeTutorGridObject.refreshGridData();
+        this.verificationFailedBecomeTutorGridObject.refreshGridData();
+        this.toBeReContactedBecomeTutorGridObject.refreshGridData();
+        this.selectedBecomeTutorGridObject.refreshGridData();
+        this.rejectedBecomeTutorGridObject.refreshGridData();
+        this.registeredBecomeTutorGridObject.refreshGridData();
+      }, 200);
     } else {
       this.showTutorData = true;
     }

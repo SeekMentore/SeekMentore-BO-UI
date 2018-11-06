@@ -73,8 +73,6 @@ export class BecomeTutorDataComponent implements OnInit {
     this.selectedReferenceOption = CommonFilterOptions.getSelectedFilterItems(this.referenceFilterOptions, this.tutorRecord.getProperty('reference'));
     this.selectedTeachingTypeOptions = CommonFilterOptions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
     this.selectedReAppliedOptions = CommonFilterOptions.getSelectedFilterItems(this.yesNoFilterOptions, this.tutorRecord.getProperty('reApplied'));
-
-    console.log(this.tutorRecord);
   }
 
   getDateFromMillis(millis: number) {

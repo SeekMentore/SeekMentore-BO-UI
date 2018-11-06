@@ -33,7 +33,6 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   showAllEnquiriesData = false;
   selectedAllEnquiriesRecord: GridRecord = null;
   interimHoldSelectedAllEnquiriesRecord: GridRecord = null;
-  interimHoldSelectedAllEnquiriesGridObject: GridComponent = null;
   allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
@@ -59,7 +58,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, gridObject: GridComponent) {
+  public getGridObject(id: string, title: string, restURL: string) {
     let grid = {
       id: id,
       title: title,
@@ -75,8 +74,6 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         clickEvent: (record: GridRecord, column: Column) => {
           // Open the Data view port
           this.interimHoldSelectedAllEnquiriesRecord = record;
-          this.interimHoldSelectedAllEnquiriesGridObject = gridObject;
-          alert(gridObject.grid.title);
           if (this.allEnquiriesDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
           } else {
@@ -228,19 +225,19 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.pendingEnquiriesGridMetaData = {
-      grid: this.getGridObject('pendingEnquiriesGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList', this.pendingEnquiriesGridObject),
+      grid: this.getGridObject('pendingEnquiriesGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList'),
       htmlDomElementId: 'pending-enquiries-grid',
       hidden: false
     };
 
     this.completedEnquiriesGridMetaData = {
-      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', this.completedEnquiriesGridObject),
+      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList'),
       htmlDomElementId: 'completed-enquiries-grid',
       hidden: false
     };
 
     this.abortedEnquiriesGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', this.abortedEnquiriesGridObject),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList'),
       htmlDomElementId: 'aborted-enquiries-grid',
       hidden: false
     }; 
@@ -270,11 +267,15 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       this.showAllEnquiriesData = false;
       this.selectedAllEnquiriesRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedAllEnquiriesGridObject.init();        
-      }, 0);  
+        this.pendingEnquiriesGridObject.init();
+        this.completedEnquiriesGridObject.init();
+        this.abortedEnquiriesGridObject.init();
+      }, 100);   
       setTimeout(() => {
-        this.interimHoldSelectedAllEnquiriesGridObject.refreshGridData();
-      }, 0);
+        this.pendingEnquiriesGridObject.refreshGridData();
+        this.completedEnquiriesGridObject.refreshGridData();
+        this.abortedEnquiriesGridObject.refreshGridData();
+      }, 200);
     } else {
       this.showAllEnquiriesData = true;
     }

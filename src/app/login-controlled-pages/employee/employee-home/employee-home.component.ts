@@ -79,7 +79,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: (record: GridRecord, column: Column) => {            
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {    
+            alert(gridComponentObject.grid.title);        
             this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column));            
           }
         }, {
@@ -130,7 +131,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            alert(gridComponentObject.grid.title);   
             this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column)); 
           }
         }, {
@@ -182,7 +184,8 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           headerName: 'Subject',
           dataType: 'string',
           mapping: 'subject',
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            alert(gridComponentObject.grid.title);   
             this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column)); 
           }
         }, {

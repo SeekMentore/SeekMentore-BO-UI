@@ -53,10 +53,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.column_extra_data_display_input = columnExtraDataDisplayInput;
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.hideShowRemoveFilterTab();
-    }, 100);
+  ngAfterViewInit() {    
   }  
 
   public init() {
@@ -83,7 +80,11 @@ export class GridComponent implements OnInit, AfterViewInit {
       );
     }
     this.hidden = this.gridMetaData.hidden;
-    this.idForModalPopUp = this.grid.id;   
+    this.idForModalPopUp = this.grid.id;
+    
+    setTimeout(() => {
+      this.hideShowRemoveFilterTab();
+    }, 1000);
   }
 
   public addExtraParams(paramKey: string, paramValue: Object) {
@@ -813,7 +814,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.dismissColumnExtraDataDisplayPopUp();
     if (hasClickEventHandlerAttached) {
       if (column.eventHandler !== null) {
-        column.eventHandler.clickEventColumn(record, column);
+        column.eventHandler.clickEventColumn(record, column, this);
       }
     }
   }
@@ -867,7 +868,7 @@ export class GridComponent implements OnInit, AfterViewInit {
    */
   public actionColumnActionButtonClicked(record: GridRecord, button: ActionButton) {
     if (button.eventHandler !== null) {
-      button.eventHandler.clickEventActionColumnButton(record, button);
+      button.eventHandler.clickEventActionColumnButton(record, button, this);
     } else {
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -881,7 +882,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public selectionColumnActionButtonClicked(button: ActionButton) {
     if (button.eventHandler !== null) {
-      button.eventHandler.clickEventSelectionColumnMultipleActionButton(this.grid.getSelectedRecords(), button);
+      button.eventHandler.clickEventSelectionColumnMultipleActionButton(this.grid.getSelectedRecords(), button, this);
     } else {
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -902,7 +903,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.displayColumnExtraDataAsPopUp(column.headerName + ' - Complete Data', this.defaultColumnValueRenderer(record, column, true), record, column, hasClickEventHandlerAttached);
     } else {
       if (column.eventHandler !== null) {
-        column.eventHandler.clickEventColumn(record, column);
+        column.eventHandler.clickEventColumn(record, column, this);
       }
     }
   }
@@ -917,7 +918,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (column.uiRenderer === null) {
       data = column.getValueForColumn(record);
     } else {
-      data = column.uiRenderer.renderColumn(record, column);
+      data = column.uiRenderer.renderColumn(record, column, this);
     }
     if (!returnCompleteData) {
       if (column.lengthyData || column.multiList) {

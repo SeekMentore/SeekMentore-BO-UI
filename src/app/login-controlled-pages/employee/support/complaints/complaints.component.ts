@@ -37,7 +37,6 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   showComplaintData = false;
   selectedComplaintRecord: GridRecord = null;
   interimHoldSelectedComplaintRecord: GridRecord = null;
-  interimHoldSelectedComplaintGridObject: GridComponent = null;
   complaintDataAccess: ComplaintDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -66,7 +65,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, gridObject: GridComponent) {
+  public getGridObject(id: string, title: string, restURL: string) {
     let grid = {
       id: id,
       title: title,
@@ -83,7 +82,6 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
             this.interimHoldSelectedComplaintRecord = record;
-            this.interimHoldSelectedComplaintGridObject = gridObject;
             if (this.complaintDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
             } else {
@@ -162,25 +160,25 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.customerComplaintGridMetaData = {
-      grid: this.getGridObject('customerComplaintGrid', 'Customer Complaints', '/rest/support/customerComplaintList', this.customerComplaintGridObject),
+      grid: this.getGridObject('customerComplaintGrid', 'Customer Complaints', '/rest/support/customerComplaintList'),
       htmlDomElementId: 'customer-complaint-grid',
       hidden: false
     };
 
     this.tutorComplaintGridMetaData = {
-      grid: this.getGridObject('tutorComplaintGrid', 'Tutor Complaints', '/rest/support/tutorComplaintList', this.tutorComplaintGridObject),
+      grid: this.getGridObject('tutorComplaintGrid', 'Tutor Complaints', '/rest/support/tutorComplaintList'),
       htmlDomElementId: 'tutor-complaint-grid',
       hidden: false
     };
 
     this.employeeComplaintGridMetaData = {
-      grid: this.getGridObject('employeeComplaintGrid', 'Employee Complaints', '/rest/support/employeeComplaintList', this.employeeComplaintGridObject),
+      grid: this.getGridObject('employeeComplaintGrid', 'Employee Complaints', '/rest/support/employeeComplaintList'),
       htmlDomElementId: 'employee-complaint-grid',
       hidden: false
     };
 
     this.resolvedComplaintGridMetaData = {
-      grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList', this.resolvedComplaintGridObject),
+      grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList'),
       htmlDomElementId: 'resolved-complaint-grid',
       hidden: false
     };
@@ -210,11 +208,17 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
       this.showComplaintData = false;
       this.selectedComplaintRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedComplaintGridObject.init();
-      }, 0);
+        this.customerComplaintGridObject.init();
+        this.tutorComplaintGridObject.init();
+        this.employeeComplaintGridObject.init();
+        this.resolvedComplaintGridObject.init();
+      }, 100);   
       setTimeout(() => {
-        this.interimHoldSelectedComplaintGridObject.refreshGridData();
-      }, 0);
+        this.customerComplaintGridObject.refreshGridData();
+        this.tutorComplaintGridObject.refreshGridData();
+        this.employeeComplaintGridObject.refreshGridData();
+        this.resolvedComplaintGridObject.refreshGridData();
+      }, 200);
     } else {
       this.showComplaintData = true;
     }

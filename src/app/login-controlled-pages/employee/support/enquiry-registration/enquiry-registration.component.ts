@@ -49,7 +49,6 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
   showEnquiryData = false;
   selectedEnquiryRecord: GridRecord = null;
   interimHoldSelectedEnquiryRecord: GridRecord = null;
-  interimHoldSelectedEnquiryGridObject: GridComponent = null;
   enquiryDataAccess: EnquiryDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
@@ -91,7 +90,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, gridObject: GridComponent) {
+  public getGridObject(id: string, title: string, restURL: string) {
     let grid = {
       id: id,
       title: title,
@@ -108,7 +107,6 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
             this.interimHoldSelectedEnquiryRecord = record;
-            this.interimHoldSelectedEnquiryGridObject = gridObject;
             if (this.enquiryDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
             } else {
@@ -232,7 +230,6 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
                 }
               });
             } else {
-              this.interimHoldSelectedEnquiryGridObject = gridObject;
               const data = {
                 tutorIdsList: enquiryIdsList.join(';'),
                 comments: ''
@@ -250,43 +247,43 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.nonContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquirysList', this.nonContactedEnquiryGridObject),
+      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquirysList'),
       htmlDomElementId: 'non-contacted-enquiry-grid',
       hidden: false
     };
 
     this.nonVerifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquirysList', this.nonVerifiedEnquiryGridObject),
+      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquirysList'),
       htmlDomElementId: 'non-verified-enquiry-grid',
       hidden: false
     };
 
     this.verifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquirysList', this.verifiedEnquiryGridObject),
+      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquirysList'),
       htmlDomElementId: 'verified-enquiry-grid',
       hidden: false
     };
 
     this.verificationFailedEnquiryGridMetaData = {
-      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquirysList', this.verificationFailedEnquiryGridObject),
+      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquirysList'),
       htmlDomElementId: 'verification-failed-enquiry-grid',
       hidden: false
     };
 
     this.toBeReContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquirysList', this.toBeReContactedEnquiryGridObject),
+      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquirysList'),
       htmlDomElementId: 'to-be-recontacted-enquiry-grid',
       hidden: false
     };
 
     this.selectedEnquiryGridMetaData = {
-      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquirysList', this.selectedEnquiryGridObject),
+      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquirysList'),
       htmlDomElementId: 'selected-enquiry-grid',
       hidden: false
     };
 
     this.rejectedEnquiryGridMetaData = {
-      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquirysList', this.rejectedEnquiryGridObject),
+      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquirysList'),
       htmlDomElementId: 'rejected-enquiry-grid',
       hidden: false
     };
@@ -329,11 +326,23 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       this.showEnquiryData = false;
       this.selectedEnquiryRecord = null;
       setTimeout(() => {
-        this.interimHoldSelectedEnquiryGridObject.init();
-      }, 0);
+        this.nonContactedEnquiryGridObject.init();
+        this.nonVerifiedEnquiryGridObject.init();
+        this.verifiedEnquiryGridObject.init();
+        this.verificationFailedEnquiryGridObject.init();
+        this.toBeReContactedEnquiryGridObject.init();
+        this.selectedEnquiryGridObject.init();
+        this.rejectedEnquiryGridObject.init();
+      }, 100);   
       setTimeout(() => {
-        this.interimHoldSelectedEnquiryGridObject.refreshGridData();
-      }, 0);
+        this.nonContactedEnquiryGridObject.refreshGridData();
+        this.nonVerifiedEnquiryGridObject.refreshGridData();
+        this.verifiedEnquiryGridObject.refreshGridData();
+        this.verificationFailedEnquiryGridObject.refreshGridData();
+        this.toBeReContactedEnquiryGridObject.refreshGridData();
+        this.selectedEnquiryGridObject.refreshGridData();
+        this.rejectedEnquiryGridObject.refreshGridData();
+      }, 200);
     } else {
       this.showEnquiryData = true;
     }

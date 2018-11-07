@@ -54,7 +54,7 @@ export class GridCommonFunctions {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  private static lookupRendererForValue(value: any, lookupList: any []) {
+  public static lookupRendererForValue(value: any, lookupList: any []) {
     let returnValue = value;
     for (var i  = 0; i < lookupList.length; i++) {
       let filterOption = lookupList[i];

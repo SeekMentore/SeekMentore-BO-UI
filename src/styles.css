@@ -594,3 +594,15 @@ table.form-container-generic-table td.td-label {
 .textarea_field {
   width: 97.8%;
 }
+
+.form-remakrs {
+  width: 98%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid black;
+  padding-left: 1%;
+}
+
+.form-container-generic-table label.data {
+  color: #337ab7;
+}

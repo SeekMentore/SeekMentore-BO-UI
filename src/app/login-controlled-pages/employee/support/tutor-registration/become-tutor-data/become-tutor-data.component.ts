@@ -1,12 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { BecomeTutorDataAccess } from '../tutor-registration.component';
-import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
-import {AppUtilityService} from "../../../../../utils/app-utility.service";
-import {HelperService} from "../../../../../utils/helper.service";
-import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { AppUtilityService } from "src/app/utils/app-utility.service";
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { HelperService } from "src/app/utils/helper.service";
+import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
+import { BecomeTutorDataAccess } from 'src/app/login-controlled-pages/employee/support/tutor-registration/tutor-registration.component';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 
 @Component({
   selector: 'app-become-tutor-data',
@@ -23,13 +24,15 @@ export class BecomeTutorDataComponent implements OnInit {
 
   updatedTutorRecord = {};
 
+  showEmployeeActionDetails = false;
+
   mandatoryDisbaled = true;
   superAccessAwarded = false;
   editRecordForm = false;
 
-  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
-  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
@@ -44,7 +47,6 @@ export class BecomeTutorDataComponent implements OnInit {
   preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
-  selectedApplicationStatus: any[] = [];
   selectedGenderOption: any[] = [];
   selectedQualificationOption: any[] = [];
   selectedProfessionOption: any[] = [];
@@ -52,39 +54,40 @@ export class BecomeTutorDataComponent implements OnInit {
   selectedStudentGradeOptions: any[] = [];
   selectedSubjectOptions: any[] = [];
   selectedLocationOptions: any[] = [];
-  selectedCallTimeOption: any[] = [];
+  selectedCallTimeOptions: any[] = [];
   selectedReferenceOption: any[] = [];
-  selectedTeachingTypeOptions: any[] = [];
-  selectedReAppliedOptions: any[] = [];
+  selectedTeachingTypeOptions: any[] = [];  
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
   ngOnInit() {
-    this.selectedApplicationStatus = CommonFilterOptions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.tutorRecord.getProperty('applicationStatus'));
-    this.selectedGenderOption = CommonFilterOptions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
-    this.selectedQualificationOption = CommonFilterOptions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
-    this.selectedProfessionOption = CommonFilterOptions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.tutorRecord.getProperty('primaryProfession'));
-    this.selectedTransportOption = CommonFilterOptions.getSelectedFilterItems(this.transportModeFilterOptions, this.tutorRecord.getProperty('transportMode'));
-    this.selectedStudentGradeOptions = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('studentGrade'));
-    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('subjects'));
-    this.selectedLocationOptions = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('locations'));
-    this.selectedCallTimeOption = CommonFilterOptions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.tutorRecord.getProperty('preferredTimeToCall'));
-    this.selectedReferenceOption = CommonFilterOptions.getSelectedFilterItems(this.referenceFilterOptions, this.tutorRecord.getProperty('reference'));
-    this.selectedTeachingTypeOptions = CommonFilterOptions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
-    this.selectedReAppliedOptions = CommonFilterOptions.getSelectedFilterItems(this.yesNoFilterOptions, this.tutorRecord.getProperty('reApplied'));
+    this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
+    this.selectedQualificationOption = CommonUtilityFunctions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
+    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.tutorRecord.getProperty('primaryProfession'));
+    this.selectedTransportOption = CommonUtilityFunctions.getSelectedFilterItems(this.transportModeFilterOptions, this.tutorRecord.getProperty('transportMode'));
+    this.selectedStudentGradeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('studentGrade'));
+    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('subjects'));
+    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('locations'));
+    this.selectedCallTimeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.tutorRecord.getProperty('preferredTimeToCall'));
+    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.tutorRecord.getProperty('reference'));
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));    
   }
 
   getDateFromMillis(millis: number) {
     return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
   }
 
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
+  }
+
   updateTutorProperty(key: string, value: string, data_type: string) {
-    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.updatedTutorRecord, this.tutorRecord);
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedTutorRecord, this.tutorRecord);
   }
 
   updateTutorRecord() {
-    const data = this.helperService.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tutorId'));
+    const data = this.helperService.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

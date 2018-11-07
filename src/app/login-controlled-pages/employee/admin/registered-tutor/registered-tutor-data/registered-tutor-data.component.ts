@@ -11,6 +11,7 @@ import {LcpConstants} from 'src/app/utils/lcp-constants';
 import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 import {AlertDialogEvent} from 'src/app/utils/alert-dialog/alert-dialog.component';
 import {Column} from 'src/app/utils/grid/column';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-registered-tutor-data',
@@ -64,9 +65,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   selectedSubjectOptions: any[] = [];
   selectedLocationOptions: any[] = [];
 
-  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
-  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
 
   aadharCard;
@@ -83,13 +84,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.selectedGenderOption = CommonFilterOptions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
-    this.selectedQualificationOption = CommonFilterOptions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
-    this.selectedProfessionOption = CommonFilterOptions.getSelectedFilterItems(this.selectedProfessionOption, this.tutorRecord.getProperty('primaryProfession'));
-    this.selectedProfessionOption = CommonFilterOptions.getSelectedFilterItems(this.selectedTransportOption, this.tutorRecord.getProperty('transportMode'));
-    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('interestedSubjects'));
-    this.selectedLocationOptions = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('comfortableLocations'));
-    this.selectedStudentGrades = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('interestedStudentGrades'));
+    this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
+    this.selectedQualificationOption = CommonUtilityFunctions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
+    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.selectedProfessionOption, this.tutorRecord.getProperty('primaryProfession'));
+    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.selectedTransportOption, this.tutorRecord.getProperty('transportMode'));
+    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('interestedSubjects'));
+    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('comfortableLocations'));
+    this.selectedStudentGrades = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('interestedStudentGrades'));
     this.setUpGridMetaData();
   }
 
@@ -474,7 +475,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
 
   updateTutorProperty(key: string, value: string, data_type: string) {
-    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.tutorUpdatedData, this.tutorRecord);
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.tutorUpdatedData, this.tutorRecord);
   }
 
   updateTutorRecord() {

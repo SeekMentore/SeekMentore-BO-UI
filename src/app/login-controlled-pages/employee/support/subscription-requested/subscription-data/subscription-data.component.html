@@ -15,14 +15,14 @@
     </div>
     <table style="width: 100%;">
       <tr>
-        <td width="40%"><label>Name</label></td>
+        <td><label>Name</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['name']}}"
                    [disabled]="!editRecordForm"
                    (change)="updateSubscriptionProperty('name', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
-        <td width="40%"><label>Application Date</label></td>
+        <td><label>Application Date</label></td>
         <td><input class="input_field" type="date" value="{{subscriptionRecord.property['applicationDate']}}"
                    [disabled]="!editRecordForm"
                    (change)="updateSubscriptionProperty('applicationDate', $event.target.value, 'date')"></td>
@@ -38,14 +38,14 @@
         </td>
       </tr>
       <tr>
-        <td width="40%"><label>Contact Number</label></td>
+        <td><label>Contact Number</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['contactNumber']}}"
                    [disabled]="!editRecordForm"
                    (change)="updateSubscriptionProperty('contactNumber', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
-        <td width="40%"><label>Email Id</label></td>
+        <td><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{subscriptionRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
                    (change)="updateSubscriptionProperty('emailId', $event.target.value, 'string')">

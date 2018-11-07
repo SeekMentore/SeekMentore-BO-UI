@@ -5,6 +5,7 @@ import {CommonFilterOptions} from "src/app/utils/common-filter-options";
 import {AppUtilityService} from "src/app/utils/app-utility.service";
 import {HelperService} from "src/app/utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-complaint-data',
@@ -30,9 +31,9 @@ export class ComplaintDataComponent implements OnInit {
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   complaintUserFilterOptions = CommonFilterOptions.complaintUserFilterOptions;
 
-  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
-  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   selectedComplaintStatus: any[] = [];
   selectedComplaintUser: any[] = [];
@@ -41,12 +42,12 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedComplaintStatus = CommonFilterOptions.getSelectedFilterItems(this.complaintStatusFilterOptions, this.complaintRecord.getProperty('complaintStatus'));
-    this.selectedComplaintUser = CommonFilterOptions.getSelectedFilterItems(this.complaintUserFilterOptions, this.complaintRecord.getProperty('complaintUser'));
+    this.selectedComplaintStatus = CommonUtilityFunctions.getSelectedFilterItems(this.complaintStatusFilterOptions, this.complaintRecord.getProperty('complaintStatus'));
+    this.selectedComplaintUser = CommonUtilityFunctions.getSelectedFilterItems(this.complaintUserFilterOptions, this.complaintRecord.getProperty('complaintUser'));
   }
 
   updateComplaintProperty(key: string, value: string, data_type: string) {
-    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.complaintUpdatedRecord, this.complaintRecord);
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.complaintUpdatedRecord, this.complaintRecord);
   }
 
   updateComplaintRecord() {

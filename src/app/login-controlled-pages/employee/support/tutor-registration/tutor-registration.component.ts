@@ -137,7 +137,8 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           headerName: 'Application Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.applicationStatusFilterOptions,
-          mapping: 'applicationStatus'
+          mapping: 'applicationStatus',
+          renderer: AdminCommonFunctions.applicationStatusRenderer
         },
         {
           id: 'contactNumber',

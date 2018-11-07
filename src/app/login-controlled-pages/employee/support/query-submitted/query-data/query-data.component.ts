@@ -5,6 +5,7 @@ import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
 import {AppUtilityService} from "../../../../../utils/app-utility.service";
 import {HelperService} from "../../../../../utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-query-data',
@@ -24,9 +25,9 @@ export class QueryDataComponent implements OnInit {
 
   editRecordForm = false;
 
-  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
-  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
@@ -39,13 +40,13 @@ export class QueryDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedCustomerSubscribedOption = CommonFilterOptions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('subscribedCustomer'));
-    this.selectedTutorRegisteredOption = CommonFilterOptions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('registeredTutor'));
-    this.selectedQueryStatus = CommonFilterOptions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.queryRecord.getProperty('queryStatus'));
+    this.selectedCustomerSubscribedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('subscribedCustomer'));
+    this.selectedTutorRegisteredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('registeredTutor'));
+    this.selectedQueryStatus = CommonUtilityFunctions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.queryRecord.getProperty('queryStatus'));
   }
 
   updateQueryProperty(key: string, value: string, data_type: string) {
-    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.queryUpdatedRecord, this.queryRecord);
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.queryUpdatedRecord, this.queryRecord);
   }
 
   updateQueryRecord() {

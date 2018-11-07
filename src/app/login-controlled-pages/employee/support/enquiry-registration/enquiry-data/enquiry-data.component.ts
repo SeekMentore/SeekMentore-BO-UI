@@ -5,6 +5,7 @@ import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
 import {AppUtilityService} from "../../../../../utils/app-utility.service";
 import {HelperService} from "../../../../../utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-enquiry-data',
@@ -32,9 +33,9 @@ export class EnquiryDataComponent implements OnInit {
   preferredTimeToCallFilterOptions = CommonFilterOptions.preferredTimeToCallFilterOptions;
   referenceFilterOptions = CommonFilterOptions.referenceFilterOptions;
 
-  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
-  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   selectedStudentGradeOption: any[] = [];
   selectedSubjectOption: any[] = [];
@@ -48,16 +49,16 @@ export class EnquiryDataComponent implements OnInit {
 
   ngOnInit() {
 
-    this.selectedStudentGradeOption = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiryRecord.getProperty('studentGrades'));
-    this.selectedSubjectOption = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiryRecord.getProperty('subjects'));
-    this.selectedLocationOption = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiryRecord.getProperty('locations'));
-    this.selectedCallTimeOptions = CommonFilterOptions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.enquiryRecord.getProperty('preferredTimeToCall'));
-    this.selectedReferenceOption = CommonFilterOptions.getSelectedFilterItems(this.referenceFilterOptions, this.enquiryRecord.getProperty('reference'));
-    this.selectedEnquiryStatus = CommonFilterOptions.getSelectedFilterItems(this.enquiryStatusFilterOptions, this.enquiryRecord.getProperty('enquiryStatus'));
+    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiryRecord.getProperty('studentGrades'));
+    this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiryRecord.getProperty('subjects'));
+    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiryRecord.getProperty('locations'));
+    this.selectedCallTimeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.enquiryRecord.getProperty('preferredTimeToCall'));
+    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.enquiryRecord.getProperty('reference'));
+    this.selectedEnquiryStatus = CommonUtilityFunctions.getSelectedFilterItems(this.enquiryStatusFilterOptions, this.enquiryRecord.getProperty('enquiryStatus'));
   }
 
   updateEnquiryProperty(key: string, value: string, data_type: string) {
-    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.enquiryUpdatedRecord, this.enquiryRecord);
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.enquiryUpdatedRecord, this.enquiryRecord);
   }
 
   updateEnquiryRecord() {

@@ -5,6 +5,7 @@ import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
 import {AppUtilityService} from "../../../../../utils/app-utility.service";
 import {HelperService} from "../../../../../utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-subscription-data',
@@ -24,9 +25,9 @@ export class SubscriptionDataComponent implements OnInit {
   editRecordForm = false;
 
 
-  singleSelectOptions = CommonFilterOptions.singleSelectOptions;
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
-  multiSelectOptions = CommonFilterOptions.multiSelectOptions;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
@@ -51,16 +52,16 @@ export class SubscriptionDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedApplicationStatus = CommonFilterOptions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.subscriptionRecord.getProperty('applicationStatus'));
-    this.selectedStudentGradeOptions = CommonFilterOptions.getSelectedFilterItems(this.studentGradesFilterOptions, this.subscriptionRecord.getProperty('studentGrades'));
-    this.selectedSubjectOptions = CommonFilterOptions.getSelectedFilterItems(this.subjectsFilterOptions, this.subscriptionRecord.getProperty('subjects'));
-    this.selectedLocationOptions = CommonFilterOptions.getSelectedFilterItems(this.locationsFilterOptions, this.subscriptionRecord.getProperty('locations'));
-    this.selectedCallTimeOption = CommonFilterOptions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.subscriptionRecord.getProperty('preferredTimeToCall'));
-    this.selectedReferenceOption = CommonFilterOptions.getSelectedFilterItems(this.referenceFilterOptions, this.subscriptionRecord.getProperty('reference'));
+    this.selectedApplicationStatus = CommonUtilityFunctions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.subscriptionRecord.getProperty('applicationStatus'));
+    this.selectedStudentGradeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.subscriptionRecord.getProperty('studentGrades'));
+    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.subscriptionRecord.getProperty('subjects'));
+    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.subscriptionRecord.getProperty('locations'));
+    this.selectedCallTimeOption = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.subscriptionRecord.getProperty('preferredTimeToCall'));
+    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.subscriptionRecord.getProperty('reference'));
   }
 
   updateSubscriptionProperty(key: string, value: string, data_type: string) {
-    CommonFilterOptions.updateRecordProperty(key, value, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord);
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord);
   }
 
   updateSubscriptionRecord() {

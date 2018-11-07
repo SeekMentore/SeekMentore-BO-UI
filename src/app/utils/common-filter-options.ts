@@ -1032,7 +1032,7 @@ export class CommonFilterOptions {
     // Leave it blank right now , I will write this content later
     ];
 
-  static singleSelectOptions = {
+  static singleSelectOptionsConfiguration = {
     singleSelection: true,
     idField: 'value',
     textField: 'label',
@@ -1040,50 +1040,13 @@ export class CommonFilterOptions {
     allowSearchFilter: true
   };
 
-  static multiSelectOptions = {
+  static multiSelectOptionsConfiguration = {
     singleSelection: false,
     idField: 'value',
     textField: 'label',
     itemsShowLimit: 3,
     allowSearchFilter: true
-  };
-
-
-  static getSelectedFilterItems(allowedOptions: { value: any, label: any }[], selectedValues: string) {
-    const selectedValuesArray = selectedValues.split(';');
-    const selectedOptionsArray: any[] = [];
-    for (const value of selectedValuesArray) {
-      for (const option of allowedOptions) {
-        if (option.value === value) {
-          selectedOptionsArray.push(option);
-        }
-      }
-    }
-    return selectedOptionsArray;
-  }
-
-  static updateRecordProperty(key: string, value: string, data_type: string, updatedData: any, parentRecord: any) {
-    switch (data_type) {
-      case 'list':
-        let previous_value = updatedData[key];
-        if (!previous_value) {
-          previous_value = parentRecord.property[key];
-        }
-        const previous_value_array = previous_value.split(';');
-        if (previous_value_array.includes(value)) {
-          previous_value_array.splice(previous_value_array.indexOf(value), 1);
-
-        } else {
-          previous_value_array.push(value);
-        }
-        updatedData[key] = previous_value_array.join(';');
-        break;
-      default:
-        updatedData[key] = value;
-    }
-
-    console.log(updatedData);
-  }
+  };  
 }
 
 

@@ -29,17 +29,17 @@
       </tr>
       <tr>
         <td class="td-label"><label>Application Date</label></td>        
-        <td><label>{{getDateFromMillis(tutorRecord.property['applicationDateMillis'])}}</label></td>
+        <td><label class="data">{{getDateFromMillis(tutorRecord.property['applicationDateMillis'])}}</label></td>
       </tr>
       <tr>
         <td class="td-label"><label>Application Status</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Application Status'" [data]="applicationStatusFilterOptions"
-                                   [(ngModel)]="selectedApplicationStatus" name="applicationStatus"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('applicationStatus', $event.value, 'list')">
-          </ng-multiselect-dropdown>
-        </td>
+        <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['applicationStatus'], applicationStatusFilterOptions)}}</label></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Date of Brith</label></td>
+        <td><input class="input_field" type="date" value="{{tutorRecord.property['dateOfBirthMillis']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateTutorProperty('dateOfBirthMillis', $event.target.value, 'date')"></td>
       </tr>
       <tr>
         <td class="td-label"><label>Contact Number</label></td>
@@ -171,17 +171,130 @@
           </ng-multiselect-dropdown>
         </td>
       </tr>
-
       <tr>
-        <td class="td-label"><label>Re-Applied</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Re-applied'" [data]="yesNoFilterOptions"
-                                   [(ngModel)]="selectedReAppliedOptions" name="reAppliedOption"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('reApplied', $event.value, 'list')">
-          </ng-multiselect-dropdown>
-        </td>
+        <td class="td-label"><label>Record Last Updated</label></td>
+        <td><label class="data">{{getDateFromMillis(tutorRecord.property['recordLastUpdatedMillis'])}}</label></td>
       </tr>
+      <tr *ngIf="!showEmployeeActionDetails">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-expander"
+                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionDetails = true"></i>
+        </td>
+        <td>
+          Show Employee Action Details
+        </td>
+      </tr>  
+      <tr *ngIf="showEmployeeActionDetails">
+        <td colspan="2">          
+          <table>
+              <tr>
+                <td class="td-label">
+                    <i
+                        id="employee-actions-details-collapser"
+                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                        (click)="showEmployeeActionDetails = false"></i>
+                </td>
+                <td colspan="5">
+                  Hide Employee Action Details
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Contacted</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
+                <td class="td-label"><label>Who Contacted</label></td>
+                <td><label class="data">{{tutorRecord.property['whoContacted']}}</label></td>              
+                <td class="td-label"><label>Contacted Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['contactedDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Contacted Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{tutorRecord.property['contactedRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Authentication Verified</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Verified</label></td>
+                <td><label class="data">{{tutorRecord.property['whoVerified']}}</label></td>              
+                <td class="td-label"><label>Verification Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['verificationDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Verification Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{tutorRecord.property['verificationRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is To Be Recontacted</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Suggested For Recontact</label></td>
+                <td><label class="data">{{tutorRecord.property['whoSuggestedForRecontact']}}</label></td>              
+                <td class="td-label"><label>Suggestion Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['suggestionDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Suggestion Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{tutorRecord.property['suggestionRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label></label></td>
+                <td><label class="data"></label></td>
+                <td class="td-label"><label>Who Recontacted</label></td>
+                <td><label class="data">{{tutorRecord.property['whoRecontacted']}}</label></td>              
+                <td class="td-label"><label>Recontacted Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['recontactedDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Recontacted Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{tutorRecord.property['recontactedRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Selected</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Selected</label></td>
+                <td><label class="data">{{tutorRecord.property['whoSelected']}}</label></td>              
+                <td class="td-label"><label>Selection Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['selectionDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Selection Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{tutorRecord.property['selectionRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Rejected</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Rejected</label></td>
+                <td><label class="data">{{tutorRecord.property['whoRejected']}}</label></td>              
+                <td class="td-label"><label>Rejection Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['rejectionDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Rejection Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{tutorRecord.property['rejectionRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Rejection Count</label></td>
+                <td><label class="data">{{tutorRecord.property['rejectionCount']}}</label></td>
+                <td class="td-label"><label>Re-Applied</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['reApplied'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Previous Application Date</label></td>
+                <td><label class="data">{{getDateFromMillis(tutorRecord.property['previousApplicationDateMillis'])}}</label></td>
+              </tr>
+          </table>
+        </td>
+      </tr>     
     </table>
     <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="ok-button form-container-update-button"

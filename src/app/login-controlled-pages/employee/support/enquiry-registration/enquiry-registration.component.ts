@@ -1,15 +1,15 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {AppUtilityService} from 'src/app/utils/app-utility.service';
-import {HelperService} from 'src/app/utils/helper.service';
-import {Column} from 'src/app/utils/grid/column';
-import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
-import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
-import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
-import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
-import {ActionButton} from 'src/app/utils/grid/action-button';
-import {LcpConstants} from 'src/app/utils/lcp-constants';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { ActionButton } from 'src/app/utils/grid/action-button';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpConstants } from 'src/app/utils/lcp-constants';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-enquiry-registration',

@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {EnquiryDataAccess} from '../enquiry-registration.component';
-import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
-import {AppUtilityService} from "../../../../../utils/app-utility.service";
-import {HelperService} from "../../../../../utils/helper.service";
-import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { AppUtilityService } from "src/app/utils/app-utility.service";
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { HelperService } from "src/app/utils/helper.service";
+import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
+import { EnquiryDataAccess } from 'src/app/login-controlled-pages/employee/support/enquiry-registration/enquiry-registration.component';
 
 @Component({
   selector: 'app-enquiry-data',
@@ -22,16 +23,19 @@ export class EnquiryDataComponent implements OnInit {
 
   enquiryUpdatedRecord = {};
 
+  showEmployeeActionDetails = false;
+
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
   editRecordForm = false;
 
   enquiryStatusFilterOptions = CommonFilterOptions.enquiryStatusFilterOptions;
-  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
-  qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   preferredTimeToCallFilterOptions = CommonFilterOptions.preferredTimeToCallFilterOptions;
   referenceFilterOptions = CommonFilterOptions.referenceFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
@@ -41,20 +45,25 @@ export class EnquiryDataComponent implements OnInit {
   selectedSubjectOption: any[] = [];
   selectedLocationOption: any[] = [];
   selectedCallTimeOptions: any[] = [];
-  selectedReferenceOption: any[] = [];
-  selectedEnquiryStatus: any[] = [];
+  selectedReferenceOption: any[] = [];  
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
   ngOnInit() {
-
-    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiryRecord.getProperty('studentGrades'));
+    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiryRecord.getProperty('studentGrade'));
     this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiryRecord.getProperty('subjects'));
-    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiryRecord.getProperty('locations'));
+    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiryRecord.getProperty('location'));
     this.selectedCallTimeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.enquiryRecord.getProperty('preferredTimeToCall'));
-    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.enquiryRecord.getProperty('reference'));
-    this.selectedEnquiryStatus = CommonUtilityFunctions.getSelectedFilterItems(this.enquiryStatusFilterOptions, this.enquiryRecord.getProperty('enquiryStatus'));
+    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.enquiryRecord.getProperty('reference'));    
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   updateEnquiryProperty(key: string, value: string, data_type: string) {
@@ -62,7 +71,7 @@ export class EnquiryDataComponent implements OnInit {
   }
 
   updateEnquiryRecord() {
-    const data = this.helperService.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('tutorId'));
+    const data = this.helperService.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
     this.utilityService.makerequest(this, this.onUpdateEnquiryRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

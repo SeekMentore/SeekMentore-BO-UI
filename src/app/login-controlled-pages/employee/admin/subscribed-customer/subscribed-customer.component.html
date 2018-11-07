@@ -6,7 +6,7 @@
     <button
       id="back-to-customer-listing-button"
       class="ok-button" (click)="toggleVisibilitySubscribedCustomerGrid()">
-      Back To Listing
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-subscribed-customer-data [customerRecord]="selectedCustomerRecord" [customerDataAccess]="customerDataAccess"></app-subscribed-customer-data>
   </div>

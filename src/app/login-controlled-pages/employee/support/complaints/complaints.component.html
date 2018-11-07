@@ -9,7 +9,7 @@
     <button
       id="back-to-complaint-listing-button"
       class="ok-button" (click)="toggleVisibilityComplaintGrid()">
-      Back To Listing
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-complaint-data [complaintRecord]="selectedComplaintRecord" [complaintDataAccess]="complaintDataAccess"></app-complaint-data>
   </div>

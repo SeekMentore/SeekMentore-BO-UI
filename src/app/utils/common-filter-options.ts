@@ -942,7 +942,7 @@ export class CommonFilterOptions {
                                 label : 'Yahiaganj'
 	                            }];
 
-    static preferredTimeToCallFilterOptions: any [] = [{
+  static preferredTimeToCallFilterOptions: any [] = [{
                                 value : '01',
                                 label : '8 AM - 10 AM'
                               },{
@@ -980,7 +980,7 @@ export class CommonFilterOptions {
                                 label : '6 AM - 8 AM'
                               }];
 
-    static referenceFilterOptions: any [] = [{
+  static referenceFilterOptions: any [] = [{
                                 value : '01',
                                 label : 'Advertisement'
                               },{
@@ -997,7 +997,7 @@ export class CommonFilterOptions {
                                 label : 'Other'
                               }];
 
-    static preferredTeachingTypeFilterOptions: any [] = [{
+  static preferredTeachingTypeFilterOptions: any [] = [{
                                 value : '01',
                                 label : 'Private Tutoring'
                               },{
@@ -1008,29 +1008,29 @@ export class CommonFilterOptions {
                                 label : 'Tutoring at your place'
                               }];
 
-    static applicationStatusFilterOptions: any [] = [
-    // Leave it blank right now , I will write this content later
-    ];
+  static applicationStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
 
-    static enquiryStatusFilterOptions: any [] = [
-    // Leave it blank right now , I will write this content later
-    ];
+  static enquiryStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
 
-    static queryStatusFilterOptions: any [] = [
-    // Leave it blank right now , I will write this content later
-    ];
+  static queryStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
 
-    static complaintStatusFilterOptions: any [] = [
-    // Leave it blank right now , I will write this content later
-    ];
+  static complaintStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
 
-    static complaintUserFilterOptions: any [] = [
-    // Leave it blank right now , I will write this content later
-    ];
+  static complaintUserFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
 
-    static matchStatusFilterOptions: any [] = [
-    // Leave it blank right now , I will write this content later
-    ];
+  static matchStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
 
   static singleSelectOptionsConfiguration = {
     singleSelection: true,

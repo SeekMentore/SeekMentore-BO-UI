@@ -175,7 +175,7 @@
         <td class="td-label"><label>Record Last Updated</label></td>
         <td><label class="data">{{getDateFromMillis(tutorRecord.property['recordLastUpdatedMillis'])}}</label></td>
       </tr>
-      <tr *ngIf="!showEmployeeActionDetails">
+      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
         <td class="td-label">
             <i
                 id="employee-actions-details-expander"
@@ -186,7 +186,7 @@
           Show Employee Action Details
         </td>
       </tr>  
-      <tr *ngIf="showEmployeeActionDetails">
+      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
         <td colspan="2">          
           <table>
               <tr>
@@ -298,8 +298,8 @@
     </table>
     <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="ok-button form-container-update-button"
-            (click)="updateTutorRecord()">
-      Update
+            (click)="updateTutorRecord()">            
+            Update
     </button>
   </form>
 </div>

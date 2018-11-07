@@ -49,13 +49,14 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
+  primaryProfessionFilterOptions = CommonFilterOptions.primaryProfessionFilterOptions;
+  transportModeFilterOptions = CommonFilterOptions.transportModeFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   referenceFilterOptions = CommonFilterOptions.referenceFilterOptions;
   preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
-
 
   selectedGenderOption: any[] = [];
   selectedQualificationOption: any[] = [];
@@ -64,16 +65,15 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   selectedStudentGrades: any[] = [];
   selectedSubjectOptions: any[] = [];
   selectedLocationOptions: any[] = [];
+  selectedTeachingTypeOptions: any[] = []; 
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-
   aadharCard;
   panCard;
   photograph;
-
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
@@ -86,12 +86,21 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
     this.selectedQualificationOption = CommonUtilityFunctions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
-    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.selectedProfessionOption, this.tutorRecord.getProperty('primaryProfession'));
-    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.selectedTransportOption, this.tutorRecord.getProperty('transportMode'));
+    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.tutorRecord.getProperty('primaryProfession'));
+    this.selectedTransportOption = CommonUtilityFunctions.getSelectedFilterItems(this.transportModeFilterOptions, this.tutorRecord.getProperty('transportMode'));
     this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('interestedSubjects'));
     this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('comfortableLocations'));
     this.selectedStudentGrades = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('interestedStudentGrades'));
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
     this.setUpGridMetaData();
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   ngAfterViewInit() {
@@ -104,19 +113,15 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         this.bankDetailGridObject.init();
         this.bankDetailGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
       }
-
       this.renderTutorRecordForm = true;
-
       if (this.tutorDataAccess.activePackageViewAccess) {
         this.currentPackagesGridObject.init();
         this.currentPackagesGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
       }
-
       if (this.tutorDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.init();
         this.historyPackagesGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
       }
-
     }, 0);
 
     setTimeout(() => {
@@ -132,9 +137,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       if (this.tutorDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.refreshGridData();
       }
-
     }, 0);
-
   }
 
   public setUpGridMetaData() {
@@ -426,7 +429,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, gridComponent: GridComponent, multipleRecords: boolean = false) {
-
     let selectedIdsList = [];
     if (multipleRecords) {
       selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
@@ -472,8 +474,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   updateTutorProperty(key: string, value: string, data_type: string) {
     CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.tutorUpdatedData, this.tutorRecord);
   }
@@ -511,8 +511,5 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     if (type === 'photo') {
       this.photograph = event.target.files[0];
     }
-
-    console.log(this.photograph);
-
   }
 }

@@ -36,7 +36,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log('Registered Tutor');
   }
 
   ngAfterViewInit() {
@@ -251,7 +250,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   }
 
   toggleVisibilityRegisterTutorGrid() {
-    // console.log("toogle visiibilty", this.showTutorData);
     if (this.showTutorData === true) {
       this.showTutorData = false;
       this.selectedTutorRecord = null;

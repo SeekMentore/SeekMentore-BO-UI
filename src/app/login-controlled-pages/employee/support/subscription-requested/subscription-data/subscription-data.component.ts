@@ -1,11 +1,12 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {SubscriptionDataAccess} from '../subscription-requested.component';
-import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
-import {AppUtilityService} from "../../../../../utils/app-utility.service";
-import {HelperService} from "../../../../../utils/helper.service";
-import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { AppUtilityService } from "../../../../../utils/app-utility.service";
+import { CommonFilterOptions } from '../../../../../utils/common-filter-options';
+import { HelperService } from "../../../../../utils/helper.service";
+import { LcpRestUrls } from "../../../../../utils/lcp-rest-urls";
+import { SubscriptionDataAccess } from '../subscription-requested.component';
 
 @Component({
   selector: 'app-subscription-data',
@@ -22,42 +23,47 @@ export class SubscriptionDataComponent implements OnInit {
 
   updatedSubscriptionRecord = {};
 
-  editRecordForm = false;
+  showSubscriptionActionDetails = false;
 
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
+  editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
-  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
-  qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   preferredTimeToCallFilterOptions = CommonFilterOptions.preferredTimeToCallFilterOptions;
   referenceFilterOptions = CommonFilterOptions.referenceFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
-
-  selectedApplicationStatus: any[] = [];
   selectedStudentGradeOptions: any[] = [];
   selectedSubjectOptions: any[] = [];
   selectedLocationOptions: any[] = [];
   selectedCallTimeOption: any[] = [];
   selectedReferenceOption: any[] = [];
 
-
-
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
   ngOnInit() {
-    this.selectedApplicationStatus = CommonUtilityFunctions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.subscriptionRecord.getProperty('applicationStatus'));
-    this.selectedStudentGradeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.subscriptionRecord.getProperty('studentGrades'));
+    this.selectedStudentGradeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.subscriptionRecord.getProperty('studentGrade'));
     this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.subscriptionRecord.getProperty('subjects'));
-    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.subscriptionRecord.getProperty('locations'));
+    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.subscriptionRecord.getProperty('location'));
     this.selectedCallTimeOption = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.subscriptionRecord.getProperty('preferredTimeToCall'));
     this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.subscriptionRecord.getProperty('reference'));
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   updateSubscriptionProperty(key: string, value: string, data_type: string) {
@@ -65,7 +71,7 @@ export class SubscriptionDataComponent implements OnInit {
   }
 
   updateSubscriptionRecord() {
-    const data = this.helperService.encodedGridFormData(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('subscriptionId'));
+    const data = this.helperService.encodedGridFormData(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('tentativeSubscriptionId'));
     this.utilityService.makerequest(this, this.onUpdateSubscriptionRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

@@ -8,6 +8,7 @@ import {SubscribedCustomerDataAccess} from '../subscribed-customer.component';
 import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
 import {LcpRestUrls} from '../../../../../utils/lcp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-subscribed-customer-data',
@@ -31,6 +32,9 @@ export class SubscribedCustomerDataComponent implements OnInit {
   customerDataAccess: SubscribedCustomerDataAccess = null;
 
   renderCustomerRecordForm = false;
+
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
   editRecordForm = false;
 
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
@@ -62,6 +66,14 @@ export class SubscribedCustomerDataComponent implements OnInit {
     this.setUpGridMetaData();
   }
 
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
+  }
+
   ngAfterViewInit() {
     setTimeout(() => {
       if (this.customerDataAccess.activePackageViewAccess) {
@@ -72,7 +84,6 @@ export class SubscribedCustomerDataComponent implements OnInit {
         this.historyPackagesGridObject.init();
         this.historyPackagesGridObject.addExtraParams('customerId', this.customerRecord.getProperty('customerId'));
       }
-
       this.renderCustomerRecordForm = true;
     }, 0);
     setTimeout(() => {
@@ -170,12 +181,15 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   onUpdateCustomerRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
     }
   }
-
-
 }

@@ -7,6 +7,7 @@ import { CommonFilterOptions } from '../../../../../utils/common-filter-options'
 import { HelperService } from "../../../../../utils/helper.service";
 import { LcpRestUrls } from "../../../../../utils/lcp-rest-urls";
 import { SubscriptionDataAccess } from '../subscription-requested.component';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-subscription-data',
@@ -77,12 +78,15 @@ export class SubscriptionDataComponent implements OnInit {
   }
 
   onUpdateSubscriptionRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
     }
-
   }
-
 }

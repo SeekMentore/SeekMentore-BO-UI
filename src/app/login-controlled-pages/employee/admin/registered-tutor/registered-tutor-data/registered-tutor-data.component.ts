@@ -43,6 +43,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   tutorDataAccess: RegisterTutorDataAccess = null;
 
   renderTutorRecordForm = false;
+  
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
   editRecordForm = false;
 
   tutorUpdatedData = {};
@@ -494,11 +497,16 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   onUpdateTutorRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
-    }
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
+    } 
   }
 
   attachFile(event, type) {

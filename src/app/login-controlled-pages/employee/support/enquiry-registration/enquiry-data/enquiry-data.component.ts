@@ -7,6 +7,7 @@ import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { HelperService } from "src/app/utils/helper.service";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
 import { EnquiryDataAccess } from 'src/app/login-controlled-pages/employee/support/enquiry-registration/enquiry-registration.component';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-enquiry-data',
@@ -77,12 +78,15 @@ export class EnquiryDataComponent implements OnInit {
   }
 
   onUpdateEnquiryRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
     }
-
   }
-
 }

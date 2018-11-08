@@ -1,6 +1,5 @@
 export class NlpRestUrls {
-  static loginURL = '/rest/login/validateCredential';
-  static resetPasswordURL = '/rest/login/resetPassword';
-  static errorPageURL = '/rest/commons/getErrorDetails';
-  static basicInfoURL = 'rest/commons/getLoginBasicInfo';
+  static login_url = '/rest/login/validateCredential';
+  static reset_password_url = '/rest/login/resetPassword';
+  static error_page_url = '/rest/commons/getErrorDetails';  
 }

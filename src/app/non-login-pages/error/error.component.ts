@@ -30,7 +30,7 @@ export class ErrorComponent implements OnInit {
     if (this.errorCode != null) {
       const formData = new URLSearchParams();
       formData.set('errorCode', this.errorCode);
-      this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.errorPageURL,
+      this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.error_page_url,
         'POST', formData.toString(), 'application/x-www-form-urlencoded');      
     }
     this.helperService.setTitle('Error Occurred');

@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AppUtilityService} from '../../utils/app-utility.service';
-import {HelperService} from '../../utils/helper.service';
-import {LcpConstants} from '../../utils/lcp-constants';
-import {NlpConstants} from '../../utils/nlp-constants';
-import {NlpRestUrls} from '../../utils/nlp-rest-urls';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppUtilityService } from '../../utils/app-utility.service';
+import { HelperService } from '../../utils/helper.service';
+import { LcpConstants } from '../../utils/lcp-constants';
+import { NlpConstants } from '../../utils/nlp-constants';
+import { NlpRestUrls } from '../../utils/nlp-rest-urls';
 
 @Component({
   selector: 'app-login',
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
       userType: this.userType
     };
 
-    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.loginURL, 'POST',
+    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.login_url, 'POST',
       this.utilityService.urlEncodeData(data),
       'application/x-www-form-urlencoded');
   }

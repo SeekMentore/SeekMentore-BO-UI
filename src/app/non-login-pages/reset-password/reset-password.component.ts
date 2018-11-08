@@ -34,7 +34,7 @@ export class ResetPasswordComponent implements OnInit {
     formData.set('userId', this.username);
     formData.set('userType', this.userType);
 
-    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.resetPasswordURL, 'POST', formData.toString(),
+    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.reset_password_url, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
   }
 

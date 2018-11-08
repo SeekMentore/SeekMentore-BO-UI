@@ -74,7 +74,6 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
           mapping: 'queryRequestedDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillisWithTime,
           clickEvent: (record: GridRecord, column: Column) => {
-            // Open the Data view port
             this.interimHoldSelectedQueryRecord = record;
             if (this.queryDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.submitted_query_data_access, 'POST');

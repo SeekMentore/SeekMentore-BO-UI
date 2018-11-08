@@ -6,6 +6,8 @@ import {AppUtilityService} from "../../../../../utils/app-utility.service";
 import {HelperService} from "../../../../../utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 
 @Component({
   selector: 'app-query-data',
@@ -22,6 +24,10 @@ export class QueryDataComponent implements OnInit {
 
   queryUpdatedRecord = {};
 
+  showEmployeeActionDetails = false;
+
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
   editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
@@ -29,19 +35,20 @@ export class QueryDataComponent implements OnInit {
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   queryStatusFilterOptions = CommonFilterOptions.queryStatusFilterOptions;
-  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
-
-  selectedCustomerSubscribedOption: any[] = [];
-  selectedTutorRegisteredOption: any[] = [];
-  selectedQueryStatus: any[] = [];
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;  
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
   }
 
-  ngOnInit() {
-    this.selectedCustomerSubscribedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('subscribedCustomer'));
-    this.selectedTutorRegisteredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('registeredTutor'));
-    this.selectedQueryStatus = CommonUtilityFunctions.getSelectedFilterItems(this.queryStatusFilterOptions, this.queryRecord.getProperty('queryStatus'));
+  ngOnInit() {    
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   updateQueryProperty(key: string, value: string, data_type: string) {
@@ -55,12 +62,15 @@ export class QueryDataComponent implements OnInit {
   }
 
   onUpdateQueryRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
-    }
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
+    } 
   }
-
 }

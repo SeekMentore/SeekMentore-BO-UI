@@ -1,7 +1,7 @@
 <div
   style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
   <form class="form-container" style="max-width: 80%">
-    <div *ngIf="queryDataAccess.formDataEditAccess"
+    <div *ngIf="queryDataAccess.queryResponseCapableAccess"
           class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
@@ -31,42 +31,72 @@
       </tr>
       <tr>
         <td class="td-label"><label>Query Response</label></td>
-        <td><input class="input_field" type="text" value="{{queryRecord.property['queryResponse']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateQueryProperty('queryResponse', $event.target.value, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Not Answered Reason</label></td>
-        <td><input class="input_field" type="text" value="{{queryRecord.property['notAnsweredReason']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateQueryProperty('notAnsweredReason', $event.target.value, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Is Registered Tutor</label></td>
         <td>
-          <ng-multiselect-dropdown [placeholder]="'Is Registered Tutor'" [data]="yesNoFilterOptions"
-                                   [(ngModel)]="selectedTutorRegisteredOption" name="isTutorRegistered"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateQueryProperty('registeredTutor', $event.value, 'list')">
-          </ng-multiselect-dropdown>
+          <textarea 
+              class="textarea_field"
+              [disabled]="!editRecordForm" 
+              (change)="updateQueryProperty('queryResponse', $event.target.value, 'string')"
+              >{{queryRecord.property['queryResponse']}}</textarea>
         </td>
       </tr>
       <tr>
-        <td class="td-label"><label>Is Subscribed Customer</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Is Subscribed Customer'" [data]="yesNoFilterOptions"
-                                   [(ngModel)]="selectedCustomerSubscribedOption" name="isCustomerSubscribed"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateQueryProperty('subscribedCustomer', $event.value, 'list')">
-          </ng-multiselect-dropdown>
-        </td>
+        <td class="td-label"><label>Record Last Updated</label></td>
+        <td><label class="data">{{getDateFromMillis(queryRecord.property['recordLastUpdatedMillis'])}}</label></td>
       </tr>
+      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-expander"
+                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionDetails = true"></i>
+        </td>
+        <td>
+          Show Action Details
+        </td>
+      </tr> 
+      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+        <td colspan="2">          
+          <table>
+              <tr>
+                <td class="td-label">
+                    <i
+                        id="employee-actions-details-collapser"
+                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                        (click)="showEmployeeActionDetails = false"></i>
+                </td>
+                <td colspan="5">
+                  Hide Action Details
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Contacted</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(queryRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
+                <td class="td-label"><label>Who Contacted</label></td>
+                <td><label class="data">{{queryRecord.property['whoContacted']}}</label></td>              
+                <td class="td-label"><label>Contacted Date</label></td>
+                <td><label class="data">{{getDateFromMillis(queryRecord.property['contactedDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Not Answered</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(queryRecord.property['notAnswered'], yesNoFilterOptions)}}</label></td>              
+                <td class="td-label"><label>Who Not Answered</label></td>
+                <td><label class="data">{{queryRecord.property['whoNotAnswered']}}</label></td>              
+                <td class="td-label"><label></label></td>
+                <td><label class="data"></label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Not Answered Reason</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{queryRecord.property['notAnsweredReason']}}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
     </table>
-    <button *ngIf="queryDataAccess.formDataEditAccess && editRecordForm" type="submit"
-            class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-            (click)="updateQueryRecord()">
+    <button *ngIf="queryDataAccess.queryResponseCapableAccess && editRecordForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="updateQueryRecord()">
       Update
     </button>
   </form>

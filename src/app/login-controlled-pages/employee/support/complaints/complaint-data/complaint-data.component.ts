@@ -6,6 +6,7 @@ import {AppUtilityService} from "src/app/utils/app-utility.service";
 import {HelperService} from "src/app/utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 
 @Component({
   selector: 'app-complaint-data',
@@ -19,21 +20,22 @@ export class ComplaintDataComponent implements OnInit {
 
   @Input()
   complaintDataAccess: ComplaintDataAccess = null;
-  editRecordForm = false;
-
+  
   complaintUpdatedRecord = {};
 
-  complaintStatusFilterOptions = CommonFilterOptions.complaintStatusFilterOptions;
-  genderFilterOptions = CommonFilterOptions.genderFilterOptions;
-  qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
-  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
-  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
-  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
-  complaintUserFilterOptions = CommonFilterOptions.complaintUserFilterOptions;
+  showEmployeeActionDetails = false;
+
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
+  editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
+
+  complaintStatusFilterOptions = CommonFilterOptions.complaintStatusFilterOptions;  
+  complaintUserFilterOptions = CommonFilterOptions.complaintUserFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions; 
 
   selectedComplaintStatus: any[] = [];
   selectedComplaintUser: any[] = [];
@@ -42,8 +44,14 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedComplaintStatus = CommonUtilityFunctions.getSelectedFilterItems(this.complaintStatusFilterOptions, this.complaintRecord.getProperty('complaintStatus'));
-    this.selectedComplaintUser = CommonUtilityFunctions.getSelectedFilterItems(this.complaintUserFilterOptions, this.complaintRecord.getProperty('complaintUser'));
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   updateComplaintProperty(key: string, value: string, data_type: string) {

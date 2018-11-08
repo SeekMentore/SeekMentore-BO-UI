@@ -1,9 +1,8 @@
-<!--*ngIf="rendercomplaintRecordForm"-->
 <div
   style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
-  <form class="form-container" style="max-width: 700px">
-    <div *ngIf="subscriptionDataAccess.formDataEditAccess"
-         style="display: flex; flex-direction: row; justify-content: flex-end">
+  <form class="form-container" style="max-width: 80%">
+    <div *ngIf="complaintDataAccess.complaintAddressCapableAccess"
+          class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
         <span class="tab_checkmark left">View</span>
@@ -13,68 +12,100 @@
         <span class="tab_checkmark right">Edit</span>
       </label>
     </div>
-    <table style="width: 100%;">
+    <table class="form-container-generic-table">
       <tr>
-        <td width="40%"><label>Name</label></td>
-        <td><input class="input_field" type="text" value="{{complaintRecord.property['name']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateComplaintProperty('name', $event.target.value, 'text')">
-        </td>
+        <td class="td-label"><label>Name</label></td>
+        <td><label class="data">{{complaintRecord.property['name']}}</label></td>
       </tr>
       <tr>
-        <td width="40%"><label>Complaint Filed Date</label></td>
-        <td><input class="input_field" type="date" value="{{complaintRecord.property['complaintFiledDate']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateComplaintProperty('complaintFiledDate', $event.target.value, 'date')">
-        </td>
+        <td class="td-label"><label>Complaint Filed Date</label></td>
+        <td><label class="data">{{getDateFromMillis(complaintRecord.property['complaintFiledDateMillis'])}}</label></td>        
       </tr>
       <tr>
-        <td><label>Complaint Status</label></td>
+        <td class="td-label"><label>Complaint Status</label></td>
+        <td><label class="data">{{getLookupRendererFromValue(complaintRecord.property['complaintStatus'], complaintStatusFilterOptions)}}</label></td>        
+      </tr>
+      <tr>
+        <td class="td-label"><label>Complaint User</label></td>
+        <td><label class="data">{{getLookupRendererFromValue(complaintRecord.property['complaintUser'], complaintUserFilterOptions)}}</label></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>User Id</label></td>
+        <td><label class="data">{{complaintRecord.property['userId']}}</label></td>        
+      </tr>
+      <tr>
+        <td class="td-label"><label>Complaint Details</label></td>
+        <td><div class="form-remakrs">{{complaintRecord.property['complaintDetails']}}</div></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Complaint Response</label></td>
         <td>
-          <ng-multiselect-dropdown [placeholder]="'Query Status'" [data]="complaintStatusFilterOptions"
-                                   [(ngModel)]="selectedComplaintStatus" name="complaintStatus"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateComplaintProperty('complaintStatus', $event.value, 'list')">
-          </ng-multiselect-dropdown>
+            <textarea 
+                class="textarea_field"
+                [disabled]="!editRecordForm" 
+                (change)="updateComplaintProperty('complaintResponse', $event.target.value, 'string')"
+                >{{complaintRecord.property['complaintResponse']}}</textarea>
         </td>
       </tr>
       <tr>
-        <td width="40%"><label>Email Id</label></td>
-        <td><input class="input_field" type="email" value="{{complaintRecord.property['emailId']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateComplaintProperty('emailId', $event.target.value, 'string')">
-        </td>
+        <td class="td-label"><label>Record Last Updated</label></td>
+        <td><label class="data">{{getDateFromMillis(complaintRecord.property['recordLastUpdatedMillis'])}}</label></td>
       </tr>
-      <tr>
-        <td width="40%"><label>Complaint Details</label></td>
-        <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintDetails']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateComplaintProperty('complaintDetails', $event.target.value, 'string')">
+      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-expander"
+                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionDetails = true"></i>
         </td>
-      </tr>
-      <tr>
-        <td width="40%"><label>Complaint Response</label></td>
-        <td><input class="input_field" type="text" value="{{complaintRecord.property['complaintResponse']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateComplaintProperty('complaintResponse', $event.target.value, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td><label>Complaint User</label></td>
         <td>
-          <ng-multiselect-dropdown [placeholder]="'Complaint User'" [data]="complaintUserFilterOptions"
-                                   [(ngModel)]="selectedComplaintUser" name="complaintUser"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateComplaintProperty('complaintUser', $event.value, 'list')">
-          </ng-multiselect-dropdown>
+          Show Action Details
         </td>
-      </tr>
+      </tr> 
+      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+        <td colspan="2">          
+          <table>
+              <tr>
+                <td class="td-label">
+                    <i
+                        id="employee-actions-details-collapser"
+                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                        (click)="showEmployeeActionDetails = false"></i>
+                </td>
+                <td colspan="5">
+                  Hide Action Details
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Contacted</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(complaintRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
+                <td class="td-label"><label>Who Contacted</label></td>
+                <td><label class="data">{{complaintRecord.property['whoContacted']}}</label></td>              
+                <td class="td-label"><label>Contacted Date</label></td>
+                <td><label class="data">{{getDateFromMillis(complaintRecord.property['contactedDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Not Resolved</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(complaintRecord.property['notResolved'], yesNoFilterOptions)}}</label></td>              
+                <td class="td-label"><label>Who Not Resolved</label></td>
+                <td><label class="data">{{complaintRecord.property['whoNotResolved']}}</label></td>              
+                <td class="td-label"><label></label></td>
+                <td><label class="data"></label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Not Resolved Reason</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{complaintRecord.property['notResolvedReason']}}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>     
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
-            class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
-            (click)="updateComplaintRecord()">
+    <button *ngIf="complaintDataAccess.complaintAddressCapableAccess && editRecordForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="updateComplaintRecord()">
       Update
     </button>
-    <!--<span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>-->
   </form>
 </div>

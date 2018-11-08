@@ -193,7 +193,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.subscriptionDataAccess = {
+      context.complaintDataAccess = {
         success: response.success,
         message: response.message,
         complaintAddressCapableAccess: response.complaintAddressCapableAccess
@@ -229,5 +229,5 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
 export interface ComplaintDataAccess {
   success: boolean;
   message: string;
-  queryResponseCapableAccess: boolean;
+  complaintAddressCapableAccess: boolean;
 }

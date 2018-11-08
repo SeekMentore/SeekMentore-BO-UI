@@ -1,7 +1,7 @@
 <div
   style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
   <form class="form-container" style="max-width: 80%">
-    <div *ngIf="subscriptionDataAccess.formDataEditAccess"
+    <div *ngIf="queryDataAccess.formDataEditAccess"
           class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
@@ -64,7 +64,7 @@
         </td>
       </tr>
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
+    <button *ngIf="queryDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="button-primary" style="display: flex; align-self: center; margin-top: 10px"
             (click)="updateQueryRecord()">
       Update

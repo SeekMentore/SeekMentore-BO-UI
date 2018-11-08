@@ -72,10 +72,9 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         dataType: 'string',
         mapping: 'customerName',
         clickEvent: (record: GridRecord, column: Column) => {
-          // Open the Data view port
           this.interimHoldSelectedAllEnquiriesRecord = record;
           if (this.allEnquiriesDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.pending_enquiry_data_access, 'POST');
           } else {
             this.selectedAllEnquiriesRecord = this.interimHoldSelectedAllEnquiriesRecord;            
             this.toggleVisibilityAllEnquiriesGrid();
@@ -192,7 +191,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
             if (selectedEmailsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_tutors_selected,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });
@@ -209,7 +208,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
             if (selectedEmailsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_tutors_selected,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });

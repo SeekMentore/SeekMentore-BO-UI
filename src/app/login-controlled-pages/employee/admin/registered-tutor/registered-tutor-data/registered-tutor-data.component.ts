@@ -218,11 +218,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approve',
             label: 'Approve',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
-              // '/rest/registeredTutor/approveTutorDocument'
-              // param name - 'selectedId'
-              // param value - record.property('documentId')
-              // response - If success = true -> refresh grid if false - show Alert Failure with message
+            clickEvent: (record: GridRecord, button: ActionButton) => {              
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_single, [record],
                 'documentId', this.uploadedDocumentGridObject);
             }
@@ -231,10 +227,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Remind',
             btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // '/rest/registeredTutor/sendReminderTutorDocument'
-              // param name - 'selectedId'
-              // param value - record.property('documentId')
-              // response - If success = true -> refresh grid if false - show Alert Failure with message
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_single, [record],
                 'documentId', this.uploadedDocumentGridObject);
             }
@@ -243,10 +235,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // '/rest/registeredTutor/rejectTutorDocument'
-              // param name - 'selectedId'
-              // param value - record.property('documentId')
-              // response - If success = true -> refresh grid if false - show Alert Failure with message
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_single, [record],
                 'documentId', this.uploadedDocumentGridObject);
             }
@@ -320,10 +308,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approve',
             label: 'Approve',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // '/rest/registeredTutor/approveBankAccount'
-              // param name - 'selectedId'
-              // param value - record.property('bankAccountId')
-              // response - If success = true -> refresh grid if false - show Alert Failure with message
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_single, [record],
                 'bankAccountId', this.bankDetailGridObject);
             }
@@ -332,10 +316,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Default',
             btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // '/rest/registeredTutor/makeDefaultBankAccount'
-              // param name - 'selectedId'
-              // param value - record.property('bankAccountId')
-              // response - If success = true -> refresh grid if false - show Alert Failure with message
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_make_default, [record],
                 'bankAccountId', this.bankDetailGridObject);
 
@@ -345,10 +325,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              // '/rest/registeredTutor/rejectBankAccount'
-              // param name - 'selectedId'
-              // param value - record.property('bankAccountId')
-              // response - If success = true -> refresh grid if false - show Alert Failure with message
               this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_single, [record],
                 'bankAccountId', this.bankDetailGridObject);
             }

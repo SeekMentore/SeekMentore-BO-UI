@@ -77,7 +77,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
             // Open the Data view port
             this.interimHoldSelectedQueryRecord = record;
             if (this.queryDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.submitted_query_data_access, 'POST');
             } else {
               this.selectedQueryRecord = this.interimHoldSelectedQueryRecord;
               this.toggleVisibilityQueryGrid();
@@ -146,7 +146,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
             if (selectedEmailsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_tutors_selected,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });
@@ -189,7 +189,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.subscriptionDataAccess = {
+      context.queryDataAccess = {
         success: response.success,
         message: response.message,
         queryResponseCapableAccess: response.queryResponseCapableAccess

@@ -105,10 +105,9 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'name',
           clickEvent: (record: GridRecord, column: Column) => {
-            // Open the Data view port
             this.interimHoldSelectedEnquiryRecord = record;
             if (this.enquiryDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_request_data_access, 'POST');
             } else {
               this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;
               this.toggleVisibilityEnquiryGrid();
@@ -208,7 +207,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
             if (selectedEmailsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_tutors_selected,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });
@@ -225,17 +224,17 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
             if (enquiryIdsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_record_selected_blacklist,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });
             } else {
               const data = {
-                tutorIdsList: enquiryIdsList.join(';'),
+                allIdsList: enquiryIdsList.join(';'),
                 comments: ''
               };
               this.utilityService.makerequest(this, this.handleBlackListRequest,
-                LcpRestUrls.blackListRegisteredTutors, 'POST', this.utilityService.urlEncodeData(data),
+                LcpRestUrls.blackList_enquiry_requests, 'POST', this.utilityService.urlEncodeData(data),
                 'application/x-www-form-urlencoded');
             }
           }

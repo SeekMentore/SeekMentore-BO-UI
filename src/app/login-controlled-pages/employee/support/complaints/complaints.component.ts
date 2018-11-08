@@ -83,7 +83,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
             // Open the Data view port
             this.interimHoldSelectedComplaintRecord = record;
             if (this.complaintDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.complaint_data_access, 'POST');
             } else {
               this.selectedComplaintRecord = this.interimHoldSelectedComplaintRecord;
               this.toggleVisibilityComplaintGrid();
@@ -144,7 +144,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
             if (selectedEmailsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_tutors_selected,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });

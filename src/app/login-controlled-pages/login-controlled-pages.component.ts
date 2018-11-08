@@ -35,7 +35,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
     this.idleTime = 0;
     this.setActivityTimer();
-    this.emailData = null;    
+    this.emailData = null; 
+    this.parseMenu();   
   }
 
   ngOnInit(): void {
@@ -47,8 +48,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
-    });
-    this.parseMenu(); 
+    });     
     // set event handler for email
     this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
     this.helperService.emailDialogState.subscribe((data: EmailInterface) => {

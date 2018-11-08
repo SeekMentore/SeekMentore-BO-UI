@@ -68,7 +68,7 @@ export class SubscribedCustomerComponent implements OnInit {
               // Open the Data view port
               this.interimHoldSelectedCustomerRecord = record;
               if (this.customerDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customerDataAccess, 'POST');
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST');
               } else {
                 this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
                 this.toggleVisibilitySubscribedCustomerGrid();
@@ -139,7 +139,7 @@ export class SubscribedCustomerComponent implements OnInit {
               if (selectedEmailsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
-                  message: LcpConstants.customer_grid_no_customers_selected,
+                  message: LcpConstants.grid_generic_no_record_selected_error,
                   onButtonClicked: () => {
                   }
                 });
@@ -156,17 +156,17 @@ export class SubscribedCustomerComponent implements OnInit {
               if (customerIdsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
-                  message: LcpConstants.customer_grid_no_record_selected_blacklist,
+                  message: LcpConstants.grid_generic_no_record_selected_error,
                   onButtonClicked: () => {
                   }
                 });
               } else {
                 const data = {
-                  params: customerIdsList.join(';'),
+                  allIdsList: customerIdsList.join(';'),
                   comments: ''
                 };
                 this.utilityService.makerequest(this, this.handleBlackListRequest,
-                  LcpRestUrls.blackListSubscribedCustomers, 'POST', this.utilityService.urlEncodeData(data),
+                  LcpRestUrls.blackList_subscribed_customers, 'POST', this.utilityService.urlEncodeData(data),
                   'application/x-www-form-urlencoded');
               }
             }

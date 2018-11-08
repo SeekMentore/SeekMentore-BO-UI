@@ -118,7 +118,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
             // Open the Data view port
             this.interimHoldSelectedTutorRecord = record;            
             if (this.tutorDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.become_tutor_data_access, 'POST');
             } else {
               this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
               this.toggleVisibilityBecomeTutorGrid();
@@ -265,12 +265,11 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           id: 'sendEmail',
           label: 'Send Email',
           clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            // Refer document
             const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
             if (selectedEmailsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_tutors_selected,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });
@@ -287,17 +286,17 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
             if (tutorIdsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
-                message: LcpConstants.tutor_grid_no_record_selected_blacklist,
+                message: LcpConstants.grid_generic_no_record_selected_error,
                 onButtonClicked: () => {
                 }
               });
             } else {
               const data = {
-                tutorIdsList: tutorIdsList.join(';'),
+                allIdsList: tutorIdsList.join(';'),
                 comments: ''
               };
               this.utilityService.makerequest(this, this.handleBlackListRequest,
-                LcpRestUrls.blackListRegisteredTutors, 'POST', this.utilityService.urlEncodeData(data),
+                LcpRestUrls.blackList_become_tutors, 'POST', this.utilityService.urlEncodeData(data),
                 'application/x-www-form-urlencoded');
             }
           }

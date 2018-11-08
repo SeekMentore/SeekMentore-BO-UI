@@ -5,8 +5,8 @@ export class LcpRestUrls {
   static logoutUrl = '/rest/login/logout';
   static sendMailUrl = '/rest/commons/sendEmail';
   static uiAccessUrl = '/rest/login/checkUIpathAccess';
-  static tutorDataAccess = '/rest/admin/registeredTutorCheckDataAccess';
-  static blackListRegisteredTutors = '/rest/admin/blacklistRegisteredTutors';
+  static tutor_data_access = '/rest/admin/registeredTutorCheckDataAccess';
+  static blackList_registered_tutors = '/rest/admin/blacklistRegisteredTutors';
   static tutor_document_grid_approve_single = '/rest/registeredTutor/approveTutorDocument';
   static tutor_document_grid_approve_multiple = '/rest/registeredTutor/approveMultipleTutorDocument';
   static tutor_document_grid_reminder_single = '/rest/registeredTutor/sendReminderTutorDocument';
@@ -19,7 +19,23 @@ export class LcpRestUrls {
   static tutor_bank_grid_reject_multiple = '/rest/registeredTutor/rejectMultipleBankAccount';
   static tutor_bank_grid_make_default = '/rest/registeredTutor/makeDefaultBankAccount';
   static tutor_update_record = '/rest/registeredTutor/updateTutorRecord';
-  static customerDataAccess = '/rest/admin/subscribedCustomerCheckDataAccess';
-  static blackListSubscribedCustomers = '/rest/admin/blacklistSubscribedCustomers';
+  static customer_data_access = '/rest/admin/subscribedCustomerCheckDataAccess';
+  static blackList_subscribed_customers = '/rest/admin/blacklistSubscribedCustomers';
   static customer_update_record = '/rest/subscribedCustomer/updateCustomerRecord';
+  //
+  static become_tutor_data_access = '/rest/support/becomeTutorCheckDataAccess';
+  static blackList_become_tutors = '/rest/support/blacklistBecomeTutors';
+  static become_tutor_update_record = '/rest/support/updateBecomeTutorRecord';
+  static enquiry_request_data_access = '/rest/support/enquiryRequestCheckDataAccess';
+  static blackList_enquiry_requests = '/rest/support/blacklistEnquiryRequests';
+  static enquiry_request_update_record = '/rest/support/updateEnquiryRequestRecord';
+  static subscription_request_data_access = '/rest/support/subscriptionRequestCheckDataAccess';
+  static blackList_subscription_request = '/rest/support/blacklistSubscriptionRequests';
+  static subscription_request_update_record = '/rest/support/updateSubscriptionRequestRecord';
+  static submitted_query_data_access = '/rest/support/submittedQueryCheckDataAccess';
+  static submitted_query_update_record = '/rest/support/updateSubmittedQueryRecord';
+  static complaint_data_access = '/rest/support/complaintCheckDataAccess';
+  static complaint_update_record = '/rest/support/updateComplaintRecord';
+  //
+  static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
 }

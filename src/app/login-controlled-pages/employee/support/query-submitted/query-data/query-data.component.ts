@@ -20,7 +20,6 @@ export class QueryDataComponent implements OnInit {
   @Input()
   queryDataAccess: QueryDataAccess = null;
 
-
   queryUpdatedRecord = {};
 
   editRecordForm = false;
@@ -51,7 +50,7 @@ export class QueryDataComponent implements OnInit {
 
   updateQueryRecord() {
     const data = this.helperService.encodedGridFormData(this.queryUpdatedRecord, this.queryRecord.getProperty('queryId'));
-    this.utilityService.makerequest(this, this.onUpdateQueryRecord, LcpRestUrls.customer_update_record, 'POST',
+    this.utilityService.makerequest(this, this.onUpdateQueryRecord, LcpRestUrls.submitted_query_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 

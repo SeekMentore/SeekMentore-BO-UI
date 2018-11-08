@@ -67,7 +67,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               // Open the Data view port
               this.interimHoldSelectedTutorRecord = record;
               if (this.tutorDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutorDataAccess, 'POST');
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST');
               } else {
                 this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
                 this.toggleVisibilityRegisterTutorGrid();
@@ -170,7 +170,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               if (selectedEmailsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
-                  message: LcpConstants.tutor_grid_no_tutors_selected,
+                  message: LcpConstants.grid_generic_no_record_selected_error,
                   onButtonClicked: () => {
                   }
                 });
@@ -187,17 +187,17 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               if (tutorIdsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
-                  message: LcpConstants.tutor_grid_no_record_selected_blacklist,
+                  message: LcpConstants.grid_generic_no_record_selected_error,
                   onButtonClicked: () => {
                   }
                 });
               } else {
                 const data = {
-                  tutorIdsList: tutorIdsList.join(';'),
+                  allIdsList: tutorIdsList.join(';'),
                   comments: ''
                 };
                 this.utilityService.makerequest(this, this.handleBlackListRequest,
-                  LcpRestUrls.blackListRegisteredTutors, 'POST', this.utilityService.urlEncodeData(data),
+                  LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
                   'application/x-www-form-urlencoded');
               }
             }

@@ -38,4 +38,5 @@ export class LcpRestUrls {
   static complaint_update_record = '/rest/support/updateComplaintRecord';
   //
   static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
+  static pending_enquiry_update_record = '/rest/sales/updatePendingEnquiryRecord';
 }

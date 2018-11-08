@@ -8,6 +8,7 @@ import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { Column } from 'src/app/utils/grid/column';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-enquiries-data',
@@ -26,12 +27,30 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   @Input()
   allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
 
+  showEmployeeActionDetails = false;
+
+  mandatoryDisbaled = true;
+  superAccessAwarded = false;
+  editRecordForm = false;
+
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
+
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.currentCustomerAllPendingEnquiriesGridMetaData = null;
   }
 
   ngOnInit() {
     this.setUpGridMetaData();
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   ngAfterViewInit() {
@@ -41,7 +60,6 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
         this.currentCustomerAllPendingEnquiriesGridObject.addExtraParams('tutorId', this.enquiriesRecord.getProperty('customerId'));
       }
     }, 0);
-
     setTimeout(() => {
       if (this.allEnquiriesDataAccess.allEnquiriesDataModificationAccess) {
         this.currentCustomerAllPendingEnquiriesGridObject.refreshGridData();
@@ -52,8 +70,8 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   public setUpGridMetaData() {
     this.currentCustomerAllPendingEnquiriesGridMetaData = {
       grid: {
-        id: 'uploadedDocumentGrid',
-        title: 'Uploaded Documents',
+        id: 'currentCustomerAllPendingEnquiriesGrid',
+        title: 'Current Customer Pending Enquiries',
         store: {
           isStatic: false,
           restURL: '/rest/sales/currentCustomerAllPendingEnquiries'
@@ -66,7 +84,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           mapping: 'subject',
           renderer: AdminCommonFunctions.subjectsRenderer,
           clickEvent: (record: GridRecord, column: Column) => {
-            // Load this enquiry
+            // Reload this enquiry
           }
         }, {
           id: 'grade',
@@ -152,7 +170,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
         }]
       },
-      htmlDomElementId: 'uploaded-document-grid',
+      htmlDomElementId: 'current-customer-all-pending-enquiries-grid',
       hidden: false,
     };
   }

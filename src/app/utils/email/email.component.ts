@@ -34,7 +34,7 @@ export class EmailComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.helperService.makeRichEditor(this.emailBodyEditorId, CkeditorConfig.emailConfiguration);
     this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
-    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.emailTemplatesUrl, 'POST');
+    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.email_templates_url, 'POST');
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -133,7 +133,7 @@ export class EmailComponent implements OnInit, OnChanges {
     }
     const formData = new URLSearchParams();
     formData.set('templateId', templateValue);
-    this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
+    this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.email_template_data_url, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
   }
 
@@ -204,7 +204,7 @@ export class EmailComponent implements OnInit, OnChanges {
       }
       formData.append(inputFilesNames[i], this.attachments[i]);
     }
-    this.utilityService.makerequest(this, this.onSuccessEmailSent, LcpRestUrls.sendMailUrl, 'POST', formData,
+    this.utilityService.makerequest(this, this.onSuccessEmailSent, LcpRestUrls.send_email_url, 'POST', formData,
       'multipart/form-data', true);
   }
 
@@ -238,7 +238,7 @@ export class EmailComponent implements OnInit, OnChanges {
   getDataForTemplate(response_handler: any, value: string) {
     const formData = new URLSearchParams();
     formData.set('templateId', value);
-    return this.utilityService.makerequest(this, response_handler, LcpRestUrls.emailTemplateDataUrl, 'POST', formData.toString(),
+    return this.utilityService.makerequest(this, response_handler, LcpRestUrls.email_template_data_url, 'POST', formData.toString(),
       'application/x-www-form-urlencoded');
   }
 

@@ -65,7 +65,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public parseMenu() {
-    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basicInfoUrl, 'POST');
+    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basic_info_url, 'POST');
   }
 
   onSuccessBasicInfo(context: any, response: any) {
@@ -102,7 +102,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public doLogout() {
-    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logoutUrl, 'POST');
+    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logout_url, 'POST');
   }
 
   onSuccessLogout(context: any, response: any) {

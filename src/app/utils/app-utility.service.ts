@@ -116,7 +116,7 @@ export class AppUtilityService {
     const paramsData = new URLSearchParams();
     paramsData.set('urlPath', path);
     const _observable = new Observable<boolean>(observer => {
-      this.makeRequestWithoutResponseHandler(LcpRestUrls.uiAccessUrl, 'POST', paramsData.toString(),
+      this.makeRequestWithoutResponseHandler(LcpRestUrls.ui_access_url, 'POST', paramsData.toString(),
         'application/x-www-form-urlencoded').subscribe(
         result => {
           let response = result['response'];

@@ -1,10 +1,10 @@
 export class LcpRestUrls {
-  static basicInfoUrl = '/rest/commons/getLoginBasicInfo';
-  static emailTemplatesUrl = '/rest/commons/getEmailTemplates';
-  static emailTemplateDataUrl = '/rest/commons/loadEmailTemplate';
-  static logoutUrl = '/rest/login/logout';
-  static sendMailUrl = '/rest/commons/sendEmail';
-  static uiAccessUrl = '/rest/login/checkUIpathAccess';
+  static basic_info_url = '/rest/commons/getLoginBasicInfo';
+  static email_templates_url = '/rest/commons/getEmailTemplates';
+  static email_template_data_url = '/rest/commons/loadEmailTemplate';
+  static logout_url = '/rest/login/logout';
+  static send_email_url = '/rest/commons/sendEmail';
+  static ui_access_url = '/rest/login/checkUIpathAccess';
   static tutor_data_access = '/rest/admin/registeredTutorCheckDataAccess';
   static blackList_registered_tutors = '/rest/admin/blacklistRegisteredTutors';
   static tutor_document_grid_approve_single = '/rest/registeredTutor/approveTutorDocument';

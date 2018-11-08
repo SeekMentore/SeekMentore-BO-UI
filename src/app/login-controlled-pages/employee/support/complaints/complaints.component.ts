@@ -105,10 +105,10 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
           mapping: 'complaintStatus'
         },
         {
-          id: 'emailId',
-          headerName: 'Email Id',
+          id: 'userId',
+          headerName: 'User Id',
           dataType: 'string',
-          mapping: 'emailId'
+          mapping: 'userId'
         },
         {
           id: 'complaintDetails',

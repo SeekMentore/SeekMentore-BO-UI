@@ -217,10 +217,6 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
       this.showQueryData = true;
     }
   }
-
-
-
-
 }
 
 export interface QueryDataAccess {

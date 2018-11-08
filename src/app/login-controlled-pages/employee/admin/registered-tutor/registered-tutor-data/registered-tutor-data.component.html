@@ -4,8 +4,7 @@
   <app-grid *ngIf="tutorDataAccess.bankViewAccess" #bankDetailGrid id="bank-detail-grid"
             [gridMetaData]="bankDetailGridMetaData"></app-grid>
 
-  <div *ngIf="renderTutorRecordForm"
-       style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
+  <div *ngIf="renderTutorRecordForm" class="form-container-div">
     <form class="form-container" style="max-width: 80%">
       <div *ngIf="tutorDataAccess.formDataEditAccess"
             class="form-container-toggle-button">

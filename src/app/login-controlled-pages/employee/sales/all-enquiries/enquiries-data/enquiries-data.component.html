@@ -1,3 +1,26 @@
 <div>
+  <div class="form-container-div">
+    <form class="form-container" style="max-width: 80%">
+      <table class="form-container-generic-table">
+        <tr>
+          <td class="td-label"><label>Customer Name</label></td>
+          <td><label class="data">{{enquiriesRecord.property['customerName']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Customer Email</label></td>
+          <td><label class="data">{{enquiriesRecord.property['customerEmail']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Customer Contact Number</label></td>
+          <td><label class="data">{{enquiriesRecord.property['customerContactNumber']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Address Details</label></td>
+          <td><div class="form-remakrs">{{enquiriesRecord.property['addressDetails']}}</div></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  
   <app-grid *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess" #currentCustomerAllPendingEnquiriesGrid id="current-customer-all-pending-enquiries-grid" [gridMetaData]="currentCustomerAllPendingEnquiriesGridMetaData"></app-grid>
 </div>

@@ -178,6 +178,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         dataType: 'list',
         filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
         mapping: 'preferredTeachingType',
+        multiList: true,
         renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
       }],
       hasSelectionColumn: true,

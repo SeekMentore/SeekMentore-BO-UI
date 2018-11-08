@@ -57,7 +57,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       if (this.allEnquiriesDataAccess.allEnquiriesDataModificationAccess) {
         this.currentCustomerAllPendingEnquiriesGridObject.init();
-        this.currentCustomerAllPendingEnquiriesGridObject.addExtraParams('tutorId', this.enquiriesRecord.getProperty('customerId'));
+        this.currentCustomerAllPendingEnquiriesGridObject.addExtraParams('customerId', this.enquiriesRecord.getProperty('customerId'));
       }
     }, 0);
     setTimeout(() => {
@@ -167,6 +167,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
           mapping: 'preferredTeachingType',
+          multiList: true,
           renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
         }]
       },

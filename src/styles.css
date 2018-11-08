@@ -606,3 +606,12 @@ table.form-container-generic-table td.td-label {
 .form-container-generic-table label.data {
   color: #337ab7;
 }
+
+div.form-container-div {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  align-content: center; 
+  justify-content: center; 
+  padding: 30px
+}

@@ -13,14 +13,149 @@
         <tr>
           <td class="td-label"><label>Customer Contact Number</label></td>
           <td><label class="data">{{enquiriesRecord.property['customerContactNumber']}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Address Details</label></td>
-          <td><div class="form-remakrs">{{enquiriesRecord.property['addressDetails']}}</div></td>
-        </tr>
+        </tr>        
       </table>
     </form>
   </div>
-  
-  <app-grid *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess" #currentCustomerAllPendingEnquiriesGrid id="current-customer-all-pending-enquiries-grid" [gridMetaData]="currentCustomerAllPendingEnquiriesGridMetaData"></app-grid>
+
+  <app-grid #currentCustomerAllPendingEnquiriesGrid id="current-customer-all-pending-enquiries-grid" [gridMetaData]="currentCustomerAllPendingEnquiriesGridMetaData"></app-grid>
+
+  <div class="form-container-div">
+    <form class="form-container" style="max-width: 80%">
+      <div *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess"
+            class="form-container-toggle-button">
+        <label class="tab_container" (change)="editRecordForm = false;">
+          <input type="radio" checked name="editFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="editRecordForm = true;">
+          <input type="radio" name="editFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
+      <table class="form-container-generic-table">
+          <tr>
+            <td class="td-label"><label>Subject</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Subject'" [data]="subjectsFilterOptions"
+                                        [(ngModel)]="selectedSubjectOption" name="subject"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateEnquiryProperty('subject', $event.value, 'list')">
+              </ng-multiselect-dropdown>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Grade</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Grade'" [data]="studentGradesFilterOptions"
+                                        [(ngModel)]="selectedStudentGradeOption" name="grade"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateEnquiryProperty('grade', $event.value, 'list')">
+              </ng-multiselect-dropdown>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Match Status</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(enquiriesRecord.property['matchStatus'], matchStatusFilterOptions)}}</label></td>        
+          </tr>          
+          <tr>
+            <td class="td-label"><label>Quoted Client Rate</label></td>
+            <td><input class="input_field" type="number" value="{{enquiriesRecord.property['quotedClientRate']}}"
+                        [disabled]="!editRecordForm"
+                        (change)="updateEnquiryProperty('quotedClientRate', $event.target.value, 'number')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>negotiatedRateWithClient</label></td>
+            <td><input class="input_field" type="number" value="{{enquiriesRecord.property['negotiatedRateWithClient']}}"
+                        [disabled]="!editRecordForm"
+                        (change)="updateEnquiryProperty('negotiatedRateWithClient', $event.target.value, 'number')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Client Negotiation Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateEnquiryProperty('clientNegotiationRemarks', $event.target.value, 'string')"
+                        >{{enquiriesRecord.property['clientNegotiationRemarks']}}</textarea>
+            </td>
+          </tr>          
+          <tr>
+            <td class="td-label"><label>Additional Details</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateEnquiryProperty('additionalDetails', $event.target.value, 'string')"
+                        >{{enquiriesRecord.property['additionalDetails']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Location</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
+                                        [(ngModel)]="selectedLocationOption" name="locationDetails"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateEnquiryProperty('locationDetails', $event.value, 'list')">
+              </ng-multiselect-dropdown>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Address Details</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateEnquiryProperty('addressDetails', $event.target.value, 'string')"
+                        >{{enquiriesRecord.property['addressDetails']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Preferred Teaching Type</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
+                                        [(ngModel)]="selectedTeachingTypeOptions" name="preferredTeachingType"
+                                        [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateEnquiryProperty('preferredTeachingType', $event.value, 'list')">
+              </ng-multiselect-dropdown>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Is Mapped</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(enquiriesRecord.property['isMapped'], yesNoFilterOptions)}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Name</label></td>
+            <td><label class="data">{{enquiriesRecord.property['tutorName']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Email</label></td>
+            <td><label class="data">{{enquiriesRecord.property['tutorEmail']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Contact Number</label></td>
+            <td><label class="data">{{enquiriesRecord.property['tutorContactNumber']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Last Action Date</label></td>
+            <td><label class="data">{{getDateFromMillis(enquiriesRecord.property['lastActionDateMillis'])}}</label></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Who Acted</label></td>
+            <td><label class="data">{{enquiriesRecord.property['whoActed']}}</label></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Action Remarks</label></td>
+            <td>
+              <div class="form-remakrs">{{enquiriesRecord.property['adminRemarks']}}</div>
+            </td>
+          </tr>
+      </table>
+      <button *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess && editRecordForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="updateEnquiryRecord()">
+        Update
+      </button>
+    </form>
+  </div>
 </div>

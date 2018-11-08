@@ -64,7 +64,7 @@ export class EnquiryDataComponent implements OnInit {
   }
 
   getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
   updateEnquiryProperty(key: string, value: string, data_type: string) {

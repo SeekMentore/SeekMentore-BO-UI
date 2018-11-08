@@ -9,6 +9,8 @@ import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { Column } from 'src/app/utils/grid/column';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-enquiries-data',
@@ -27,6 +29,8 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   @Input()
   allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
 
+  enquiryUpdatedRecord = {};
+
   showEmployeeActionDetails = false;
 
   mandatoryDisbaled = true;
@@ -37,11 +41,27 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
+  matchStatusFilterOptions = CommonFilterOptions.matchStatusFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
+
+  selectedStudentGradeOption: any[] = [];
+  selectedSubjectOption: any[] = [];
+  selectedLocationOption: any[] = [];
+  selectedTeachingTypeOptions: any[] = [];
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.currentCustomerAllPendingEnquiriesGridMetaData = null;
   }
 
   ngOnInit() {
+    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiriesRecord.getProperty('grade'));
+    this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiriesRecord.getProperty('subject'));
+    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiriesRecord.getProperty('locationDetails'));
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.enquiriesRecord.getProperty('preferredTeachingType'));
     this.setUpGridMetaData();
   }
 
@@ -50,7 +70,11 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
+  }
+
+  updateEnquiryProperty(key: string, value: string, data_type: string) {
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.enquiryUpdatedRecord, this.enquiriesRecord);
   }
 
   ngAfterViewInit() {
@@ -176,4 +200,22 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
     };
   }
 
+  updateEnquiryRecord() {
+    const data = this.helperService.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiriesRecord.getProperty('enquiryId'));
+    this.utilityService.makerequest(this, this.onUpdateEnquiryRecord, LcpRestUrls.pending_enquiry_update_record, 'POST',
+      data, 'multipart/form-data', true);
+  }
+
+  onUpdateEnquiryRecord(context: any, data: any) {
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
+    }
+  }
 }

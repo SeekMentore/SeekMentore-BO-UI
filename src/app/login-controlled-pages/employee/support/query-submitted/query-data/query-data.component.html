@@ -1,9 +1,8 @@
-<!--*ngIf="renderqueryRecordForm"-->
 <div
   style="display: flex; flex-direction: column; align-items: center; align-content: center; justify-content: center; padding: 30px">
-  <form class="form-container" style="max-width: 700px">
+  <form class="form-container" style="max-width: 80%">
     <div *ngIf="subscriptionDataAccess.formDataEditAccess"
-         style="display: flex; flex-direction: row; justify-content: flex-end">
+          class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
         <span class="tab_checkmark left">View</span>
@@ -13,54 +12,39 @@
         <span class="tab_checkmark right">Edit</span>
       </label>
     </div>
-    <table style="width: 100%;">
+    <table class="form-container-generic-table">
       <tr>
-        <td width="40%"><label>Query Requested Date</label></td>
-        <td><input class="input_field" type="date" value="{{queryRecord.property['queryRequestedDate']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateQueryProperty('queryRequestedDate', $event.target.value, 'date')">
-        </td>
+        <td class="td-label"><label>Query Requested Date</label></td>
+        <td><label class="data">{{getDateFromMillis(queryRecord.property['queryRequestedDateMillis'])}}</label></td>        
       </tr>
       <tr>
-        <td><label>Query Status</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Query Status'" [data]="applicationStatusFilterOptions"
-                                   [(ngModel)] = "selectedQueryStatus" name="queryStatus"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateQueryProperty('queryStatus', $event.value, 'list')">
-          </ng-multiselect-dropdown>
-        </td>
+        <td class="td-label"><label>Query Status</label></td>
+        <td><label class="data">{{getLookupRendererFromValue(queryRecord.property['queryStatus'], queryStatusFilterOptions)}}</label></td>        
       </tr>
       <tr>
-        <td width="40%"><label>Email Id</label></td>
-        <td><input class="input_field" type="email" value="{{queryRecord.property['emailId']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateQueryProperty('emailId', $event.target.value, 'string')">
-        </td>
+        <td class="td-label"><label>Email Id</label></td>
+        <td><label class="data">{{queryRecord.property['emailId']}}</label></td>        
       </tr>
       <tr>
-        <td width="40%"><label>Query Details</label></td>
-        <td><input class="input_field" type="text" value="{{queryRecord.property['queryDetails']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateQueryProperty('queryDetails', $event.target.value, 'string')">
-        </td>
+        <td class="td-label"><label>Query Details</label></td>
+        <td><div class="form-remakrs">{{queryRecord.property['queryDetails']}}</div></td>
       </tr>
       <tr>
-        <td width="40%"><label>Query Response</label></td>
+        <td class="td-label"><label>Query Response</label></td>
         <td><input class="input_field" type="text" value="{{queryRecord.property['queryResponse']}}"
                    [disabled]="!editRecordForm"
                    (change)="updateQueryProperty('queryResponse', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
-        <td width="40%"><label>Not Answered Reason</label></td>
+        <td class="td-label"><label>Not Answered Reason</label></td>
         <td><input class="input_field" type="text" value="{{queryRecord.property['notAnsweredReason']}}"
                    [disabled]="!editRecordForm"
                    (change)="updateQueryProperty('notAnsweredReason', $event.target.value, 'string')">
         </td>
       </tr>
       <tr>
-        <td><label>Is Registered Tutor</label></td>
+        <td class="td-label"><label>Is Registered Tutor</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Is Registered Tutor'" [data]="yesNoFilterOptions"
                                    [(ngModel)]="selectedTutorRegisteredOption" name="isTutorRegistered"
@@ -70,7 +54,7 @@
         </td>
       </tr>
       <tr>
-        <td><label>Is Subscribed Customer</label></td>
+        <td class="td-label"><label>Is Subscribed Customer</label></td>
         <td>
           <ng-multiselect-dropdown [placeholder]="'Is Subscribed Customer'" [data]="yesNoFilterOptions"
                                    [(ngModel)]="selectedCustomerSubscribedOption" name="isCustomerSubscribed"

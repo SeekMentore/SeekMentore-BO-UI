@@ -29,7 +29,7 @@ export class QueryDataComponent implements OnInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-  applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
+  queryStatusFilterOptions = CommonFilterOptions.queryStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
   selectedCustomerSubscribedOption: any[] = [];
@@ -42,7 +42,7 @@ export class QueryDataComponent implements OnInit {
   ngOnInit() {
     this.selectedCustomerSubscribedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('subscribedCustomer'));
     this.selectedTutorRegisteredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.queryRecord.getProperty('registeredTutor'));
-    this.selectedQueryStatus = CommonUtilityFunctions.getSelectedFilterItems(this.applicationStatusFilterOptions, this.queryRecord.getProperty('queryStatus'));
+    this.selectedQueryStatus = CommonUtilityFunctions.getSelectedFilterItems(this.queryStatusFilterOptions, this.queryRecord.getProperty('queryStatus'));
   }
 
   updateQueryProperty(key: string, value: string, data_type: string) {

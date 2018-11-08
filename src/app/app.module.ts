@@ -44,6 +44,7 @@ import { GridComponent } from './utils/grid/grid.component';
 import { HelperService } from './utils/helper.service';
 import { MultiSelectInputComponent } from './utils/multi-select-input/multi-select-input.component';
 import { RoutingModule } from './utils/routing.module';
+import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { RoutingModule } from './utils/routing.module';
     SubscriptionDataComponent,
     QueryDataComponent,
     ComplaintDataComponent,
-    EnquiriesDataComponent
+    EnquiriesDataComponent,
+    MapTutorToEnquiryDataComponent
   ],
   imports: [
     BrowserModule,

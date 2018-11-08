@@ -1,0 +1,19 @@
+<div>
+  <div id="subscription-list-page" *ngIf="!showSubscriptionData">
+    <app-grid #nonContactedSubscriptionGrid id="non-contacted-subscription-grid" [gridMetaData]="nonContactedSubscriptionGridMetaData"></app-grid>
+    <app-grid #nonVerifiedSubscriptionGrid id="non-verified-subscription-grid" [gridMetaData]="nonVerifiedSubscriptionGridMetaData"></app-grid>
+    <app-grid #verifiedSubscriptionGrid id="verified-subscription-grid" [gridMetaData]="verifiedSubscriptionGridMetaData"></app-grid>
+    <app-grid #verificationFailedSubscriptionGrid id="verification-failed-subscription-grid" [gridMetaData]="verificationFailedSubscriptionGridMetaData"></app-grid>
+    <app-grid #toBeReContactedSubscriptionGrid id="to-be-recontacted-subscription-grid" [gridMetaData]="toBeReContactedSubscriptionGridMetaData"></app-grid>
+    <app-grid #selectedSubscriptionGrid id="selected-subscription-grid" [gridMetaData]="selectedSubscriptionGridMetaData"></app-grid>
+    <app-grid #rejectedSubscriptionGrid id="rejected-subscription-grid" [gridMetaData]="rejectedSubscriptionGridMetaData"></app-grid>    
+  </div>
+  <div id="subscription-data-page" *ngIf="showSubscriptionData">
+    <button
+      id="back-to-subscription-listing-button"
+      class="ok-button" (click)="toggleVisibilitySubscriptionGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-subscription-data [subscriptionRecord]="selectedSubscriptionRecord" [subscriptionDataAccess]="subscriptionDataAccess"></app-subscription-data>
+  </div>
+</div>

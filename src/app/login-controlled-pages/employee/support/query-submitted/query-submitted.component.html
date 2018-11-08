@@ -1,0 +1,15 @@
+<div>
+  <div id="query-list-page" *ngIf="!showQueryData">
+    <app-grid #nonContactedQueryGrid id="non-contacted-query-grid" [gridMetaData]="nonContactedQueryGridMetaData"></app-grid>
+    <app-grid #nonAnsweredQueryGrid id="non-answered-query-grid" [gridMetaData]="nonAnsweredQueryGridMetaData"></app-grid>
+    <app-grid #answeredQueryGrid id="answered-query-grid" [gridMetaData]="answeredQueryGridMetaData"></app-grid>
+  </div>
+  <div id="query-data-page" *ngIf="showQueryData">
+    <button
+      id="back-to-query-listing-button"
+      class="ok-button" (click)="toggleVisibilityQueryGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-query-data [queryRecord]="selectedQueryRecord" [queryDataAccess]="queryDataAccess"></app-query-data>
+  </div>
+</div>

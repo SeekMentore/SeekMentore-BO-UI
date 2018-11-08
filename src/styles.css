@@ -1,0 +1,617 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Comfortaa|Raleway');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+:root {
+  --colorPrimaryDark: #0d1f30;
+  --colorPrimary: #10213a;
+  --colorAccent: #FFB300;
+  --textColor: rgb(34, 34, 34);
+  --divider: rgba(0, 0, 0, 0.1);
+  --cellBorderColor: rgba(0, 0, 0, 0.5);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  min-height: calc(100% - 80px);
+  font-family: "Open Sans", sans-serif;
+}
+
+.hidden_input {
+  outline: none !important;
+  border: none !important;
+  display: block;
+  opacity: 0;
+  height: 1px;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.main_content {
+  margin-top: 80px;
+  padding: 20px;
+  flex: 1 1 auto;
+}
+
+.toolbar {
+  position: fixed;
+  top: 0;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+  z-index: 990;
+  width: 100%;
+  padding: 10px 0;
+  background-color: var(--colorPrimary);
+  min-height: 60px;
+  transition: 0.4s;
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar img {
+  height: 51px;
+  width: 336px;
+  object-fit: contain;
+  padding-left: 20px;
+  align-self: center;
+}
+
+.toolbar-title {
+  font-family: "Raleway", sans-serif;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.9);
+  /*font-weight: 600;*/
+  font-size: xx-large;
+  position: absolute;
+  text-align: center;
+  right: 0;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  /*max-width: calc(100% - 700px) !important;*/
+}
+
+.icon_button {
+  color: whitesmoke;
+  border-radius: 50%;
+  background-color: var(--colorPrimary);
+  cursor: pointer;
+  padding: 10px;
+  margin: 0 20px;
+  transition: all 0.3s;
+}
+
+.button-white-stroked {
+  background-color: white !important;
+  color: var(--textColor) !important;
+  transition: all 0.4s;
+  padding: 8px 16px;
+  font-size: medium;
+  cursor: pointer;
+  text-decoration: none !important;
+  border: 1px solid var(--textColor) !important;
+  border-radius: 4px !important;
+  font-family: "Open Sans", sans-serif !important;
+}
+
+.button-white-stroked:hover {
+  color: white !important;
+  font-weight: bold;
+  border-color: var(--colorPrimary) !important;
+  background-color: var(--colorPrimary) !important;
+}
+
+.button-white {
+  text-decoration: none !important;
+  background-color: white !important;
+  border: none;
+  outline: none;
+  color: var(--textColor) !important;
+  transition: all 0.4s;
+  font-family: "Open Sans", sans-serif !important;
+}
+
+.button-white:hover {
+  color: white !important;
+  font-weight: bold;
+  background-color: var(--colorPrimary) !important;
+}
+
+.button-white-link {
+  text-decoration: underline;
+  background-color: white !important;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  color: var(--textColor) !important;
+  transition: all 0.4s;
+  font-family: "Open Sans", sans-serif !important;
+}
+
+.button-primary {
+  text-decoration: none !important;
+  background-color: var(--colorPrimary) !important;
+  color: white !important;
+  transition: all 0.4s;
+  font-family: "Open Sans", sans-serif !important;
+  padding: 8px 16px;
+  font-size: medium;
+  cursor: pointer;
+  border: 1px solid var(--textColor) !important;
+  border-radius: 4px !important;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-primary:hover {
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.form-container {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background-color: white;
+  display: flex;
+  margin: 30px 0;
+  width: 100%;
+  max-width: 500px;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--divider);
+  border-top: 4px solid var(--colorPrimary);
+}
+
+.form-container h1 {
+  color: var(--colorPrimary);
+  font-family: "Raleway", sans-serif;
+  font-weight: bold;
+  font-size: xx-large;
+  padding: 0;
+  text-align: center;
+  margin: 10px 0 30px;
+}
+
+.form-container input[type=email],
+.form-container input[type=tel],
+.form-container input[type=text],
+.form-container input[type=password],
+.form-container input[type=number],
+.input_field, textarea, .dropdown-btn {
+  padding: 8px 16px !important;
+  margin: 10px 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: 1px solid var(--divider) !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 15px !important;
+  color: var(--textColor) !important;
+  transition: all 0.4s !important;
+  text-align: start !important;
+  border-radius: 0 !important;
+}
+
+.form-container input[type=email]:focus,
+.form-container input[type=tel]:focus,
+.form-container input[type=text]:focus,
+.form-container input[type=password]:focus,
+.form-container input[type=number]:focus,
+.form-container input[type=email]:hover,
+.form-container input[type=tel]:hover,
+.form-container input[type=text]:hover,
+.form-container input[type=password]:hover,
+.form-container input[type=number]:hover,
+.input_field:focus, .input_field:hover, textarea:hover, textarea:focus {
+  border: 1px solid var(--colorPrimary);
+}
+
+.form-container .error {
+  background-color: darkred;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: white;
+  font-family: "Raleway", sans-serif;
+}
+
+.form-container .success {
+  background-color: limegreen;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: white;
+  font-family: "Raleway", sans-serif;
+}
+
+.form-container .validation-error {
+  font-size: small;
+  color: darkred;
+  margin-top: -6px;
+  font-family: "Raleway", sans-serif;
+}
+
+textarea {
+  resize: vertical;
+  height: 200px;
+}
+
+.form-container input:disabled, .input_field:disabled {
+  background-color: #eceeef;
+}
+
+table .input_field, table .dropdown-btn {
+  width: calc(100% - 20px) !important;
+  padding: 3px !important;
+  margin: 0 !important;
+}
+
+
+.responsive-row-column {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.responsive-row-column input {
+  width: 100% !important;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: row;
+  background-color: #f5f5f5;
+  width: 100%;
+  align-content: center;
+  justify-content: center;
+  border-bottom: solid 1px var(--divider);
+  flex: 1 1 100%;
+}
+
+.menu-container-2 {
+  min-width: 700px;
+  display: inherit;
+  flex-direction: inherit;
+  width: 70%;
+}
+
+.menu-container-2 .dropdown {
+  flex: 1 1 auto;
+}
+
+.menu-container-2 .dropbtn {
+  width: 100%;
+}
+
+.dropbtn {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 12pt;
+  border: none;
+  min-width: 100px;
+  background-color: transparent;
+  border-bottom: solid 3px transparent;
+}
+
+.dropdown {
+  position: relative;
+  /*display: inline-block;*/
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f0f0f0;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.dropdown-content button {
+  color: black;
+  text-align: start;
+  cursor: pointer;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: transparent;
+  text-decoration: none;
+  display: block;
+  outline: none;
+  border: none;
+  font-size: 11pt;
+  white-space: nowrap;
+}
+
+.dropdown-content button:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  border-bottom: solid 3px var(--colorPrimary);
+  background-color: var(--divider);
+  color: var(--colorPrimaryDark);
+}
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.dialog_modal {
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  margin: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.dialog_modal .title {
+  font-family: "Open Sans", sans-serif;
+  font-size: x-large;
+  padding: 20px 20px 0;
+  color: var(--colorPrimary);
+  font-weight: bold;
+}
+
+.dialog_modal span {
+  font-family: "Open Sans", sans-serif;
+  font-size: medium;
+  padding: 20px;
+  color: var(--textColor);
+}
+
+.modal_control {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.ok-button {
+  background-color: #20A843;
+  border: none;
+  outline: none;
+  color: white;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  font-family: "Open Sans", sans-serif !important;
+  padding: 6px 18px;
+  margin: 10px;
+  border-radius: 3px;
+  min-width: 120px;
+  min-height: 40px;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 10pt;
+}
+
+.ok-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.cancel-button {
+  background-color: darkred;
+  border: none;
+  outline: none;
+  color: whitesmoke;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  font-family: "Open Sans", sans-serif !important;
+  padding: 6px 18px;
+  margin: 10px;
+  border-radius: 3px;
+  min-width: 120px;
+  min-height: 40px;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 10pt;
+}
+
+.cancel-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive-row-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .responsive-row-column input {
+    width: calc(100% - 34px) !important;
+    margin: 10px !important;
+  }
+
+  .toolbar-title {
+    display: flex;
+    flex: 1 1 auto;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    font-family: "Raleway", sans-serif;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: small;
+    max-width: calc(100% - 120px) !important;
+  }
+
+  .toolbar > img {
+    max-height: 30px;
+    width: 60px;
+    object-fit: contain;
+  }
+
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  margin: -75px 0 0 -75px;
+  border: 10px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 10px solid #3498db;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tab_checkmark.left, .tab_checkmark_search.left {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  margin: 0 0 0 8px;
+}
+
+.tab_checkmark.right, .tab_checkmark_search.right {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  margin: 0 8px 0 0;
+}
+
+.tab_container {
+  cursor: pointer;
+  outline: none;
+}
+
+.tab_container input {
+  opacity: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.tab_checkmark {
+  padding: 3px 6px;
+  display: block;
+  outline: none;
+  text-align: center;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.80);
+  transition: 0.5s ease;
+  background-color: #e70000;
+}
+
+.tab_container:hover input ~ .tab_checkmark {
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.tab_container input:checked ~ .tab_checkmark {
+  color: rgb(255, 255, 255);
+  background: #20A843;
+  transition: 0.5s ease;
+}
+
+.form-container-generic-table {
+  width: 100%;
+  line-height: 2.5 !important;
+}
+
+.form-container-generic-table .dropdown-btn {
+  line-height: 2.5 !important;
+}
+
+.form-container-generic-table label {
+  font-weight: bold;
+  text-align: left !important;
+}
+
+table.form-container-generic-table td.td-label {
+  width: 25%;
+}
+
+.form-container-update-button {
+  align-self: center; 
+  margin-top: 10px; 
+  line-height: 2.5;
+  font-size: 1.2em;
+}
+
+.form-container-toggle-button {
+  display: flex; 
+  flex-direction: row; 
+  justify-content: flex-end;
+  line-height: 2.5;
+  width: 99%;
+}
+
+.textarea_field {
+  width: 97.8%;
+}
+
+.form-remakrs {
+  width: 98%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid black;
+  padding-left: 1%;
+}
+
+.form-container-generic-table label.data {
+  color: #337ab7;
+}
+
+div.form-container-div {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  align-content: center; 
+  justify-content: center; 
+  padding: 30px
+}

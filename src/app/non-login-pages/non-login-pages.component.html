@@ -1,0 +1,16 @@
+<!-- Toolbar -->
+<div class="toolbar">
+  <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
+  <span class="toolbar-title">{{title}}</span>
+</div>
+
+<!--Main Content-->
+<div class="main_content">
+  <router-outlet></router-outlet>
+</div>
+
+<!--Confirmation Dialog-->
+<app-confirmation-dialog></app-confirmation-dialog>
+
+<!--Alert Dialog-->
+<app-alert-dialog></app-alert-dialog>

@@ -1,0 +1,13 @@
+<div>
+  <div id="customer-list-page" *ngIf="!showCustomerData">
+    <app-grid #subscribedCustomerGrid id="subscribed-customer-grid" [gridMetaData]="subscribedCustomerGridMetaData"></app-grid>
+  </div>
+  <div id="customer-data-page" *ngIf="showCustomerData">
+    <button
+      id="back-to-customer-listing-button"
+      class="ok-button" (click)="toggleVisibilitySubscribedCustomerGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-subscribed-customer-data [customerRecord]="selectedCustomerRecord" [customerDataAccess]="customerDataAccess"></app-subscribed-customer-data>
+  </div>
+</div>

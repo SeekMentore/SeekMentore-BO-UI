@@ -1,0 +1,381 @@
+label {
+  margin: 0;
+}
+
+.uigrid {
+  border: solid 0.5pt var(--cellBorderColor);
+  border-collapse: collapse;
+  margin: 20px 20px 50px;
+  position: relative;
+}
+
+.span-title {
+  flex: 1 1 auto;
+}
+
+.uigrid-cell div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.uigrid-row {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+}
+
+.uigrid-cell {
+  font-family: sans-serif;
+  font-size: 15px;
+  padding: 3px 6px;
+  border: solid 0.5pt var(--cellBorderColor);
+  display: flex;
+  border-collapse: collapse;
+  flex-direction: row;
+  min-width: 240px;
+  flex: 1 1 0;
+  overflow: hidden;
+}
+
+.uigrid-cell.select_box {
+  min-width: 60px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.uigrid-cell.grid_actions {
+  justify-content: center;
+}
+
+.uigrid-cell.grid_actions button {
+  font-weight: bold;
+  margin: 0 8px;
+}
+
+.column-header {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+}
+
+.column-header .title {
+  color: var(--colorPrimary);
+  flex: 1 1 auto;
+  text-align: center;
+  font-weight: bold;
+}
+
+.uigrid-cell input {
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  flex: 1 1 auto;
+  font-size: 15px;
+  line-height: 15px;
+}
+
+.uigrid-cell button {
+  border: none;
+  margin: 0;
+  outline: none;
+  flex: 0 0 auto;
+  line-height: 20px;
+  background-color: transparent;
+  color: var(--colorPrimary);
+  cursor: pointer;
+}
+
+.uigrid-cell i {
+  border: none;
+  margin-right: 8px;
+  outline: none;
+  flex: 0 0 auto;
+  font-size: 14px;
+  background-color: transparent;
+  color: var(--cellBorderColor);
+  align-self: center;
+}
+
+.uigrid-cell.title {
+  font-weight: bold;
+  justify-content: center;
+}
+
+.sorter-tabs {
+  flex: 1 1 auto;
+  flex-direction: row;
+  display: flex;
+}
+
+.sorter-button {
+  padding: 2px 6px;
+  margin: 0 2px;
+  border-radius: 3px;
+  background-color: var(--colorPrimary);
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+.sorter-button .order_icon {
+  color: white;
+  margin: 0 6px;
+}
+
+.ui-grid-clear-filter-button {
+  position: relative;
+  margin-right: 5px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.remove {
+  border-radius: 50%;
+  padding: 2px 4px;
+  margin: 0;
+  font-size: 10px !important;
+  position: absolute;
+  top: -5px;
+  right: -12px;
+  background-color: white;
+  cursor: pointer;
+  color: var(--colorPrimary);
+}
+
+.uigrid-green-button {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #20A843 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.uigrid-green-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.uigrid-cancel-button {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  background-color: #c00000 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.uigrid-cancel-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.uigrid-stroked-white-button {
+  padding: 0 3px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: var(--colorPrimary) !important;
+  border: 1px solid var(--colorPrimary) !important;
+  outline: none;
+  cursor: pointer;
+}
+
+.uigrid-blue-button {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #2a61ff !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.uigrid-green-button:hover {
+  transition: all 0.3s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.uigrid-order-icon-button {
+  border-radius: 50%;
+  padding: 4px;
+  margin: 0 2px !important;
+  width: 20px;
+  height: 20px;
+  background-color: ghostwhite !important;
+  cursor: pointer;
+  color: var(--colorPrimary) !important;
+}
+
+.filter_column {
+  width: 100%;
+}
+
+i {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.filter_column .date_input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  flex: 0 0 0;
+}
+
+.filter_column .number_input {
+  min-width: 50px;
+  max-width: 100px;
+}
+
+.filter_column > div {
+  flex: 1 1 auto;
+}
+
+.filter_column span {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.filter_column input, .filter_input_field {
+  margin: 0 5px !important;
+  padding: 0 2px !important;
+  border-radius: 5px !important;
+  border: 1px solid var(--colorPrimary) !important;
+  line-height: 20px;
+  height: 20px;
+}
+
+.filter_input_field {
+  max-width: 70px;
+  padding: 0 8px;
+}
+
+.tab_checkmark_search {
+  padding: 3px 6px;
+  display: block;
+  outline: none;
+  text-align: center;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.80);
+  transition: 0.5s ease;
+  background-color: #4350a8;
+}
+
+.tab_container input:checked ~ .tab_checkmark_search {
+  color: rgb(255, 255, 255);
+  background: #20A843;
+  transition: 0.5s ease;
+}
+
+.btnSubmit {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #20A843 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.btnReset {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #2a61ff !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.btnReject {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #e70000 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.uigrid-title-toolbar, .uigrid-sorter-toolbar, .uigrid-pagination-toolbar, .uigrid-selection-model-button-toolbar, .select_box, .grid_actions {
+  background-color: beige;
+}
+
+.uigrid-cell-column-name {
+  background-color: lightgrey;
+}
+
+.uigrid-cell-column-filter {
+  background-color: lightcyan;
+}
+
+.column-header-filter {
+  background-color: #e6b00b;
+  height: 1.6em;
+  border-radius: 4px;
+}
+
+.grid-mask {
+  background-color: rgba(0,0,0,0.4);
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.column-pointer {
+  cursor: pointer;
+}
+
+.text-color-blue {  
+  color: blue;
+}

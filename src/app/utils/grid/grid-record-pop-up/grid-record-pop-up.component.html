@@ -1,0 +1,25 @@
+<div style="display: flex; flex-direction: column; width: 100%">
+    <div style="display: block; width: 100%;">
+      <span style="float: right; padding-top: 0; padding-right: 0;" (click)="dismissClicked()">
+        <i class="fas fa-times" style="color: var(--colorPrimary); align-self: flex-end; margin: 0px; cursor: pointer;"></i>
+      </span>
+      <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; text-align: center">
+        <b><u>{{recordDisplayInput.titleText}}</u></b>
+      </div>
+    </div>
+    <table style="max-height: 400px; overflow-y: auto; width: 100%; border: 1px solid blue;" cellPadding="5">
+      <tr style="margin: 5px 10px; padding: 3px;" class="{{rowClasses[i%2]}}" *ngFor="let row of recordDisplayInput.data; let i = index">
+          <td width="25%">
+            <b>
+              {{row.label}}
+            </b>
+          </td>
+          <td>
+              {{row.value}}
+          </td>
+      </tr>
+    </table>
+    <button class="cancel-button" (click)="dismissClicked()">
+        Dismiss
+    </button>
+</div>

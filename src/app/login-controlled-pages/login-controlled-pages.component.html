@@ -1,0 +1,54 @@
+<!-- Toolbar -->
+<div class="toolbar">
+  <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
+  <div class="toolbar_content">
+    <span>{{title}}</span>
+    <i *ngIf="accessOptions && accessOptions.emailformaccess" class="fas fa-envelope" (click)="showEmailDialog()"></i>
+    <div class="dropdown">
+      <i class="fas fa-user-alt"></i>
+      <div class="dropdown-content" style="left: -100px">
+        <button *ngFor="let element of userMenu">{{element.name}}</button>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <i class="fas fa-cog"></i>
+      <div class="dropdown-content" style="left: -100px">
+        <div *ngFor="let element of settingMenu">
+          <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name }}</button>
+          <button *ngIf="!element.functioncall">{{element.name}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Main Content-->
+<div class="main_content" style="padding: 0; display: flex; flex-direction: column">
+  <div class="menu-container">
+    <div class="menu-container-2">
+      <div class="dropdown" *ngFor="let element of menu; let i = index">
+        <button class="dropbtn">{{element.name}}</button>
+        <div class="dropdown-content">
+          <button *ngFor="let sub_element of element.subMenuItems" routerLink="{{sub_element.url}}">{{sub_element.name}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--<router-outlet></router-outlet>-->
+  <div id="lcp-view-port" class="view-port">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<!--Email Dialog-->
+<div id="email-dialog" class="dialog" style="display: none; overflow-y: auto;">
+  <app-email [emailData]="emailData" style="min-width: 70%; margin: auto"></app-email>
+</div>
+
+<!--Confirmation Dialog-->
+<app-confirmation-dialog></app-confirmation-dialog>
+
+<!--Alert Dialog-->
+<app-alert-dialog></app-alert-dialog>

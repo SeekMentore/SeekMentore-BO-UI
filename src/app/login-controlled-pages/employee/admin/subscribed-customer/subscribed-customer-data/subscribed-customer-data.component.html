@@ -1,0 +1,110 @@
+<div>
+  <app-grid *ngIf="customerDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid"
+            [gridMetaData]="currentPackagesGridMetaData"></app-grid>
+  <app-grid *ngIf="customerDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
+            [gridMetaData]="historyPackagesGridMetaData"></app-grid>
+
+  <div *ngIf="renderCustomerRecordForm" class="form-container-div">
+    <form class="form-container" style="max-width: 80%">
+      <div *ngIf="customerDataAccess.formDataEditAccess"
+            class="form-container-toggle-button">
+        <label class="tab_container" (change)="editRecordForm = false;">
+          <input type="radio" checked name="editFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="editRecordForm = true;">
+          <input type="radio" name="editFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
+      <table class="form-container-generic-table">
+        <tr>
+          <td class="td-label"><label>Name</label></td>
+          <td><input class="input_field" type="text" value="{{customerRecord.property['name']}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateCustomerProperty('name', $event.target.value, 'string')">
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Contact Number</label></td>
+          <td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateCustomerProperty('contactNumber', $event.target.value, 'string')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Email Id</label></td>
+          <td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateCustomerProperty('emailId', $event.target.value, 'string')"></td>
+        </tr>        
+        <tr>
+          <td class="td-label"><label>Student Grades</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
+                                     [(ngModel)]="selectedGradesOptions" name="studentGrades"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Interested Subjects</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
+                                     [(ngModel)]="selectedSubjectOptions" name="interestedSubjects"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateCustomerProperty('interestedSubjects', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Location</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
+                                     [(ngModel)]="selectedLocationOption" name="selectedLocation"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateCustomerProperty('location', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Address Details</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateCustomerProperty('addressDetails', $event.target.value, 'string')"
+                      >{{customerRecord.property['addressDetails']}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Additional Details</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateCustomerProperty('additionalDetails', $event.target.value, 'string')"
+                      >{{customerRecord.property['additionalDetails']}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>User-Id</label></td>        
+          <td><label class="data">{{customerRecord.property['userId']}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Record Last Updated</label></td>
+          <td><label class="data">{{getDateFromMillis(customerRecord.property['recordLastUpdatedMillis'])}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Updated By</label></td>        
+          <td><label class="data">{{customerRecord.property['updatedBy']}}</label></td>
+        </tr>
+      </table>
+      <button *ngIf="customerDataAccess.formDataEditAccess && editRecordForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="updateCustomerRecord()">
+        Update
+      </button>      
+    </form>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div>
+  <div id="tutor-list-page" *ngIf="!showTutorData">
+    <app-grid #nonContactedBecomeTutorGrid id="non-contacted-become-tutor-grid" [gridMetaData]="nonContactedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #nonVerifiedBecomeTutorGrid id="non-verified-become-tutor-grid" [gridMetaData]="nonVerifiedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #verifiedBecomeTutorGrid id="verified-become-tutor-grid" [gridMetaData]="verifiedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #verificationFailedBecomeTutorGrid id="verification-failed-become-tutor-grid" [gridMetaData]="verificationFailedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #toBeReContactedBecomeTutorGrid id="to-be-recontacted-become-tutor-grid" [gridMetaData]="toBeReContactedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #selectedBecomeTutorGrid id="selected-become-tutor-grid" [gridMetaData]="selectedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #rejectedBecomeTutorGrid id="rejected-become-tutor-grid" [gridMetaData]="rejectedBecomeTutorGridMetaData"></app-grid>
+    <app-grid #registeredBecomeTutorGrid id="registered-become-tutor-grid" [gridMetaData]="registeredBecomeTutorGridMetaData"></app-grid>
+  </div>
+  <div id="tutor-data-page" *ngIf="showTutorData">
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="toggleVisibilityBecomeTutorGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-become-tutor-data [tutorRecord]="selectedTutorRecord" [tutorDataAccess]="tutorDataAccess"></app-become-tutor-data>
+  </div>
+</div>

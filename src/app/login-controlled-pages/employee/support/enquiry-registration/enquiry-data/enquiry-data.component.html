@@ -1,0 +1,237 @@
+<div class="form-container-div">
+  <form class="form-container" style="max-width: 80%">
+    <div *ngIf="enquiryDataAccess.formDataEditAccess"
+          class="form-container-toggle-button">
+      <label class="tab_container" (change)="editRecordForm = false;">
+        <input type="radio" checked name="editFormChoice">
+        <span class="tab_checkmark left">View</span>
+      </label>
+      <label class="tab_container" (change)="editRecordForm = true;">
+        <input type="radio" name="editFormChoice">
+        <span class="tab_checkmark right">Edit</span>
+      </label>
+    </div>
+    <table class="form-container-generic-table">
+      <tr>
+        <td class="td-label"><label>Name</label></td>
+        <td><input class="input_field" type="text" value="{{enquiryRecord.property['name']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateEnquiryProperty('name', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Enquiry Date</label></td>
+        <td><label class="data">{{getDateFromMillis(enquiryRecord.property['enquiryDateMillis'])}}</label></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Enquiry Status</label></td>
+        <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['enquiryStatus'], enquiryStatusFilterOptions)}}</label></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Contact Number</label></td>
+        <td><input class="input_field" type="text" value="{{enquiryRecord.property['contactNumber']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateEnquiryProperty('contactNumber', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Email Id</label></td>
+        <td><input class="input_field" type="email" value="{{enquiryRecord.property['emailId']}}"
+                   [disabled]="!editRecordForm"
+                   (change)="updateEnquiryProperty('emailId', $event.target.value, 'string')">
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Student Grade</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Student Grade'" [data]="studentGradesFilterOptions"
+                                   [(ngModel)]="selectedStudentGradeOption" name="studentGrade"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateEnquiryProperty('studentGrade', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Subject</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Subject'" [data]="subjectsFilterOptions"
+                                   [(ngModel)]="selectedSubjectOption" name="subjectOption"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateEnquiryProperty('subjects', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Locations</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
+                                   [(ngModel)]="selectedLocationOption" name="locationOption"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateEnquiryProperty('location', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Preferred Time To Call</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
+                                   [(ngModel)] = "selectedCallTimeOptions" name="callTimeOptions"
+                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateEnquiryProperty('preferredTimeToCall', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Additional Details</label></td>
+        <td>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateEnquiryProperty('additionalDetails', $event.target.value, 'string')"
+                    >{{enquiryRecord.property['additionalDetails']}}</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Address Details</label></td>
+        <td>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateEnquiryProperty('addressDetails', $event.target.value, 'string')"
+                    >{{enquiryRecord.property['addressDetails']}}</textarea>
+        </td>
+      </tr>      
+      <tr>
+        <td class="td-label"><label>Reference</label></td>
+        <td>
+          <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
+                                   [(ngModel)]="selectedReferenceOption" name="refrenceOption"
+                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                   (onSelect)="updateEnquiryProperty('reference', $event.value, 'list')">
+          </ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Record Last Updated</label></td>
+        <td><label class="data">{{getDateFromMillis(enquiryRecord.property['recordLastUpdatedMillis'])}}</label></td>
+      </tr>
+      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-expander"
+                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionDetails = true"></i>
+        </td>
+        <td>
+          Show Action Details
+        </td>
+      </tr>  
+      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+        <td colspan="2">          
+          <table>
+              <tr>
+                <td class="td-label">
+                    <i
+                        id="employee-actions-details-collapser"
+                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                        (click)="showEmployeeActionDetails = false"></i>
+                </td>
+                <td colspan="5">
+                  Hide Action Details
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Contacted</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
+                <td class="td-label"><label>Who Contacted</label></td>
+                <td><label class="data">{{enquiryRecord.property['whoContacted']}}</label></td>              
+                <td class="td-label"><label>Contacted Date</label></td>
+                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['contactedDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Contacted Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{enquiryRecord.property['contactedRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Authentication Verified</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Verified</label></td>
+                <td><label class="data">{{enquiryRecord.property['whoVerified']}}</label></td>              
+                <td class="td-label"><label>Verification Date</label></td>
+                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['verificationDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Verification Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{enquiryRecord.property['verificationRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is To Be Recontacted</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Suggested For Recontact</label></td>
+                <td><label class="data">{{enquiryRecord.property['whoSuggestedForRecontact']}}</label></td>              
+                <td class="td-label"><label>Suggestion Date</label></td>
+                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['suggestionDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Suggestion Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{enquiryRecord.property['suggestionRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label></label></td>
+                <td><label class="data"></label></td>
+                <td class="td-label"><label>Who Recontacted</label></td>
+                <td><label class="data">{{enquiryRecord.property['whoRecontacted']}}</label></td>              
+                <td class="td-label"><label>Recontacted Date</label></td>
+                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['recontactedDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Recontacted Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{enquiryRecord.property['recontactedRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Selected</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Selected</label></td>
+                <td><label class="data">{{enquiryRecord.property['whoSelected']}}</label></td>              
+                <td class="td-label"><label>Selection Date</label></td>
+                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['selectionDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Selection Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{enquiryRecord.property['selectionRemarks']}}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Is Rejected</label></td>
+                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
+                <td class="td-label"><label>Who Rejected</label></td>
+                <td><label class="data">{{enquiryRecord.property['whoRejected']}}</label></td>              
+                <td class="td-label"><label>Rejection Date</label></td>
+                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['rejectionDateMillis'])}}</label></td>
+              </tr>
+              <tr>
+                <td class="td-label"><label>Rejection Remarks</label></td>
+                <td colspan="5">
+                  <div class="form-remakrs">{{enquiryRecord.property['rejectionRemarks']}}</div>
+                </td>
+              </tr>              
+          </table>
+        </td>
+      </tr>
+    </table>
+    <button *ngIf="enquiryDataAccess.formDataEditAccess && editRecordForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="updateEnquiryRecord()">
+      Update
+    </button>
+  </form>
+</div>

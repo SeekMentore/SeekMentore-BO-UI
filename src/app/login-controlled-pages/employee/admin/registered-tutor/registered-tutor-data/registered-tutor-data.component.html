@@ -1,0 +1,195 @@
+<div>
+  <app-grid *ngIf="tutorDataAccess.documentViewAccess" #uploadedDocumentGrid id="uploaded-document-grid"
+            [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>
+  <app-grid *ngIf="tutorDataAccess.bankViewAccess" #bankDetailGrid id="bank-detail-grid"
+            [gridMetaData]="bankDetailGridMetaData"></app-grid>
+
+  <div *ngIf="renderTutorRecordForm" class="form-container-div">
+    <form class="form-container" style="max-width: 80%">
+      <div *ngIf="tutorDataAccess.formDataEditAccess"
+            class="form-container-toggle-button">
+        <label class="tab_container" (change)="editRecordForm = false;">
+          <input type="radio" checked name="editFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="editRecordForm = true;">
+          <input type="radio" name="editFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
+      <table class="form-container-generic-table">
+        <tr>
+          <td class="td-label"><label>Name</label></td>
+          <td><input class="input_field" type="text" value="{{tutorRecord.property['name']}}"
+                     [disabled]="!editRecordForm" (change)="updateTutorProperty('name', $event.target.value, 'string')">
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Contact Number</label></td>
+          <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateTutorProperty('contactNumber', $event.target.value, 'string')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Email</label></td>
+          <td><input class="input_field" type="text" value="{{tutorRecord.property['emailId']}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateTutorProperty('emailId', $event.target.value, 'string')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Gender</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
+                                     [(ngModel)] = "selectedGenderOption" name="selectedGender"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('gender', $event.value, 'string')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Qualification</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
+                                     [(ngModel)]="selectedQualificationOption" name="qualificationOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('qualification', $event.value, 'string')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Primary Profession</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
+                                     [(ngModel)]="selectedProfessionOption" name="professionOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('primaryProfession', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Transport Mode</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
+                                     [(ngModel)] = "selectedTransportOption" name="transportOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('transportMode', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Teaching Experience</label></td>
+          <td><input class="input_field" type="number" value="{{tutorRecord.property['teachingExp']}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateTutorProperty('contactNumber', $event.target.value, 'number')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Interested Student Grades</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Interested Student Grades'" [data]="studentGradesFilterOptions" name="gradeFilter"
+                                     [(ngModel)] = "selectedStudentGrades"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('interestedStudentGrades', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Interested Subjects</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions" name="subjectFilter"
+                                     [(ngModel)] = "selectedSubjectOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('interestedSubjects', $event.value, 'list')"
+                                     (onDeSelect)="updateTutorProperty('interestedSubjects', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Comfortable Locations</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Comfortable Locations'" [data]="locationsFilterOptions" name="locationFilters"
+                                     [(ngModel)] = "selectedLocationOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateTutorProperty('comfortableLocations', $event.value, 'list')"
+                                     (onDeSelect)="updateTutorProperty('comfortableLocations', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Additional Details</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorProperty('additionalDetails', $event.target.value, 'string')"
+                      >{{tutorRecord.property['additionalDetails']}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Preferred Teaching Type</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
+                                      [(ngModel)]="selectedTeachingTypeOptions" name="teachingTypeOptions"
+                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                      (onSelect)="updateTutorProperty('preferredTeachingType', $event.value, 'list')">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>User-Id</label></td>        
+          <td><label class="data">{{tutorRecord.property['userId']}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Record Last Updated</label></td>
+          <td><label class="data">{{getDateFromMillis(tutorRecord.property['recordLastUpdatedMillis'])}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Updated By</label></td>        
+          <td><label class="data">{{tutorRecord.property['updatedBy']}}</label></td>
+        </tr>     
+      </table>
+
+      <div class="attachments">
+        <!--Aadhar Card-->
+        <div class="file_chooser_container">
+          <span>Attach Aadhar card:</span>
+          <label for="aadhar_card_file" class="choose_file_container">
+            <input name="id_proof" type="file" accept="file/*" id="aadhar_card_file" [disabled]="!editRecordForm"
+                   (change)="attachFile($event,'aadhar_card')">
+            <span class="button-primary"> click to upload </span>
+            <span *ngIf="aadharCard">{{aadharCard.name}}</span>
+          </label>
+        </div>
+        <!--Pan Card-->
+        <div class="file_chooser_container">
+          <span>Attach PAN card:</span>
+          <label for="pan_card_file" class="choose_file_container">
+            <input name="id_proof" type="file" accept="file/*" id="pan_card_file" [disabled]="!editRecordForm"
+                   (change)="attachFile($event,'pan_card')">
+            <span class="button-primary"> click to upload </span>
+            <span *ngIf="panCard">{{panCard.name}}</span>
+          </label>
+        </div>
+        <!--Photo-->
+        <div class="file_chooser_container">
+          <span>Attach Photo:</span>
+          <label for="photo_file" class="choose_file_container">
+            <input name="id_proof" type="file" accept="file/*" id="photo_file" [disabled]="!editRecordForm"
+                   (change)="attachFile($event,'photo')">
+            <span class="button-primary"> click to upload </span>
+            <span *ngIf="photograph">{{photograph.name}}</span>
+          </label>
+        </div>
+      </div>
+      <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="updateTutorRecord()">
+        Update
+      </button>      
+    </form>
+  </div>
+
+  <app-grid *ngIf="tutorDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid"
+            [gridMetaData]="currentPackagesGridMetaData"></app-grid>
+  <app-grid *ngIf="tutorDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
+            [gridMetaData]="historyPackagesGridMetaData"></app-grid>
+</div>

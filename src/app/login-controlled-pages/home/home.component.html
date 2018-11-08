@@ -1,0 +1,6 @@
+<div>
+  <app-employee-home *ngIf="userType === 'admin'"></app-employee-home>
+  <app-customer-home *ngIf="userType === 'customer'"></app-customer-home>
+  <app-tutor-home *ngIf="userType === 'tutor'"></app-tutor-home>
+  <span *ngIf="!userType">User Not Logged In.</span>
+</div>

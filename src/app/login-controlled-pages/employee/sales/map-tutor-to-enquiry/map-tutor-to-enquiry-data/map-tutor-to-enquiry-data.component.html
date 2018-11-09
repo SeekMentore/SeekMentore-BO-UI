@@ -1,3 +1,15 @@
-<p>
-  map-tutor-to-enquiry-data works!
-</p>
+<div>
+  <div class="form-container-div">
+    <form class="form-container" style="max-width: 80%">
+      <!-- This is the search form-->
+      <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="searchEligibleMappingTutors()">
+        Search Tutors
+      </button>
+    </form>
+  </div>
+  <app-grid #allMappingEligibleTutorsGrid id="all-mapping-eligible-tutors-grid" [gridMetaData]="allMappingEligibleTutorsGridMetaData"></app-grid>  
+
+  <app-grid #allMappedTutorsGrid id="all-mapped-tutors-grid" [gridMetaData]="allMappedTutorsGridMetaData"></app-grid>
+</div>

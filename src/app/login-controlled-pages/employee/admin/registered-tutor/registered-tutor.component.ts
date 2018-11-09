@@ -57,8 +57,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           isStatic: false,
           restURL: '/rest/admin/registeredTutorsList'
         },
-        columns: [
-          {
+        columns: [{
             id: 'name',
             headerName: 'Name',
             dataType: 'string',
@@ -157,8 +156,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             dataType: 'string',
             mapping: 'additionalDetails',
             lengthyData: true
-          }
-        ],
+        }],
         hasSelectionColumn: true,
         selectionColumn: {
           buttons: [{

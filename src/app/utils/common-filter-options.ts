@@ -1032,6 +1032,10 @@ export class CommonFilterOptions {
   // Leave it blank right now , I will write this content later
   ];
 
+  static mappingStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
+
   static singleSelectOptionsConfiguration = {
     singleSelection: true,
     idField: 'value',

@@ -98,7 +98,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
         title: 'Current Customer Pending Enquiries',
         store: {
           isStatic: false,
-          restURL: '/rest/sales/currentCustomerAllPendingEnquiries'
+          restURL: '/rest/sales/currentCustomerAllPendingEnquiriesList'
         },
         columns: [{
           id: 'subject',

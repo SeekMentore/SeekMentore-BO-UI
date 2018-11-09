@@ -39,4 +39,10 @@ export class LcpRestUrls {
   //
   static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
   static pending_enquiry_update_record = '/rest/sales/updatePendingEnquiryRecord';
+  //
+  static map_tutor_to_enquiry_data_access = '/rest/sales/mapTutorToEnquiryCheckDataAccess';
+  static map_tutor_to_enquiry_map_registered_tutors = '/rest/sales/mapRegisteredTutors';
+  static map_tutor_to_enquiry_map_registered_tutor = '/rest/sales/mapRegisteredTutor';
+  static map_tutor_to_enquiry_unmap_registered_tutors = '/rest/sales/unmapRegisteredTutors';
+  static map_tutor_to_enquiry_unmap_registered_tutor = '/rest/sales/unmapRegisteredTutor';
 }

@@ -7,6 +7,7 @@ import {HelperService} from "src/app/utils/helper.service";
 import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-complaint-data',
@@ -65,11 +66,15 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   onUpdateComplaintRecord(context: any, data: any) {
-    if (data['success'] === true) {
-
-    } else {
-
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      this.editRecordForm = false;
     }
-
   }
 }

@@ -11,6 +11,7 @@ import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { Column } from 'src/app/utils/grid/column';
 
 @Component({
   selector: 'app-map-tutor-to-enquiry-data',
@@ -32,6 +33,11 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
 
   @Input()
   enquiryMappingDataAccess: EnquiryMappingDataAccess = null;
+
+  showMapTutorToEnquiryMappedTutorData = false;
+  selectedMappedTutorRecord: GridRecord = null;
+  interimHoldSelectedMappedTutorRecord: GridRecord = null;
+  mappedTutorDataAccess: MappedTutorDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.allMappingEligibleTutorsGridMetaData = null;
@@ -219,7 +225,16 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           id: 'tutorName',
           headerName: 'Tutor Name',
           dataType: 'string',
-          mapping: 'tutorName'          
+          mapping: 'tutorName',
+          clickEvent: (record: GridRecord, column: Column) => {
+            this.interimHoldSelectedMappedTutorRecord = record;
+            if (this.mappedTutorDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_enquiry_data_access, 'POST');
+            } else {
+              this.selectedMappedTutorRecord = this.interimHoldSelectedMappedTutorRecord;            
+              this.toggleVisibilityMappedTutorGrid();
+            }
+          }        
         },{
           id: 'tutorContactNumber',
           headerName: 'Tutor Contact Number',
@@ -341,4 +356,54 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     console.log('to be coded');
   }
 
+  handleDataAccessRequest(context: any, response: any) {
+    if (response['success'] === false) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    } else {
+      context.mappedTutorDataAccess = {
+        success: response.success,
+        message: response.message,
+        mappedEnquiryFormAccess: response.mappedEnquiryFormAccess
+      };
+      context.selectedMappedTutorRecord = context.interimHoldSelectedMappedTutorRecord;
+      context.toggleVisibilityMappedTutorGrid();
+    }
+  }
+
+  toggleVisibilityMappedTutorGrid() {
+    if (this.showMapTutorToEnquiryMappedTutorData === true) {
+      this.showMapTutorToEnquiryMappedTutorData = false;
+      this.selectedMappedTutorRecord = null;
+      const backToEnquiriesListingButton: HTMLElement = document.getElementById('back-to-all-enquiries-listing-button'); 
+      backToEnquiriesListingButton.classList.remove('noscreen');
+      setTimeout(() => {
+        this.allMappingEligibleTutorsGridObject.init();
+        this.allMappingEligibleTutorsGridObject.addExtraParams('enquiryId', this.enquiryRecord.getProperty('enquiryId'));
+        // Remaining extra params from the form will also go
+
+        this.allMappedTutorsGridObject.init();
+        this.allMappedTutorsGridObject.addExtraParams('enquiryId', this.enquiryRecord.getProperty('enquiryId'));
+      }, 100);   
+      setTimeout(() => {
+        this.allMappingEligibleTutorsGridObject.refreshGridData();
+        this.allMappedTutorsGridObject.refreshGridData();
+      }, 200);
+    } else {
+      const backToEnquiriesListingButton: HTMLElement = document.getElementById('back-to-all-enquiries-listing-button'); 
+      backToEnquiriesListingButton.classList.add('noscreen');     
+      this.showMapTutorToEnquiryMappedTutorData = true;
+    }
+  }
+
+}
+
+export interface MappedTutorDataAccess {
+  success: boolean;
+  message: string;
+  mappedEnquiryFormAccess: boolean;
 }

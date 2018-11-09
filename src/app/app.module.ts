@@ -45,6 +45,7 @@ import { HelperService } from './utils/helper.service';
 import { MultiSelectInputComponent } from './utils/multi-select-input/multi-select-input.component';
 import { RoutingModule } from './utils/routing.module';
 import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
+import { MappedTutorDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/mapped-tutor-data/mapped-tutor-data.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employe
     QueryDataComponent,
     ComplaintDataComponent,
     EnquiriesDataComponent,
-    MapTutorToEnquiryDataComponent
+    MapTutorToEnquiryDataComponent,
+    MappedTutorDataComponent
   ],
   imports: [
     BrowserModule,

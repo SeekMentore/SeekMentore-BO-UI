@@ -32,6 +32,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   enquiryUpdatedRecord = {};
 
   showEmployeeActionDetails = false;
+  showCustomerDetails = false;
 
   mandatoryDisbaled = true;
   superAccessAwarded = false;

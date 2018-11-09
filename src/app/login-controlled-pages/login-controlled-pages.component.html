@@ -15,7 +15,7 @@
       <i class="fas fa-cog"></i>
       <div class="dropdown-content" style="left: -100px">
         <div *ngFor="let element of settingMenu">
-          <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name }}</button>
+          <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name}}</button>
           <button *ngIf="!element.functioncall">{{element.name}}</button>
         </div>
       </div>
@@ -28,7 +28,7 @@
   <div class="menu-container">
     <div class="menu-container-2">
       <div class="dropdown" *ngFor="let element of menu; let i = index">
-        <button class="dropbtn">{{element.name}}</button>
+        <button class="dropbtn" routerLink="{{element.url}}">{{element.name}}</button>        
         <div class="dropdown-content">
           <button *ngFor="let sub_element of element.subMenuItems" routerLink="{{sub_element.url}}">{{sub_element.name}}</button>
         </div>

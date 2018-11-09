@@ -23,7 +23,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   allMappingEligibleTutorsGridObject: GridComponent;
   allMappingEligibleTutorsGridMetaData: GridDataInterface;
 
-  @ViewChild('allMappingEligibleTutorsGrid')
+  @ViewChild('allMappedTutorsGrid')
   allMappedTutorsGridObject: GridComponent;
   allMappedTutorsGridMetaData: GridDataInterface;
 
@@ -39,6 +39,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
   }
 
   getDateFromMillis(millis: number) {
@@ -172,7 +173,9 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                 });
               } else {
                 const data = {
-                  allIdsList: tutorIdsList.join(';')
+                  enquiryId: this.enquiryRecord.getProperty('enquiryId'),
+                  allIdsList: tutorIdsList.join(';'),
+                  comments: ''
                 };
                 this.utilityService.makerequest(this, this.handleMappingRequest,
                   LcpRestUrls.map_tutor_to_enquiry_map_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
@@ -189,7 +192,9 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             label: 'Map Tutor',
             clickEvent: (record: GridRecord, button: ActionButton) => {
               const data = {
-                tutorId: record.getProperty('tutorId')
+                enquiryId: this.enquiryRecord.getProperty('enquiryId'),
+                tutorId: record.getProperty('tutorId'),
+                comments: ''
               };
               this.utilityService.makerequest(this, this.handleMappingRequest,
                 LcpRestUrls.map_tutor_to_enquiry_map_registered_tutor, 'POST', this.utilityService.urlEncodeData(data),
@@ -285,7 +290,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                 });
               } else {
                 const data = {
-                  allIdsList: tutorMapperIdsList.join(';')
+                  allIdsList: tutorMapperIdsList.join(';'),
+                  comments: ''
                 };
                 this.utilityService.makerequest(this, this.handleMappingRequest,
                   LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
@@ -302,7 +308,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             label: 'Un-map Tutor',
             clickEvent: (record: GridRecord, button: ActionButton) => {
               const data = {
-                tutorMapperId: record.getProperty('tutorMapperId')
+                tutorMapperId: record.getProperty('tutorMapperId'),
+                comments: ''
               };
               this.utilityService.makerequest(this, this.handleMappingRequest,
                 LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutor, 'POST', this.utilityService.urlEncodeData(data),
@@ -328,6 +335,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
       context.allMappingEligibleTutorsGridObject.refreshGridData();
       context.allMappedTutorsGridObject.refreshGridData();
     }
+  }
+
+  searchEligibleMappingTutors() {
+    console.log('to be coded');
   }
 
 }

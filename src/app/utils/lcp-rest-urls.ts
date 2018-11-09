@@ -45,4 +45,6 @@ export class LcpRestUrls {
   static map_tutor_to_enquiry_map_registered_tutor = '/rest/sales/mapRegisteredTutor';
   static map_tutor_to_enquiry_unmap_registered_tutors = '/rest/sales/unmapRegisteredTutors';
   static map_tutor_to_enquiry_unmap_registered_tutor = '/rest/sales/unmapRegisteredTutor';
+  static mapped_tutor_enquiry_data_access = '/rest/sales/mappedTutorCheckDataAccess';
+  static mapped_tutor_update_record = '/rest/sales/updateTutorMapperRecord';
 }

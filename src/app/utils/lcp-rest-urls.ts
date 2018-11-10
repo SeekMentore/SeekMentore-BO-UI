@@ -48,4 +48,5 @@ export class LcpRestUrls {
   static mapped_tutor_enquiry_data_access = '/rest/sales/mappedTutorCheckDataAccess';
   static mapped_tutor_update_record = '/rest/sales/updateTutorMapperRecord';
   static mapped_tutor_schedule_demo_access = '/rest/sales/mappedTutorCheckScheduleDemoAccess';
+  static schedule_demo_mapped_tutor_update_record = '/rest/sales/updateScheduleDemoMappedTutorRecord';
 }

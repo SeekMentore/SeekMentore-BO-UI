@@ -68,11 +68,11 @@ export class MappedTutorDataComponent implements OnInit {
 
   updateMappedTutorRecord() {
     const data = this.helperService.encodedGridFormData(this.mappedTutorUpdatedRecord, this.mappedTutorRecord.getProperty('tutorMapperId'));
-    this.utilityService.makerequest(this, this.onUpdateComplaintRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
+    this.utilityService.makerequest(this, this.onUpdateMappedTutorRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
-  onUpdateComplaintRecord(context: any, data: any) {
+  onUpdateMappedTutorRecord(context: any, data: any) {
     const myListener: AlertDialogEvent = {
       isSuccess: data['success'],
       message: data['message'],

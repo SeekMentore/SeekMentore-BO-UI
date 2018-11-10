@@ -165,7 +165,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
           }]
         }
       },
-      htmlDomElementId: 'all-mapped-tutors-grid',
+      htmlDomElementId: 'all-demo-ready-mapped-tutors-grid',
       hidden: false,
     };
   }

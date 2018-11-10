@@ -1,3 +1,13 @@
-<p>
-  schedule-demo works!
-</p>
+<div>
+  <div id="schedule-demo-mapped-tutor-list-page" *ngIf="!showScheduleDemoMappedTutorData">
+    <app-grid #allDemoReadyMappedTutorsGrid id="all-demo-ready-mapped-tutors-grid" [gridMetaData]="allDemoReadyMappedTutorsGridMetaData"></app-grid>
+  </div>
+  <div id="schedule-demo-mapped-tutor-data-page" *ngIf="showScheduleDemoMappedTutorData">
+    <button
+      id="back-to-all-schedule-demo-mapped-tutor-listing-button"
+      class="ok-button" (click)="toggleVisibilityScheduleDemoMappedTutorGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-schedule-demo-data [mappedTutorRecord]="selectedMappedTutorRecord" [mappedTutorScheduleDemoAccess]="mappedTutorScheduleDemoAccess"></app-schedule-demo-data>
+  </div>
+</div>

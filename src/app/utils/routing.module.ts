@@ -53,7 +53,7 @@ const routes: Routes = [
             children: [
               {path: 'allenquiries', component: AllEnquiriesComponent, canActivate: [RoutingGuardService]},
               {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent, canActivate: [RoutingGuardService]},
-              {path: 'scheduleDemo', component: ScheduleDemoComponent, canActivate: [RoutingGuardService]},
+              {path: 'scheduledemo', component: ScheduleDemoComponent, canActivate: [RoutingGuardService]},
               {path: 'demotracker', component: DemoTrackerComponent, canActivate: [RoutingGuardService]},
               {path: 'subscriptionpackages', component: SubscriptionPackagesComponent, canActivate: [RoutingGuardService]}
             ]

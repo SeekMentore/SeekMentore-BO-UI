@@ -47,6 +47,7 @@ import { RoutingModule } from './utils/routing.module';
 import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
 import { MappedTutorDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/mapped-tutor-data/mapped-tutor-data.component';
 import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
+import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/s
     EnquiriesDataComponent,
     MapTutorToEnquiryDataComponent,
     MappedTutorDataComponent,
-    ScheduleDemoComponent
+    ScheduleDemoComponent,
+    ScheduleDemoDataComponent
   ],
   imports: [
     BrowserModule,

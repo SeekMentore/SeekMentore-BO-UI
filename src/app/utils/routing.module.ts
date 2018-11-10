@@ -20,6 +20,7 @@ import { QuerySubmittedComponent } from 'src/app/login-controlled-pages/employee
 import { SubscriptionRequestedComponent } from 'src/app/login-controlled-pages/employee/support/subscription-requested/subscription-requested.component';
 import { ComplaintsComponent } from 'src/app/login-controlled-pages/employee/support/complaints/complaints.component';
 import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
+import { ScheduleDemoComponent } from '../login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,7 @@ const routes: Routes = [
             children: [
               {path: 'allenquiries', component: AllEnquiriesComponent},
               {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent},
+              {path: 'scheduleDemo', component: ScheduleDemoComponent},
               {path: 'demotracker', component: DemoTrackerComponent},
               {path: 'subscriptionpackages', component: SubscriptionPackagesComponent}
             ]

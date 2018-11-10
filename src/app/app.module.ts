@@ -46,6 +46,7 @@ import { MultiSelectInputComponent } from './utils/multi-select-input/multi-sele
 import { RoutingModule } from './utils/routing.module';
 import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
 import { MappedTutorDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/mapped-tutor-data/mapped-tutor-data.component';
+import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { MappedTutorDataComponent } from './login-controlled-pages/employee/sale
     ComplaintDataComponent,
     EnquiriesDataComponent,
     MapTutorToEnquiryDataComponent,
-    MappedTutorDataComponent
+    MappedTutorDataComponent,
+    ScheduleDemoComponent
   ],
   imports: [
     BrowserModule,

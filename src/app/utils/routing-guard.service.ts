@@ -13,12 +13,7 @@ export class RoutingGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const url: string = state.url;
+    console.log(url);
     return this.utilityService.checkUIPathAccess(url);
-  }
-
-  // canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-  //   const url: string = state.url;
-  //   console.log(url);
-  //   return true;
-  // }
+  }  
 }

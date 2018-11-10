@@ -27,41 +27,46 @@ const routes: Routes = [
     path: 'user', component: LoginControlledPagesComponent,
     canActivate: [RoutingGuardService],
     children: [
-      {path: 'home', component: HomeComponent},
+      {path: 'home', component: HomeComponent, canActivate: [RoutingGuardService]},
       {
         path: 'employee',
+        canActivate: [RoutingGuardService],
         children: [
           {
             path: 'superadmin',
+            canActivate: [RoutingGuardService],
             children: [
-              {path: 'controlpanel', component: ControlPanelComponent}
+              {path: 'controlpanel', component: ControlPanelComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
             path: 'admin',
+            canActivate: [RoutingGuardService],
             children: [
-              {path: 'registeredtutor', component: RegisteredTutorComponent},
-              {path: 'subscribedcustomer', component: SubscribedCustomerComponent}
+              {path: 'registeredtutor', component: RegisteredTutorComponent, canActivate: [RoutingGuardService]},
+              {path: 'subscribedcustomer', component: SubscribedCustomerComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
             path: 'sales',
+            canActivate: [RoutingGuardService],
             children: [
-              {path: 'allenquiries', component: AllEnquiriesComponent},
-              {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent},
-              {path: 'scheduleDemo', component: ScheduleDemoComponent},
-              {path: 'demotracker', component: DemoTrackerComponent},
-              {path: 'subscriptionpackages', component: SubscriptionPackagesComponent}
+              {path: 'allenquiries', component: AllEnquiriesComponent, canActivate: [RoutingGuardService]},
+              {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent, canActivate: [RoutingGuardService]},
+              {path: 'scheduleDemo', component: ScheduleDemoComponent, canActivate: [RoutingGuardService]},
+              {path: 'demotracker', component: DemoTrackerComponent, canActivate: [RoutingGuardService]},
+              {path: 'subscriptionpackages', component: SubscriptionPackagesComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
             path: 'support',
+            canActivate: [RoutingGuardService],
             children: [
-              {path: 'tutorregistration', component: TutorRegistrationComponent},
-              {path: 'enquiryregistration', component: EnquiryRegistrationComponent},
-              {path: 'querysubmitted', component: QuerySubmittedComponent},
-              {path: 'subscriptionrequested', component: SubscriptionRequestedComponent},
-              {path: 'complaints', component: ComplaintsComponent}
+              {path: 'tutorregistration', component: TutorRegistrationComponent, canActivate: [RoutingGuardService]},
+              {path: 'enquiryregistration', component: EnquiryRegistrationComponent, canActivate: [RoutingGuardService]},
+              {path: 'querysubmitted', component: QuerySubmittedComponent, canActivate: [RoutingGuardService]},
+              {path: 'subscriptionrequested', component: SubscriptionRequestedComponent, canActivate: [RoutingGuardService]},
+              {path: 'complaints', component: ComplaintsComponent, canActivate: [RoutingGuardService]}
             ]
           }
         ]

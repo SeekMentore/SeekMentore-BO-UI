@@ -10,8 +10,6 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { Column } from 'src/app/utils/grid/column';
-import { ActionButton } from 'src/app/utils/grid/action-button';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
 
 @Component({
   selector: 'app-schedule-demo-data',

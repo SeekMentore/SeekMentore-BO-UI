@@ -190,13 +190,21 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
                   }
                 });
               } else {
-                const data = {
-                  allIdsList: tutorIdsList.join(';'),
-                  comments: ''
-                };
-                this.utilityService.makerequest(this, this.handleBlackListRequest,
-                  LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                  'application/x-www-form-urlencoded');
+                this.helperService.showPromptDialog({
+                  required: true,
+                  onOk: (message) => {
+                    console.log(message);
+                    const data = {
+                      allIdsList: tutorIdsList.join(';'),
+                      comments: ''
+                    };
+                    this.utilityService.makerequest(this, this.handleBlackListRequest,
+                      LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                      'application/x-www-form-urlencoded');
+                  },
+                  onCancel: () => {
+                  }
+                });
               }
             }
           }]

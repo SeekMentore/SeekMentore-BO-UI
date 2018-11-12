@@ -4,6 +4,7 @@ import {AlertDialogEvent} from './alert-dialog/alert-dialog.component';
 import {CkeditorConfig} from './ckeditor-config';
 import {EmailInterface} from './email/email.component';
 import {ConfirmationDialogEvent} from './confirmation-dialog/confirmation-dialog.component';
+import {PromptDialogInterface} from "./prompt-dialog/prompt-dialog.component";
 
 declare var CKEDITOR: any;
 
@@ -20,6 +21,8 @@ export class HelperService {
   public alertDialogState = this.alertDialogSubject.asObservable();
   private emailDialogSubject = new Subject();
   public emailDialogState = this.emailDialogSubject.asObservable();
+  private promptDialogSubject = new Subject();
+  public promptDialogState = this.promptDialogSubject.asObservable();
 
   constructor() {
   }
@@ -47,8 +50,13 @@ export class HelperService {
     this.emailDialogSubject.next(emailData);
   }
 
+
   public hideEmailDialog() {
     this.emailDialogSubject.next(null);
+  }
+
+  public showPromptDialog(eventListener: PromptDialogInterface) {
+    this.promptDialogSubject.next(eventListener);
   }
 
   public getDataFromRichEditor(editorId: string): string {

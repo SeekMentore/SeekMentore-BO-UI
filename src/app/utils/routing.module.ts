@@ -21,6 +21,7 @@ import { SubscriptionRequestedComponent } from 'src/app/login-controlled-pages/e
 import { ComplaintsComponent } from 'src/app/login-controlled-pages/employee/support/complaints/complaints.component';
 import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
 import { ScheduleDemoComponent } from 'src/app/login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
+import { PromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 
 const routes: Routes = [
   {
@@ -99,7 +100,7 @@ const routes: Routes = [
     RouterModule
   ],
   providers: [RoutingGuardService],
-  declarations: []
+  declarations: [PromptDialogComponent]
 })
 export class RoutingModule {
 }

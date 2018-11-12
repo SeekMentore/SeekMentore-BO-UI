@@ -28,14 +28,14 @@
   <div class="menu-container">
     <div class="menu-container-2">
       <div class="dropdown" *ngFor="let element of menu; let i = index">
-        <button class="dropbtn" routerLink="{{element.url}}">{{element.name}}</button>        
+        <button class="dropbtn" routerLink="{{element.url}}">{{element.name}}</button>
         <div class="dropdown-content">
           <button *ngFor="let sub_element of element.subMenuItems" routerLink="{{sub_element.url}}">{{sub_element.name}}</button>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!--<router-outlet></router-outlet>-->
   <div id="lcp-view-port" class="view-port">
     <router-outlet></router-outlet>
@@ -52,3 +52,6 @@
 
 <!--Alert Dialog-->
 <app-alert-dialog></app-alert-dialog>
+
+<!--Prompt Dialog-->
+<!--<app-prompt-dialog></app-prompt-dialog>-->

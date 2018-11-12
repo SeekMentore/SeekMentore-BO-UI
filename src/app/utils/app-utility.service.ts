@@ -6,6 +6,7 @@ import { HelperService } from './helper.service';
 import { LcpConstants } from './lcp-constants';
 import { LcpRestUrls } from './lcp-rest-urls';
 import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AppUtilityService {
 
   type: 'GET' | 'POST' | 'DELETE' | 'PUT';
 
-  constructor(private http: HttpClient, private helperService: HelperService) {
+  constructor(private http: HttpClient, private helperService: HelperService, private router: Router) {
   }
 
   public makeRequestWithoutResponseHandler(url: string,
@@ -124,6 +125,7 @@ export class AppUtilityService {
           if (response != null && response['success']) {
             observer.next(true);
           } else {
+            this.router.navigateByUrl(response['redirect_to']);
             observer.next(false);
           }
         },

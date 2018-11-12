@@ -36,8 +36,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.allDemoReadyMappedTutorsGridObject.init();
-      
+      this.allDemoReadyMappedTutorsGridObject.init();      
     }, 0);
     setTimeout(() => {
       this.allDemoReadyMappedTutorsGridObject.refreshGridData();

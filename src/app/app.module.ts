@@ -49,6 +49,7 @@ import { MappedTutorDataComponent } from './login-controlled-pages/employee/sale
 import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
 import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
 import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
+import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.compo
     MappedTutorDataComponent,
     ScheduleDemoComponent,
     ScheduleDemoDataComponent,
-    PromptDialogComponent
+    PromptDialogComponent,
+    DemoTrackerDataComponent
   ],
   imports: [
     BrowserModule,

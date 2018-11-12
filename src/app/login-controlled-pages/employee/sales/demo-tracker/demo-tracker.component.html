@@ -1,3 +1,17 @@
-<p>
-  demo-tracker works!
-</p>
+<div>
+  <div id="demo-tracker-list-page" *ngIf="!showDemoTrackerData">
+    <app-grid #scheduledDemoGrid id="scheduled-demo-grid" [gridMetaData]="scheduledDemoGridMetaData"></app-grid>
+    <app-grid #reScheduledDemoGrid id="re-scheduled-demo-grid" [gridMetaData]="reScheduledDemoGridMetaData"></app-grid>
+    <app-grid #successfulDemoGrid id="successful-demo-grid" [gridMetaData]="successfulDemoGridMetaData"></app-grid>
+    <app-grid #failedDemoGrid id="failed-demo-grid" [gridMetaData]="failedDemoGridMetaData"></app-grid>
+    <app-grid #cancelledDemoGrid id="cancelled-demo-grid" [gridMetaData]="cancelledDemoGridMetaData"></app-grid>
+  </div>
+  <div id="demo-tracker-data-page" *ngIf="showDemoTrackerData">
+    <button
+      id="back-to-all-demo-tracker-listing-button"
+      class="ok-button" (click)="toggleVisibilityDemoTrackerGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-demo-tracker-data [demoTrackerRecord]="selectedDemoTrackerRecord" [demoTrackerModifyAccess]="demoTrackerModifyAccess"></app-demo-tracker-data>
+  </div>
+</div>

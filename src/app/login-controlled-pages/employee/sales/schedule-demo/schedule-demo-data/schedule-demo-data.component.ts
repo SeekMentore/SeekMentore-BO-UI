@@ -22,6 +22,10 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
   currentTutorAllMappingGridObject: GridComponent;
   currentTutorAllMappingGridMetaData: GridDataInterface;
 
+  @ViewChild('currentTutorAllScheduledDemoGrid')
+  currentTutorAllScheduledDemoGridObject: GridComponent;
+  currentTutorAllScheduledDemoGridMetaData: GridDataInterface;
+
   @Input()
   mappedTutorRecord: GridRecord = null;
 
@@ -53,6 +57,7 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.currentTutorAllMappingGridMetaData = null;
+    this.currentTutorAllScheduledDemoGridMetaData = null;
   }
 
   ngOnInit() {
@@ -63,9 +68,13 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.currentTutorAllMappingGridObject.init();
       this.currentTutorAllMappingGridObject.addExtraParams('tutorId', this.mappedTutorRecord.getProperty('tutorId'));
+
+      this.currentTutorAllScheduledDemoGridObject.init();
+      this.currentTutorAllScheduledDemoGridObject.addExtraParams('tutorId', this.mappedTutorRecord.getProperty('tutorId'));
     }, 0);
     setTimeout(() => {
       this.currentTutorAllMappingGridObject.refreshGridData();
+      this.currentTutorAllScheduledDemoGridObject.refreshGridData();
     }, 0);
   }
 
@@ -137,6 +146,150 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
           dataType: 'list',
           filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
           mapping: 'mappingStatus'
+        }]
+      },
+      htmlDomElementId: 'current-tutor-all-mapping-grid',
+      hidden: false,
+    };
+
+    this.currentTutorAllScheduledDemoGridMetaData = {
+      grid: {
+        id: 'currentTutorAllScheduledDemoGrid',
+        title: 'Current Tutor Scheduled Demo',
+        store: {
+          isStatic: false,
+          restURL: '/rest/sales/currentTutorAllScheduledDemoList'
+        },
+        columns: [{
+          id: 'customerName',
+          headerName: 'Customer Name',
+          dataType: 'string',
+          mapping: 'customerName'
+        }, {
+          id: 'tutorName',
+          headerName: 'Tutor Name',
+          dataType: 'string',
+          mapping: 'tutorName'
+        }, {
+          id: 'demoDateAndTime',
+          headerName: 'Demo Date And Time',
+          dataType: 'date',
+          mapping: 'demoDateAndTimeMillis',
+          renderer: GridCommonFunctions.renderDateFromMillisWithTime
+        }, {
+          id: 'demoOccurred',
+          headerName: 'Demo Occurred',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'demoOccurred',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'demoStatus',
+          headerName: 'Demo Status',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.demoStatusFilterOptions,
+          mapping: 'demoStatus'
+        }, {
+          id: 'clientSatisfiedFromTutor',
+          headerName: 'Client Satisfied From Tutor',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'clientSatisfiedFromTutor',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'clientRemarks',
+          headerName: 'Client Remarks',
+          dataType: 'string',
+          mapping: 'clientRemarks',
+          lengthyData: true
+        }, {
+          id: 'tutorSatisfiedWithClient',
+          headerName: 'Tutor Satisfied With Client',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'tutorSatisfiedWithClient',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'tutorRemarks',
+          headerName: 'Tutor Remarks',
+          dataType: 'string',
+          mapping: 'tutorRemarks',
+          lengthyData: true
+        }, {
+          id: 'adminSatisfiedFromTutor',
+          headerName: 'Admin Satisfied From Tutor',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'adminSatisfiedFromTutor',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'adminSatisfiedWithClient',
+          headerName: 'Admin Satisfied With Client',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'adminSatisfiedWithClient',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'isDemoSuccess',
+          headerName: 'Demo Success',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'isDemoSuccess',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'needPriceNegotiationWithClient',
+          headerName: 'Need Price Negotiation With Client',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'needPriceNegotiationWithClient',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'negotiatedOverrideRateWithClient',
+          headerName: 'Negotiated Override Rate With Client',
+          dataType: 'number',
+          mapping: 'negotiatedOverrideRateWithClient'
+        }, {
+          id: 'clientNegotiationRemarks',
+          headerName: 'Client Negotiation Remarks',
+          dataType: 'string',
+          mapping: 'clientNegotiationRemarks',
+          lengthyData: true
+        }, {
+          id: 'needPriceNegotiationWithTutor',
+          headerName: 'Need Price Negotiation With Tutor',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'needPriceNegotiationWithTutor',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'negotiatedOverrideRateWithTutor',
+          headerName: 'Negotiated Override Rate With Tutor',
+          dataType: 'number',
+          mapping: 'negotiatedOverrideRateWithTutor'
+        }, {
+          id: 'tutorNegotiationRemarks',
+          headerName: 'Tutor Negotiation Remarks',
+          dataType: 'string',
+          mapping: 'tutorNegotiationRemarks',
+          lengthyData: true
+        }, {
+          id: 'adminRemarks',
+          headerName: 'Admin Remarks',
+          dataType: 'string',
+          mapping: 'adminRemarks',
+          lengthyData: true
+        }, {
+          id: 'adminFinalizingRemarks',
+          headerName: 'Admin Finalizing Remarks',
+          dataType: 'string',
+          mapping: 'adminFinalizingRemarks',
+          lengthyData: true
+        }, {
+          id: 'reschedulingRemarks',
+          headerName: 'Re-scheduling Remarks',
+          dataType: 'string',
+          mapping: 'reschedulingRemarks',
+          lengthyData: true
         }]
       },
       htmlDomElementId: 'current-tutor-all-mapping-grid',

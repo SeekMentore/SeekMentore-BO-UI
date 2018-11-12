@@ -25,7 +25,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
   idleTime: number;    
   emailData: EmailInterface;
-  emailDialog: HTMLDivElement; 
   userType: string = ''; 
 
   constructor(private helperService: HelperService,
@@ -48,17 +47,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
-    });     
-    // set event handler for email
-    this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
-    this.helperService.emailDialogState.subscribe((data: EmailInterface) => {
-      if (data === null) {
-        this.emailDialog.style.display = 'none';
-      } else {
-        this.emailData = data;
-        this.emailDialog.style.display = 'flex';
-      }
-    });
+    }); 
   }
 
   ngAfterViewInit() {

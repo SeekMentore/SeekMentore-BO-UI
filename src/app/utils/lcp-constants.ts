@@ -19,5 +19,5 @@ export class LcpConstants {
   static user_type_key = 'user_type';
   static user_type_admin = 'admin';
   static grid_generic_no_record_selected_error = 'No record selected for operation';
-  static prompt_dialog_title = 'Enter message';
+  static prompt_dialog_title = 'Please provide your comments';
 }

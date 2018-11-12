@@ -1,3 +1,7 @@
+import { CkeditorConfig } from "./ckeditor-config";
+
+declare var CKEDITOR: any;
+
 export class CommonUtilityFunctions {
 
   /** Common validity functions */
@@ -63,5 +67,28 @@ export class CommonUtilityFunctions {
       default:
         updatedData[key] = value;
     }   
+  }
+
+  public static getDataFromRichEditor(editorId: string): string {
+    return CKEDITOR.instances[editorId].getData();
+  }
+
+  public static setDataForRichEditor(editorId: string, data: string) {
+    CKEDITOR.instances[editorId].setData(data);
+  }
+
+  public static makeRichEditor(editorId: string, configuration: any) {
+    CKEDITOR.replace(editorId, configuration);
+  }
+
+  public static makeRichEditorWithDefaultConfiguration(editorId: string) {
+    CKEDITOR.replace(editorId, CkeditorConfig.defaultConfiguration);
+  }
+
+  public static encodedGridFormData(updatedValues: any, parentId: any) {
+    const formData = new FormData();
+    formData.append('completeUpdatedRecord', JSON.stringify(updatedValues));
+    formData.append('parentId', parentId);
+    return formData;
   }
 }

@@ -60,7 +60,7 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   updateComplaintRecord() {
-    const data = this.helperService.encodedGridFormData(this.complaintUpdatedRecord, this.complaintRecord.getProperty('complaintId'));
+    const data = CommonUtilityFunctions.encodedGridFormData(this.complaintUpdatedRecord, this.complaintRecord.getProperty('complaintId'));
     this.utilityService.makerequest(this, this.onUpdateComplaintRecord, LcpRestUrls.complaint_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

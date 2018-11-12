@@ -72,7 +72,7 @@ export class EnquiryDataComponent implements OnInit {
   }
 
   updateEnquiryRecord() {
-    const data = this.helperService.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
+    const data = CommonUtilityFunctions.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
     this.utilityService.makerequest(this, this.onUpdateEnquiryRecord, LcpRestUrls.enquiry_request_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

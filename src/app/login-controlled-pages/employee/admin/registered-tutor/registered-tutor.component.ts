@@ -192,11 +192,12 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               } else {
                 this.helperService.showPromptDialog({
                   required: true,
+                  titleText: 'Enter comments to Blacklist',
+                  placeholderText: 'Please provide your comments for blacklisting the tutors.',
                   onOk: (message) => {
-                    console.log(message);
                     const data = {
                       allIdsList: tutorIdsList.join(';'),
-                      comments: ''
+                      comments: message
                     };
                     this.utilityService.makerequest(this, this.handleBlackListRequest,
                       LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),

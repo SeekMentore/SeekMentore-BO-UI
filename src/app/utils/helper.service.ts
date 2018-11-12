@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/index';
-import {AlertDialogEvent} from './alert-dialog/alert-dialog.component';
-import {CkeditorConfig} from './ckeditor-config';
-import {EmailInterface} from './email/email.component';
-import {ConfirmationDialogEvent} from './confirmation-dialog/confirmation-dialog.component';
-import {PromptDialogInterface} from "./prompt-dialog/prompt-dialog.component";
-
-declare var CKEDITOR: any;
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/index';
+import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
+import { ConfirmationDialogEvent } from './confirmation-dialog/confirmation-dialog.component';
+import { EmailInterface } from './email/email.component';
+import { PromptDialogInterface } from "./prompt-dialog/prompt-dialog.component";
 
 @Injectable({
   providedIn: 'root'
@@ -57,28 +54,5 @@ export class HelperService {
 
   public showPromptDialog(eventListener: PromptDialogInterface) {
     this.promptDialogSubject.next(eventListener);
-  }
-
-  public getDataFromRichEditor(editorId: string): string {
-    return CKEDITOR.instances[editorId].getData();
-  }
-
-  public setDataForRichEditor(editorId: string, data: string) {
-    CKEDITOR.instances[editorId].setData(data);
-  }
-
-  public makeRichEditor(editorId: string, configuration: any) {
-    CKEDITOR.replace(editorId, configuration);
-  }
-
-  public makeRichEditorWithDefaultConfiguration(editorId: string) {
-    CKEDITOR.replace(editorId, CkeditorConfig.defaultConfiguration);
-  }
-
-  public encodedGridFormData(updatedValues: any, parentId: any) {
-    const formData = new FormData();
-    formData.append('completeUpdatedRecord', JSON.stringify(updatedValues));
-    formData.append('parentId', parentId);
-    return formData;
-  }
+  }  
 }

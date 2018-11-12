@@ -1,8 +1,10 @@
 <div id="prompt-dialog" class="dialog" style="display: none;">
   <div class="dialog_modal">
     <span class="title">Title Message</span>
-    <input placeholder="Enter Message" name="prompt_input_message" class="message">
-    <span class="error" *ngIf="showErrorMessage">This field required</span>
+    <form class="form-container" style="border: none; box-shadow: none; margin: 0; padding: 0; width: 80%">
+      <input placeholder="Enter Message" name="prompt_input_message" class="message">
+      <span class="validation-error" *ngIf="showErrorMessage" style="padding: 0; padding-top: 10px">This field required</span>
+    </form>
     <div class="modal_control">
       <button class="ok-button">ok</button>
       <button class="cancel-button">cancel</button>

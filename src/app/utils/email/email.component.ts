@@ -5,6 +5,7 @@ import {HelperService} from '../helper.service';
 import {LcpRestUrls} from '../lcp-rest-urls';
 import {CkeditorConfig} from '../ckeditor-config';
 import {tryCatch} from "rxjs/internal/util/tryCatch";
+import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 
 @Component({
   selector: 'app-email',
@@ -26,6 +27,8 @@ export class EmailComponent implements OnInit, OnChanges {
 
   @Input('emailData')
   receivedEmailData: EmailInterface = null;
+
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
@@ -113,20 +116,20 @@ export class EmailComponent implements OnInit, OnChanges {
         message: LcpConstants.replace_email_data,
         onOk: () => {
           this.selectedEmailTemplate = emailTemplate;
-          this.loadEmailDataFromServer(this.selectedEmailTemplate.value);
+          this.loadEmailDataFromServer(emailTemplate.value);
         },
         onCancel: () => {
         }
       });
     } else {
       this.selectedEmailTemplate = emailTemplate;
-      this.loadEmailDataFromServer(this.selectedEmailTemplate.value);
+      this.loadEmailDataFromServer(emailTemplate.value);
     }
 
   }
 
   loadEmailDataFromServer(templateValue: string) {
-    if (templateValue === this.defaultValueEmailTemplate.value) {
+    if (templateValue === null || templateValue === '') {
       this.setDefaultData();
       this.helperService.setDataForRichEditor(this.emailBodyEditorId, '');
       return;

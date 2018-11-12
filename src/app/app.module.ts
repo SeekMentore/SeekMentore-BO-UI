@@ -48,6 +48,7 @@ import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employe
 import { MappedTutorDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/mapped-tutor-data/mapped-tutor-data.component';
 import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
 import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
+import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sal
     MapTutorToEnquiryDataComponent,
     MappedTutorDataComponent,
     ScheduleDemoComponent,
-    ScheduleDemoDataComponent
+    ScheduleDemoDataComponent,
+    PromptDialogComponent
   ],
   imports: [
     BrowserModule,

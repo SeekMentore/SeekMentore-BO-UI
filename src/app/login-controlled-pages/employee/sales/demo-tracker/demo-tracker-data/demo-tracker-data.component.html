@@ -1,3 +1,142 @@
-<p>
-  demo-tracker-data works!
-</p>
+<div>
+  <div class="form-container-div">
+    <form class="form-container" style="max-width: 80%">
+      <div *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess"
+            class="form-container-toggle-button">
+        <label class="tab_container" (change)="editRecordForm = false;">
+          <input type="radio" checked name="editFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="editRecordForm = true;">
+          <input type="radio" name="editFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
+      <table class="form-container-generic-table">
+        <tr>
+          <td class="td-label"><label>Customer Name</label></td>
+          <td><label class="data">{{demoTrackerRecord.property['customerName']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Tutor Name</label></td>
+          <td><label class="data">{{demoTrackerRecord.property['tutorName']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Demo Date And Time</label></td>
+          <td><label class="data">{{getDateFromMillis(demoTrackerRecord.property['demoDateAndTimeMillis'])}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Demo Occurred</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['demoOccurred'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Demo Status</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['demoStatus'], demoStatusFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Client Satisfied From Tutor</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['clientSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Client Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['clientRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Tutor Satisfied With Client</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['tutorSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Tutor Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['tutorRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Admin Satisfied From Tutor</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['adminSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Admin Satisfied With Client</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['adminSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Demo Success</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['isDemoSuccess'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Need Price Negotiation With Client</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['needPriceNegotiationWithClient'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>'Negotiated Override Rate With Client</label></td>
+          <td><label class="data">{{demoTrackerRecord.property['negotiatedOverrideRateWithClient']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Client Negotiation Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['clientNegotiationRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Need Price Negotiation With Tutor</label></td>
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['needPriceNegotiationWithTutor'], yesNoFilterOptions)}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Negotiated Override Rate With Tutor</label></td>
+          <td><label class="data">{{demoTrackerRecord.property['negotiatedOverrideRateWithTutor']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['tutorNegotiationRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Who Acted</label></td>
+          <td><label class="data">{{demoTrackerRecord.property['whoActed']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Admin Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['adminRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Admin Finalizing Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['adminFinalizingRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Rescheduling Remarks</label></td>
+          <td>
+            <div class="form-remakrs">{{demoTrackerRecord.property['reschedulingRemarks']}}</div>
+          </td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Admin Action Date</label></td>
+          <td><label class="data">{{getDateFromMillis(demoTrackerRecord.property['adminActionDateMillis'])}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>New Demo Date</label></td>
+          <td><input class="input_field" type="date" value=""
+                      [disabled]="!editRecordForm"
+                      (change)="updateDemoTrackerProperty('demoDate', $event.target.value, 'date')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>New Demo Time</label></td>
+          <td><input class="input_field" type="time" value=""
+                      [disabled]="!editRecordForm"
+                      (change)="updateDemoTrackerProperty('demoTime', $event.target.value, 'time')"></td>
+        </tr>
+      </table>
+      <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && editRecordForm" type="submit"
+            class="ok-button form-container-update-button"
+            (click)="updateDemoTrackerRecord()">
+        Update
+      </button>
+    </form>
+  </div>
+</div>

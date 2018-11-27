@@ -66,7 +66,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               // Open the Data view port
               this.interimHoldSelectedTutorRecord = record;
               if (this.tutorDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST');
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
               } else {
                 this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
                 this.toggleVisibilityRegisterTutorGrid();
@@ -271,7 +271,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
     } else {
       this.showTutorData = true;
     }
-
   }
 }
 

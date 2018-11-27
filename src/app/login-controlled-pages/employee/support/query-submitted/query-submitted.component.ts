@@ -76,7 +76,7 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             this.interimHoldSelectedQueryRecord = record;
             if (this.queryDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.submitted_query_data_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.submitted_query_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedQueryRecord = this.interimHoldSelectedQueryRecord;
               this.toggleVisibilityQueryGrid();

@@ -10,9 +10,9 @@
     <span class="validation-error" *ngIf="errorPassword">{{errorPassword}}</span>
     <select class="input_field" name="user-type" required [(ngModel)]="userType">
       <option value="">User Type</option>
-      <option value="admin">Employee</option>
-      <option value="tutor">Tutor</option>
-      <option value="customer">Parent &amp; Students</option>
+      <option value="Employee">Employee</option>
+      <option value="Tutor">Tutor</option>
+      <option value="Customer">Parent &amp; Students</option>
     </select>
     <span class="validation-error" *ngIf="errorUserType">{{errorUserType}}</span>
     <button type="submit" class="button-primary" style="display: flex; align-self: flex-end;" (click)="login()">

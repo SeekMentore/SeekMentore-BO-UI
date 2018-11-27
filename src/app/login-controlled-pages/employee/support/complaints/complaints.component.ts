@@ -83,7 +83,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
             // Open the Data view port
             this.interimHoldSelectedComplaintRecord = record;
             if (this.complaintDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.complaint_data_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.complaint_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedComplaintRecord = this.interimHoldSelectedComplaintRecord;
               this.toggleVisibilityComplaintGrid();

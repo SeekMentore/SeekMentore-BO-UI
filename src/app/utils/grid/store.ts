@@ -40,7 +40,7 @@ export class Store {
       if (grid_mask_loader) {
         grid_mask_loader.hidden = false;
       }
-      gridObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', JSON.stringify(params)).subscribe(
+      gridObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', gridObject.utility_service.urlEncodeData(params), 'application/x-www-form-urlencoded').subscribe(
         result => {
           let response = result['response'];
           response = gridObject.utility_service.decodeObjectFromJSON(response);

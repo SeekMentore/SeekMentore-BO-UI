@@ -27,7 +27,7 @@ export class AppUtilityService {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
-    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
+    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType), withCredentials: true};
     if (requestType === 'GET') {
       if (params != null) {
         requestOptions['params'] = params;
@@ -51,7 +51,7 @@ export class AppUtilityService {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
-    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
+    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType), withCredentials: true};
     if (requestType === 'GET') {
       if (params != null) {
         requestOptions['params'] = params;
@@ -63,7 +63,6 @@ export class AppUtilityService {
     }
 
     this.http.request(requestType, url, requestOptions).subscribe(result => {
-
       let response = result['response'];
       response = this.decodeObjectFromJSON(response);
       if (response != null) {

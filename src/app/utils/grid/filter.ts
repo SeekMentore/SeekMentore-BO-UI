@@ -3,6 +3,7 @@ export class Filter {
   type: string; // (listed values {number | string | date | list})
   mapping: string;
   columnId: string;
+  multiList: boolean;
   lessThan: number = null;
   equalTo: number = null;
   greaterThan: number = null;
@@ -16,11 +17,12 @@ export class Filter {
   afterDateMillis: number = null;
   listValue: string[] = [];
 
-  constructor(id: string, type: string, mapping: string, columnId: string) {
+  constructor(id: string, type: string, mapping: string, columnId: string, multiList: boolean) {
     this.id = id;
     this.type = type;
     this.mapping = mapping;
     this.columnId = columnId;
+    this.multiList = multiList;
   }
 
   nullifyFilterProperties() {

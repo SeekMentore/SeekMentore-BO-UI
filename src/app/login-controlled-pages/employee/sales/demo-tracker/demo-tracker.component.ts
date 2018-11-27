@@ -88,7 +88,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         clickEvent: (record: GridRecord, column: Column) => {
           this.interimHoldSelectedDemoTrackerRecord = record;
           if (this.demoTrackerModifyAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_tracker_modify_data_access, 'POST');
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_tracker_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
             this.selectedDemoTrackerRecord = this.interimHoldSelectedDemoTrackerRecord;            
             this.toggleVisibilityDemoTrackerGrid();

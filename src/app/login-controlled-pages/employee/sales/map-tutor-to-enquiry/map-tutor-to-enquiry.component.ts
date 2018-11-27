@@ -60,7 +60,7 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         clickEvent: (record: GridRecord, column: Column) => {
           this.interimHoldSelectedEnquiryRecord = record;
           if (this.enquiryMappingDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.map_tutor_to_enquiry_data_access, 'POST');
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.map_tutor_to_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
             this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;            
             this.toggleVisibilityAllEnquiriesGrid();

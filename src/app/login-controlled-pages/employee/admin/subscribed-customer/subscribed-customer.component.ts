@@ -68,7 +68,7 @@ export class SubscribedCustomerComponent implements OnInit {
               // Open the Data view port
               this.interimHoldSelectedCustomerRecord = record;
               if (this.customerDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST');
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
               } else {
                 this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
                 this.toggleVisibilitySubscribedCustomerGrid();

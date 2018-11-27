@@ -1,6 +1,48 @@
 <div>
-  <app-employee-home *ngIf="userType === 'admin'"></app-employee-home>
-  <app-customer-home *ngIf="userType === 'customer'"></app-customer-home>
-  <app-tutor-home *ngIf="userType === 'tutor'"></app-tutor-home>
+  <!--
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="uwhxue()">
+      U-WH-XUE
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="uwhaj()">
+      U-WH-AJ
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="uwohxue()">
+      U-WOH-XUE
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="uwohaj()">
+      U-WOH-AJ
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="swhxue()">
+      S-WH-XUE
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="swhaj()">
+      S-WH-AJ
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="swohxue()">
+      S-WOH-XUE
+    </button>
+    <button
+      id="back-to-tutor-listing-button"
+      class="ok-button" (click)="swohaj()">
+      S-WOH-AJ
+    </button>
+  -->
+  <app-employee-home *ngIf="userType === 'Employee'"></app-employee-home>
+  <app-customer-home *ngIf="userType === 'Customer'"></app-customer-home>
+  <app-tutor-home *ngIf="userType === 'Tutor'"></app-tutor-home>
   <span *ngIf="!userType">User Not Logged In.</span>
 </div>

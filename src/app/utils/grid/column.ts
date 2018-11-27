@@ -44,17 +44,17 @@ export class Column {
     this.id = id;
     this.headerName = headerName;
     this.dataType = dataType;
+    this.multiList = multiList;
     this.mapping = mapping;
     this.sortable = sortable;
     this.filterable = filterable;
     this.filter = null;
     if (this.filterable) {
-      this.filter = new Filter(this.id + '-Filter', this.dataType, this.mapping, this.id);
+      this.filter = new Filter(this.id + '-Filter', this.dataType, this.mapping, this.id, this.multiList);
     }
     this.hideable = hideable;
     this.hidden = hidden;
     this.lengthyData = lengthyData;
-    this.multiList = multiList;
     if (this.lengthyData || this.multiList) {
       this.appliedClassNames = this.appliedClassNames + ' ' + 'column-pointer';
     }

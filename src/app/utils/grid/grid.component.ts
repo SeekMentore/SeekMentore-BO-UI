@@ -215,6 +215,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.grid.filters = [];
       for (const column of this.grid.columns) {
         column.isFiltered = false;
+        this.removeFilterFromColumn(column);
       }
       if (!this.grid.offline) {
         this.grid.loadData(this);

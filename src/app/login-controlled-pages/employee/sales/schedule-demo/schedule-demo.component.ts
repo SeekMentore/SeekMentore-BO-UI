@@ -60,7 +60,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             this.interimHoldSelectedMappedTutorRecord = record;
             if (this.mappedTutorScheduleDemoAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_schedule_demo_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_schedule_demo_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedMappedTutorRecord = this.interimHoldSelectedMappedTutorRecord;            
               this.toggleVisibilityScheduleDemoMappedTutorGrid();

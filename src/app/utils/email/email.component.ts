@@ -39,7 +39,8 @@ export class EmailComponent implements OnInit, OnChanges {
   ngOnInit() {
     CommonUtilityFunctions.makeRichEditor(this.emailBodyEditorId, CkeditorConfig.emailConfiguration);
     CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
-    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.email_templates_url, 'POST');
+    const formData = new URLSearchParams();
+    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.email_templates_url, 'POST', formData.toString(), 'application/x-www-form-urlencoded');
     // set event handler for email
     this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
     this.helperService.emailDialogState.subscribe((data: EmailInterface) => {

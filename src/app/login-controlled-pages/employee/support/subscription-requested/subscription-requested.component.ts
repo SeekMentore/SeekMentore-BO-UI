@@ -111,7 +111,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
             // Open the Data view port
             this.interimHoldSelectedSubscriptionRecord = record;
             if (this.subscriptionDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_request_data_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedSubscriptionRecord = this.interimHoldSelectedSubscriptionRecord;
               this.toggleVisibilitySubscriptionGrid();

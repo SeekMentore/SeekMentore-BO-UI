@@ -107,7 +107,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
           clickEvent: (record: GridRecord, column: Column) => {
             this.interimHoldSelectedEnquiryRecord = record;
             if (this.enquiryDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_request_data_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;
               this.toggleVisibilityEnquiryGrid();

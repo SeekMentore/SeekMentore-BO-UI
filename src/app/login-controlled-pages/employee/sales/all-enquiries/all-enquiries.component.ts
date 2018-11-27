@@ -74,7 +74,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         clickEvent: (record: GridRecord, column: Column) => {
           this.interimHoldSelectedAllEnquiriesRecord = record;
           if (this.allEnquiriesDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.pending_enquiry_data_access, 'POST');
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.pending_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
             this.selectedAllEnquiriesRecord = this.interimHoldSelectedAllEnquiriesRecord;            
             this.toggleVisibilityAllEnquiriesGrid();

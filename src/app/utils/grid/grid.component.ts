@@ -12,6 +12,7 @@ import { Sorter, SortingOrder } from './sorter';
 import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
 import { AlertDialogEvent } from '../alert-dialog/alert-dialog.component';
 import { ColumnExtraDataDisplayInputData } from './grid-column-extra-data/grid-column-extra-data.component';
+import { CommonUtilityFunctions } from '../common-utility-functions';
 
 @Component({
   selector: 'app-grid',
@@ -897,11 +898,24 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public columnClicked(record: GridRecord, column: Column) {
     if (column.lengthyData || column.multiList) {
+      let data: string = this.defaultColumnValueRenderer(record, column, true);
       let hasClickEventHandlerAttached: boolean = false
       if (column.eventHandler !== null) {
         hasClickEventHandlerAttached = true;
       }
-      this.displayColumnExtraDataAsPopUp(column.headerName + ' - Complete Data', this.defaultColumnValueRenderer(record, column, true), record, column, hasClickEventHandlerAttached);
+      if (
+            GridCommonFunctions.checkStringAvailability(data) 
+            && (
+                  (column.multiList && GridCommonFunctions.checkStringContainsText(data, ';')) 
+                  || (column.lengthyData && data.length > 21)
+                )
+        ) {
+        this.displayColumnExtraDataAsPopUp(column.headerName + ' - Complete Data', data, record, column, hasClickEventHandlerAttached);
+      } else {
+        if (column.eventHandler !== null) {
+          column.eventHandler.clickEventColumn(record, column, this);
+        }
+      }
     } else {
       if (column.eventHandler !== null) {
         column.eventHandler.clickEventColumn(record, column, this);
@@ -927,6 +941,11 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
     }
     return data;
+  }
+
+  public showMoreLink(record: GridRecord, column: Column) {
+    let data: string = this.defaultColumnValueRenderer(record, column, true);
+    return data.length > 21;
   }
 
   private hideShowRemoveFilterTab(column: Column = null) {

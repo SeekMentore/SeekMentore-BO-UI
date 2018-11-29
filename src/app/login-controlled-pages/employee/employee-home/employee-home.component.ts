@@ -66,7 +66,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         title: 'Alerts & Reminders',
         store: {
           isStatic: false,
-          restURL: '/rest/employee/alertsRemindersGrid'
+          restURL: '/rest/employee/alertReminderList'
         },
         columns: [{
           id: 'initiatedDate',
@@ -117,7 +117,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         title: 'Workflows',
         store: {
           isStatic: false,
-          restURL: '/rest/employee/workflowsGrid'
+          restURL: '/rest/employee/workflowList'
         },
         columns: [{
           id: 'initiatedDate',
@@ -169,7 +169,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         title: 'Tasks',
         store: {
           isStatic: false,
-          restURL: '/rest/employee/tasksGrid'
+          restURL: '/rest/employee/taskList'
         },
         columns: [{
           id: 'initiatedDate',

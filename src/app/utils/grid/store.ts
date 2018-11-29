@@ -44,19 +44,34 @@ export class Store {
         result => {
           let response = result['response'];
           response = gridObject.utility_service.decodeObjectFromJSON(response);
-          this.restData = response['data'];
-          this.data = [];
-          this.totalRecords = response['totalRecords'];
-          this.convertIntoRecordData(this.getRestData());
-          if (grid_mask_loader) {
-            grid_mask_loader.hidden = true;
+          if (response != null) {
+            if (response['success'] === true) {
+              this.restData = response['data'];
+              this.data = [];
+              this.totalRecords = response['totalRecords'];
+              this.convertIntoRecordData(this.getRestData());
+              if (grid_mask_loader) {
+                grid_mask_loader.hidden = true;
+              }
+              grid.setData();
+            } else {
+              if (grid_mask_loader) {
+                grid_mask_loader.hidden = true;
+              }
+              gridObject.showMessageOnGridStoreLoadFailure(response['message']);
+            }
+          } else {
+            if (grid_mask_loader) {
+              grid_mask_loader.hidden = true;
+            }
+            gridObject.showMessageOnGridStoreLoadFailure('NULL response received from server, cannot load data.');
           }
-          grid.setData();
         },
         error2 => {
           if (grid_mask_loader) {
             grid_mask_loader.hidden = true;
           }
+          gridObject.showMessageOnGridStoreLoadFailure('Communication failure!! Something went wrong.');
         }
       );
     }

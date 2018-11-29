@@ -163,11 +163,11 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           renderer: AdminCommonFunctions.subjectsMultiRenderer
         },
         {
-          id: 'locations',
-          headerName: 'Locations',
+          id: 'location',
+          headerName: 'Location',
           dataType: 'list',
           filterOptions: CommonFilterOptions.locationsFilterOptions,
-          mapping: 'locations',
+          mapping: 'location',
           renderer: AdminCommonFunctions.locationsRenderer
         },
         {

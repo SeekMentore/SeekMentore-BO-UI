@@ -156,7 +156,10 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           id: 'filename',
           headerName: 'Filename',
           dataType: 'string',
-          mapping: 'filename'
+          mapping: 'filename',
+          clickEvent: (record: GridRecord, column: Column) => {
+            alert('Download file - ' + column.getValueForColumn(record));
+          }
         }, {
           id: 'isApproved',
           headerName: 'Is Approved',
@@ -174,10 +177,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           headerName: 'Remarks',
           dataType: 'string',
           mapping: 'remarks',
-          lengthyData: true,
-          clickEvent: (record: GridRecord, column: Column) => {
-            alert(column.headerName);
-          }
+          lengthyData: true          
         }, {
           id: 'actionDate',
           headerName: 'Action Date',

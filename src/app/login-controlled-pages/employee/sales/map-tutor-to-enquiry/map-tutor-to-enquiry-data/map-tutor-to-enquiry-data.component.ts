@@ -219,7 +219,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         title: 'Mapped Tutors',
         store: {
           isStatic: false,
-          restURL: '/rest/sales/allMappedTutorsList'
+          restURL: '/rest/sales/currentEnquiryAllMappedTutorsList'
         },
         columns: [{
           id: 'tutorName',
@@ -227,6 +227,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'tutorName',
           clickEvent: (record: GridRecord, column: Column) => {
+            console.log(record);
             this.interimHoldSelectedMappedTutorRecord = record;
             if (this.mappedTutorDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');

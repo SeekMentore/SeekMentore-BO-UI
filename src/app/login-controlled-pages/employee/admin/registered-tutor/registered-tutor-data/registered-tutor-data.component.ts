@@ -171,7 +171,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           id: 'whoActed',
           headerName: 'Who Acted',
           dataType: 'string',
-          mapping: 'whoActed'
+          mapping: 'whoActedName'
         }, {
           id: 'remarks',
           headerName: 'Remarks',

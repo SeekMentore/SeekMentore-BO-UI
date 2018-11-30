@@ -10,6 +10,7 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { Column } from 'src/app/utils/grid/column';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-schedule-demo-data',
@@ -96,13 +97,37 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
           restURL: '/rest/sales/currentTutorAllMappingList'
         },
         columns: [{
-          id: 'enquiryId',
-          headerName: 'Enquiry Id',
-          dataType: 'string',
-          mapping: 'enquiryId',
+          id: 'enquirySubject',
+          headerName: 'Enquiry Subject',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.subjectsFilterOptions,
+          mapping: 'enquirySubject',
+          renderer: AdminCommonFunctions.subjectsRenderer,
           clickEvent: (record: GridRecord, column: Column) => {
             
           }        
+        },{
+          id: 'enquiryGrade',
+          headerName: 'Enquiry Grade',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+          mapping: 'enquiryGrade',
+          renderer: AdminCommonFunctions.studentGradesRenderer
+        },{
+          id: 'enquiryLocation',
+          headerName: 'Enquiry Location',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.locationsFilterOptions,
+          mapping: 'enquiryLocation',
+          renderer: AdminCommonFunctions.locationsRenderer
+        },{
+          id: 'enquiryPreferredTeachingType',
+          headerName: 'Enquiry Preferred Teaching Type',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+          mapping: 'enquiryPreferredTeachingType',
+          multiList: true,
+          renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
         },{
           id: 'quotedTutorRate',
           headerName: 'Quoted Tutor Rate',

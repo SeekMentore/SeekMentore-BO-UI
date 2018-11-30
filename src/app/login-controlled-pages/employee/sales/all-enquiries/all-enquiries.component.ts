@@ -101,7 +101,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         id: 'grade',
         headerName: 'Grade',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.complaintStatusFilterOptions,
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
         mapping: 'grade',
         renderer: AdminCommonFunctions.studentGradesRenderer
       }, {
@@ -157,9 +157,10 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       }, {
         id: 'locationDetails',
         headerName: 'Location Details',
-        dataType: 'string',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
         mapping: 'locationDetails',
-        lengthyData: true
+        renderer: AdminCommonFunctions.locationsRenderer
       }, {
         id: 'addressDetails',
         headerName: 'Address Details',

@@ -29,8 +29,11 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   @Input()
   allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
 
+  selectedEnquiryRecord: GridRecord = null;
+
   enquiryUpdatedRecord = {};
 
+  loadSelectedEnquiry = true;
   showEmployeeActionDetails = false;
   showCustomerDetails = false;
 
@@ -59,6 +62,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.selectedEnquiryRecord = this.enquiriesRecord;
     this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiriesRecord.getProperty('grade'));
     this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiriesRecord.getProperty('subject'));
     this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiriesRecord.getProperty('locationDetails'));
@@ -109,7 +113,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           mapping: 'subject',
           renderer: AdminCommonFunctions.subjectsRenderer,
           clickEvent: (record: GridRecord, column: Column) => {
-            // Reload this enquiry
+            alert(record.getProperty('subject'));
           }
         }, {
           id: 'grade',

@@ -5,6 +5,8 @@ import {Grid} from "./grid";
 export class Store {
   id: string;
   isStatic: boolean = true;
+  responseError: boolean = false;
+  responseErrorMessage: string;
   restURL: string;
   downloadURL: string;
   data: GridRecord[]; // Each Object here will have a property 'id'
@@ -46,6 +48,8 @@ export class Store {
           response = gridObject.utility_service.decodeObjectFromJSON(response);
           if (response != null) {
             if (response['success'] === true) {
+              this.responseError = false;
+              this.responseErrorMessage = '';
               this.restData = response['data'];
               this.data = [];
               this.totalRecords = response['totalRecords'];
@@ -55,23 +59,26 @@ export class Store {
               }
               grid.setData();
             } else {
+              this.responseError = false;
+              this.responseErrorMessage = response['message'];
               if (grid_mask_loader) {
                 grid_mask_loader.hidden = true;
               }
-              gridObject.showMessageOnGridStoreLoadFailure(response['message']);
             }
           } else {
+            this.responseError = false;
+            this.responseErrorMessage = 'NULL response received from server, cannot load data.';
             if (grid_mask_loader) {
               grid_mask_loader.hidden = true;
             }
-            gridObject.showMessageOnGridStoreLoadFailure('NULL response received from server, cannot load data.');
           }
         },
         error2 => {
+          this.responseError = true;
+          this.responseErrorMessage = 'Communication failure!! Something went wrong.';
           if (grid_mask_loader) {
             grid_mask_loader.hidden = true;
-          }
-          gridObject.showMessageOnGridStoreLoadFailure('Communication failure!! Something went wrong.');
+          }          
         }
       );
     }

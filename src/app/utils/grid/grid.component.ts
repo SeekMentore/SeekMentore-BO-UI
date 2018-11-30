@@ -918,7 +918,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       if (
             GridCommonFunctions.checkStringAvailability(data) 
             && (
-                  (column.multiList && GridCommonFunctions.checkStringContainsText(data, ';')) 
+                  (column.multiList && (GridCommonFunctions.checkStringContainsText(data, ';') || data.length > GridConstants.LETTER_LENGTH_FOR_LENGTHY_DATA)) 
                   || (column.lengthyData && data.length > GridConstants.LETTER_LENGTH_FOR_LENGTHY_DATA)
                 )
         ) {

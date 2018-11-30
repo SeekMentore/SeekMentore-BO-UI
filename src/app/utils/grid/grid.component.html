@@ -343,6 +343,9 @@
         <span class="uigrid-cell" style="line-height: 60px; font-weight: 600; border: 0px !important;">
             <i style="cursor: default; color: #7f7f7f">No Records</i>
         </span>
+        <span class="uigrid-cell" style="line-height: 60px; font-weight: 600; border: 0px !important;" *ngIf="grid.store.responseError">
+            <i style="cursor: default; color: #ec1f1f">{{grid.store.responseErrorMessage}}</i>
+        </span>
     </div>
   </div>
   <!--Pagination Bar-->

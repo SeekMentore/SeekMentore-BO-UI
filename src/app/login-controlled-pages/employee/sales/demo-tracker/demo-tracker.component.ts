@@ -286,7 +286,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     }; 
 
     this.cancelledDemoGridMetaData = {
-      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/cancelledDemoGridList'),
+      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList'),
       htmlDomElementId: 'cancelled-demo-grid',
       hidden: false
     }; 

@@ -51,6 +51,8 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
   interimHoldSelectedSubscriptionRecord: GridRecord = null;
   subscriptionDataAccess: SubscriptionDataAccess = null;
 
+  interimHoldSelectedSubscriptionGridObject: GridComponent = null;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedSubscriptionGridMetaData = null;
     this.nonVerifiedSubscriptionGridMetaData = null;
@@ -225,9 +227,10 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           id: 'blacklist',
           label: 'Blacklist',
           btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            const SubscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
-            if (SubscriptionIdsList.length === 0) {
+          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+            this.interimHoldSelectedSubscriptionGridObject = gridComponentObject;
+            const subscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
+            if (subscriptionIdsList.length === 0) {
               this.helperService.showAlertDialog({
                 isSuccess: false,
                 message: LcpConstants.grid_generic_no_record_selected_error,
@@ -235,13 +238,22 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
                 }
               });
             } else {
-              const data = {
-                allIdsList: SubscriptionIdsList.join(';'),
-                comments: ''
-              };
-              this.utilityService.makerequest(this, this.handleBlackListRequest,
-                LcpRestUrls.blackList_subscription_request, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+              this.helperService.showPromptDialog({
+                required: true,
+                titleText: 'Enter comments to Blacklist',
+                placeholderText: 'Please provide your comments for blacklisting the subscriptions.',
+                onOk: (message) => {
+                  const data = {
+                    allIdsList: subscriptionIdsList.join(';'),
+                    comments: message
+                  };
+                  this.utilityService.makerequest(this, this.handleBlackListRequest,
+                    LcpRestUrls.blackList_subscription_request, 'POST', this.utilityService.urlEncodeData(data),
+                    'application/x-www-form-urlencoded');
+                },
+                onCancel: () => {
+                }
+              });
             }
           }
         }]

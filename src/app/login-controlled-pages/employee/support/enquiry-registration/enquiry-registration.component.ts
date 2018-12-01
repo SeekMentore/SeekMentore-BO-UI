@@ -51,6 +51,8 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
   interimHoldSelectedEnquiryRecord: GridRecord = null;
   enquiryDataAccess: EnquiryDataAccess = null;
 
+  interimHoldSelectedEnquiryGridObject: GridComponent = null;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedEnquiryGridMetaData = null;
     this.nonVerifiedEnquiryGridMetaData = null;
@@ -219,7 +221,8 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
           id: 'blacklist',
           label: 'Blacklist',
           btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+            this.interimHoldSelectedEnquiryGridObject = gridComponentObject;
             const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
             if (enquiryIdsList.length === 0) {
               this.helperService.showAlertDialog({
@@ -229,13 +232,22 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
                 }
               });
             } else {
-              const data = {
-                allIdsList: enquiryIdsList.join(';'),
-                comments: ''
-              };
-              this.utilityService.makerequest(this, this.handleBlackListRequest,
-                LcpRestUrls.blackList_enquiry_requests, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+              this.helperService.showPromptDialog({
+                required: true,
+                titleText: 'Enter comments to Blacklist',
+                placeholderText: 'Please provide your comments for blacklisting the enquiries.',
+                onOk: (message) => {
+                  const data = {
+                    allIdsList: enquiryIdsList.join(';'),
+                    comments: message
+                  };
+                  this.utilityService.makerequest(this, this.handleBlackListRequest,
+                    LcpRestUrls.blackList_enquiry_requests, 'POST', this.utilityService.urlEncodeData(data),
+                    'application/x-www-form-urlencoded');
+                },
+                onCancel: () => {
+                }
+              });              
             }
           }
         }]

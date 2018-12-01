@@ -191,24 +191,46 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approveMultiple',
             label: 'Approve',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_multiple, selectedRecords,
-                'documentId', this.uploadedDocumentGridObject, true);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_document_grid_approve, 
+                    selectedRecords,
+                    'documentId', 
+                    this.uploadedDocumentGridObject,
+                    'Enter comments to Approve Documents',
+                    'Please provide your comments for approving the documents.',
+                    false,
+                    true);
             }
           }, {
             id: 'sendReminderMultiple',
             label: 'Send Reminder',
             btnclass: 'btnReset',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_multiple, selectedRecords,
-                'documentId', this.uploadedDocumentGridObject, true);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_document_grid_reminder, 
+                    selectedRecords,
+                    'documentId', 
+                    this.uploadedDocumentGridObject, 
+                    'Enter comments to Send Reminder for Documents',
+                    'Please provide your comments for reminding the documents.',
+                    false,
+                    true,
+                    true);
             }
           }, {
             id: 'rejectMultiple',
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_multiple, selectedRecords,
-                'documentId', this.uploadedDocumentGridObject, true);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_document_grid_reject, 
+                    selectedRecords,
+                    'documentId', 
+                    this.uploadedDocumentGridObject,
+                    'Enter comments to Reject Documents',
+                    'Please provide your comments for rejecting the documents.',
+                    true,
+                    true);
             }
           }]
         },
@@ -219,24 +241,43 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approve',
             label: 'Approve',
             clickEvent: (record: GridRecord, button: ActionButton) => {              
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_approve_single, [record],
-                'documentId', this.uploadedDocumentGridObject);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_document_grid_approve, 
+                    [record],
+                    'documentId', 
+                    this.uploadedDocumentGridObject,
+                    'Enter comments to Approve Document',
+                    'Please provide your comments for approving the document.',
+                    false);
             }
           }, {
             id: 'sendReminder',
             label: 'Remind',
             btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reminder_single, [record],
-                'documentId', this.uploadedDocumentGridObject);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_document_grid_reminder, 
+                    [record],
+                    'documentId', 
+                    this.uploadedDocumentGridObject,
+                    'Enter comments to Send Reminder for Document',
+                    'Please provide your comments for reminding the document.',
+                    false,
+                    false,
+                    true);
             }
           }, {
             id: 'reject',
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_document_grid_reject_single, [record],
-                'documentId', this.uploadedDocumentGridObject);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_document_grid_reject, 
+                    [record],
+                    'documentId', 
+                    this.uploadedDocumentGridObject,
+                    'Enter comments to Reject Document',
+                    'Please provide your comments for rejecting the document.');
             }
           }]
         }
@@ -287,8 +328,15 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approveMultiple',
             label: 'Approve',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_multiple, selectedRecords,
-                'bankAccountId', this.bankDetailGridObject, true);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_bank_grid_approve, 
+                    selectedRecords,
+                    'bankAccountId', 
+                    this.bankDetailGridObject, 
+                    'Enter comments to Approve Bank Accounts',
+                    'Please provide your comments for approving the accounts.',
+                    false,
+                    true);
 
             }
           }, {
@@ -296,8 +344,15 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_multiple, selectedRecords,
-                'bankAccountId', this.bankDetailGridObject, true);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_bank_grid_reject, 
+                    selectedRecords,
+                    'bankAccountId', 
+                    this.bankDetailGridObject, 
+                    'Enter comments to Reject Bank Accounts',
+                    'Please provide your comments for rejecting the accounts.',
+                    true,
+                    true);
             }
           }]
         },
@@ -308,25 +363,72 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'approve',
             label: 'Approve',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_approve_single, [record],
-                'bankAccountId', this.bankDetailGridObject);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_bank_grid_approve, 
+                    [record],
+                    'bankAccountId', 
+                    this.bankDetailGridObject,
+                    'Enter comments to Approve Bank Account',
+                    'Please provide your comments for approving the account.',
+                    false);
             }
           }, {
             id: 'makeDefault',
             label: 'Default',
             btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_make_default, [record],
-                'bankAccountId', this.bankDetailGridObject);
-
+              this.helperService.showPromptDialog({
+                required: false,
+                titleText: 'Enter comments to Make Default this Bank Account',
+                placeholderText: 'Please provide your comments for making the account Default.',
+                onOk: (message) => {
+                  const data = {
+                    bankAccountId: record.getProperty('bankAccountId'),
+                    tutorId: this.tutorRecord.getProperty('tutorId'),
+                    comments: message
+                  };
+                  this.utilityService.makeRequestWithoutResponseHandler(LcpRestUrls.tutor_bank_grid_make_default, 'POST', this.utilityService.urlEncodeData(data),
+                    'application/x-www-form-urlencoded').subscribe(result => {
+                    let response = result['response'];
+                    response = this.utilityService.decodeObjectFromJSON(response);
+                    if (response != null) {
+                      if (response['success'] === false) {
+                        this.helperService.showAlertDialog({
+                          isSuccess: response['success'],
+                          message: response['message'],
+                          onButtonClicked: () => {
+                          }
+                        });
+                      } else {
+                        this.bankDetailGridObject.refreshGridData();
+                      }
+                    }
+                  }, error2 => {
+                    const myListener: AlertDialogEvent = {
+                      isSuccess: false,
+                      message: 'Communication failure!! Something went wrong',
+                      onButtonClicked: () => {
+                      }
+                    };
+                    this.helperService.showAlertDialog(myListener);
+                  });  
+                },
+                onCancel: () => {
+                }
+              });
             }
           }, {
             id: 'reject',
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              this.makeRestCallForGridOperation(LcpRestUrls.tutor_bank_grid_reject_single, [record],
-                'bankAccountId', this.bankDetailGridObject);
+              this.makeRestCallForGridOperation(
+                    LcpRestUrls.tutor_bank_grid_reject, 
+                    [record],
+                    'bankAccountId', 
+                    this.bankDetailGridObject,
+                    'Enter comments to Reject Bank Account',
+                    'Please provide your comments for rejecting the account.');
             }
           }]
         }
@@ -407,7 +509,17 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     };
   }
 
-  makeRestCallForGridOperation(url: string, selectedRecords: GridRecord[], property: string, gridComponent: GridComponent, multipleRecords: boolean = false) {
+  makeRestCallForGridOperation(
+          url: string, 
+          selectedRecords: GridRecord[], 
+          property: string, 
+          gridComponent: GridComponent, 
+          commentPopupTitleText: string,
+          commentPopupPlaceholderText: string,
+          commentsMandatory: boolean = true, 
+          multipleRecords: boolean = false,
+          showAlertMessageAndDoNotRefreshGrid: boolean = false
+  ) {
     let selectedIdsList = [];
     if (multipleRecords) {
       selectedIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, property);
@@ -422,34 +534,55 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      const data = {
-        params: selectedIdsList.join(';')
-      };
-      this.utilityService.makeRequestWithoutResponseHandler(url, 'POST', this.utilityService.urlEncodeData(data),
-        'application/x-www-form-urlencoded').subscribe(result => {
-        let response = result['response'];
-        response = this.utilityService.decodeObjectFromJSON(response);
-        if (response != null) {
-          if (response['success'] === false) {
-            this.helperService.showAlertDialog({
-              isSuccess: response['success'],
-              message: response['message'],
+      this.helperService.showPromptDialog({
+        required: commentsMandatory,
+        titleText: commentPopupTitleText,
+        placeholderText: commentPopupPlaceholderText,
+        onOk: (message) => {
+          const data = {
+            allIdsList: selectedIdsList.join(';'),
+            tutorId: this.tutorRecord.getProperty('tutorId'),
+            comments: message
+          };
+          this.utilityService.makeRequestWithoutResponseHandler(url, 'POST', this.utilityService.urlEncodeData(data),
+            'application/x-www-form-urlencoded').subscribe(result => {
+            let response = result['response'];
+            response = this.utilityService.decodeObjectFromJSON(response);
+            if (response != null) {
+              if (response['success'] === false) {
+                this.helperService.showAlertDialog({
+                  isSuccess: response['success'],
+                  message: response['message'],
+                  onButtonClicked: () => {
+                  }
+                });
+              } else {
+                if (showAlertMessageAndDoNotRefreshGrid) {
+                  const myListener: AlertDialogEvent = {
+                    isSuccess: response['success'],
+                    message: response['message'],
+                    onButtonClicked: () => {
+                    }
+                  };
+                  this.helperService.showAlertDialog(myListener);
+                } else {
+                  gridComponent.refreshGridData();
+                }
+              }
+            }
+          }, error2 => {
+            const myListener: AlertDialogEvent = {
+              isSuccess: false,
+              message: 'Communication failure!! Something went wrong',
               onButtonClicked: () => {
               }
-            });
-          } else {
-            gridComponent.refreshGridData();
-          }
+            };
+            this.helperService.showAlertDialog(myListener);
+          });  
+        },
+        onCancel: () => {
         }
-      }, error2 => {
-        const myListener: AlertDialogEvent = {
-          isSuccess: false,
-          message: 'Communication failure!! Something went wrong',
-          onButtonClicked: () => {
-          }
-        };
-        this.helperService.showAlertDialog(myListener);
-      });
+      });     
     }
   }
 

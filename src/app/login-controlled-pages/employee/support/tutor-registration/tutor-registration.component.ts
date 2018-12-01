@@ -99,24 +99,8 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getSelectionColumnBaseButtons() {
-    return [{
-      id: 'sendEmail',
-      label: 'Send Email',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
-        if (selectedEmailsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-        }
-      }
-    }, {
+  private getSelectionColumnBlacklistButton() {
+    return {
       id: 'blacklist',
       label: 'Blacklist',
       btnclass: 'btnReject',
@@ -147,6 +131,26 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
             onCancel: () => {
             }
           });
+        }
+      }
+    };
+  }
+
+  private getSelectionColumnBaseButton() {
+    return [{
+      id: 'sendEmail',
+      label: 'Send Email',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
         }
       }
     }];
@@ -316,20 +320,21 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
       ],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: this.getSelectionColumnBaseButtons().concat(customSelectionButtons)
+        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
       }
     };
     return grid;
   }
 
-  private getBaseCustomButton(
+  private getCustomButton (
           id:string, 
           label: string, 
           btnclass: string = 'btnSubmit', 
           actionText: string, 
           commentsRequired: boolean = false,
           titleText: string,
-          placeholderText: string) {
+          placeholderText: string
+  ) {
     return {
       id: id,
       label: label,
@@ -368,54 +373,59 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
   }
 
   public setUpGridMetaData() {
-    let contactedButton = this.getBaseCustomButton('contacted', 'Contacted', 'btnSubmit', 'contacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let recontactButton = this.getBaseCustomButton('recontact', 'To Be Re-Contacted', 'btnReset', 'recontact', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let nonverifyButton = this.getBaseCustomButton('nonverify', 'Non Verify', 'btnReset', 'nonverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let verifyButton = this.getBaseCustomButton('verify', 'Verify', 'btnSubmit', 'verify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let reverifyButton = this.getBaseCustomButton('reverify', 'Re-Verify', 'btnSubmit', 'reverify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let recontactedButton = this.getBaseCustomButton('recontacted', 'Re-Contacted', 'btnSubmit', 'recontacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let selectButton = this.getBaseCustomButton('select', 'Select', 'btnSubmit', 'select', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let failVerificationButton = this.getBaseCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let rejectButton = this.getBaseCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let contactedButton = this.getCustomButton('contacted', 'Contacted', 'btnSubmit', 'contacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactButton = this.getCustomButton('recontact', 'To Be Re-Contacted', 'btnReset', 'recontact', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let verifyButton = this.getCustomButton('verify', 'Verify', 'btnSubmit', 'verify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let reverifyButton = this.getCustomButton('reverify', 'Re-Verify', 'btnSubmit', 'reverify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactedButton = this.getCustomButton('recontacted', 'Re-Contacted', 'btnSubmit', 'recontacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let selectButton = this.getCustomButton('select', 'Select', 'btnSubmit', 'select', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let failVerificationButton = this.getCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
 
     this.nonContactedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('nonContactedBecomeTutorGrid', 'Non Contacted Tutors', '/rest/support/nonContactedBecomeTutorsList', [contactedButton, recontactButton, rejectButton]),
+      grid: this.getGridObject('nonContactedBecomeTutorGrid', 'Non Contacted Tutors', '/rest/support/nonContactedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
       htmlDomElementId: 'non-contacted-become-tutor-grid',
       hidden: false
     };
 
     this.nonVerifiedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList', [verifyButton, failVerificationButton, rejectButton]),
+      grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
       htmlDomElementId: 'non-verified-become-tutor-grid',
       hidden: false
     };
 
     this.verifiedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList', [selectButton, rejectButton]),
+      grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
       htmlDomElementId: 'verified-become-tutor-grid',
       hidden: false
     };
 
     this.verificationFailedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList', [reverifyButton, rejectButton]),
+      grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
       htmlDomElementId: 'verification-failed-become-tutor-grid',
       hidden: false
     };
 
     this.toBeReContactedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList', [recontactedButton, rejectButton]),
+      grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
       htmlDomElementId: 'to-be-recontacted-become-tutor-grid',
       hidden: false
     };
 
     this.selectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList', [rejectButton]),
+      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList', []),
       htmlDomElementId: 'selected-become-tutor-grid',
       hidden: false
     };
 
     this.rejectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList', [nonverifyButton, selectButton]),
+      grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList', 
+                            [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
       htmlDomElementId: 'rejected-become-tutor-grid',
       hidden: false
     };

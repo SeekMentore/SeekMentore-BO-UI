@@ -92,7 +92,65 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  private getSelectionColumnBlacklistButton() {
+    return {
+      id: 'blacklist',
+      label: 'Blacklist',
+      btnclass: 'btnReject',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedEnquiryGridObject = gridComponentObject;
+        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
+        if (enquiryIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: true,
+            titleText: 'Enter comments to Blacklist',
+            placeholderText: 'Please provide your comments for blacklisting the enquiries.',
+            onOk: (message) => {
+              const data = {
+                allIdsList: enquiryIdsList.join(';'),
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.blackList_enquiry_requests, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });              
+        }
+      }
+    };
+  }
+
+  private getSelectionColumnBaseButton() {
+    return [{
+      id: 'sendEmail',
+      label: 'Send Email',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+        // Refer document
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
+        }
+      }
+    }];
+  }
+
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
@@ -200,101 +258,112 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       ],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: [{
-          id: 'sendEmail',
-          label: 'Send Email',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            // Refer document
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }, {
-          id: 'blacklist',
-          label: 'Blacklist',
-          btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-            this.interimHoldSelectedEnquiryGridObject = gridComponentObject;
-            const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
-            if (enquiryIdsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showPromptDialog({
-                required: true,
-                titleText: 'Enter comments to Blacklist',
-                placeholderText: 'Please provide your comments for blacklisting the enquiries.',
-                onOk: (message) => {
-                  const data = {
-                    allIdsList: enquiryIdsList.join(';'),
-                    comments: message
-                  };
-                  this.utilityService.makerequest(this, this.handleBlackListRequest,
-                    LcpRestUrls.blackList_enquiry_requests, 'POST', this.utilityService.urlEncodeData(data),
-                    'application/x-www-form-urlencoded');
-                },
-                onCancel: () => {
-                }
-              });              
-            }
-          }
-        }]
+        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
       }
     }
     return grid;
   }
 
+  private getCustomButton (
+      id:string, 
+      label: string, 
+      btnclass: string = 'btnSubmit', 
+      actionText: string, 
+      commentsRequired: boolean = false,
+      titleText: string,
+      placeholderText: string
+  ) {
+    return {
+      id: id,
+      label: label,
+      btnclass: btnclass,
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedEnquiryGridObject = gridComponentObject;
+        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
+        if (enquiryIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: enquiryIdsList.join(';'),
+                button: actionText,
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.take_action_on_find_tutor, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
   public setUpGridMetaData() {
+    let contactedButton = this.getCustomButton('contacted', 'Contacted', 'btnSubmit', 'contacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactButton = this.getCustomButton('recontact', 'To Be Re-Contacted', 'btnReset', 'recontact', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let verifyButton = this.getCustomButton('verify', 'Verify', 'btnSubmit', 'verify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let reverifyButton = this.getCustomButton('reverify', 'Re-Verify', 'btnSubmit', 'reverify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactedButton = this.getCustomButton('recontacted', 'Re-Contacted', 'btnSubmit', 'recontacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let selectButton = this.getCustomButton('select', 'Select', 'btnSubmit', 'select', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let failVerificationButton = this.getCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+
     this.nonContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquiriesList'),
+      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquiriesList', 
+                              [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
       htmlDomElementId: 'non-contacted-enquiry-grid',
       hidden: false
     };
 
     this.nonVerifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquiriesList'),
+      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquiriesList', 
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
       htmlDomElementId: 'non-verified-enquiry-grid',
       hidden: false
     };
 
     this.verifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquiriesList'),
+      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquiriesList', 
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
       htmlDomElementId: 'verified-enquiry-grid',
       hidden: false
     };
 
     this.verificationFailedEnquiryGridMetaData = {
-      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquiriesList'),
+      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquiriesList', 
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
       htmlDomElementId: 'verification-failed-enquiry-grid',
       hidden: false
     };
 
     this.toBeReContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquiriesList'),
+      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquiriesList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
       htmlDomElementId: 'to-be-recontacted-enquiry-grid',
       hidden: false
     };
 
     this.selectedEnquiryGridMetaData = {
-      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList'),
+      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList', []),
       htmlDomElementId: 'selected-enquiry-grid',
       hidden: false
     };
 
     this.rejectedEnquiryGridMetaData = {
-      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquiriesList'),
+      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquiriesList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
       htmlDomElementId: 'rejected-enquiry-grid',
       hidden: false
     };
@@ -319,7 +388,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     }
   }
 
-  handleBlackListRequest(context: any, response: any) {
+  handleSelectionActionRequest(context: any, response: any) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
         isSuccess: response['success'],

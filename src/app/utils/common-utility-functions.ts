@@ -1,4 +1,5 @@
 import { CkeditorConfig } from "./ckeditor-config";
+import { GridRecord } from "./grid/grid-record";
 
 declare var CKEDITOR: any;
 
@@ -19,6 +20,13 @@ export class CommonUtilityFunctions {
       }
     }
     return false;
+  }
+
+  public static getDateForDateInputParam(value: any) {
+    const dateParam = new Date(value);
+    let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
+    let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
+    return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
   public static getDateStringInDDMMYYYYHHmmSS(datemillis: number) {
@@ -48,24 +56,110 @@ export class CommonUtilityFunctions {
     return selectedOptionsArray;
   }
 
-  static updateRecordProperty(key: string, value: string, data_type: string, updatedData: any, parentRecord: any) {
-    switch (data_type) {
-      case 'list':
-        let previous_value = updatedData[key];
-        if (!previous_value) {
-          previous_value = parentRecord.property[key];
+  public static checkStringContainsText(stringObject: string, textToSearch: string) {
+    if (CommonUtilityFunctions.checkObjectAvailability(stringObject)) {
+      if ('' !== stringObject.trim()) {
+        if (stringObject.includes(textToSearch)) {
+          return true;
         }
-        const previous_value_array = previous_value.split(';');
-        if (previous_value_array.includes(value)) {
-          previous_value_array.splice(previous_value_array.indexOf(value), 1);
+      }
+    }
+    return false;
+  }
 
+  private static getSelectedItemsValueList(selectOptions :{value:'',label:''} []) {
+    let valueList : string[] = [];
+    if (CommonUtilityFunctions.checkObjectAvailability(selectOptions)) {
+      if (selectOptions.length > 0) {
+        selectOptions.forEach( (selectOption) => {
+          valueList.push(selectOption.value);
+        })
+      }
+    }
+    return valueList;
+  } 
+
+  public static updateRecordProperty (
+              key: string, 
+              value: string, 
+              data_type: string, 
+              updatedData: any, 
+              record: GridRecord,
+              event: any = null, 
+              deselected: boolean = false,
+              isAllOPeration: boolean = false
+  ) {
+    switch (data_type) {
+      case 'multilist' : {
+        if (isAllOPeration) {
+          if (deselected) {
+            updatedData[key] = 'NULLIFIED';
+          } else {
+            let valueList : string[] = this.getSelectedItemsValueList(event);
+            if (valueList.length > 0) {
+              updatedData[key] = valueList.join(';');
+            } else {
+              updatedData[key] = 'NULLIFIED';
+            }
+          }
         } else {
-          previous_value_array.push(value);
+          let previous_selected_value = updatedData[key];
+          if (!CommonUtilityFunctions.checkStringAvailability(previous_selected_value)) {
+            previous_selected_value = record.getProperty(key);
+          }
+          if ('NULLIFIED' === previous_selected_value) {
+            previous_selected_value = null;
+          }
+          let previous_selected_value_array = CommonUtilityFunctions.checkStringAvailability(previous_selected_value) ? previous_selected_value.split(';') : [];
+          if (deselected) {
+            if (previous_selected_value.length > 0) {
+              previous_selected_value_array.splice(previous_selected_value_array.indexOf(value), 1); 
+            }
+          } else {
+            previous_selected_value_array.push(value);
+          }
+          if (previous_selected_value_array.length > 0) {
+            updatedData[key] = previous_selected_value_array.join(';');
+          } else {
+            updatedData[key] = 'NULLIFIED';
+          }
         }
-        updatedData[key] = previous_value_array.join(';');
         break;
-      default:
-        updatedData[key] = value;
+      }
+      case 'list': { 
+        if (deselected) {
+          updatedData[key] = 'NULLIFIED';
+        } else {
+          updatedData[key] = value;
+        }      
+        break;
+      }
+      case 'millis' : {
+        let millisValue = new Date(value).getTime();        
+        updatedData[key] = millisValue;
+        break;
+      }
+      case 'date' : {
+        let dateValue = new Date(value);
+        updatedData[key] = dateValue;
+        break;
+      }
+      case 'string' : {
+        if (CommonUtilityFunctions.checkStringAvailability(value)) {
+          updatedData[key] = value;
+        } else {
+          updatedData[key] = 'NULLIFIED';
+        }
+        break;
+      }      
+      default : {
+        if (CommonUtilityFunctions.checkStringAvailability(value.toString())) {
+          updatedData[key] = value;
+        } else {
+          updatedData[key] = 'NULLIFIED';
+        }
+        break;
+      }
     }   
   }
 

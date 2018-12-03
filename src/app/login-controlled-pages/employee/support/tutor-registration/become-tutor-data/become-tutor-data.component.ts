@@ -78,17 +78,21 @@ export class BecomeTutorDataComponent implements OnInit {
     return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
   }
 
+  getDateForDateInputParam(value: any) {
+    return CommonUtilityFunctions.getDateForDateInputParam(value);
+  }
+
   getLookupRendererFromValue(value: any, lookupList: any []) {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateTutorProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedTutorRecord, this.tutorRecord);
+  updateTutorProperty(key: string, value: string, data_type: string, event: any = null, deselected: boolean = false, isAllOPeration: boolean = false) {    
+    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedTutorRecord, this.tutorRecord, event, deselected, isAllOPeration);    
   }
 
   updateTutorRecord() {
     const data = CommonUtilityFunctions.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
-    this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.customer_update_record, 'POST',
+    this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.become_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
@@ -99,9 +103,9 @@ export class BecomeTutorDataComponent implements OnInit {
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
+    context.helperService.showAlertDialog(myListener);
     if (data['success']) {
-      this.editRecordForm = false;
+      context.editRecordForm = false;
     } 
   }
 }

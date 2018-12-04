@@ -79,6 +79,12 @@ export class CommonUtilityFunctions {
     return valueList;
   } 
 
+  public static convertValueOfYYYYMMDDDateToJSDate(value: string) {
+    let parts: string[] = value.split('-');
+    let dateValue = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    return dateValue;
+  }
+
   public static updateRecordProperty (
               key: string, 
               value: string, 
@@ -135,13 +141,12 @@ export class CommonUtilityFunctions {
         break;
       }
       case 'millis' : {
-        let millisValue = new Date(value).getTime();        
+        let millisValue = CommonUtilityFunctions.convertValueOfYYYYMMDDDateToJSDate(value).getTime();        
         updatedData[key] = millisValue;
         break;
       }
-      case 'date' : {
-        let dateValue = new Date(value);
-        updatedData[key] = dateValue;
+      case 'date' : {        
+        updatedData[key] = value;
         break;
       }
       case 'string' : {

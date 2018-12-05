@@ -38,7 +38,7 @@
         <td class="td-label"><label>Date of Brith</label></td>
         <td><input class="input_field" type="date" value="{{getDateForDateInputParam(tutorRecord.property['dateOfBirth'])}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('dateOfBirth', $event.target.value, 'date', $event)"></td>
+                   (change)="updateTutorProperty('dateOfBirth', $event.target.valueAsDate, 'date', $event)"></td>
       </tr>
       <tr>
         <td class="td-label"><label>Contact Number</label></td>

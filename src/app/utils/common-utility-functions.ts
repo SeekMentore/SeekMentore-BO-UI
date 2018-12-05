@@ -29,6 +29,12 @@ export class CommonUtilityFunctions {
     return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
+  public static formatDateYYYYMMDD(dateParam: any) {
+    let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
+    let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
+    return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
+  }
+
   public static getDateStringInDDMMYYYYHHmmSS(datemillis: number) {
     if (CommonUtilityFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
@@ -141,12 +147,12 @@ export class CommonUtilityFunctions {
         break;
       }
       case 'millis' : {
-        let millisValue = CommonUtilityFunctions.convertValueOfYYYYMMDDDateToJSDate(value).getTime();        
-        updatedData[key] = millisValue;
+        // directly return 'valueAsNumber'
+        updatedData[key] = value;
         break;
       }
       case 'date' : {        
-        updatedData[key] = value;
+        updatedData[key] = CommonUtilityFunctions.formatDateYYYYMMDD(value);
         break;
       }
       case 'string' : {

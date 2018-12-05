@@ -67,8 +67,8 @@ export class SubscriptionDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateSubscriptionProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord);
+  updateSubscriptionProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord, deselected, isAllOPeration);
   }
 
   updateSubscriptionRecord() {

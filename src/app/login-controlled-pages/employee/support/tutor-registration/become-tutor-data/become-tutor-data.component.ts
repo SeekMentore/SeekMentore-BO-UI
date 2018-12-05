@@ -86,9 +86,9 @@ export class BecomeTutorDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateTutorProperty(key: string, value: string, data_type: string, event: any = null, deselected: boolean = false, isAllOPeration: boolean = false) {   
-    console.log(key + value + data_type);
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedTutorRecord, this.tutorRecord, event, deselected, isAllOPeration);    
+  updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedTutorRecord, this.tutorRecord, deselected, isAllOPeration);
+    console.log(this.updatedTutorRecord);
   }
 
   updateTutorRecord() {

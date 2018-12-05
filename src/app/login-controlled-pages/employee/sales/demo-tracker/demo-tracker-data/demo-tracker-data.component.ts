@@ -50,8 +50,8 @@ export class DemoTrackerDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  updateDemoTrackerProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.demoTrackerUpdatedRecord, this.demoTrackerRecord);
+  updateDemoTrackerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.demoTrackerUpdatedRecord, this.demoTrackerRecord, deselected, isAllOPeration);
   }
 
   updateDemoTrackerRecord() {

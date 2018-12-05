@@ -156,7 +156,13 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             dataType: 'string',
             mapping: 'additionalDetails',
             lengthyData: true
-        }],
+          },{
+            id: 'addressDetails',
+            headerName: 'Address Details',
+            dataType: 'string',
+            mapping: 'addressDetails',
+            lengthyData: true
+          }],
         hasSelectionColumn: true,
         selectionColumn: {
           buttons: [{

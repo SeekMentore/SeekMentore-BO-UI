@@ -55,8 +55,8 @@ export class ComplaintDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateComplaintProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.complaintUpdatedRecord, this.complaintRecord);
+  updateComplaintProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.complaintUpdatedRecord, this.complaintRecord, deselected, isAllOPeration);
   }
 
   updateComplaintRecord() {

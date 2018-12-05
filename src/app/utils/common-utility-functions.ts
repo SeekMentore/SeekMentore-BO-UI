@@ -93,16 +93,16 @@ export class CommonUtilityFunctions {
 
   public static updateRecordProperty (
               key: string, 
-              value: string, 
+              event: any, 
               data_type: string, 
               updatedData: any, 
               record: GridRecord,
-              event: any = null, 
-              deselected: boolean = false,
-              isAllOPeration: boolean = false
+              deselected: boolean,
+              isAllOPeration: boolean
   ) {
     switch (data_type) {
       case 'multilist' : {
+        let value = event.value;
         if (isAllOPeration) {
           if (deselected) {
             updatedData[key] = 'NULLIFIED';
@@ -139,6 +139,7 @@ export class CommonUtilityFunctions {
         break;
       }
       case 'list': { 
+        let value = event.value;
         if (deselected) {
           updatedData[key] = 'NULLIFIED';
         } else {
@@ -147,15 +148,17 @@ export class CommonUtilityFunctions {
         break;
       }
       case 'millis' : {
-        // directly return 'valueAsNumber'
+        let value = event.target.valueAsNumber;   
         updatedData[key] = value;
         break;
       }
-      case 'date' : {        
+      case 'date' : {
+        let value = event.target.valueAsDate;      
         updatedData[key] = CommonUtilityFunctions.formatDateYYYYMMDD(value);
         break;
       }
       case 'string' : {
+        let value = event.target.value;
         if (CommonUtilityFunctions.checkStringAvailability(value)) {
           updatedData[key] = value;
         } else {
@@ -164,6 +167,7 @@ export class CommonUtilityFunctions {
         break;
       }      
       default : {
+        let value = event.target.value;
         if (CommonUtilityFunctions.checkStringAvailability(value.toString())) {
           updatedData[key] = value;
         } else {

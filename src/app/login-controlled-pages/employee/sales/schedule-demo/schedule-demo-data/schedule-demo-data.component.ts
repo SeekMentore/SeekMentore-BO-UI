@@ -322,8 +322,8 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
     };
   }
 
-  updateScheduleDemoMappedTutorProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.scheduleDemoMappedTutorUpdatedRecord, this.mappedTutorRecord);
+  updateScheduleDemoMappedTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.scheduleDemoMappedTutorUpdatedRecord, this.mappedTutorRecord, deselected, isAllOPeration);
   }
 
   updateScheduleDemoMappedTutorRecord() {

@@ -150,7 +150,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         title: 'Uploaded Documents',
         store: {
           isStatic: false,
-          restURL: '/rest/registeredTutor/uploadedDocuments'
+          restURL: '/rest/registeredTutor/uploadedDocumentList'
         },
         columns: [{
           id: 'filename',
@@ -292,7 +292,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         title: 'Bank Details',
         store: {
           isStatic: false,
-          restURL: '/rest/registeredTutor/bankDetails'
+          restURL: '/rest/registeredTutor/bankDetailList'
         },
         columns: [{
           id: 'bankName',
@@ -443,7 +443,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         title: 'Current Packages',
         store: {
           isStatic: false,
-          restURL: '/rest/registeredTutor/currentPackages'
+          restURL: '/rest/registeredTutor/currentPackageList'
         },
         columns: [{
           id: 'customerName',
@@ -478,7 +478,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         title: 'History Packages',
         store: {
           isStatic: false,
-          restURL: '/rest/registeredTutor/historyPackages'
+          restURL: '/rest/registeredTutor/historyPackageList'
         },
         columns: [{
           id: 'customerName',
@@ -586,10 +586,11 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     }
   }
 
-  updateTutorProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.tutorUpdatedData, this.tutorRecord);
+  updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorUpdatedData, this.tutorRecord, deselected, isAllOPeration);
+    console.log(this.tutorUpdatedData);
   }
-
+  
   updateTutorRecord() {
     const data = CommonUtilityFunctions.encodedGridFormData(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
     if (this.panCard) {

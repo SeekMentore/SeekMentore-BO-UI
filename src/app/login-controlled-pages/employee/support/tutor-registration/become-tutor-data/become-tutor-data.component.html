@@ -16,14 +16,14 @@
         <td class="td-label"><label>First Name</label></td>
         <td><input class="input_field" type="text" value="{{tutorRecord.property['firstName']}}"
                     [disabled]="!editRecordForm"
-                    (change)="updateTutorProperty('firstName', $event.target.value, 'string', $event)">
+                    (change)="updateTutorProperty('firstName', $event, 'string')">
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Last Name</label></td>
         <td><input class="input_field" type="text" value="{{tutorRecord.property['lastName']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('lastName', $event.target.value, 'string', $event)">
+                   (change)="updateTutorProperty('lastName', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -38,20 +38,20 @@
         <td class="td-label"><label>Date of Brith</label></td>
         <td><input class="input_field" type="date" value="{{getDateForDateInputParam(tutorRecord.property['dateOfBirth'])}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('dateOfBirth', $event.target.valueAsDate, 'date', $event)"></td>
+                   (change)="updateTutorProperty('dateOfBirth', $event, 'date')"></td>
       </tr>
       <tr>
         <td class="td-label"><label>Contact Number</label></td>
         <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('contactNumber', $event.target.value, 'string', $event)">
+                   (change)="updateTutorProperty('contactNumber', $event, 'string')">
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{tutorRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('emailId', $event.target.value, 'string', $event)">
+                   (change)="updateTutorProperty('emailId', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -60,8 +60,8 @@
           <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
                                    [(ngModel)]="selectedGenderOption" name="genderOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('gender', $event.value, 'list', $event)"
-                                   (onDeSelect)="updateTutorProperty('gender', $event.value, 'list', $event, true)">
+                                   (onSelect)="updateTutorProperty('gender', $event, 'list')"
+                                   (onDeSelect)="updateTutorProperty('gender', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -71,8 +71,8 @@
           <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
                                    [(ngModel)]="selectedQualificationOption" name="qualificationOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('qualification', $event.value, 'list', $event)"
-                                   (onDeSelect)="updateTutorProperty('qualification', $event.value, 'list', $event, true)">
+                                   (onSelect)="updateTutorProperty('qualification', $event, 'list')"
+                                   (onDeSelect)="updateTutorProperty('qualification', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -82,8 +82,8 @@
           <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
                                    [(ngModel)]="selectedProfessionOption" name="professionOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('primaryProfession', $event.value, 'list', $event)"
-                                   (onDeSelect)="updateTutorProperty('primaryProfession', $event.value, 'list', $event, true)">
+                                   (onSelect)="updateTutorProperty('primaryProfession', $event, 'list')"
+                                   (onDeSelect)="updateTutorProperty('primaryProfession', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -93,8 +93,8 @@
           <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
                                    [(ngModel)]="selectedTransportOption" name="transportOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('transportMode', $event.value, 'list', $event)"
-                                   (onDeSelect)="updateTutorProperty('transportMode', $event.value, 'list', $event, true)">
+                                   (onSelect)="updateTutorProperty('transportMode', $event, 'list')"
+                                   (onDeSelect)="updateTutorProperty('transportMode', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -102,7 +102,7 @@
         <td class="td-label"><label>Teaching Experience</label></td>
         <td><input class="input_field" type="number" value="{{tutorRecord.property['teachingExp']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('teachingExp', $event.target.value, 'number', $event)"></td>
+                   (change)="updateTutorProperty('teachingExp', $event, 'number')"></td>
       </tr>
       <tr>
         <td class="td-label"><label>Student Grades</label></td>
@@ -110,10 +110,10 @@
           <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
                                    [(ngModel)]="selectedStudentGradeOptions" name="studentGradeOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('studentGrades', $event.value, 'multilist', $event)"
-                                   (onDeSelect)="updateTutorProperty('studentGrades', $event.value, 'multilist', $event, true)"
-                                   (onDeSelectAll)="updateTutorProperty('studentGrades', $event.value, 'multilist', $event, true, true)"
-                                   (onSelectAll)="updateTutorProperty('studentGrades', $event.value, 'multilist', $event, false, true)">
+                                   (onSelect)="updateTutorProperty('studentGrades', $event, 'multilist')"
+                                   (onDeSelect)="updateTutorProperty('studentGrades', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateTutorProperty('studentGrades', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateTutorProperty('studentGrades', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -123,10 +123,10 @@
           <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
                                    [(ngModel)]="selectedSubjectOptions" name="subjectOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('subjects', $event.value, 'multilist', $event)"
-                                   (onDeSelect)="updateTutorProperty('subjects', $event.value, 'multilist', $event, true)"
-                                   (onDeSelectAll)="updateTutorProperty('subjects', $event.value, 'multilist', $event, true, true)"
-                                   (onSelectAll)="updateTutorProperty('subjects', $event.value, 'multilist', $event, false, true)">
+                                   (onSelect)="updateTutorProperty('subjects', $event, 'multilist')"
+                                   (onDeSelect)="updateTutorProperty('subjects', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateTutorProperty('subjects', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateTutorProperty('subjects', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -136,10 +136,10 @@
           <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
                                    [(ngModel)]="selectedLocationOptions" name="locationOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('locations', $event.value, 'multilist', $event)"
-                                   (onDeSelect)="updateTutorProperty('locations', $event.value, 'multilist', $event, true)"
-                                   (onDeSelectAll)="updateTutorProperty('locations', $event.value, 'multilist', $event, true, true)"
-                                   (onSelectAll)="updateTutorProperty('locations', $event.value, 'multilist', $event, false, true)">
+                                   (onSelect)="updateTutorProperty('locations', $event, 'multilist')"
+                                   (onDeSelect)="updateTutorProperty('locations', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateTutorProperty('locations', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateTutorProperty('locations', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -149,10 +149,10 @@
           <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
                                    [(ngModel)]="selectedCallTimeOptions" name="callTimeOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('preferredTimeToCall', $event.value, 'multilist', $event)"
-                                   (onDeSelect)="updateTutorProperty('preferredTimeToCall', $event.value, 'multilist', $event, true)"
-                                   (onDeSelectAll)="updateTutorProperty('preferredTimeToCall', $event.value, 'multilist', $event, true, true)"
-                                   (onSelectAll)="updateTutorProperty('preferredTimeToCall', $event.value, 'multilist', $event, false, true)">
+                                   (onSelect)="updateTutorProperty('preferredTimeToCall', $event, 'multilist')"
+                                   (onDeSelect)="updateTutorProperty('preferredTimeToCall', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateTutorProperty('preferredTimeToCall', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateTutorProperty('preferredTimeToCall', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -162,8 +162,18 @@
             <textarea 
                     class="textarea_field"
                     [disabled]="!editRecordForm" 
-                    (change)="updateTutorProperty('additionalDetails', $event.target.value, 'string', $event)"
+                    (change)="updateTutorProperty('additionalDetails', $event, 'string')"
                     >{{tutorRecord.property['additionalDetails']}}</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Address Details</label></td>
+        <td>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateTutorProperty('addressDetails', $event, 'string')"
+                    >{{tutorRecord.property['addressDetails']}}</textarea>
         </td>
       </tr>
       <tr>
@@ -172,8 +182,8 @@
           <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
                                    [(ngModel)]="selectedReferenceOption" name="referenceOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('reference', $event.value, 'list', $event)"
-                                   (onDeSelect)="updateTutorProperty('reference', $event.value, 'list', $event, true)">
+                                   (onSelect)="updateTutorProperty('reference', $event, 'list')"
+                                   (onDeSelect)="updateTutorProperty('reference', $event, 'list', true)">
                                    
           </ng-multiselect-dropdown>
         </td>
@@ -184,10 +194,10 @@
           <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
                                    [(ngModel)]="selectedTeachingTypeOptions" name="teachingTypeOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('preferredTeachingType', $event.value, 'multilist', $event)"
-                                   (onDeSelect)="updateTutorProperty('preferredTeachingType', $event.value, 'multilist', $event, true)"
-                                   (onDeSelectAll)="updateTutorProperty('preferredTeachingType', $event.value, 'multilist', $event, true, true)"
-                                   (onSelectAll)="updateTutorProperty('preferredTeachingType', $event.value, 'multilist', $event, false, true)">
+                                   (onSelect)="updateTutorProperty('preferredTeachingType', $event, 'multilist')"
+                                   (onDeSelect)="updateTutorProperty('preferredTeachingType', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateTutorProperty('preferredTeachingType', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateTutorProperty('preferredTeachingType', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>

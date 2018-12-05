@@ -67,8 +67,8 @@ export class EnquiryDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  updateEnquiryProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.enquiryUpdatedRecord, this.enquiryRecord);
+  updateEnquiryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enquiryRecord, deselected, isAllOPeration);
   }
 
   updateEnquiryRecord() {

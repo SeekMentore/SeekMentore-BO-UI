@@ -62,8 +62,8 @@ export class MappedTutorDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  updateMappedTutorProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.mappedTutorUpdatedRecord, this.mappedTutorRecord);
+  updateMappedTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.mappedTutorUpdatedRecord, this.mappedTutorRecord, deselected, isAllOPeration);
   }  
 
   updateMappedTutorRecord() {

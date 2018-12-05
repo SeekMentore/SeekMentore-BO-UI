@@ -51,8 +51,8 @@ export class QueryDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateQueryProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.queryUpdatedRecord, this.queryRecord);
+  updateQueryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.queryUpdatedRecord, this.queryRecord, deselected, isAllOPeration);
   }
 
   updateQueryRecord() {

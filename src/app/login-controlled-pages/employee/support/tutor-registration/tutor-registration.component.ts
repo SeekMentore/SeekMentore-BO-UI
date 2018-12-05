@@ -293,6 +293,13 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           lengthyData: true
         },
         {
+          id: 'addressDetails',
+          headerName: 'Address Details',
+          dataType: 'string',
+          mapping: 'addressDetails',
+          lengthyData: true
+        },
+        {
           id: 'reference',
           headerName: 'Reference',
           dataType: 'list',

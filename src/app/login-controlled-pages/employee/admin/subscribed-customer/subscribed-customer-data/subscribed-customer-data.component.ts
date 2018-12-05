@@ -103,7 +103,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
         title: 'Current Packages',
         store: {
           isStatic: false,
-          restURL: '/rest/subscribedCustomer/currentPackages'
+          restURL: '/rest/subscribedCustomer/currentPackageList'
         },
         columns: [{
           id: 'customerName',
@@ -138,7 +138,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
         title: 'History Packages',
         store: {
           isStatic: false,
-          restURL: '/rest/subscribedCustomer/historyPackages'
+          restURL: '/rest/subscribedCustomer/historyPackageList'
         },
         columns: [{
           id: 'customerName',
@@ -169,9 +169,9 @@ export class SubscribedCustomerDataComponent implements OnInit {
     };
   }
 
-
-  updateCustomerProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.customerUpdatedData, this.customerRecord);
+  updateCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
+    console.log(this.customerUpdatedData);
   }
 
   updateCustomerRecord() {

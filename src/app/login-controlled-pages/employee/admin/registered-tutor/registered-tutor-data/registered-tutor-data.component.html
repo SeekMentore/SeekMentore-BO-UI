@@ -125,6 +125,16 @@
           </td>
         </tr>
         <tr>
+          <td class="td-label"><label>Address Details</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorProperty('addressDetails', $event.target.value, 'string')"
+                      >{{tutorRecord.property['addressDetails']}}</textarea>
+          </td>
+        </tr>
+        <tr>
           <td class="td-label"><label>Preferred Teaching Type</label></td>
           <td>
             <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"

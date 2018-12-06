@@ -50,6 +50,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
   selectedSubscriptionRecord: GridRecord = null;
   interimHoldSelectedSubscriptionRecord: GridRecord = null;
   subscriptionDataAccess: SubscriptionDataAccess = null;
+  selectedRecordGridType: string = null;
 
   interimHoldSelectedSubscriptionGridObject: GridComponent = null;
 
@@ -167,9 +168,10 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           renderer: (record: GridRecord, column: Column) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
           },
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             // Open the Data view port
             this.interimHoldSelectedSubscriptionRecord = record;
+            this.selectedRecordGridType = gridComponentObject.grid.id;       
             if (this.subscriptionDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
@@ -305,7 +307,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
                 comments: message
               };
               this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.take_action_on_become_tutor, 'POST', this.utilityService.urlEncodeData(data),
+                LcpRestUrls.take_action_on_subscription, 'POST', this.utilityService.urlEncodeData(data),
                 'application/x-www-form-urlencoded');
             },
             onCancel: () => {

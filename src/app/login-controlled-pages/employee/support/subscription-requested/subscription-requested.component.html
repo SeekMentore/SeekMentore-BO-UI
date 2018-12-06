@@ -14,6 +14,10 @@
       class="ok-button" (click)="toggleVisibilitySubscriptionGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-subscription-data [subscriptionRecord]="selectedSubscriptionRecord" [subscriptionDataAccess]="subscriptionDataAccess"></app-subscription-data>
+    <app-subscription-data 
+                    [subscriptionRecord]="selectedSubscriptionRecord" 
+                    [subscriptionDataAccess]="subscriptionDataAccess"
+                    [selectedRecordGridType]="selectedRecordGridType">
+    </app-subscription-data>
   </div>
 </div>

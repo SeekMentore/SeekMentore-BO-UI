@@ -1,6 +1,6 @@
 <div class="form-container-div">
   <form class="form-container" style="max-width: 80%">
-    <div *ngIf="tutorDataAccess.formDataEditAccess"
+    <div *ngIf="tutorDataAccess.formDataEditAccess && !formEditMandatoryDisbaled"
           class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
@@ -329,7 +329,7 @@
           </table>
         </td>
       </tr>
-      <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons">
+      <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
         <td class="td-label">
             <i
                 id="employee-actions-details-expander"
@@ -340,7 +340,7 @@
           Show Action Buttons
         </td>
       </tr>  
-      <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons">
+      <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
         <td colspan="2">          
           <table width="100%">
               <tr>
@@ -354,34 +354,165 @@
                   Hide Action Buttons
                 </td>
               </tr>
-              <tr>
+              <tr *ngIf="selectedRecordGridType === 'nonContactedBecomeTutorGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord()">            
+                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnSubmit"
-                          (click)="takeActionOnTutorRecord()">            
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
                           Contacted
                   </button>
                 </td>              
                 <td>
                   <button type="submit"
                           class="btnReset"
-                          (click)="takeActionOnTutorRecord()">            
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
                           To Be Re-Contacted
                   </button>
                 </td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord()">            
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
                           Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'nonVerifiedBecomeTutorGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
+                          Verify
+                  </button>
+                </td>              
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
+                          Fail Verify
+                  </button>
+                </td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'verifiedBecomeTutorGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          Select
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'verificationFailedBecomeTutorGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
+                          Re-Verify
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'toBeReContactedBecomeTutorGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnReset"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          Re-Contacted
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'rejectedBecomeTutorGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnReset"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          Re-Contacted
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          Select
                   </button>
                 </td>
               </tr>
@@ -392,7 +523,7 @@
         </td>
       </tr>
     </table>        
-    <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
+    <button *ngIf="tutorDataAccess.formDataEditAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
             class="ok-button form-container-update-button"
             (click)="updateTutorRecord()">            
             Update

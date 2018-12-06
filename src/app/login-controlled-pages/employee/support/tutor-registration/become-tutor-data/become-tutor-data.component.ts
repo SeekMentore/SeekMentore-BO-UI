@@ -22,12 +22,16 @@ export class BecomeTutorDataComponent implements OnInit {
   @Input()
   tutorDataAccess: BecomeTutorDataAccess = null;
 
+  @Input()
+  selectedRecordGridType: string = null;
+
   updatedTutorRecord = {};
 
   showEmployeeActionDetails = false;
   showEmployeeActionButtons = false;
 
-  mandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
+  takeActionDisabled = true;
   superAccessAwarded = false;
   editRecordForm = false;
 
@@ -72,7 +76,24 @@ export class BecomeTutorDataComponent implements OnInit {
     this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('locations'));
     this.selectedCallTimeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.tutorRecord.getProperty('preferredTimeToCall'));
     this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.tutorRecord.getProperty('reference'));
-    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));    
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
+    this.setDisabledStatus();
+  }
+
+  private setDisabledStatus() {
+    if (
+      this.selectedRecordGridType === 'nonContactedBecomeTutorGrid' 
+      || this.selectedRecordGridType === 'nonVerifiedBecomeTutorGrid' 
+      || this.selectedRecordGridType === 'verifiedBecomeTutorGrid'
+      || this.selectedRecordGridType === 'verificationFailedBecomeTutorGrid'
+      || this.selectedRecordGridType === 'toBeReContactedBecomeTutorGrid'
+    ) {
+      this.formEditMandatoryDisbaled = false;
+      this.takeActionDisabled = false;
+    }
+    if (this.selectedRecordGridType === 'rejectedBecomeTutorGrid') {
+      this.takeActionDisabled = false;
+    }
   }
 
   getDateFromMillis(millis: number) {
@@ -97,7 +118,7 @@ export class BecomeTutorDataComponent implements OnInit {
       data, 'multipart/form-data', true);
   }
 
-  takeActionOnTutorRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+  takeActionOnTutorRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false, blacklist: boolean = false) {
     this.helperService.showPromptDialog({
       required: commentsRequired,
       titleText: titleText,
@@ -108,8 +129,12 @@ export class BecomeTutorDataComponent implements OnInit {
           button: actionText,
           comments: message
         };
+        let url: string = LcpRestUrls.take_action_on_become_tutor;
+        if (blacklist) {
+          url = LcpRestUrls.blackList_become_tutors;
+        }
         this.utilityService.makerequest(this, this.handleTakeActionOnTutorRecord,
-          LcpRestUrls.take_action_on_become_tutor, 'POST', this.utilityService.urlEncodeData(data),
+          url, 'POST', this.utilityService.urlEncodeData(data),
           'application/x-www-form-urlencoded');
       },
       onCancel: () => {

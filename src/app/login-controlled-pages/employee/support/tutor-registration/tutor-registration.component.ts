@@ -54,6 +54,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
   selectedTutorRecord: GridRecord = null;
   interimHoldSelectedTutorRecord: GridRecord = null;  
   tutorDataAccess: BecomeTutorDataAccess = null;
+  selectedRecordGridType: string = null;
 
   interimHoldSelectedTutorGridObject: GridComponent = null;
 
@@ -164,8 +165,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [
-        {
+      columns: [{
           id: 'name',
           headerName: 'Name',
           dataType: 'string',
@@ -175,7 +175,8 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           },
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             // Open the Data view port
-            this.interimHoldSelectedTutorRecord = record;            
+            this.interimHoldSelectedTutorRecord = record;
+            this.selectedRecordGridType = gridComponentObject.grid.id;           
             if (this.tutorDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.become_tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {

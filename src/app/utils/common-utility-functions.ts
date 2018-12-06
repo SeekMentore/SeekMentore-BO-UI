@@ -24,13 +24,13 @@ export class CommonUtilityFunctions {
 
   public static getDateForDateInputParam(value: any) {
     const dateParam = new Date(value);
-    let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
+    let dateValue = dateParam.getUTCDate() > 9 ? dateParam.getUTCDate() : ('0' + dateParam.getUTCDate());
     let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
     return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
   public static formatDateYYYYMMDD(dateParam: any) {
-    let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
+    let dateValue = dateParam.getUTCDate() > 9 ? dateParam.getUTCDate() : ('0' + dateParam.getUTCDate());
     let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
     return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
@@ -38,7 +38,7 @@ export class CommonUtilityFunctions {
   public static getDateStringInDDMMYYYYHHmmSS(datemillis: number) {
     if (CommonUtilityFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
-      const dateString = date_value.getDate()
+      const dateString = date_value.getUTCDate()
         + '/' + (date_value.getMonth() + 1)
         + '/' + date_value.getUTCFullYear()
         + ' ' + date_value.getHours()
@@ -153,7 +153,7 @@ export class CommonUtilityFunctions {
         break;
       }
       case 'date' : {
-        let value = event.target.valueAsDate;      
+        let value = event.target.valueAsDate;
         updatedData[key] = CommonUtilityFunctions.formatDateYYYYMMDD(value);
         break;
       }

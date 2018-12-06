@@ -69,6 +69,7 @@ export class SubscriptionDataComponent implements OnInit {
 
   updateSubscriptionProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord, deselected, isAllOPeration);
+    console.log(this.updatedSubscriptionRecord);
   }
 
   updateSubscriptionRecord() {

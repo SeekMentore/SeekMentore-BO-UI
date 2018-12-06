@@ -205,6 +205,10 @@
         <td class="td-label"><label>Record Last Updated</label></td>
         <td><label class="data">{{getDateFromMillis(tutorRecord.property['recordLastUpdatedMillis'])}}</label></td>
       </tr>
+      <tr>
+        <td class="td-label"><label>Updated By</label></td>
+        <td><label class="data">{{tutorRecord.property['updatedByName']}}</label></td>
+      </tr>
       <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
         <td class="td-label">
             <i
@@ -234,7 +238,7 @@
                 <td class="td-label"><label>Is Contacted</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
                 <td class="td-label"><label>Who Contacted</label></td>
-                <td><label class="data">{{tutorRecord.property['whoContacted']}}</label></td>              
+                <td><label class="data">{{tutorRecord.property['whoContactedName']}}</label></td>              
                 <td class="td-label"><label>Contacted Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['contactedDateMillis'])}}</label></td>
               </tr>
@@ -248,7 +252,7 @@
                 <td class="td-label"><label>Is Authentication Verified</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Verified</label></td>
-                <td><label class="data">{{tutorRecord.property['whoVerified']}}</label></td>              
+                <td><label class="data">{{tutorRecord.property['whoVerifiedName']}}</label></td>              
                 <td class="td-label"><label>Verification Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['verificationDateMillis'])}}</label></td>
               </tr>
@@ -262,7 +266,7 @@
                 <td class="td-label"><label>Is To Be Recontacted</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Suggested For Recontact</label></td>
-                <td><label class="data">{{tutorRecord.property['whoSuggestedForRecontact']}}</label></td>              
+                <td><label class="data">{{tutorRecord.property['whoSuggestedForRecontactName']}}</label></td>              
                 <td class="td-label"><label>Suggestion Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['suggestionDateMillis'])}}</label></td>
               </tr>
@@ -276,7 +280,7 @@
                 <td class="td-label"><label></label></td>
                 <td><label class="data"></label></td>
                 <td class="td-label"><label>Who Recontacted</label></td>
-                <td><label class="data">{{tutorRecord.property['whoRecontacted']}}</label></td>              
+                <td><label class="data">{{tutorRecord.property['whoRecontactedName']}}</label></td>              
                 <td class="td-label"><label>Recontacted Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['recontactedDateMillis'])}}</label></td>
               </tr>
@@ -290,7 +294,7 @@
                 <td class="td-label"><label>Is Selected</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Selected</label></td>
-                <td><label class="data">{{tutorRecord.property['whoSelected']}}</label></td>              
+                <td><label class="data">{{tutorRecord.property['whoSelectedName']}}</label></td>              
                 <td class="td-label"><label>Selection Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['selectionDateMillis'])}}</label></td>
               </tr>
@@ -304,7 +308,7 @@
                 <td class="td-label"><label>Is Rejected</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Rejected</label></td>
-                <td><label class="data">{{tutorRecord.property['whoRejected']}}</label></td>              
+                <td><label class="data">{{tutorRecord.property['whoRejectedName']}}</label></td>              
                 <td class="td-label"><label>Rejection Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['rejectionDateMillis'])}}</label></td>
               </tr>
@@ -324,8 +328,59 @@
               </tr>
           </table>
         </td>
+      </tr>
+      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionButtons">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-expander"
+                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionButtons = true"></i>
+        </td>
+        <td>
+          Show Action Buttons
+        </td>
+      </tr>
+      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionButtons">
+        <td colspan="2">
+          <table>
+            <tr>
+              <td class="td-label">
+                  <i
+                      id="employee-actions-details-collapser"
+                      class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                      (click)="showEmployeeActionDetails = false"></i>
+              </td>
+              <td colspan="5">
+                Hide Action Details
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button type="submit"
+                  class="ok-button form-container-update-button"
+                  (click)="updateTutorRecord()">            
+                  Test 1
+                </button>
+              </td>
+              <td>
+                <button type="submit"
+                  class="ok-button form-container-update-button"
+                  (click)="updateTutorRecord()">            
+                  Test 2
+                </button>
+              </td>
+              <td>
+                <button type="submit"
+                  class="ok-button form-container-update-button"
+                  (click)="updateTutorRecord()">            
+                  Test 3
+                </button>
+              </td>        
+            </tr>
+          </table>
+        </td>
       </tr>     
-    </table>
+    </table>        
     <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="ok-button form-container-update-button"
             (click)="updateTutorRecord()">            

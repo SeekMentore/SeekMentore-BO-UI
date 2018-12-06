@@ -16,7 +16,7 @@
         <td class="td-label"><label>Name</label></td>
         <td><input class="input_field" type="text" value="{{enquiryRecord.property['name']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateEnquiryProperty('name', $event.target.value, 'string')">
+                   (change)="updateEnquiryProperty('name', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -31,14 +31,14 @@
         <td class="td-label"><label>Contact Number</label></td>
         <td><input class="input_field" type="text" value="{{enquiryRecord.property['contactNumber']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateEnquiryProperty('contactNumber', $event.target.value, 'string')">
+                   (change)="updateEnquiryProperty('contactNumber', $event, 'string')">
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{enquiryRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateEnquiryProperty('emailId', $event.target.value, 'string')">
+                   (change)="updateEnquiryProperty('emailId', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -47,7 +47,8 @@
           <ng-multiselect-dropdown [placeholder]="'Student Grade'" [data]="studentGradesFilterOptions"
                                    [(ngModel)]="selectedStudentGradeOption" name="studentGrade"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('studentGrade', $event.value, 'list')">
+                                   (onSelect)="updateEnquiryProperty('studentGrade', $event, 'list')"
+                                   (onDeSelect)="updateEnquiryProperty('studentGrade', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -57,7 +58,8 @@
           <ng-multiselect-dropdown [placeholder]="'Subject'" [data]="subjectsFilterOptions"
                                    [(ngModel)]="selectedSubjectOption" name="subjectOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('subjects', $event.value, 'list')">
+                                   (onSelect)="updateEnquiryProperty('subjects', $event, 'list')"
+                                   (onDeSelect)="updateEnquiryProperty('subjects', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -67,7 +69,8 @@
           <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
                                    [(ngModel)]="selectedLocationOption" name="locationOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('location', $event.value, 'list')">
+                                   (onSelect)="updateEnquiryProperty('location', $event, 'list')"
+                                   (onDeSelect)="updateEnquiryProperty('location', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -77,7 +80,10 @@
           <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
                                    [(ngModel)] = "selectedCallTimeOptions" name="callTimeOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('preferredTimeToCall', $event.value, 'list')">
+                                   (onSelect)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist')"
+                                   (onDeSelect)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -87,7 +93,7 @@
             <textarea 
                     class="textarea_field"
                     [disabled]="!editRecordForm" 
-                    (change)="updateEnquiryProperty('additionalDetails', $event.target.value, 'string')"
+                    (change)="updateEnquiryProperty('additionalDetails', $event, 'string')"
                     >{{enquiryRecord.property['additionalDetails']}}</textarea>
         </td>
       </tr>
@@ -97,7 +103,7 @@
             <textarea 
                     class="textarea_field"
                     [disabled]="!editRecordForm" 
-                    (change)="updateEnquiryProperty('addressDetails', $event.target.value, 'string')"
+                    (change)="updateEnquiryProperty('addressDetails', $event, 'string')"
                     >{{enquiryRecord.property['addressDetails']}}</textarea>
         </td>
       </tr>      
@@ -107,13 +113,18 @@
           <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
                                    [(ngModel)]="selectedReferenceOption" name="refrenceOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('reference', $event.value, 'list')">
+                                   (onSelect)="updateEnquiryProperty('reference', $event, 'list')"
+                                   (onDeSelect)="updateEnquiryProperty('reference', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Record Last Updated</label></td>
         <td><label class="data">{{getDateFromMillis(enquiryRecord.property['recordLastUpdatedMillis'])}}</label></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Updated By</label></td>
+        <td><label class="data">{{enquiryRecord.property['updatedByName']}}</label></td>
       </tr>
       <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
         <td class="td-label">
@@ -144,7 +155,7 @@
                 <td class="td-label"><label>Is Contacted</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
                 <td class="td-label"><label>Who Contacted</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoContacted']}}</label></td>              
+                <td><label class="data">{{enquiryRecord.property['whoContactedName']}}</label></td>              
                 <td class="td-label"><label>Contacted Date</label></td>
                 <td><label class="data">{{getDateFromMillis(enquiryRecord.property['contactedDateMillis'])}}</label></td>
               </tr>
@@ -158,7 +169,7 @@
                 <td class="td-label"><label>Is Authentication Verified</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Verified</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoVerified']}}</label></td>              
+                <td><label class="data">{{enquiryRecord.property['whoVerifiedName']}}</label></td>              
                 <td class="td-label"><label>Verification Date</label></td>
                 <td><label class="data">{{getDateFromMillis(enquiryRecord.property['verificationDateMillis'])}}</label></td>
               </tr>
@@ -172,7 +183,7 @@
                 <td class="td-label"><label>Is To Be Recontacted</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Suggested For Recontact</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoSuggestedForRecontact']}}</label></td>              
+                <td><label class="data">{{enquiryRecord.property['whoSuggestedForRecontactName']}}</label></td>              
                 <td class="td-label"><label>Suggestion Date</label></td>
                 <td><label class="data">{{getDateFromMillis(enquiryRecord.property['suggestionDateMillis'])}}</label></td>
               </tr>
@@ -186,7 +197,7 @@
                 <td class="td-label"><label></label></td>
                 <td><label class="data"></label></td>
                 <td class="td-label"><label>Who Recontacted</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoRecontacted']}}</label></td>              
+                <td><label class="data">{{enquiryRecord.property['whoRecontactedName']}}</label></td>              
                 <td class="td-label"><label>Recontacted Date</label></td>
                 <td><label class="data">{{getDateFromMillis(enquiryRecord.property['recontactedDateMillis'])}}</label></td>
               </tr>
@@ -200,7 +211,7 @@
                 <td class="td-label"><label>Is Selected</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Selected</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoSelected']}}</label></td>              
+                <td><label class="data">{{enquiryRecord.property['whoSelectedName']}}</label></td>              
                 <td class="td-label"><label>Selection Date</label></td>
                 <td><label class="data">{{getDateFromMillis(enquiryRecord.property['selectionDateMillis'])}}</label></td>
               </tr>
@@ -214,7 +225,7 @@
                 <td class="td-label"><label>Is Rejected</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Rejected</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoRejected']}}</label></td>              
+                <td><label class="data">{{enquiryRecord.property['whoRejectedName']}}</label></td>              
                 <td class="td-label"><label>Rejection Date</label></td>
                 <td><label class="data">{{getDateFromMillis(enquiryRecord.property['rejectionDateMillis'])}}</label></td>
               </tr>

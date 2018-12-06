@@ -88,7 +88,6 @@ export class BecomeTutorDataComponent implements OnInit {
 
   updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedTutorRecord, this.tutorRecord, deselected, isAllOPeration);
-    console.log(this.updatedTutorRecord);
   }
 
   updateTutorRecord() {

@@ -208,7 +208,7 @@
       <tr>
         <td class="td-label"><label>Updated By</label></td>
         <td><label class="data">{{tutorRecord.property['updatedByName']}}</label></td>
-      </tr>
+      </tr>      
       <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
         <td class="td-label">
             <i
@@ -222,7 +222,7 @@
       </tr>  
       <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
         <td colspan="2">          
-          <table>
+          <table width="100%">
               <tr>
                 <td class="td-label">
                     <i
@@ -325,11 +325,11 @@
                 <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['reApplied'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Previous Application Date</label></td>
                 <td><label class="data">{{getDateFromMillis(tutorRecord.property['previousApplicationDateMillis'])}}</label></td>
-              </tr>
+              </tr>             
           </table>
         </td>
       </tr>
-      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionButtons">
+      <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons">
         <td class="td-label">
             <i
                 id="employee-actions-details-expander"
@@ -339,47 +339,58 @@
         <td>
           Show Action Buttons
         </td>
-      </tr>
-      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionButtons">
-        <td colspan="2">
-          <table>
-            <tr>
-              <td class="td-label">
-                  <i
-                      id="employee-actions-details-collapser"
-                      class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                      (click)="showEmployeeActionDetails = false"></i>
-              </td>
-              <td colspan="5">
-                Hide Action Details
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <button type="submit"
-                  class="ok-button form-container-update-button"
-                  (click)="updateTutorRecord()">            
-                  Test 1
-                </button>
-              </td>
-              <td>
-                <button type="submit"
-                  class="ok-button form-container-update-button"
-                  (click)="updateTutorRecord()">            
-                  Test 2
-                </button>
-              </td>
-              <td>
-                <button type="submit"
-                  class="ok-button form-container-update-button"
-                  (click)="updateTutorRecord()">            
-                  Test 3
-                </button>
-              </td>        
-            </tr>
+      </tr>  
+      <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons">
+        <td colspan="2">          
+          <table width="100%">
+              <tr>
+                <td class="td-label">
+                    <i
+                        id="employee-actions-details-collapser"
+                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                        (click)="showEmployeeActionButtons = false"></i>
+                </td>
+                <td colspan="3">
+                  Hide Action Buttons
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord()">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnTutorRecord()">            
+                          Contacted
+                  </button>
+                </td>              
+                <td>
+                  <button type="submit"
+                          class="btnReset"
+                          (click)="takeActionOnTutorRecord()">            
+                          To Be Re-Contacted
+                  </button>
+                </td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnTutorRecord()">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4"></td>
+              </tr>                         
           </table>
         </td>
-      </tr>     
+      </tr>
     </table>        
     <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
             class="ok-button form-container-update-button"

@@ -25,6 +25,7 @@ export class BecomeTutorDataComponent implements OnInit {
   updatedTutorRecord = {};
 
   showEmployeeActionDetails = false;
+  showEmployeeActionButtons = false;
 
   mandatoryDisbaled = true;
   superAccessAwarded = false;
@@ -94,6 +95,35 @@ export class BecomeTutorDataComponent implements OnInit {
     const data = CommonUtilityFunctions.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.become_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
+  }
+
+  takeActionOnTutorRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.tutorRecord.getProperty('tentativeTutorId'),
+          button: actionText,
+          comments: message
+        };
+        this.utilityService.makerequest(this, this.handleTakeActionOnTutorRecord,
+          LcpRestUrls.take_action_on_become_tutor, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnTutorRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
   }
 
   onUpdateTutorRecord(context: any, data: any) {

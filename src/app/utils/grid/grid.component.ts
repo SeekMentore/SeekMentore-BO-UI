@@ -284,7 +284,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         if (sorterExists) {
           return;
         }
-        this.grid.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder));
+        this.grid.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder, column.clubbedMapping, column.clubbedProperties));
         return;
       }
       const myListener: AlertDialogEvent = {

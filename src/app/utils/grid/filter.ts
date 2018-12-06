@@ -16,13 +16,27 @@ export class Filter {
   onDateMillis: number = null;
   afterDateMillis: number = null;
   listValue: string[] = [];
+  clubbedFilterMapping: boolean = false;
+  clubbedFilterProperties: string[] = [];
 
-  constructor(id: string, type: string, mapping: string, columnId: string, multiList: boolean) {
+  constructor(
+      id: string, 
+      type: string, 
+      mapping: string, 
+      columnId: string, 
+      multiList: boolean,
+      clubbedFilterMapping: boolean = false,
+      clubbedFilterProperties: string[] = []
+  ) {
     this.id = id;
     this.type = type;
     this.mapping = mapping;
     this.columnId = columnId;
     this.multiList = multiList;
+    this.clubbedFilterMapping = clubbedFilterMapping;
+    if (this.clubbedFilterMapping) {
+      this.clubbedFilterProperties = clubbedFilterProperties;
+    }
   }
 
   nullifyFilterProperties() {

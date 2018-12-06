@@ -1,6 +1,6 @@
 <div class="form-container-div">
   <form class="form-container" style="max-width: 80%">
-    <div *ngIf="subscriptionDataAccess.formDataEditAccess"
+    <div *ngIf="subscriptionDataAccess.formDataEditAccess && !formEditMandatoryDisbaled"
           class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
@@ -274,81 +274,81 @@
                   Hide Action Buttons
                 </td>
               </tr>
-              <tr *ngIf="selectedRecordGridType === 'nonContactedBecomeTutorGrid'">
+              <tr *ngIf="selectedRecordGridType === 'nonContactedSubscriptionGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
                           Contacted
                   </button>
                 </td>              
                 <td>
                   <button type="submit"
                           class="btnReset"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
                           To Be Re-Contacted
                   </button>
                 </td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
                           Reject
                   </button>
                 </td>
               </tr>
-              <tr *ngIf="selectedRecordGridType === 'nonVerifiedBecomeTutorGrid'">
+              <tr *ngIf="selectedRecordGridType === 'nonVerifiedSubscriptionGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
                           Verify
                   </button>
                 </td>              
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
                           Fail Verify
                   </button>
                 </td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
                           Reject
                   </button>
                 </td>
               </tr>
-              <tr *ngIf="selectedRecordGridType === 'verifiedBecomeTutorGrid'">
+              <tr *ngIf="selectedRecordGridType === 'verifiedSubscriptionGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
                           Select
                   </button>
                 </td>              
@@ -356,24 +356,24 @@
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
                           Reject
                   </button>
                 </td>
               </tr>
-              <tr *ngIf="selectedRecordGridType === 'verificationFailedBecomeTutorGrid'">
+              <tr *ngIf="selectedRecordGridType === 'verificationFailedSubscriptionGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
                           Re-Verify
                   </button>
                 </td>              
@@ -381,24 +381,24 @@
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
                           Reject
                   </button>
                 </td>
               </tr>
-              <tr *ngIf="selectedRecordGridType === 'toBeReContactedBecomeTutorGrid'">
+              <tr *ngIf="selectedRecordGridType === 'toBeReContactedSubscriptionGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnReset"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
                           Re-Contacted
                   </button>
                 </td>              
@@ -406,24 +406,24 @@
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
                           Reject
                   </button>
                 </td>
               </tr>
-              <tr *ngIf="selectedRecordGridType === 'rejectedBecomeTutorGrid'">
+              <tr *ngIf="selectedRecordGridType === 'rejectedSubscriptionGrid'">
                 <td></td>
                 <td>
                   <button type="submit"
                           class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
                           class="btnReset"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
                           Re-Contacted
                   </button>
                 </td>              
@@ -431,7 +431,7 @@
                 <td>
                   <button type="submit"
                           class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
                           Select
                   </button>
                 </td>
@@ -443,7 +443,7 @@
         </td>
       </tr>
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
+    <button *ngIf="subscriptionDataAccess.formDataEditAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
               class="ok-button form-container-update-button"
              (click)="updateSubscriptionRecord()">
       Update

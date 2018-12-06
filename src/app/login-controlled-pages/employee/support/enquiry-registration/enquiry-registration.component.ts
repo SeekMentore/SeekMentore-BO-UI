@@ -50,6 +50,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
   selectedEnquiryRecord: GridRecord = null;
   interimHoldSelectedEnquiryRecord: GridRecord = null;
   enquiryDataAccess: EnquiryDataAccess = null;
+  selectedRecordGridType: string = null;
 
   interimHoldSelectedEnquiryGridObject: GridComponent = null;
 
@@ -158,14 +159,14 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [
-        {
+      columns: [{
           id: 'name',
           headerName: 'Name',
           dataType: 'string',
           mapping: 'name',
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             this.interimHoldSelectedEnquiryRecord = record;
+            this.selectedRecordGridType = gridComponentObject.grid.id;    
             if (this.enquiryDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {

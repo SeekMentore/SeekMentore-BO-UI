@@ -56,9 +56,10 @@ export class Store {
               this.convertIntoRecordData(this.getRestData());
               if (grid_mask_loader) {
                 grid_mask_loader.hidden = true;
-              }
-              grid.setData();
+              }              
             } else {
+              this.data = [];
+              this.totalRecords = 0;
               this.responseError = false;
               this.responseErrorMessage = response['message'];
               if (grid_mask_loader) {
@@ -66,19 +67,25 @@ export class Store {
               }
             }
           } else {
+            this.data = [];
+            this.totalRecords = 0;
             this.responseError = false;
             this.responseErrorMessage = 'NULL response received from server, cannot load data.';
             if (grid_mask_loader) {
               grid_mask_loader.hidden = true;
             }
           }
+          grid.setData();
         },
         error2 => {
+          this.data = [];
+          this.totalRecords = 0;
           this.responseError = true;
           this.responseErrorMessage = 'Communication failure!! Something went wrong.';
           if (grid_mask_loader) {
             grid_mask_loader.hidden = true;
-          }          
+          }
+          grid.setData();          
         }
       );
     }

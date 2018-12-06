@@ -170,6 +170,8 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           headerName: 'Name',
           dataType: 'string',
           mapping: 'firstName',
+          clubbedMapping: true,
+          clubbedProperties: ['firstName', 'lastName'],
           renderer: (record: GridRecord, column: Column) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
           },

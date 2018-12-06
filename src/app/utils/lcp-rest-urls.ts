@@ -16,8 +16,7 @@ export class LcpRestUrls {
   static tutor_update_record = '/rest/registeredTutor/updateTutorRecord';
   static customer_data_access = '/rest/admin/subscribedCustomerCheckDataAccess';
   static blackList_subscribed_customers = '/rest/admin/blacklistSubscribedCustomers';
-  static customer_update_record = '/rest/subscribedCustomer/updateCustomerRecord';
-  //
+  static customer_update_record = '/rest/subscribedCustomer/updateCustomerRecord';  
   static become_tutor_data_access = '/rest/support/becomeTutorCheckDataAccess';
   static blackList_become_tutors = '/rest/support/blacklistBecomeTutorList';
   static take_action_on_become_tutor = '/rest/support/takeActionOnBecomeTutor';
@@ -30,14 +29,13 @@ export class LcpRestUrls {
   static blackList_subscription_request = '/rest/support/blacklistSubscriptionRequestList';
   static take_action_on_subscription = '/rest/support/takeActionOnSubscription';
   static subscription_request_update_record = '/rest/support/updateSubscriptionRequestRecord';
-  static submitted_query_data_access = '/rest/support/submittedQueryCheckDataAccess';
-  static submitted_query_update_record = '/rest/support/updateSubmittedQueryRecord';
+  static take_action_on_submit_query = '/rest/support/takeActionOnSubmitQuery';
+  static submitted_query_data_access = '/rest/support/submitQueryCheckDataAccess';
+  static submitted_query_update_record = '/rest/support/updateSubmitQueryRecord';
   static complaint_data_access = '/rest/support/complaintCheckDataAccess';
-  static complaint_update_record = '/rest/support/updateComplaintRecord';
-  //
+  static complaint_update_record = '/rest/support/updateComplaintRecord';  
   static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
-  static pending_enquiry_update_record = '/rest/sales/updatePendingEnquiryRecord';
-  //
+  static pending_enquiry_update_record = '/rest/sales/updatePendingEnquiryRecord';  
   static map_tutor_to_enquiry_data_access = '/rest/sales/mapTutorToEnquiryCheckDataAccess';
   static map_tutor_to_enquiry_map_registered_tutors = '/rest/sales/mapRegisteredTutors';
   static map_tutor_to_enquiry_map_registered_tutor = '/rest/sales/mapRegisteredTutor';

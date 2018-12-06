@@ -33,7 +33,9 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
   selectedQueryRecord: GridRecord = null;
   interimHoldSelectedQueryRecord: GridRecord = null;
   queryDataAccess: QueryDataAccess = null;
+  selectedRecordGridType: string = null;
 
+  interimHoldSelectedQueryGridObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedQueryGridMetaData = null;
@@ -58,7 +60,28 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  private getSelectionColumnBaseButton() {
+    return [{
+      id: 'sendEmail',
+      label: 'Send Email',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+        // Refer document
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
+        }
+      }
+    }];
+  }
+
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
@@ -66,15 +89,15 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [
-        {
+      columns: [{
           id: 'queryRequestedDate',
           headerName: 'Query Requested Date',
           dataType: 'date',
           mapping: 'queryRequestedDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillisWithTime,
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             this.interimHoldSelectedQueryRecord = record;
+            this.selectedRecordGridType = gridComponentObject.grid.id;    
             if (this.queryDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.submitted_query_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
@@ -136,44 +159,89 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
       ],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: [{
-          id: 'sendEmail',
-          label: 'Send Email',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            // Refer document
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }]
+        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
       }
     }
     return grid;
   }
 
+  private getCustomButton (
+      id:string, 
+      label: string, 
+      btnclass: string = 'btnSubmit', 
+      actionText: string, 
+      commentsRequired: boolean = false,
+      titleText: string,
+      placeholderText: string
+  ) {
+    return {
+      id: id,
+      label: label,
+      btnclass: btnclass,
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedQueryGridObject = gridComponentObject;
+        const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'queryId');
+        if (tutorIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: tutorIdsList.join(';'),
+                button: actionText,
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.take_action_on_submit_query, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
+  handleSelectionActionRequest(context: any, response: any) {
+    if (response['success'] === false) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    } else {
+      context.interimHoldSelectedQueryGridObject.refreshGridData();
+    }
+  }
+
   public setUpGridMetaData() {
+    let respondButton = this.getCustomButton('contacted', 'Respond', 'btnSubmit', 'respond', true, 'Respond to Query', 'Please provide your response for the query.');
+    let putOnHoldButton = this.getCustomButton('contacted', 'Put on Hold', 'btnReject', 'hold', true, 'Put query on hold', 'Please provide your explanation for putting query on hold.');
+
     this.nonContactedQueryGridMetaData = {
-      grid: this.getGridObject('nonContactedQueryGrid', 'Non Contacted Queries', '/rest/support/nonContactedQueryList'),
+      grid: this.getGridObject('nonContactedQueryGrid', 'Fresh Queries', '/rest/support/nonContactedQueryList', [respondButton, putOnHoldButton]),
       htmlDomElementId: 'non-contacted-query-grid',
       hidden: false
     };
 
     this.nonAnsweredQueryGridMetaData = {
-      grid: this.getGridObject('nonAnsweredQueryGrid', 'Non Answered Queries', '/rest/support/nonAnsweredQueryList'),
+      grid: this.getGridObject('nonAnsweredQueryGrid', 'Put On Hold Queries', '/rest/support/nonAnsweredQueryList', [respondButton]),
       htmlDomElementId: 'non-answered-query-grid',
       hidden: false
     };
 
     this.answeredQueryGridMetaData = {
-      grid: this.getGridObject('answeredQueryGrid', 'Answered Queries', '/rest/support/answeredQueryList'),
+      grid: this.getGridObject('answeredQueryGrid', 'Responded Queries', '/rest/support/answeredQueryList', []),
       htmlDomElementId: 'answered-query-grid',
       hidden: false
     };

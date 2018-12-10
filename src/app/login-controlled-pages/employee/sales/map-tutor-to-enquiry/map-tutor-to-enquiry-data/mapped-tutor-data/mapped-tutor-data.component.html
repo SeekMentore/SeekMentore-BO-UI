@@ -116,13 +116,13 @@
             <td class="td-label"><label>Quoted Tutor Rate</label></td>
             <td><input class="input_field" type="number" value="{{mappedTutorRecord.property['quotedTutorRate']}}"
                         [disabled]="!editRecordForm"
-                        (change)="updateMappedTutorProperty('quotedTutorRate', $event.target.value, 'number')"></td>
+                        (change)="updateMappedTutorProperty('quotedTutorRate', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Negotiated Rate With Tutor</label></td>
             <td><input class="input_field" type="number" value="{{mappedTutorRecord.property['negotiatedRateWithTutor']}}"
                         [disabled]="!editRecordForm"
-                        (change)="updateMappedTutorProperty('negotiatedRateWithTutor', $event.target.value, 'number')"></td>
+                        (change)="updateMappedTutorProperty('negotiatedRateWithTutor', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
@@ -130,7 +130,7 @@
                 <textarea 
                         class="textarea_field"
                         [disabled]="!editRecordForm" 
-                        (change)="updateMappedTutorProperty('tutorNegotiationRemarks', $event.target.value, 'string')"
+                        (change)="updateMappedTutorProperty('tutorNegotiationRemarks', $event, 'string')"
                         >{{mappedTutorRecord.property['tutorNegotiationRemarks']}}</textarea>
             </td>
           </tr>          
@@ -287,7 +287,7 @@
                   <td class="td-label"><label></label></td>
                   <td><label class="data"></label></td>              
                   <td class="td-label"><label>Who Acted</label></td>
-                  <td><label class="data">{{mappedTutorRecord.property['whoActed']}}</label></td>              
+                  <td><label class="data">{{mappedTutorRecord.property['whoActedName']}}</label></td>              
                   <td class="td-label"><label>Admin Action Date</label></td>
                   <td><label class="data">{{getDateFromMillis(mappedTutorRecord.property['adminActionDateMillis'])}}</label></td>
                 </tr>

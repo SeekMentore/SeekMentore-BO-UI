@@ -218,9 +218,9 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
+    context.helperService.showAlertDialog(myListener);
     if (data['success']) {
-      this.editRecordForm = false;
+      context.editRecordForm = false;
     }
   }
 }

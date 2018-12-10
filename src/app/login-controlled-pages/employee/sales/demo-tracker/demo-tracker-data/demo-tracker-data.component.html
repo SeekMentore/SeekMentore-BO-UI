@@ -95,7 +95,7 @@
         </tr>
         <tr>
           <td class="td-label"><label>Who Acted</label></td>
-          <td><label class="data">{{demoTrackerRecord.property['whoActed']}}</label></td>        
+          <td><label class="data">{{demoTrackerRecord.property['whoActedName']}}</label></td>        
         </tr>
         <tr>
           <td class="td-label"><label>Admin Remarks</label></td>
@@ -123,13 +123,13 @@
           <td class="td-label"><label>New Demo Date</label></td>
           <td><input class="input_field" type="date" value=""
                       [disabled]="!editRecordForm"
-                      (change)="updateDemoTrackerProperty('demoDate', $event.target.value, 'date')"></td>
+                      (change)="updateDemoTrackerProperty('demoDate', $event, 'millis')"></td>
         </tr>
         <tr>
           <td class="td-label"><label>New Demo Time</label></td>
           <td><input class="input_field" type="time" value=""
                       [disabled]="!editRecordForm"
-                      (change)="updateDemoTrackerProperty('demoTime', $event.target.value, 'time')"></td>
+                      (change)="updateDemoTrackerProperty('demoTime', $event, 'millis')"></td>
         </tr>
       </table>
       <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && editRecordForm" type="submit"

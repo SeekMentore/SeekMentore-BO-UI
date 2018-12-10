@@ -232,7 +232,7 @@
                   <td class="td-label"><label></label></td>
                   <td><label class="data"></label></td>              
                   <td class="td-label"><label>Who Acted</label></td>
-                  <td><label class="data">{{mappedTutorRecord.property['whoActed']}}</label></td>              
+                  <td><label class="data">{{mappedTutorRecord.property['whoActedName']}}</label></td>              
                   <td class="td-label"><label>Admin Action Date</label></td>
                   <td><label class="data">{{getDateFromMillis(mappedTutorRecord.property['adminActionDateMillis'])}}</label></td>
                 </tr>
@@ -253,13 +253,13 @@
             <td class="td-label"><label>Demo Date</label></td>
             <td><input class="input_field" type="date" value=""
                         [disabled]="!editRecordForm"
-                        (change)="updateScheduleDemoMappedTutorProperty('demoDate', $event.target.value, 'date')"></td>
+                        (change)="updateScheduleDemoMappedTutorProperty('demoDate', $event, 'millis')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Demo Time</label></td>
             <td><input class="input_field" type="time" value=""
                         [disabled]="!editRecordForm"
-                        (change)="updateScheduleDemoMappedTutorProperty('demoTime', $event.target.value, 'time')"></td>
+                        (change)="updateScheduleDemoMappedTutorProperty('demoTime', $event, 'millis')"></td>
           </tr>
         </table>
         <button *ngIf="mappedTutorScheduleDemoAccess.scheduleDemoFormAccess && editRecordForm" type="submit"

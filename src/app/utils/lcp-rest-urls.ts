@@ -35,7 +35,7 @@ export class LcpRestUrls {
   static complaint_data_access = '/rest/support/complaintCheckDataAccess';
   static complaint_update_record = '/rest/support/updateComplaintRecord';  
   static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
-  static pending_enquiry_update_record = '/rest/sales/updatePendingEnquiryRecord';  
+  static pending_enquiry_update_record = '/rest/sales/updateEnquiryRecord';  
   static map_tutor_to_enquiry_data_access = '/rest/sales/mapTutorToEnquiryCheckDataAccess';
   static map_tutor_to_enquiry_map_registered_tutors = '/rest/sales/mapRegisteredTutors';
   static map_tutor_to_enquiry_map_registered_tutor = '/rest/sales/mapRegisteredTutor';

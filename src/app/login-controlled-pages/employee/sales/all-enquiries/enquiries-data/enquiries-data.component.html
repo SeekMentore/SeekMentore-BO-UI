@@ -58,7 +58,8 @@
               <ng-multiselect-dropdown [placeholder]="'Subject'" [data]="subjectsFilterOptions"
                                         [(ngModel)]="selectedSubjectOption" name="subject"
                                         [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                        (onSelect)="updateEnquiryProperty('subject', $event.value, 'list')">
+                                        (onSelect)="updateEnquiryProperty('subject', $event, 'list')"
+                                        (onDeSelect)="updateEnquiryProperty('subject', $event, 'list', true)">
               </ng-multiselect-dropdown>
             </td>
           </tr>
@@ -68,7 +69,8 @@
               <ng-multiselect-dropdown [placeholder]="'Grade'" [data]="studentGradesFilterOptions"
                                         [(ngModel)]="selectedStudentGradeOption" name="grade"
                                         [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                        (onSelect)="updateEnquiryProperty('grade', $event.value, 'list')">
+                                        (onSelect)="updateEnquiryProperty('grade', $event, 'list')"
+                                        (onDeSelect)="updateEnquiryProperty('grade', $event, 'list', true)">
               </ng-multiselect-dropdown>
             </td>        
           </tr>
@@ -80,13 +82,13 @@
             <td class="td-label"><label>Quoted Client Rate</label></td>
             <td><input class="input_field" type="number" value="{{selectedEnquiryRecord.property['quotedClientRate']}}"
                         [disabled]="!editRecordForm"
-                        (change)="updateEnquiryProperty('quotedClientRate', $event.target.value, 'number')"></td>
+                        (change)="updateEnquiryProperty('quotedClientRate', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Negotiated Rate With Client</label></td>
             <td><input class="input_field" type="number" value="{{selectedEnquiryRecord.property['negotiatedRateWithClient']}}"
                         [disabled]="!editRecordForm"
-                        (change)="updateEnquiryProperty('negotiatedRateWithClient', $event.target.value, 'number')"></td>
+                        (change)="updateEnquiryProperty('negotiatedRateWithClient', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Client Negotiation Remarks</label></td>
@@ -94,7 +96,7 @@
                 <textarea 
                         class="textarea_field"
                         [disabled]="!editRecordForm" 
-                        (change)="updateEnquiryProperty('clientNegotiationRemarks', $event.target.value, 'string')"
+                        (change)="updateEnquiryProperty('clientNegotiationRemarks', $event, 'string')"
                         >{{selectedEnquiryRecord.property['clientNegotiationRemarks']}}</textarea>
             </td>
           </tr>          
@@ -104,7 +106,7 @@
                 <textarea 
                         class="textarea_field"
                         [disabled]="!editRecordForm" 
-                        (change)="updateEnquiryProperty('additionalDetails', $event.target.value, 'string')"
+                        (change)="updateEnquiryProperty('additionalDetails', $event, 'string')"
                         >{{selectedEnquiryRecord.property['additionalDetails']}}</textarea>
             </td>
           </tr>
@@ -114,7 +116,8 @@
               <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
                                         [(ngModel)]="selectedLocationOption" name="locationDetails"
                                         [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                        (onSelect)="updateEnquiryProperty('locationDetails', $event.value, 'list')">
+                                        (onSelect)="updateEnquiryProperty('locationDetails', $event, 'list')"
+                                        (onDeSelect)="updateEnquiryProperty('locationDetails', $event, 'list', true)">
               </ng-multiselect-dropdown>
             </td>        
           </tr>
@@ -124,7 +127,7 @@
                 <textarea 
                         class="textarea_field"
                         [disabled]="!editRecordForm" 
-                        (change)="updateEnquiryProperty('addressDetails', $event.target.value, 'string')"
+                        (change)="updateEnquiryProperty('addressDetails', $event, 'string')"
                         >{{selectedEnquiryRecord.property['addressDetails']}}</textarea>
             </td>
           </tr>
@@ -134,7 +137,10 @@
               <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
                                         [(ngModel)]="selectedTeachingTypeOptions" name="preferredTeachingType"
                                         [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                        (onSelect)="updateEnquiryProperty('preferredTeachingType', $event.value, 'list')">
+                                        (onSelect)="updateEnquiryProperty('preferredTeachingType', $event, 'multilist')"
+                                        (onDeSelect)="updateEnquiryProperty('preferredTeachingType', $event, 'multilist', true)"
+                                        (onDeSelectAll)="updateEnquiryProperty('preferredTeachingType', $event, 'multilist', true, true)"
+                                        (onSelectAll)="updateEnquiryProperty('preferredTeachingType', $event, 'multilist', false, true)">
               </ng-multiselect-dropdown>
             </td>        
           </tr>
@@ -160,7 +166,7 @@
           </tr>
           <tr>
             <td class="td-label"><label>Who Acted</label></td>
-            <td><label class="data">{{selectedEnquiryRecord.property['whoActed']}}</label></td>
+            <td><label class="data">{{selectedEnquiryRecord.property['whoActedName']}}</label></td>
           </tr>
           <tr>
             <td class="td-label"><label>Action Remarks</label></td>

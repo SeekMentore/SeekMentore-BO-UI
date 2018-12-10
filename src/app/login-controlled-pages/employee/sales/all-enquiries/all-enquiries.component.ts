@@ -22,6 +22,10 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   pendingEnquiriesGridObject: GridComponent;
   pendingEnquiriesGridMetaData: GridDataInterface;
 
+  @ViewChild('toBeMappedEnquiriesGrid')
+  toBeMappedEnquiriesGridObject: GridComponent;
+  toBeMappedEnquiriesGridMetaData: GridDataInterface;
+
   @ViewChild('completedEnquiriesGrid')
   completedEnquiriesGridObject: GridComponent;
   completedEnquiriesGridMetaData: GridDataInterface;
@@ -48,11 +52,13 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.pendingEnquiriesGridObject.init();
+      this.toBeMappedEnquiriesGridObject.init();
       this.completedEnquiriesGridObject.init();
       this.abortedEnquiriesGridObject.init();
     }, 0);
     setTimeout(() => {
       this.pendingEnquiriesGridObject.refreshGridData();
+      this.toBeMappedEnquiriesGridObject.refreshGridData();
       this.completedEnquiriesGridObject.refreshGridData();
       this.abortedEnquiriesGridObject.refreshGridData();
     }, 0);
@@ -231,6 +237,12 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       hidden: false
     };
 
+    this.toBeMappedEnquiriesGridMetaData = {
+      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList'),
+      htmlDomElementId: 'to-be-mapped-enquiries-grid',
+      hidden: false
+    };
+
     this.completedEnquiriesGridMetaData = {
       grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList'),
       htmlDomElementId: 'completed-enquiries-grid',
@@ -269,11 +281,13 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       this.selectedAllEnquiriesRecord = null;
       setTimeout(() => {
         this.pendingEnquiriesGridObject.init();
+        this.toBeMappedEnquiriesGridObject.init();
         this.completedEnquiriesGridObject.init();
         this.abortedEnquiriesGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.pendingEnquiriesGridObject.refreshGridData();
+        this.toBeMappedEnquiriesGridObject.refreshGridData();
         this.completedEnquiriesGridObject.refreshGridData();
         this.abortedEnquiriesGridObject.refreshGridData();
       }, 200);

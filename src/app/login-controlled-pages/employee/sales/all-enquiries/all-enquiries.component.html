@@ -1,6 +1,7 @@
 <div>
   <div id="all-enquiries-list-page" *ngIf="!showAllEnquiriesData">
     <app-grid #pendingEnquiriesGrid id="pending-enquiries-grid" [gridMetaData]="pendingEnquiriesGridMetaData"></app-grid>
+    <app-grid #toBeMappedEnquiriesGrid id="to-be-mapped-enquiries-grid" [gridMetaData]="toBeMappedEnquiriesGridMetaData"></app-grid>
     <app-grid #completedEnquiriesGrid id="completed-enquiries-grid" [gridMetaData]="completedEnquiriesGridMetaData"></app-grid>
     <app-grid #abortedEnquiriesGrid id="aborted-enquiries-grid" [gridMetaData]="abortedEnquiriesGridMetaData"></app-grid>
   </div>

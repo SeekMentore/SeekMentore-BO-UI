@@ -19,6 +19,10 @@
       class="ok-button" (click)="toggleVisibilityMappedTutorGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-mapped-tutor-data [enquiryRecord]="enquiryRecord" [mappedTutorRecord]="selectedMappedTutorRecord" [mappedTutorDataAccess]="mappedTutorDataAccess"></app-mapped-tutor-data>
+    <app-mapped-tutor-data 
+                [enquiryRecord]="enquiryRecord" 
+                [mappedTutorRecord]="selectedMappedTutorRecord" 
+                [mappedTutorDataAccess]="mappedTutorDataAccess">
+    </app-mapped-tutor-data>
   </div>
 </div>

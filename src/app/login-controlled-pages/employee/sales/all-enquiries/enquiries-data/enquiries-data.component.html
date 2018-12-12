@@ -2,7 +2,7 @@
   <app-grid #currentCustomerAllPendingEnquiriesGrid id="current-customer-all-pending-enquiries-grid" [gridMetaData]="currentCustomerAllPendingEnquiriesGridMetaData"></app-grid>
   <div *ngIf="loadSelectedEnquiry" class="form-container-div">
     <form class="form-container" style="max-width: 80%">
-      <div *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess"
+      <div *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess  && !formEditMandatoryDisbaled"
             class="form-container-toggle-button">
         <label class="tab_container" (change)="editRecordForm = false;">
           <input type="radio" checked name="editFormChoice">
@@ -174,8 +174,94 @@
               <div class="form-remakrs">{{selectedEnquiryRecord.property['adminRemarks']}}</div>
             </td>
           </tr>
+          <tr>
+            <td class="td-label"><label></label></td>
+            <td><label class="data"></label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showEmployeeActionButtons = true"></i>
+            </td>
+            <td>
+              Show Action Buttons
+            </td>
+          </tr>  
+          <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
+            <td colspan="2">          
+              <table width="100%">
+                  <tr>
+                    <td class="td-label">
+                        <i
+                            id="employee-actions-details-collapser"
+                            class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                            (click)="showEmployeeActionButtons = false"></i>
+                    </td>
+                    <td colspan="3">
+                      Hide Action Buttons
+                    </td>
+                  </tr>
+                  <tr *ngIf="selectedRecordGridType === 'pendingEnquiriesGrid'">
+                    <td></td>
+                    <td>
+                      <button type="submit"
+                              class="btnSubmit"
+                              (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'toBeMapped')">            
+                              To Be Mapped
+                      </button>
+                    </td> 
+                    <td></td>              
+                    <td></td>
+                    <td>
+                      <button type="submit"
+                              class="btnReject"
+                              (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'aborted', true)">            
+                              Aborted
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="selectedRecordGridType === 'toBeMappedEnquiriesGrid'">
+                    <td></td>
+                    <td>
+                      <button type="submit"
+                              class="btnReset"
+                              (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'pending', true)">            
+                              Pending
+                      </button>
+                    </td> 
+                    <td></td>              
+                    <td></td>
+                    <td>
+                      <button type="submit"
+                              class="btnReject"
+                              (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'aborted', true)">            
+                              Aborted
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="selectedRecordGridType === 'abortedEnquiriesGrid'">
+                    <td></td>
+                    <td>
+                      <button type="submit"
+                              class="btnReset"
+                              (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'pending', true)">            
+                              Pending
+                      </button>
+                    </td> 
+                    <td></td>              
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"></td>
+                  </tr>                         
+              </table>
+            </td>
+          </tr>
       </table>
-      <button *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess && editRecordForm" type="submit"
+      <button *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
               class="ok-button form-container-update-button"
               (click)="updateEnquiryRecord()">
         Update

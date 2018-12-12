@@ -168,6 +168,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'mapTutors',
             label: 'Map Tutors',
+            btnclass: 'btnReset',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorId');
               if (tutorIdsList.length === 0) {
@@ -178,14 +179,20 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                   }
                 });
               } else {
-                const data = {
-                  enquiryId: this.enquiryRecord.getProperty('enquiryId'),
-                  allIdsList: tutorIdsList.join(';'),
-                  comments: ''
-                };
-                this.utilityService.makerequest(this, this.handleMappingRequest,
-                  LcpRestUrls.map_tutor_to_enquiry_map_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                  'application/x-www-form-urlencoded');
+                this.helperService.showConfirmationDialog({
+                  message: 'Please confirm if you want to map the selected tutors to the Enquiry',
+                  onOk: () => {
+                    const data = {
+                      parentId: this.enquiryRecord.getProperty('enquiryId'),
+                      allIdsList: tutorIdsList.join(';')
+                    };
+                    this.utilityService.makerequest(this, this.handleMappingRequest,
+                      LcpRestUrls.map_tutor_to_enquiry_map_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                      'application/x-www-form-urlencoded');
+                  },
+                  onCancel: () => {
+                  }
+                });
               }
             }
           }]
@@ -196,15 +203,22 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'mapTutor',
             label: 'Map Tutor',
+            btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              const data = {
-                enquiryId: this.enquiryRecord.getProperty('enquiryId'),
-                tutorId: record.getProperty('tutorId'),
-                comments: ''
-              };
-              this.utilityService.makerequest(this, this.handleMappingRequest,
-                LcpRestUrls.map_tutor_to_enquiry_map_registered_tutor, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+              this.helperService.showConfirmationDialog({
+                message: 'Please confirm if you want to map this tutor to the Enquiry',
+                onOk: () => {
+                  const data = {
+                    parentId: this.enquiryRecord.getProperty('enquiryId'),
+                    allIdsList: record.getProperty('tutorId')
+                  };
+                  this.utilityService.makerequest(this, this.handleMappingRequest,
+                    LcpRestUrls.map_tutor_to_enquiry_map_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                    'application/x-www-form-urlencoded');
+                },
+                onCancel: () => {
+                }
+              });
             }
           }]
         }
@@ -227,7 +241,6 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'tutorName',
           clickEvent: (record: GridRecord, column: Column) => {
-            console.log(record);
             this.interimHoldSelectedMappedTutorRecord = record;
             if (this.mappedTutorDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
@@ -295,6 +308,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'unmapTutors',
             label: 'Un-map Tutors',
+            btnclass: 'btnReject',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
               const tutorMapperIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorMapperId');
               if (tutorMapperIdsList.length === 0) {
@@ -305,13 +319,19 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                   }
                 });
               } else {
-                const data = {
-                  allIdsList: tutorMapperIdsList.join(';'),
-                  comments: ''
-                };
-                this.utilityService.makerequest(this, this.handleMappingRequest,
-                  LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                  'application/x-www-form-urlencoded');
+                this.helperService.showConfirmationDialog({
+                  message: 'Please confirm if you want to un-map the selected tutors from the Enquiry',
+                  onOk: () => {
+                    const data = {
+                      allIdsList: tutorMapperIdsList.join(';')
+                    };
+                    this.utilityService.makerequest(this, this.handleMappingRequest,
+                      LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                      'application/x-www-form-urlencoded');
+                  },
+                  onCancel: () => {
+                  }
+                });
               }
             }
           }]
@@ -322,14 +342,21 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'unmapTutor',
             label: 'Un-map Tutor',
+            btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton) => {
-              const data = {
-                tutorMapperId: record.getProperty('tutorMapperId'),
-                comments: ''
-              };
-              this.utilityService.makerequest(this, this.handleMappingRequest,
-                LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutor, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+              this.helperService.showConfirmationDialog({
+                message: 'Please confirm if you want to un-map this tutor from the Enquiry',
+                onOk: () => {
+                  const data = {
+                    allIdsList: record.getProperty('tutorMapperId')
+                  };
+                  this.utilityService.makerequest(this, this.handleMappingRequest,
+                    LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                    'application/x-www-form-urlencoded');
+                },
+                onCancel: () => {
+                }
+              });
             }
           }]
         }

@@ -12,6 +12,8 @@ export class HelperService {
 
   private titleSubject = new Subject();
   public titleState = this.titleSubject.asObservable();
+  private breadCrumbSubject = new Subject();
+  public breadCrumbState = this.breadCrumbSubject.asObservable();
   private confirmationDialogSubject = new Subject();
   public confirmationDialogState = this.confirmationDialogSubject.asObservable();
   private alertDialogSubject = new Subject();
@@ -26,6 +28,10 @@ export class HelperService {
 
   public setTitle(title: string) {
     this.titleSubject.next(title);
+  }
+
+  public setBreadCrumb(breadCrumb: string) {
+    this.breadCrumbSubject.next(breadCrumb);
   }
 
   public showConfirmationDialog(eventListener: ConfirmationDialogEvent) {

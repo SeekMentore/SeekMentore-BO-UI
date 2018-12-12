@@ -29,6 +29,9 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   @Input()
   allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
 
+  @Input()
+  selectedRecordGridType: string = null;
+
   selectedEnquiryRecord: GridRecord = null;
 
   enquiryUpdatedRecord = {};
@@ -36,8 +39,10 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   loadSelectedEnquiry = true;
   showEmployeeActionDetails = false;
   showCustomerDetails = false;
+  showEmployeeActionButtons = false;
 
-  mandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
+  takeActionDisabled = true;
   superAccessAwarded = false;
   editRecordForm = false;
 
@@ -68,6 +73,17 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
     this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiriesRecord.getProperty('locationDetails'));
     this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.enquiriesRecord.getProperty('preferredTeachingType'));
     this.setUpGridMetaData();
+    this.setDisabledStatus();
+  }
+
+  private setDisabledStatus() {
+    if (this.selectedRecordGridType === 'pendingEnquiriesGrid') {
+      this.formEditMandatoryDisbaled = false;
+      this.takeActionDisabled = false;
+    }
+    if (this.selectedRecordGridType === 'toBeMappedEnquiriesGrid' || this.selectedRecordGridType === 'abortedEnquiriesGrid') {
+      this.takeActionDisabled = false;
+    }
   }
 
   getDateFromMillis(millis: number) {
@@ -209,6 +225,36 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
     const data = CommonUtilityFunctions.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiriesRecord.getProperty('enquiryId'));
     this.utilityService.makerequest(this, this.onUpdateEnquiryRecord, LcpRestUrls.pending_enquiry_update_record, 'POST',
       data, 'multipart/form-data', true);
+  }
+
+  takeActionOnEnquiryRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.enquiriesRecord.getProperty('enquiryId'),
+          button: actionText,
+          comments: message
+        };
+        let url: string = LcpRestUrls.take_action_on_enquiry;
+        this.utilityService.makerequest(this, this.handleTakeActionOnEnquiryRecord,
+          url, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnEnquiryRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
   }
 
   onUpdateEnquiryRecord(context: any, data: any) {

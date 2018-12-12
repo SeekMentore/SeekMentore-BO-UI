@@ -35,12 +35,12 @@ export class LcpRestUrls {
   static complaint_data_access = '/rest/support/complaintCheckDataAccess';
   static complaint_update_record = '/rest/support/updateComplaintRecord';  
   static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
+  static take_action_on_enquiry = '/rest/sales/takeActionOnEnquiry';
   static pending_enquiry_update_record = '/rest/sales/updateEnquiryRecord';  
   static map_tutor_to_enquiry_data_access = '/rest/sales/mapTutorToEnquiryCheckDataAccess';
   static map_tutor_to_enquiry_map_registered_tutors = '/rest/sales/mapRegisteredTutors';
-  static map_tutor_to_enquiry_map_registered_tutor = '/rest/sales/mapRegisteredTutor';
   static map_tutor_to_enquiry_unmap_registered_tutors = '/rest/sales/unmapRegisteredTutors';
-  static map_tutor_to_enquiry_unmap_registered_tutor = '/rest/sales/unmapRegisteredTutor';
+  static take_action_on_mapped_tutor = '/rest/sales/takeActionOnMappedTutor';
   static mapped_tutor_enquiry_data_access = '/rest/sales/mappedTutorCheckDataAccess';
   static mapped_tutor_update_record = '/rest/sales/updateTutorMapperRecord';
   static mapped_tutor_schedule_demo_access = '/rest/sales/mappedTutorCheckScheduleDemoAccess';

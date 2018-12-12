@@ -48,6 +48,7 @@
   margin-top: -10px;
 }
 
-#lcp-view-port {
-  margin-top: inherit;
+.bread-crumb {
+  margin-left: 1.5%;
+  margin-top: 3%;
 }

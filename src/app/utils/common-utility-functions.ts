@@ -200,4 +200,8 @@ export class CommonUtilityFunctions {
     formData.append('parentId', parentId);
     return formData;
   }
+
+  public static removeHTMLBRTagsFromServerResponse(responseString: string) {
+    return CommonUtilityFunctions.checkStringAvailability(responseString) ? responseString.replace(/\<BR\/\>/g, '\n').replace('\n','') : '';
+  }
 }

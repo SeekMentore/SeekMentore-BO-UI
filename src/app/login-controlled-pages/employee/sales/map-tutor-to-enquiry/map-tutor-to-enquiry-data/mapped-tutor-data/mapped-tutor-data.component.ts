@@ -142,15 +142,15 @@ export class MappedTutorDataComponent implements OnInit {
     });
   }
 
-  onUpdateMappedTutorRecord(context: any, data: any) {
+  onUpdateMappedTutorRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
       onButtonClicked: () => {
       }
     };
     context.helperService.showAlertDialog(myListener);
-    if (data['success']) {
+    if (response['success']) {
       context.editRecordForm = false;
     }
   }

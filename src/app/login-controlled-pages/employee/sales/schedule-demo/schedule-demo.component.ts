@@ -59,7 +59,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], hasActionColumn: boolean = false, actionColumn: any = null) {
     let grid = {
       id: id,
       title: title,
@@ -138,7 +138,9 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
       hasSelectionColumn: true,
       selectionColumn: {
         buttons: customSelectionButtons
-      }      
+      },
+      hasActionColumn: hasActionColumn,
+      actionColumn: hasActionColumn ? actionColumn : null
     };
     return grid;
   }
@@ -191,10 +193,65 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     let demoReady = this.getCustomSelectionButton('demoReady', 'Demo Ready', 'btnSubmit', 'demoReady', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let pending = this.getCustomSelectionButton('pending', 'Pening', 'btnReset', 'pending', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let pending = this.getCustomSelectionButton('pending', 'Pending', 'btnReset', 'pending', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let unmapTutorsSelectionButton = {
+      id: 'unmapTutors',
+      label: 'Un-map Tutors',
+      btnclass: 'btnReject',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedMappedTutorObject = gridComponentObject;
+        const tutorMapperIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorMapperId');
+        if (tutorMapperIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showConfirmationDialog({
+            message: 'Please confirm if you want to un-map the selected tutors from the Enquiry',
+            onOk: () => {
+              const data = {
+                allIdsList: tutorMapperIdsList.join(';')
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+    let actionColumn = {
+      label: 'Take Action',
+      buttons: [{
+        id: 'unmapTutor',
+        label: 'Un-map Tutor',
+        btnclass: 'btnReject',
+        clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
+          this.interimHoldSelectedMappedTutorObject = gridComponentObject;
+          this.helperService.showConfirmationDialog({
+            message: 'Please confirm if you want to un-map this tutor from the Enquiry',
+            onOk: () => {
+              const data = {
+                allIdsList: record.getProperty('tutorMapperId')
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }]
+    };
 
     this.pendingMappedTutorsGridMetaData = {
-      grid: this.getGridObject('pendingMappedTutorsGrid', 'Pending Mapped Tutors', '/rest/sales/pendingMappedTutorsList', [demoReady]),
+      grid: this.getGridObject('pendingMappedTutorsGrid', 'Pending Mapped Tutors', '/rest/sales/pendingMappedTutorsList', [demoReady, unmapTutorsSelectionButton], true, actionColumn),
       htmlDomElementId: 'pending-mapped-tutors-grid',
       hidden: false,
     };

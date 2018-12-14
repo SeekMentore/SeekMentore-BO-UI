@@ -1,7 +1,6 @@
 <div>
   <div id="demo-tracker-list-page" *ngIf="!showDemoTrackerData">
     <app-grid #scheduledDemoGrid id="scheduled-demo-grid" [gridMetaData]="scheduledDemoGridMetaData"></app-grid>
-    <app-grid #reScheduledDemoGrid id="re-scheduled-demo-grid" [gridMetaData]="reScheduledDemoGridMetaData"></app-grid>
     <app-grid #successfulDemoGrid id="successful-demo-grid" [gridMetaData]="successfulDemoGridMetaData"></app-grid>
     <app-grid #failedDemoGrid id="failed-demo-grid" [gridMetaData]="failedDemoGridMetaData"></app-grid>
     <app-grid #cancelledDemoGrid id="cancelled-demo-grid" [gridMetaData]="cancelledDemoGridMetaData"></app-grid>

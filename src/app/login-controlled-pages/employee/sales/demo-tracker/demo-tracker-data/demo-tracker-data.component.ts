@@ -92,6 +92,8 @@ export class DemoTrackerDataComponent implements OnInit {
   }
 
   reScheduleDemo() {
+    this.demoTrackerUpdatedRecord['tutorMapperId'] = this.demoTrackerRecord.getProperty('tutorMapperId').toString();
+    this.demoTrackerUpdatedRecord['reScheduleCount'] = this.demoTrackerRecord.getProperty('reScheduleCount').toString();
     const data = CommonUtilityFunctions.encodedGridFormData(this.demoTrackerUpdatedRecord, this.demoTrackerRecord.getProperty('demoTrackerId'));
     this.utilityService.makerequest(this, this.onUpdateDemoTrackerRecord, LcpRestUrls.re_schedule_demo, 'POST',
       data, 'multipart/form-data', true);
@@ -121,7 +123,7 @@ export class DemoTrackerDataComponent implements OnInit {
   handleTakeActionOnDemoRecord(context: any, response: any) {
     context.helperService.showAlertDialog({
       isSuccess: response['success'],
-      message: response['message'],
+      message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
       onButtonClicked: () => {
       }
     });

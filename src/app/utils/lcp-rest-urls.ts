@@ -47,6 +47,6 @@ export class LcpRestUrls {
   static schedule_demo = '/rest/sales/scheduleDemo';
   static demo_tracker_modify_data_access = '/rest/sales/demoTrackerModifyCheckDataAccess';
   static take_action_on_demo = '/rest/sales/takeActionOnDemo';
-  static demo_tracker_update_record = '/rest/sales/updateDemoTrackerRecord';
+  static demo_tracker_update_record = '/rest/sales/updateDemoRecord';
   static re_schedule_demo = '/rest/sales/reScheduleDemo';
 }

@@ -22,10 +22,6 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   scheduledDemoGridObject: GridComponent;
   scheduledDemoGridMetaData: GridDataInterface;
 
-  @ViewChild('reScheduledDemoGrid')
-  reScheduledDemoGridObject: GridComponent;
-  reScheduledDemoGridMetaData: GridDataInterface;
-
   @ViewChild('successfulDemoGrid')
   successfulDemoGridObject: GridComponent;
   successfulDemoGridMetaData: GridDataInterface;
@@ -48,7 +44,6 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.scheduledDemoGridMetaData = null;
-    this.reScheduledDemoGridMetaData = null;
     this.successfulDemoGridMetaData = null;
     this.failedDemoGridMetaData = null;
     this.cancelledDemoGridMetaData = null;
@@ -61,14 +56,12 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.scheduledDemoGridObject.init();
-      this.reScheduledDemoGridObject.init();
       this.successfulDemoGridObject.init();
       this.failedDemoGridObject.init();
       this.cancelledDemoGridObject.init();
     }, 0);
     setTimeout(() => {
       this.scheduledDemoGridObject.refreshGridData();
-      this.reScheduledDemoGridObject.refreshGridData();
       this.successfulDemoGridObject.refreshGridData();
       this.failedDemoGridObject.refreshGridData();
       this.cancelledDemoGridObject.refreshGridData();
@@ -300,12 +293,6 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       hidden: false
     };
 
-    this.reScheduledDemoGridMetaData = {
-      grid: this.getGridObject('reScheduledDemoGrid', 'Re-Scheduled Demo', '/rest/sales/reScheduledDemoList', [cancelDemo]),
-      htmlDomElementId: 're-scheduled-demo-grid',
-      hidden: false
-    };
-
     this.successfulDemoGridMetaData = {
       grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', []),
       htmlDomElementId: 'successful-demo-grid',
@@ -323,23 +310,6 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       htmlDomElementId: 'cancelled-demo-grid',
       hidden: false
     }; 
-  }
-
-  handleCancelDemoRequest(context: any, response: any) {
-    if (response['success'] === false) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
-    } else {
-      context.scheduledDemoGridObject.refreshGridData();
-      context.reScheduledDemoGridObject.refreshGridData();
-      context.successfulDemoGridObject.refreshGridData();
-      context.failedDemoGridObject.refreshGridData();
-      context.cancelledDemoGridObject.refreshGridData();
-    }
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -367,14 +337,12 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       this.selectedDemoTrackerRecord = null;
       setTimeout(() => {
         this.scheduledDemoGridObject.init();
-        this.reScheduledDemoGridObject.init();
         this.successfulDemoGridObject.init();
         this.failedDemoGridObject.init();
         this.cancelledDemoGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.scheduledDemoGridObject.refreshGridData();
-        this.reScheduledDemoGridObject.refreshGridData();
         this.successfulDemoGridObject.refreshGridData();
         this.failedDemoGridObject.refreshGridData();
         this.cancelledDemoGridObject.refreshGridData();

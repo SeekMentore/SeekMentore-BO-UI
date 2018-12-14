@@ -197,8 +197,12 @@
                     >{{demoTrackerRecord.property['adminFinalizingRemarks']}}</textarea>
           </td>        
         </tr>
-        <tr *ngIf="formEditMandatoryDisbaled">
-          <td class="td-label"><label>Rescheduling Remarks</label></td>
+        <tr>
+          <td class="td-label"><label>Re-Schedule Count</label></td>
+          <td><label class="data">{{demoTrackerRecord.property['reScheduleCount']}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Re-Scheduling Remarks</label></td>
           <td><div class="form-remakrs">{{demoTrackerRecord.property['reschedulingRemarks']}}</div></td>        
         </tr>
         <tr>
@@ -282,13 +286,13 @@
                       (change)="updateDemoTrackerProperty('demoTimeMillis', $event, 'millis')"></td>
         </tr>
         <tr>
-          <td class="td-label"><label>Rescheduling Remarks</label></td>
+          <td class="td-label"><label>Re-Scheduling Remarks</label></td>
           <td>
             <textarea 
                     class="textarea_field"
                     [disabled]="!editReScheduleRecordForm" 
                     (change)="updateDemoTrackerProperty('reschedulingRemarks', $event, 'string')"
-                    >{{demoTrackerRecord.property['reschedulingRemarks']}}</textarea>
+                    ></textarea>
           </td>        
         </tr>
       </table>

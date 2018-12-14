@@ -37,8 +37,8 @@ export class GridCommonFunctions {
     const datemillis = column.getValueForColumn(record);
     if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
-      const dateString = date_value.getDate()
-        + '/' + (date_value.getMonth() + 1)
+      const dateString = date_value.getUTCDate()
+        + '/' + (date_value.getUTCMonth() + 1)
         + '/' + date_value.getUTCFullYear();
       return dateString;
     }
@@ -49,12 +49,12 @@ export class GridCommonFunctions {
     const datemillis = column.getValueForColumn(record);
     if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
-      const dateString = date_value.getDate()
-        + '/' + (date_value.getMonth() + 1)
+      const dateString = date_value.getUTCDate()
+        + '/' + (date_value.getUTCMonth() + 1)
         + '/' + date_value.getUTCFullYear()
-        + ' ' + date_value.getHours()
-        + ':' + date_value.getMinutes()
-        + ':' + date_value.getSeconds();
+        + ' ' + date_value.getUTCHours()
+        + ':' + date_value.getUTCMinutes()
+        + ':' + date_value.getUTCSeconds();
       return dateString;
     }
     return '';

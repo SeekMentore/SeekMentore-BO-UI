@@ -4,12 +4,12 @@ import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { HelperService } from 'src/app/utils/helper.service';
 import { Column } from 'src/app/utils/grid/column';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-demo-tracker',
@@ -43,6 +43,9 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   interimHoldSelectedDemoTrackerRecord: GridRecord = null;
   demoTrackerModifyAccess: DemoTrackerModifyAccess = null;
 
+  selectedRecordGridType: string = null;
+  interimHoldSelectedDemoTrackerObject: GridComponent = null;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.scheduledDemoGridMetaData = null;
     this.reScheduledDemoGridMetaData = null;
@@ -72,7 +75,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
@@ -85,8 +88,9 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         headerName: 'Customer Name',
         dataType: 'string',
         mapping: 'customerName',
-        clickEvent: (record: GridRecord, column: Column) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
           this.interimHoldSelectedDemoTrackerRecord = record;
+          this.selectedRecordGridType = gridComponentObject.grid.id; 
           if (this.demoTrackerModifyAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_tracker_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
@@ -222,71 +226,100 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       }],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: [{
-          id: 'cancelDemos',
-          label: 'Cancel Demos',
-          btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'demoTrackerId');
-            if (tutorIdsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showPromptDialog({
-                required: true,
-                titleText: 'Enter comments to Cancel',
-                placeholderText: 'Please provide your comments for cancelling the demo.',
-                onOk: (message) => {
-                  const data = {
-                    allIdsList: tutorIdsList.join(';'),
-                    comments: message
-                  };
-                  this.utilityService.makerequest(this, this.handleCancelDemoRequest,
-                    LcpRestUrls.cancel_demos, 'POST', this.utilityService.urlEncodeData(data),
-                    'application/x-www-form-urlencoded');
-                },
-                onCancel: () => {
-                }
-              });
-            }
-          }
-        }]
+        buttons: customSelectionButtons
       }
     }
     return grid;
   }
 
+  private getCustomButton (
+      id:string, 
+      label: string, 
+      btnclass: string = 'btnSubmit', 
+      actionText: string, 
+      commentsRequired: boolean = false,
+      titleText: string,
+      placeholderText: string
+  ) {
+    return {
+      id: id,
+      label: label,
+      btnclass: btnclass,
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedDemoTrackerObject = gridComponentObject;
+        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'demoTrackerId');
+        if (enquiryIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: enquiryIdsList.join(';'),
+                button: actionText,
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.take_action_on_demo, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
+  handleSelectionActionRequest(context: any, response: any) {
+    if (response['success'] === false) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
+        onButtonClicked: () => {
+        }
+      });
+    } else {
+      context.interimHoldSelectedDemoTrackerObject.refreshGridData();
+    }
+  }
+
   public setUpGridMetaData() {
+    let cancelDemo = this.getCustomButton('cancel', 'Cancel Demo', 'btnReject', 'cancel', true, 'Enter comments for Cancelling Demo', 'Please provide your comments for Cancelling Demo.');
+
     this.scheduledDemoGridMetaData = {
-      grid: this.getGridObject('scheduledDemoGrid', 'Scheduled Demo', '/rest/sales/scheduledDemoList'),
+      grid: this.getGridObject('scheduledDemoGrid', 'Scheduled Demo', '/rest/sales/scheduledDemoList', [cancelDemo]),
       htmlDomElementId: 'scheduled-demo-grid',
       hidden: false
     };
 
     this.reScheduledDemoGridMetaData = {
-      grid: this.getGridObject('reScheduledDemoGrid', 'Re-Scheduled Demo', '/rest/sales/reScheduledDemoList'),
+      grid: this.getGridObject('reScheduledDemoGrid', 'Re-Scheduled Demo', '/rest/sales/reScheduledDemoList', [cancelDemo]),
       htmlDomElementId: 're-scheduled-demo-grid',
       hidden: false
     };
 
     this.successfulDemoGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList'),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', []),
       htmlDomElementId: 'successful-demo-grid',
       hidden: false
     }; 
 
     this.failedDemoGridMetaData = {
-      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList'),
+      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', []),
       htmlDomElementId: 'failed-demo-grid',
       hidden: false
     }; 
 
     this.cancelledDemoGridMetaData = {
-      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList'),
+      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', []),
       htmlDomElementId: 'cancelled-demo-grid',
       hidden: false
     }; 

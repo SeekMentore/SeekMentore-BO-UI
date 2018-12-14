@@ -1,7 +1,7 @@
 <div>
   <div class="form-container-div">
     <form class="form-container" style="max-width: 80%">
-      <div *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess"
+      <div *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled"
             class="form-container-toggle-button">
         <label class="tab_container" (change)="editRecordForm = false;">
           <input type="radio" checked name="editFormChoice">
@@ -26,72 +26,152 @@
           <td><label class="data">{{getDateFromMillis(demoTrackerRecord.property['demoDateAndTimeMillis'])}}</label></td>        
         </tr>
         <tr>
-          <td class="td-label"><label>Demo Occurred</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['demoOccurred'], yesNoFilterOptions)}}</label></td>        
+          <td class="td-label"><label>Is Demo Occurred</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Is Demo Occurred'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedDemoOccurredOption" name="selectedDemoOccurred"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('demoOccurred', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('demoOccurred', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>      
         </tr>
         <tr>
           <td class="td-label"><label>Demo Status</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['demoStatus'], demoStatusFilterOptions)}}</label></td>        
+          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['demoStatus'], demoStatusFilterOptions)}}</label></td>
         </tr>
         <tr>
-          <td class="td-label"><label>Client Satisfied From Tutor</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['clientSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>        
+          <td class="td-label"><label>Is Client Satisfied From Tutor</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Is Client Satisfied From Tutor'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedClientSatisfiedFromTutorOption" name="selectedClientSatisfiedFromTutor"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('clientSatisfiedFromTutor', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('clientSatisfiedFromTutor', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>        
         </tr>
         <tr>
           <td class="td-label"><label>Client Remarks</label></td>
           <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['clientRemarks']}}</div>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateDemoTrackerProperty('clientRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['clientRemarks']}}</textarea>
           </td>        
         </tr>
         <tr>
-          <td class="td-label"><label>Tutor Satisfied With Client</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['tutorSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>        
+          <td class="td-label"><label>Is Tutor Satisfied With Client</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Is Tutor Satisfied With Client'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedTutorSatisfiedWithClientOption" name="selectedTutorSatisfiedWithClient"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('tutorSatisfiedWithClient', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('tutorSatisfiedWithClient', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>       
         </tr>
         <tr>
           <td class="td-label"><label>Tutor Remarks</label></td>
           <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['tutorRemarks']}}</div>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateDemoTrackerProperty('tutorRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['tutorRemarks']}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Is Admin Satisfied From Tutor</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Is Admin Satisfied From Tutor'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedAdminSatisfiedFromTutorOption" name="selectedAdminSatisfiedFromTutor"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('adminSatisfiedFromTutor', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('adminSatisfiedFromTutor', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>       
+        </tr>
+        <tr>
+          <td class="td-label"><label>Is Admin Satisfied With Client</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Is Admin Satisfied With Client'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedAdminSatisfiedWithClientOption" name="selectedAdminSatisfiedWithClient"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('adminSatisfiedWithClient', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('adminSatisfiedWithClient', $event, 'list', true)">
+            </ng-multiselect-dropdown>
           </td>        
         </tr>
         <tr>
-          <td class="td-label"><label>Admin Satisfied From Tutor</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['adminSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Admin Satisfied With Client</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['adminSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Demo Success</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['isDemoSuccess'], yesNoFilterOptions)}}</label></td>        
+          <td class="td-label"><label>Is Demo Success</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Is Demo Success'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedIsDemoSuccessOption" name="selectedIsDemoSuccess"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('isDemoSuccess', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('isDemoSuccess', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>       
         </tr>
         <tr>
           <td class="td-label"><label>Need Price Negotiation With Client</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['needPriceNegotiationWithClient'], yesNoFilterOptions)}}</label></td>        
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Need Price Negotiation With Client'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedNeedPriceNegotiationWithClientOption" name="selectedNeedPriceNegotiationWithClient"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('needPriceNegotiationWithClient', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('needPriceNegotiationWithClient', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>        
         </tr>
         <tr>
-          <td class="td-label"><label>'Negotiated Override Rate With Client</label></td>
-          <td><label class="data">{{demoTrackerRecord.property['negotiatedOverrideRateWithClient']}}</label></td>        
+          <td class="td-label"><label>Negotiated Override Rate With Client</label></td>
+          <td>
+              <input class="input_field" type="number" value="{{demoTrackerRecord.property['negotiatedOverrideRateWithClient']}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateDemoTrackerProperty('negotiatedOverrideRateWithClient', $event, 'number')">
+          </td>        
         </tr>
         <tr>
           <td class="td-label"><label>Client Negotiation Remarks</label></td>
           <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['clientNegotiationRemarks']}}</div>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateDemoTrackerProperty('clientNegotiationRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['clientNegotiationRemarks']}}</textarea>
           </td>        
         </tr>
         <tr>
           <td class="td-label"><label>Need Price Negotiation With Tutor</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(demoTrackerRecord.property['needPriceNegotiationWithTutor'], yesNoFilterOptions)}}</label></td>        
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Need Price Negotiation With Tutor'" [data]="yesNoFilterOptions"
+                                     [(ngModel)] = "selectedNeedPriceNegotiationWithTutorOption" name="selectedNeedPriceNegotiationWithTutor"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateDemoTrackerProperty('needPriceNegotiationWithTutor', $event, 'list')"
+                                     (onDeSelect)="updateDemoTrackerProperty('needPriceNegotiationWithTutor', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>       
         </tr>
         <tr>
           <td class="td-label"><label>Negotiated Override Rate With Tutor</label></td>
-          <td><label class="data">{{demoTrackerRecord.property['negotiatedOverrideRateWithTutor']}}</label></td>        
+          <td>
+              <input class="input_field" type="number" value="{{demoTrackerRecord.property['negotiatedOverrideRateWithTutor']}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateDemoTrackerProperty('negotiatedOverrideRateWithTutor', $event, 'number')">
+          </td>        
         </tr>
         <tr>
           <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
           <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['tutorNegotiationRemarks']}}</div>
-          </td>        
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateDemoTrackerProperty('tutorNegotiationRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['tutorNegotiationRemarks']}}</textarea>
+          </td>       
         </tr>
         <tr>
           <td class="td-label"><label>Who Acted</label></td>
@@ -100,42 +180,78 @@
         <tr>
           <td class="td-label"><label>Admin Remarks</label></td>
           <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['adminRemarks']}}</div>
-          </td>        
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateDemoTrackerProperty('adminRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['adminRemarks']}}</textarea>
+          </td>       
         </tr>
         <tr>
           <td class="td-label"><label>Admin Finalizing Remarks</label></td>
           <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['adminFinalizingRemarks']}}</div>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateDemoTrackerProperty('adminFinalizingRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['adminFinalizingRemarks']}}</textarea>
           </td>        
         </tr>
-        <tr>
+        <tr *ngIf="formEditMandatoryDisbaled">
           <td class="td-label"><label>Rescheduling Remarks</label></td>
-          <td>
-            <div class="form-remakrs">{{demoTrackerRecord.property['reschedulingRemarks']}}</div>
-          </td>        
+          <td><div class="form-remakrs">{{demoTrackerRecord.property['reschedulingRemarks']}}</div></td>        
         </tr>
         <tr>
           <td class="td-label"><label>Admin Action Date</label></td>
           <td><label class="data">{{getDateFromMillis(demoTrackerRecord.property['adminActionDateMillis'])}}</label></td>        
         </tr>
+      </table>
+      <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
+            class="ok-button form-container-update-button"
+            (click)="updateDemoTrackerRecord()">
+        Update
+      </button>
+    </form>
+    <form class="form-container" style="max-width: 80%" *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled">
+        <div *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled"
+              class="form-container-toggle-button">
+          <label class="tab_container" (change)="editReScheduleRecordForm = false;">
+            <input type="radio" checked name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="editReScheduleRecordForm = true;">
+            <input type="radio" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
+      <table class="form-container-generic-table">
         <tr>
           <td class="td-label"><label>New Demo Date</label></td>
           <td><input class="input_field" type="date" value=""
-                      [disabled]="!editRecordForm"
-                      (change)="updateDemoTrackerProperty('demoDate', $event, 'millis')"></td>
+                      [disabled]="!editReScheduleRecordForm"
+                      (change)="updateDemoTrackerProperty('demoDateMillis', $event, 'millis')"></td>
         </tr>
         <tr>
           <td class="td-label"><label>New Demo Time</label></td>
           <td><input class="input_field" type="time" value=""
-                      [disabled]="!editRecordForm"
-                      (change)="updateDemoTrackerProperty('demoTime', $event, 'millis')"></td>
+                      [disabled]="!editReScheduleRecordForm"
+                      (change)="updateDemoTrackerProperty('demoTimeMillis', $event, 'millis')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Rescheduling Remarks</label></td>
+          <td>
+            <textarea 
+                    class="textarea_field"
+                    [disabled]="!editReScheduleRecordForm" 
+                    (change)="updateDemoTrackerProperty('reschedulingRemarks', $event, 'string')"
+                    >{{demoTrackerRecord.property['reschedulingRemarks']}}</textarea>
+          </td>        
         </tr>
       </table>
-      <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && editRecordForm" type="submit"
+      <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled && editReScheduleRecordForm" type="submit"
             class="ok-button form-container-update-button"
-            (click)="updateDemoTrackerRecord()">
-        Update
+            (click)="reScheduleDemo()">
+        Re-Schedule Demo
       </button>
     </form>
   </div>

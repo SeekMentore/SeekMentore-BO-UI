@@ -22,13 +22,19 @@ export class DemoTrackerDataComponent implements OnInit {
   @Input()
   demoTrackerModifyAccess: DemoTrackerModifyAccess = null;
 
+  @Input()
+  selectedRecordGridType: string = null;
+
   demoTrackerUpdatedRecord = {};
 
   showEmployeeActionDetails = false;
+  showEmployeeActionButtons = false;
 
-  mandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
+  takeActionDisabled = true;
   superAccessAwarded = false;
   editRecordForm = false;
+  editReScheduleRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
@@ -37,9 +43,34 @@ export class DemoTrackerDataComponent implements OnInit {
   demoStatusFilterOptions = CommonFilterOptions.demoStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
+  selectedDemoOccurredOption: any[] = [];
+  selectedClientSatisfiedFromTutorOption: any[] = [];
+  selectedTutorSatisfiedWithClientOption: any[] = [];
+  selectedAdminSatisfiedFromTutorOption: any[] = [];
+  selectedAdminSatisfiedWithClientOption: any[] = [];
+  selectedIsDemoSuccessOption: any[] = [];
+  selectedNeedPriceNegotiationWithClientOption: any[] = [];
+  selectedNeedPriceNegotiationWithTutorOption: any[] = [];
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { }
 
   ngOnInit() {
+    this.selectedDemoOccurredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('demoOccurred'));
+    this.selectedClientSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('clientSatisfiedFromTutor'));
+    this.selectedTutorSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('tutorSatisfiedWithClient'));
+    this.selectedAdminSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('adminSatisfiedFromTutor'));
+    this.selectedAdminSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('adminSatisfiedWithClient'));
+    this.selectedIsDemoSuccessOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('isDemoSuccess'));
+    this.selectedNeedPriceNegotiationWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('needPriceNegotiationWithClient'));
+    this.selectedNeedPriceNegotiationWithTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('needPriceNegotiationWithTutor'));
+    this.setDisabledStatus();
+  }
+
+  private setDisabledStatus() {
+    if (this.selectedRecordGridType === 'scheduledDemoGrid' || this.selectedRecordGridType === 'reScheduledDemoGrid') {
+      this.formEditMandatoryDisbaled = false;
+      this.takeActionDisabled = false;
+    }
   }
 
   getDateFromMillis(millis: number) {
@@ -60,17 +91,22 @@ export class DemoTrackerDataComponent implements OnInit {
       data, 'multipart/form-data', true);
   }
 
-  onUpdateDemoTrackerRecord(context: any, data: any) {
+  reScheduleDemo() {
+    const data = CommonUtilityFunctions.encodedGridFormData(this.demoTrackerUpdatedRecord, this.demoTrackerRecord.getProperty('demoTrackerId'));
+    this.utilityService.makerequest(this, this.onUpdateDemoTrackerRecord, LcpRestUrls.re_schedule_demo, 'POST',
+      data, 'multipart/form-data', true);
+  }
+
+  onUpdateDemoTrackerRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
-
 }

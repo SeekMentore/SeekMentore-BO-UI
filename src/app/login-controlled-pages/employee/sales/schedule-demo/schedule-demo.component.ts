@@ -34,6 +34,8 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
   interimHoldSelectedMappedTutorRecord: GridRecord = null;
   mappedTutorScheduleDemoAccess: MappedTutorScheduleDemoAccess = null;
 
+  selectedRecordGridType: string = null;
+
   interimHoldSelectedMappedTutorObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
@@ -72,8 +74,9 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         headerName: 'Tutor Name',
         dataType: 'string',
         mapping: 'tutorName',
-        clickEvent: (record: GridRecord, column: Column) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           this.interimHoldSelectedMappedTutorRecord = record;
+          this.selectedRecordGridType = gridComponentObject.grid.id; 
           if (this.mappedTutorScheduleDemoAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_schedule_demo_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
@@ -319,10 +322,14 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
       this.showScheduleDemoMappedTutorData = false;
       this.selectedMappedTutorRecord = null;
       setTimeout(() => {
+        this.pendingMappedTutorsGridObject.init();
         this.demoReadyMappedTutorsGridObject.init();
+        this.demoScheduledMappedTutorsGridObject.init();
       }, 100);   
       setTimeout(() => {
+        this.pendingMappedTutorsGridObject.refreshGridData();
         this.demoReadyMappedTutorsGridObject.refreshGridData();
+        this.demoScheduledMappedTutorsGridObject.refreshGridData();
       }, 200);
     } else {
       this.showScheduleDemoMappedTutorData = true;

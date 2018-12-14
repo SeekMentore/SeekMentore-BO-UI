@@ -2,7 +2,7 @@
   <app-grid #currentCustomerAllPendingEnquiriesGrid id="current-customer-all-pending-enquiries-grid" [gridMetaData]="currentCustomerAllPendingEnquiriesGridMetaData"></app-grid>
   <div *ngIf="loadSelectedEnquiry" class="form-container-div">
     <form class="form-container" style="max-width: 80%">
-      <div *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess  && !formEditMandatoryDisbaled"
+      <div *ngIf="allEnquiriesDataAccess.allEnquiriesDataModificationAccess && !formEditMandatoryDisbaled"
             class="form-container-toggle-button">
         <label class="tab_container" (change)="editRecordForm = false;">
           <input type="radio" checked name="editFormChoice">

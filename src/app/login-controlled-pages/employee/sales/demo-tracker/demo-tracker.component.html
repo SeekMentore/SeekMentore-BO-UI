@@ -12,6 +12,10 @@
       class="ok-button" (click)="toggleVisibilityDemoTrackerGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-demo-tracker-data [demoTrackerRecord]="selectedDemoTrackerRecord" [demoTrackerModifyAccess]="demoTrackerModifyAccess"></app-demo-tracker-data>
+    <app-demo-tracker-data 
+                [demoTrackerRecord]="selectedDemoTrackerRecord" 
+                [demoTrackerModifyAccess]="demoTrackerModifyAccess"
+                [selectedRecordGridType]="selectedRecordGridType">
+    </app-demo-tracker-data>
   </div>
 </div>

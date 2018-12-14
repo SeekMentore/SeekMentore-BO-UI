@@ -25,13 +25,13 @@ export class CommonUtilityFunctions {
   public static getDateForDateInputParam(value: any) {
     const dateParam = new Date(value);
     let dateValue = dateParam.getUTCDate() > 9 ? dateParam.getUTCDate() : ('0' + dateParam.getUTCDate());
-    let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
+    let monthValue = (dateParam.getUTCMonth() + 1) > 9 ? (dateParam.getUTCMonth() + 1) : ('0' + (dateParam.getUTCMonth() + 1));
     return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
   public static formatDateYYYYMMDD(dateParam: any) {
     let dateValue = dateParam.getUTCDate() > 9 ? dateParam.getUTCDate() : ('0' + dateParam.getUTCDate());
-    let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
+    let monthValue = (dateParam.getUTCMonth() + 1) > 9 ? (dateParam.getUTCMonth() + 1) : ('0' + (dateParam.getUTCMonth() + 1));
     return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
@@ -39,11 +39,11 @@ export class CommonUtilityFunctions {
     if (CommonUtilityFunctions.checkObjectAvailability(datemillis)) {
       const date_value = new Date(datemillis);
       const dateString = date_value.getUTCDate()
-        + '/' + (date_value.getMonth() + 1)
+        + '/' + (date_value.getUTCMonth() + 1)
         + '/' + date_value.getUTCFullYear()
-        + ' ' + date_value.getHours()
-        + ':' + date_value.getMinutes()
-        + ':' + date_value.getSeconds();
+        + ' ' + date_value.getUTCHours()
+        + ':' + date_value.getUTCMinutes()
+        + ':' + date_value.getUTCSeconds();
       return dateString;
     }
     return '';
@@ -143,13 +143,13 @@ export class CommonUtilityFunctions {
         if (deselected) {
           updatedData[key] = 'NULLIFIED';
         } else {
-          updatedData[key] = value;
+          updatedData[key] = value.toString();
         }      
         break;
       }
       case 'millis' : {
         let value = event.target.valueAsNumber;   
-        updatedData[key] = value;
+        updatedData[key] = value.toString();
         break;
       }
       case 'date' : {
@@ -169,7 +169,7 @@ export class CommonUtilityFunctions {
       default : {
         let value = event.target.value;
         if (CommonUtilityFunctions.checkStringAvailability(value.toString())) {
-          updatedData[key] = value;
+          updatedData[key] = value.toString();
         } else {
           updatedData[key] = 'NULLIFIED';
         }

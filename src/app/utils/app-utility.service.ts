@@ -92,10 +92,17 @@ export class AppUtilityService {
   public submitForm(formId: string, url: string, method: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET') {
     const formElement: HTMLFormElement = <HTMLFormElement>document.getElementById(formId);
     if (formElement.checkValidity()) {
-      formElement.action = url;
+      formElement.action = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
       formElement.method = method;
       formElement.submit();
     } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Form is not valid',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
     }
   }
 

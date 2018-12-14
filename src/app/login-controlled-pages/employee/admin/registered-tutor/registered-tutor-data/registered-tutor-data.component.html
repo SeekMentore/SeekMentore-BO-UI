@@ -1,6 +1,9 @@
 <div>
   <app-grid *ngIf="tutorDataAccess.documentViewAccess" #uploadedDocumentGrid id="uploaded-document-grid"
             [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>
+  <form id="tutorDocumentDownloadForm" target="ifrDownload" method="post" class="noscreen">
+    <input type="text" value="" size="10" name="documentId" id="tutorDocumentDownloadForm-documentId" />
+  </form>
   <app-grid *ngIf="tutorDataAccess.bankViewAccess" #bankDetailGrid id="bank-detail-grid"
             [gridMetaData]="bankDetailGridMetaData"></app-grid>
 

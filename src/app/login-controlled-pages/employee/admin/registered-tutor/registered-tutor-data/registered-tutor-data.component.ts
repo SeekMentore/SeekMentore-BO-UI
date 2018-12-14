@@ -158,7 +158,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'filename',
           clickEvent: (record: GridRecord, column: Column) => {
-            alert('Download file - ' + column.getValueForColumn(record));
+            const documentIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentId');
+            documentIdElement.value = record.getProperty('documentId');
+            this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadTutorDocument', 'POST');
           }
         }, {
           id: 'isApproved',

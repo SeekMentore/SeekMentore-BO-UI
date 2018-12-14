@@ -97,6 +97,36 @@ export class DemoTrackerDataComponent implements OnInit {
       data, 'multipart/form-data', true);
   }
 
+  takeActionOnDemoRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.demoTrackerRecord.getProperty('demoTrackerId'),
+          button: actionText,
+          comments: message
+        };
+        let url: string = LcpRestUrls.take_action_on_demo;
+        this.utilityService.makerequest(this, this.handleTakeActionOnDemoRecord,
+          url, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnDemoRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+  }
+
   onUpdateDemoTrackerRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
       isSuccess: response['success'],

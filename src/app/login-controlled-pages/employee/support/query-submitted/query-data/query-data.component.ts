@@ -106,16 +106,16 @@ export class QueryDataComponent implements OnInit {
     });
   }
 
-  onUpdateQueryRecord(context: any, data: any) {
+  onUpdateQueryRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     } 
   }
 }

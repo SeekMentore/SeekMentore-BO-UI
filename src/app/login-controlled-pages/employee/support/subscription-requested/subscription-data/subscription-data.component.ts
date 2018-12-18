@@ -91,12 +91,11 @@ export class SubscriptionDataComponent implements OnInit {
 
   updateSubscriptionProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord, deselected, isAllOPeration);
-    console.log(this.updatedSubscriptionRecord);
   }
 
   updateSubscriptionRecord() {
     const data = CommonUtilityFunctions.encodedGridFormData(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('tentativeSubscriptionId'));
-    this.utilityService.makerequest(this, this.onUpdateSubscriptionRecord, LcpRestUrls.subscription_request_update_record, 'POST',
+    this.utilityService.makerequest(this, this.onUpdateSubscriptionRecord, LcpRestUrls.subscription_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
@@ -133,16 +132,16 @@ export class SubscriptionDataComponent implements OnInit {
     });
   }
 
-  onUpdateSubscriptionRecord(context: any, data: any) {
+  onUpdateSubscriptionRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
 }

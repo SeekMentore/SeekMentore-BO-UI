@@ -207,6 +207,7 @@ export class GridComponent implements OnInit, AfterViewInit {
             this.grid.filters.push(column.filter);
           }
         }
+        this.grid.paginator.navigateToFirstPage();
         this.grid.loadData(this);
       } else {
         this.filterRecords();
@@ -231,6 +232,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.removeFilterFromColumn(column);
       }
       if (!this.grid.offline) {
+        this.grid.paginator.navigateToFirstPage();
         this.grid.loadData(this);
       } else {
         this.filterRecords();

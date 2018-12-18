@@ -594,7 +594,6 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorUpdatedData, this.tutorRecord, deselected, isAllOPeration);
-    console.log(this.tutorUpdatedData);
   }
   
   updateTutorRecord() {
@@ -612,16 +611,16 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       data, 'multipart/form-data', true);
   }
 
-  onUpdateTutorRecord(context: any, data: any) {
+  onUpdateTutorRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     } 
   }
 

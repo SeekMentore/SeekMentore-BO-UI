@@ -40,7 +40,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
-  gradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
   customerUpdatedData = {};
 
@@ -61,7 +61,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   ngOnInit() {
     this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.customerRecord.getProperty('gender'));
     this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.customerRecord.getProperty('location'));
-    this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.gradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
+    this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
     this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
     this.setUpGridMetaData();
   }
@@ -171,7 +171,6 @@ export class SubscribedCustomerDataComponent implements OnInit {
 
   updateCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
-    console.log(this.customerUpdatedData);
   }
 
   updateCustomerRecord() {
@@ -180,16 +179,16 @@ export class SubscribedCustomerDataComponent implements OnInit {
       data, 'multipart/form-data', true);
   }
 
-  onUpdateCustomerRecord(context: any, data: any) {
+  onUpdateCustomerRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
 }

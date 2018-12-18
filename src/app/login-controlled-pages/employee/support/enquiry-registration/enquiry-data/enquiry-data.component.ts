@@ -91,7 +91,6 @@ export class EnquiryDataComponent implements OnInit {
 
   updateEnquiryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enquiryRecord, deselected, isAllOPeration);
-    console.log(this.enquiryUpdatedRecord);
   }
 
   updateEnquiryRecord() {
@@ -133,16 +132,16 @@ export class EnquiryDataComponent implements OnInit {
     });
   }
 
-  onUpdateEnquiryRecord(context: any, data: any) {
+  onUpdateEnquiryRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
 }

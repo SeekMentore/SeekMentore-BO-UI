@@ -24,11 +24,11 @@ export class LcpRestUrls {
   static enquiry_request_data_access = '/rest/support/enquiryRequestCheckDataAccess';
   static blackList_enquiry_requests = '/rest/support/blacklistEnquiryRequestList';
   static take_action_on_find_tutor = '/rest/support/takeActionOnFindTutor';
-  static enquiry_request_update_record = '/rest/support/updateEnquiryRequestRecord';
+  static enquiry_request_update_record = '/rest/support/updateFindTutorRecord';
   static subscription_request_data_access = '/rest/support/subscriptionRequestCheckDataAccess';
   static blackList_subscription_request = '/rest/support/blacklistSubscriptionRequestList';
   static take_action_on_subscription = '/rest/support/takeActionOnSubscription';
-  static subscription_request_update_record = '/rest/support/updateSubscriptionRequestRecord';
+  static subscription_update_record = '/rest/support/updateSubscriptionRecord';
   static take_action_on_submit_query = '/rest/support/takeActionOnSubmitQuery';
   static submitted_query_data_access = '/rest/support/submitQueryCheckDataAccess';
   static submitted_query_update_record = '/rest/support/updateSubmitQueryRecord';

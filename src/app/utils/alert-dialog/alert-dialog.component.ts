@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HelperService } from '../helper.service';
 import { LcpConstants } from '../lcp-constants';
+import { CommonUtilityFunctions } from '../common-utility-functions';
 
 @Component({
   selector: 'app-alert-dialog',
@@ -30,7 +31,7 @@ export class AlertDialogComponent implements OnInit {
         actionButton.innerText = 'Dismiss';
         actionButton.classList.add('cancel-button');
       }
-      messageElement.innerText = eventListener.message;
+      messageElement.innerText = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(eventListener.message);
 
       actionButton.onclick = (ev: Event) => {
         eventListener.onButtonClicked();

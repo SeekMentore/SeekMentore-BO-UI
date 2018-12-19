@@ -131,7 +131,7 @@ export class AppUtilityService {
           if (response != null && response['success']) {
             observer.next(true);
           } else {
-            this.router.navigateByUrl(response['redirect_to']);
+            this.router.navigateByUrl(response['redirectTo']);
             observer.next(false);
           }
         },

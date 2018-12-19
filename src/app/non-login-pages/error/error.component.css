@@ -6,6 +6,12 @@
   justify-content: center;
 }
 
+.error-page-image {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 400px !important;
+}
+
 .root span {
   text-align: center;
   font-family: "Open Sans", sans-serif;

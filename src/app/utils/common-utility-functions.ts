@@ -22,28 +22,29 @@ export class CommonUtilityFunctions {
     return false;
   }
 
-  public static getDateForDateInputParam(value: any) {
-    const dateParam = new Date(value);
+  public static getDateForDateInputParam(completeDateSignatureInUTC: Date) {
+    const dateParam = new Date(completeDateSignatureInUTC);
     let dateValue = dateParam.getUTCDate() > 9 ? dateParam.getUTCDate() : ('0' + dateParam.getUTCDate());
     let monthValue = (dateParam.getUTCMonth() + 1) > 9 ? (dateParam.getUTCMonth() + 1) : ('0' + (dateParam.getUTCMonth() + 1));
     return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
-  public static formatDateYYYYMMDD(dateParam: any) {
-    let dateValue = dateParam.getUTCDate() > 9 ? dateParam.getUTCDate() : ('0' + dateParam.getUTCDate());
-    let monthValue = (dateParam.getUTCMonth() + 1) > 9 ? (dateParam.getUTCMonth() + 1) : ('0' + (dateParam.getUTCMonth() + 1));
-    return dateParam.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
+  public static formatDateYYYYMMDD(completeDateSignatureInUTC: Date) {
+    let dateValue = completeDateSignatureInUTC.getUTCDate() > 9 ? completeDateSignatureInUTC.getUTCDate() : ('0' + completeDateSignatureInUTC.getUTCDate());
+    let monthValue = (completeDateSignatureInUTC.getUTCMonth() + 1) > 9 ? (completeDateSignatureInUTC.getUTCMonth() + 1) : ('0' + (completeDateSignatureInUTC.getUTCMonth() + 1));
+    return completeDateSignatureInUTC.getUTCFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
-  public static getDateStringInDDMMYYYYHHmmSS(datemillis: number) {
-    if (CommonUtilityFunctions.checkObjectAvailability(datemillis)) {
-      const date_value = new Date(datemillis);
-      const dateString = date_value.getUTCDate()
-        + '/' + (date_value.getUTCMonth() + 1)
+  public static getDateStringInDDMMYYYYHHmmSS(datemillisInUTC: number) {
+    if (CommonUtilityFunctions.checkObjectAvailability(datemillisInUTC)) {
+      const date_value = new Date(datemillisInUTC  - (new Date().getTimezoneOffset() * 60 * 1000));
+      const dateString = 
+                (date_value.getUTCDate() > 9 ? date_value.getUTCDate() : ('0' + date_value.getUTCDate()))
+        + '/' + ((date_value.getUTCMonth() + 1) > 9 ? (date_value.getUTCMonth() + 1) : ('0' + (date_value.getUTCMonth() + 1)))
         + '/' + date_value.getUTCFullYear()
-        + ' ' + date_value.getUTCHours()
-        + ':' + date_value.getUTCMinutes()
-        + ':' + date_value.getUTCSeconds();
+        + ' ' + (date_value.getUTCHours() > 9 ? date_value.getUTCHours() : ('0' + date_value.getUTCHours()))
+        + ':' + (date_value.getUTCMinutes() > 9 ? date_value.getUTCMinutes() : ('0' + date_value.getUTCMinutes()))
+        + ':' + (date_value.getUTCSeconds() > 9 ? date_value.getUTCSeconds() : ('0' + date_value.getUTCSeconds()));
       return dateString;
     }
     return '';
@@ -150,6 +151,7 @@ export class CommonUtilityFunctions {
       case 'millis' : {
         let value = event.target.valueAsNumber;   
         updatedData[key] = value.toString();
+        updatedData['localTimezoneOffsetInMilliseconds'] = (new Date().getTimezoneOffset() * 60 * 1000).toString();
         break;
       }
       case 'date' : {

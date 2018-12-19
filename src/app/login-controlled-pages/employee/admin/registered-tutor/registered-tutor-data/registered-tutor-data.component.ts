@@ -12,6 +12,7 @@ import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 import {AlertDialogEvent} from 'src/app/utils/alert-dialog/alert-dialog.component';
 import {Column} from 'src/app/utils/grid/column';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-registered-tutor-data',
@@ -74,9 +75,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-  aadharCard;
-  panCard;
-  photograph;
+  aadharCard: any = null;
+  panCard: any = null;
+  photograph: any = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
@@ -153,10 +154,12 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           restURL: '/rest/registeredTutor/uploadedDocumentList'
         },
         columns: [{
-          id: 'filename',
-          headerName: 'Filename',
-          dataType: 'string',
-          mapping: 'filename',
+          id: 'documentType',
+          headerName: 'Document Type',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.documentTypeFilterOptions,
+          mapping: 'documentType',
+          renderer: AdminCommonFunctions.documentTypeRenderer,
           clickEvent: (record: GridRecord, column: Column) => {
             const documentIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentId');
             documentIdElement.value = record.getProperty('documentId');
@@ -621,10 +624,11 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     context.helperService.showAlertDialog(myListener);
     if (response['success']) {
       context.editRecordForm = false;
+      context.detachAllFiles();
     } 
   }
 
-  attachFile(event, type) {
+  attachFile(event: any, type: any) {
     if (type === 'pan_card') {
       this.panCard = event.target.files[0];
     }
@@ -634,5 +638,23 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     if (type === 'photo') {
       this.photograph = event.target.files[0];
     }
+  }
+
+  detachFile(type: any) {
+    if (type === 'pan_card') {
+      this.panCard = null;
+    }
+    if (type === 'aadhar_card') {
+      this.aadharCard = null;
+    }
+    if (type === 'photo') {
+      this.photograph = null;
+    }
+  }
+
+  detachAllFiles() {
+    this.panCard = null;
+    this.aadharCard = null;
+    this.photograph = null;    
   }
 }

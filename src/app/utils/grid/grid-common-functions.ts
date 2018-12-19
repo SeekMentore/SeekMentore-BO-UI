@@ -34,27 +34,29 @@ export class GridCommonFunctions {
 
   /** Common Renderer functions */
   public static renderDateFromMillis(record: GridRecord, column: Column) {
-    const datemillis = column.getValueForColumn(record);
-    if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
-      const date_value = new Date(datemillis);
-      const dateString = date_value.getUTCDate()
-        + '/' + (date_value.getUTCMonth() + 1)
-        + '/' + date_value.getUTCFullYear();
+    const datemillisInUTC = column.getValueForColumn(record);
+    if (GridCommonFunctions.checkObjectAvailability(datemillisInUTC)) {
+      const date_value = new Date(datemillisInUTC - (new Date().getTimezoneOffset() * 60 * 1000));
+      const dateString = 
+                (date_value.getUTCDate() > 9 ? date_value.getUTCDate() : ('0' + date_value.getUTCDate()))
+        + '/' + ((date_value.getUTCMonth() + 1) > 9 ? (date_value.getUTCMonth() + 1) : ('0' + (date_value.getUTCMonth() + 1)))
+        + '/' + date_value.getUTCFullYear()
       return dateString;
     }
     return '';
   }
 
   public static renderDateFromMillisWithTime(record: GridRecord, column: Column) {
-    const datemillis = column.getValueForColumn(record);
-    if (GridCommonFunctions.checkObjectAvailability(datemillis)) {
-      const date_value = new Date(datemillis);
-      const dateString = date_value.getUTCDate()
-        + '/' + (date_value.getUTCMonth() + 1)
+    const datemillisInUTC = column.getValueForColumn(record);
+    if (GridCommonFunctions.checkObjectAvailability(datemillisInUTC)) {
+      const date_value = new Date(datemillisInUTC - (new Date().getTimezoneOffset() * 60 * 1000));
+      const dateString = 
+                (date_value.getUTCDate() > 9 ? date_value.getUTCDate() : ('0' + date_value.getUTCDate()))
+        + '/' + ((date_value.getUTCMonth() + 1) > 9 ? (date_value.getUTCMonth() + 1) : ('0' + (date_value.getUTCMonth() + 1)))
         + '/' + date_value.getUTCFullYear()
-        + ' ' + date_value.getUTCHours()
-        + ':' + date_value.getUTCMinutes()
-        + ':' + date_value.getUTCSeconds();
+        + ' ' + (date_value.getUTCHours() > 9 ? date_value.getUTCHours() : ('0' + date_value.getUTCHours()))
+        + ':' + (date_value.getUTCMinutes() > 9 ? date_value.getUTCMinutes() : ('0' + date_value.getUTCMinutes()))
+        + ':' + (date_value.getUTCSeconds() > 9 ? date_value.getUTCSeconds() : ('0' + date_value.getUTCSeconds()));
       return dateString;
     }
     return '';

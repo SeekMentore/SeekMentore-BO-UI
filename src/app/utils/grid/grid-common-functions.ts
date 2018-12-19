@@ -36,11 +36,11 @@ export class GridCommonFunctions {
   public static renderDateFromMillis(record: GridRecord, column: Column) {
     const datemillisInUTC = column.getValueForColumn(record);
     if (GridCommonFunctions.checkObjectAvailability(datemillisInUTC)) {
-      const date_value = new Date(datemillisInUTC - (new Date().getTimezoneOffset() * 60 * 1000));
+      const date_value = new Date(datemillisInUTC);
       const dateString = 
-                (date_value.getUTCDate() > 9 ? date_value.getUTCDate() : ('0' + date_value.getUTCDate()))
-        + '/' + ((date_value.getUTCMonth() + 1) > 9 ? (date_value.getUTCMonth() + 1) : ('0' + (date_value.getUTCMonth() + 1)))
-        + '/' + date_value.getUTCFullYear()
+                (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
+        + '/' + ((date_value.getMonth() + 1) > 9 ? (date_value.getMonth() + 1) : ('0' + (date_value.getMonth() + 1)))
+        + '/' + date_value.getFullYear()
       return dateString;
     }
     return '';
@@ -49,14 +49,14 @@ export class GridCommonFunctions {
   public static renderDateFromMillisWithTime(record: GridRecord, column: Column) {
     const datemillisInUTC = column.getValueForColumn(record);
     if (GridCommonFunctions.checkObjectAvailability(datemillisInUTC)) {
-      const date_value = new Date(datemillisInUTC - (new Date().getTimezoneOffset() * 60 * 1000));
+      const date_value = new Date(datemillisInUTC);
       const dateString = 
-                (date_value.getUTCDate() > 9 ? date_value.getUTCDate() : ('0' + date_value.getUTCDate()))
-        + '/' + ((date_value.getUTCMonth() + 1) > 9 ? (date_value.getUTCMonth() + 1) : ('0' + (date_value.getUTCMonth() + 1)))
-        + '/' + date_value.getUTCFullYear()
-        + ' ' + (date_value.getUTCHours() > 9 ? date_value.getUTCHours() : ('0' + date_value.getUTCHours()))
-        + ':' + (date_value.getUTCMinutes() > 9 ? date_value.getUTCMinutes() : ('0' + date_value.getUTCMinutes()))
-        + ':' + (date_value.getUTCSeconds() > 9 ? date_value.getUTCSeconds() : ('0' + date_value.getUTCSeconds()));
+                (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
+        + '/' + ((date_value.getMonth() + 1) > 9 ? (date_value.getMonth() + 1) : ('0' + (date_value.getMonth() + 1)))
+        + '/' + date_value.getFullYear()
+        + ' ' + (date_value.getHours() > 9 ? date_value.getHours() : ('0' + date_value.getHours()))
+        + ':' + (date_value.getMinutes() > 9 ? date_value.getMinutes() : ('0' + date_value.getMinutes()))
+        + ':' + (date_value.getSeconds() > 9 ? date_value.getSeconds() : ('0' + date_value.getSeconds()));
       return dateString;
     }
     return '';

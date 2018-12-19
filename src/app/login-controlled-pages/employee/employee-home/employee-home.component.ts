@@ -33,7 +33,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
   public getDisplayDataForRecord(record: GridRecord, column: Column) {
     const displayData = {
       'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
-      'Subject': record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject') + record.getProperty('subject'),
+      'Subject': record.getProperty('subject'),
       'Initiated By': record.getProperty('initiatedBy'),
       'Due Date': (new Date(record.getProperty('dueDateMillis'))).toDateString(),
       'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),
@@ -66,7 +66,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         title: 'Alerts & Reminders',
         store: {
           isStatic: false,
-          restURL: '/rest/employee/alertsRemindersGrid'
+          restURL: '/rest/employee/alertReminderList'
         },
         columns: [{
           id: 'initiatedDate',
@@ -80,7 +80,6 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'subject',
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {    
-            alert(gridComponentObject.grid.title);        
             this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column));            
           }
         }, {
@@ -118,7 +117,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         title: 'Workflows',
         store: {
           isStatic: false,
-          restURL: '/rest/employee/workflowsGrid'
+          restURL: '/rest/employee/workflowList'
         },
         columns: [{
           id: 'initiatedDate',
@@ -132,7 +131,6 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'subject',
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-            alert(gridComponentObject.grid.title);   
             this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column)); 
           }
         }, {
@@ -171,7 +169,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
         title: 'Tasks',
         store: {
           isStatic: false,
-          restURL: '/rest/employee/tasksGrid'
+          restURL: '/rest/employee/taskList'
         },
         columns: [{
           id: 'initiatedDate',
@@ -185,7 +183,6 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'subject',
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-            alert(gridComponentObject.grid.title);   
             this.alertGridObject.displayRecordAsPopUp('Record Details', this.getDisplayDataForRecord(record, column)); 
           }
         }, {

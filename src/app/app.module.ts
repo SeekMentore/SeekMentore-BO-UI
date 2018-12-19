@@ -44,6 +44,12 @@ import { GridComponent } from './utils/grid/grid.component';
 import { HelperService } from './utils/helper.service';
 import { MultiSelectInputComponent } from './utils/multi-select-input/multi-select-input.component';
 import { RoutingModule } from './utils/routing.module';
+import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
+import { MappedTutorDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/mapped-tutor-data/mapped-tutor-data.component';
+import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
+import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
+import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
+import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +89,13 @@ import { RoutingModule } from './utils/routing.module';
     SubscriptionDataComponent,
     QueryDataComponent,
     ComplaintDataComponent,
-    EnquiriesDataComponent
+    EnquiriesDataComponent,
+    MapTutorToEnquiryDataComponent,
+    MappedTutorDataComponent,
+    ScheduleDemoComponent,
+    ScheduleDemoDataComponent,
+    PromptDialogComponent,
+    DemoTrackerDataComponent
   ],
   imports: [
     BrowserModule,

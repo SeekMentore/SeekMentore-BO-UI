@@ -40,7 +40,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
-  gradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
   customerUpdatedData = {};
 
@@ -61,7 +61,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   ngOnInit() {
     this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.customerRecord.getProperty('gender'));
     this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.customerRecord.getProperty('location'));
-    this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.gradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
+    this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
     this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
     this.setUpGridMetaData();
   }
@@ -103,7 +103,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
         title: 'Current Packages',
         store: {
           isStatic: false,
-          restURL: '/rest/subscribedCustomer/currentPackages'
+          restURL: '/rest/subscribedCustomer/currentPackageList'
         },
         columns: [{
           id: 'customerName',
@@ -138,7 +138,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
         title: 'History Packages',
         store: {
           isStatic: false,
-          restURL: '/rest/subscribedCustomer/historyPackages'
+          restURL: '/rest/subscribedCustomer/historyPackageList'
         },
         columns: [{
           id: 'customerName',
@@ -169,27 +169,26 @@ export class SubscribedCustomerDataComponent implements OnInit {
     };
   }
 
-
-  updateCustomerProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.customerUpdatedData, this.customerRecord);
+  updateCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
   }
 
   updateCustomerRecord() {
-    const data = this.helperService.encodedGridFormData(this.customerUpdatedData, this.customerRecord.getProperty('customerId'));
+    const data = CommonUtilityFunctions.encodedGridFormData(this.customerUpdatedData, this.customerRecord.getProperty('customerId'));
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
-  onUpdateCustomerRecord(context: any, data: any) {
+  onUpdateCustomerRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
 }

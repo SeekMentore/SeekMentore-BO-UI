@@ -50,6 +50,9 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
   selectedSubscriptionRecord: GridRecord = null;
   interimHoldSelectedSubscriptionRecord: GridRecord = null;
   subscriptionDataAccess: SubscriptionDataAccess = null;
+  selectedRecordGridType: string = null;
+
+  interimHoldSelectedSubscriptionGridObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedSubscriptionGridMetaData = null;
@@ -90,7 +93,65 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  private getSelectionColumnBlacklistButton() {
+    return {
+      id: 'blacklist',
+      label: 'Blacklist',
+      btnclass: 'btnReject',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedSubscriptionGridObject = gridComponentObject;
+        const subscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
+        if (subscriptionIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: true,
+            titleText: 'Enter comments to Blacklist',
+            placeholderText: 'Please provide your comments for blacklisting the subscriptions.',
+            onOk: (message) => {
+              const data = {
+                allIdsList: subscriptionIdsList.join(';'),
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.blackList_subscription_request, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
+  private getSelectionColumnBaseButton() {
+    return [{
+      id: 'sendEmail',
+      label: 'Send Email',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+        // Refer document
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
+        }
+      }
+    }];
+  }
+
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
@@ -107,11 +168,12 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           renderer: (record: GridRecord, column: Column) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
           },
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             // Open the Data view port
             this.interimHoldSelectedSubscriptionRecord = record;
+            this.selectedRecordGridType = gridComponentObject.grid.id;       
             if (this.subscriptionDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_request_data_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedSubscriptionRecord = this.interimHoldSelectedSubscriptionRecord;
               this.toggleVisibilitySubscriptionGrid();
@@ -163,11 +225,11 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           renderer: AdminCommonFunctions.subjectsMultiRenderer
         },
         {
-          id: 'locations',
-          headerName: 'Locations',
+          id: 'location',
+          headerName: 'Location',
           dataType: 'list',
           filterOptions: CommonFilterOptions.locationsFilterOptions,
-          mapping: 'locations',
+          mapping: 'location',
           renderer: AdminCommonFunctions.locationsRenderer
         },
         {
@@ -204,91 +266,112 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       ],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: [{
-          id: 'sendEmail',
-          label: 'Send Email',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            // Refer document
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }, {
-          id: 'blacklist',
-          label: 'Blacklist',
-          btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            const SubscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
-            if (SubscriptionIdsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              const data = {
-                allIdsList: SubscriptionIdsList.join(';'),
-                comments: ''
-              };
-              this.utilityService.makerequest(this, this.handleBlackListRequest,
-                LcpRestUrls.blackList_subscription_request, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            }
-          }
-        }]
+        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
       }
     }
     return grid;
   }
 
+  private getCustomButton (
+      id:string, 
+      label: string, 
+      btnclass: string = 'btnSubmit', 
+      actionText: string, 
+      commentsRequired: boolean = false,
+      titleText: string,
+      placeholderText: string
+  ) {
+    return {
+      id: id,
+      label: label,
+      btnclass: btnclass,
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedSubscriptionGridObject = gridComponentObject;
+        const subscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
+        if (subscriptionIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: subscriptionIdsList.join(';'),
+                button: actionText,
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.take_action_on_subscription, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
   public setUpGridMetaData() {
+    let contactedButton = this.getCustomButton('contacted', 'Contacted', 'btnSubmit', 'contacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactButton = this.getCustomButton('recontact', 'To Be Re-Contacted', 'btnReset', 'recontact', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let verifyButton = this.getCustomButton('verify', 'Verify', 'btnSubmit', 'verify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let reverifyButton = this.getCustomButton('reverify', 'Re-Verify', 'btnSubmit', 'reverify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactedButton = this.getCustomButton('recontacted', 'Re-Contacted', 'btnReset', 'recontacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let selectButton = this.getCustomButton('select', 'Select', 'btnSubmit', 'select', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let failVerificationButton = this.getCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+
     this.nonContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList'),
+      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
       htmlDomElementId: 'non-contacted-subscription-grid',
       hidden: false
     };
 
     this.nonVerifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList'),
+      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
       htmlDomElementId: 'non-verified-subscription-grid',
       hidden: false
     };
 
     this.verifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList'),
+      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
       htmlDomElementId: 'verified-subscription-grid',
       hidden: false
     };
 
     this.verificationFailedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList'),
+      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
       htmlDomElementId: 'verification-failed-subscription-grid',
       hidden: false
     };
 
     this.toBeReContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList'),
+      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
       htmlDomElementId: 'to-be-recontacted-subscription-grid',
       hidden: false
     };
 
     this.selectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList'),
+      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList', []),
       htmlDomElementId: 'selected-subscription-grid',
       hidden: false
     };
 
     this.rejectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList'),
+      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
       htmlDomElementId: 'rejected-subscription-grid',
       hidden: false
     };
@@ -313,7 +396,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     }
   }
 
-  handleBlackListRequest(context: any, response: any) {
+  handleSelectionActionRequest(context: any, response: any) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
         isSuccess: response['success'],

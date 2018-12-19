@@ -601,6 +601,7 @@ table.form-container-generic-table td.td-label {
   overflow-y: auto;
   border: 1px solid black;
   padding-left: 1%;
+  min-height: 50px;
 }
 
 .form-container-generic-table label.data {
@@ -614,4 +615,59 @@ div.form-container-div {
   align-content: center; 
   justify-content: center; 
   padding: 30px
+}
+
+.noscreen {
+  display: none;
+}
+
+.btnSubmit {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #20A843 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.btnReset {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #2a61ff !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
+}
+
+.btnReject {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  background-color: #e70000 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: stretch;
 }

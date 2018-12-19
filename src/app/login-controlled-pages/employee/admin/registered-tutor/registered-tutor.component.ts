@@ -57,8 +57,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           isStatic: false,
           restURL: '/rest/admin/registeredTutorsList'
         },
-        columns: [
-          {
+        columns: [{
             id: 'name',
             headerName: 'Name',
             dataType: 'string',
@@ -67,7 +66,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
               // Open the Data view port
               this.interimHoldSelectedTutorRecord = record;
               if (this.tutorDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST');
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
               } else {
                 this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
                 this.toggleVisibilityRegisterTutorGrid();
@@ -157,8 +156,13 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             dataType: 'string',
             mapping: 'additionalDetails',
             lengthyData: true
-          }
-        ],
+          },{
+            id: 'addressDetails',
+            headerName: 'Address Details',
+            dataType: 'string',
+            mapping: 'addressDetails',
+            lengthyData: true
+          }],
         hasSelectionColumn: true,
         selectionColumn: {
           buttons: [{
@@ -192,13 +196,22 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
                   }
                 });
               } else {
-                const data = {
-                  allIdsList: tutorIdsList.join(';'),
-                  comments: ''
-                };
-                this.utilityService.makerequest(this, this.handleBlackListRequest,
-                  LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                  'application/x-www-form-urlencoded');
+                this.helperService.showPromptDialog({
+                  required: true,
+                  titleText: 'Enter comments to Blacklist',
+                  placeholderText: 'Please provide your comments for blacklisting the tutors.',
+                  onOk: (message) => {
+                    const data = {
+                      allIdsList: tutorIdsList.join(';'),
+                      comments: message
+                    };
+                    this.utilityService.makerequest(this, this.handleBlackListRequest,
+                      LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                      'application/x-www-form-urlencoded');
+                  },
+                  onCancel: () => {
+                  }
+                });
               }
             }
           }]
@@ -264,7 +277,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
     } else {
       this.showTutorData = true;
     }
-
   }
 }
 

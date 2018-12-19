@@ -1008,6 +1008,17 @@ export class CommonFilterOptions {
                                 label : 'Tutoring at your place'
                               }];
 
+  static documentTypeFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'PAN Card'
+                              },{
+                                value : '02',
+                                label : 'Profile Photo'
+                              },{
+                                value : '03',
+                                label : 'Aadhaar Card'
+                              }];
+
   static applicationStatusFilterOptions: any [] = [
   // Leave it blank right now , I will write this content later
   ];
@@ -1029,6 +1040,14 @@ export class CommonFilterOptions {
   ];
 
   static matchStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
+
+  static mappingStatusFilterOptions: any [] = [
+  // Leave it blank right now , I will write this content later
+  ];
+
+  static demoStatusFilterOptions: any [] = [
   // Leave it blank right now , I will write this content later
   ];
 

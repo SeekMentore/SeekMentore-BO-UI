@@ -1,4 +1,5 @@
 <div class="root" *ngIf="errorText">
   <span>{{errorText}} </span>
-  <img [src]=errorImageSrc>
+  <img class="error-page-image" [src]=errorImageSrc>
+  <span class="button-white-link" routerLink="/public/login">Back to Login</span>
 </div>

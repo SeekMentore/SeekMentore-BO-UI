@@ -1,0 +1,19 @@
+<div>
+  <div id="schedule-demo-mapped-tutor-list-page" *ngIf="!showScheduleDemoMappedTutorData">
+    <app-grid #pendingMappedTutorsGrid id="pending-mapped-tutors-grid" [gridMetaData]="pendingMappedTutorsGridMetaData"></app-grid>
+    <app-grid #demoReadyMappedTutorsGrid id="demo-ready-mapped-tutors-grid" [gridMetaData]="demoReadyMappedTutorsGridMetaData"></app-grid>
+    <app-grid #demoScheduledMappedTutorsGrid id="demo-scheduled-mapped-tutors-grid" [gridMetaData]="demoScheduledMappedTutorsGridMetaData"></app-grid>
+  </div>
+  <div id="schedule-demo-mapped-tutor-data-page" *ngIf="showScheduleDemoMappedTutorData">
+    <button
+      id="back-to-all-schedule-demo-mapped-tutor-listing-button"
+      class="ok-button" (click)="toggleVisibilityScheduleDemoMappedTutorGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-schedule-demo-data 
+                  [mappedTutorRecord]="selectedMappedTutorRecord" 
+                  [mappedTutorScheduleDemoAccess]="mappedTutorScheduleDemoAccess"
+                  [selectedRecordGridType]="selectedRecordGridType">
+    </app-schedule-demo-data>
+  </div>
+</div>

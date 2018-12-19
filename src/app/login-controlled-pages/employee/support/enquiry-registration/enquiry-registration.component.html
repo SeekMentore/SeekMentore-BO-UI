@@ -14,6 +14,10 @@
       class="ok-button" (click)="toggleVisibilityEnquiryGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-enquiry-data [enquiryRecord]="selectedEnquiryRecord" [enquiryDataAccess]="enquiryDataAccess"></app-enquiry-data>
+    <app-enquiry-data 
+              [enquiryRecord]="selectedEnquiryRecord" 
+              [enquiryDataAccess]="enquiryDataAccess"
+              [selectedRecordGridType]="selectedRecordGridType">
+    </app-enquiry-data>
   </div>
 </div>

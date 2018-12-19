@@ -25,7 +25,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   logoURL = EnvironmentConstants.IMAGE_SERVER + AppConstants.LOGO_PATH;
   idleTime: number;    
   emailData: EmailInterface;
-  emailDialog: HTMLDivElement; 
   userType: string = ''; 
 
   constructor(private helperService: HelperService,
@@ -42,30 +41,21 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     console.log('LCP');
     this.userType = localStorage.getItem(LcpConstants.user_type_key);      
-    if (!('admin' === this.userType || 'customer' === this.userType || 'tutor' === this.userType)) {
+    if (!('Employee' === this.userType || 'Customer' === this.userType || 'Tutor' === this.userType)) {
       this.router.navigateByUrl('/public/login');
     }
 
     this.helperService.titleState.subscribe((title: string) => {
       this.title = title;
-    });     
-    // set event handler for email
-    this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
-    this.helperService.emailDialogState.subscribe((data: EmailInterface) => {
-      if (data === null) {
-        this.emailDialog.style.display = 'none';
-      } else {
-        this.emailData = data;
-        this.emailDialog.style.display = 'flex';
-      }
-    });
+    }); 
   }
 
   ngAfterViewInit() {
   }
 
   public parseMenu() {
-    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basic_info_url, 'POST');
+    const formData = new URLSearchParams();
+    this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basic_info_url, 'POST', formData.toString(), 'application/x-www-form-urlencoded');
   }
 
   onSuccessBasicInfo(context: any, response: any) {
@@ -102,7 +92,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   public doLogout() {
-    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logout_url, 'POST');
+    const formData = new URLSearchParams();
+    this.utilityService.makerequest(this, this.onSuccessLogout, LcpRestUrls.logout_url, 'POST', formData.toString(), 'application/x-www-form-urlencoded');
   }
 
   onSuccessLogout(context: any, response: any) {

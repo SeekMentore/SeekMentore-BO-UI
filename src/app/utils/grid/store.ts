@@ -5,6 +5,8 @@ import {Grid} from "./grid";
 export class Store {
   id: string;
   isStatic: boolean = true;
+  responseError: boolean = false;
+  responseErrorMessage: string;
   restURL: string;
   downloadURL: string;
   data: GridRecord[]; // Each Object here will have a property 'id'
@@ -40,23 +42,50 @@ export class Store {
       if (grid_mask_loader) {
         grid_mask_loader.hidden = false;
       }
-      gridObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', JSON.stringify(params)).subscribe(
+      gridObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', gridObject.utility_service.urlEncodeData(params), 'application/x-www-form-urlencoded').subscribe(
         result => {
           let response = result['response'];
           response = gridObject.utility_service.decodeObjectFromJSON(response);
-          this.restData = response['data'];
-          this.data = [];
-          this.totalRecords = response['totalRecords'];
-          this.convertIntoRecordData(this.getRestData());
-          if (grid_mask_loader) {
-            grid_mask_loader.hidden = true;
+          if (response != null) {
+            if (response['success'] === true) {
+              this.responseError = false;
+              this.responseErrorMessage = '';
+              this.restData = response['data'];
+              this.data = [];
+              this.totalRecords = response['totalRecords'];
+              this.convertIntoRecordData(this.getRestData());
+              if (grid_mask_loader) {
+                grid_mask_loader.hidden = true;
+              }              
+            } else {
+              this.data = [];
+              this.totalRecords = 0;
+              this.responseError = false;
+              this.responseErrorMessage = response['message'];
+              if (grid_mask_loader) {
+                grid_mask_loader.hidden = true;
+              }
+            }
+          } else {
+            this.data = [];
+            this.totalRecords = 0;
+            this.responseError = false;
+            this.responseErrorMessage = 'NULL response received from server, cannot load data.';
+            if (grid_mask_loader) {
+              grid_mask_loader.hidden = true;
+            }
           }
           grid.setData();
         },
         error2 => {
+          this.data = [];
+          this.totalRecords = 0;
+          this.responseError = true;
+          this.responseErrorMessage = 'Communication failure!! Something went wrong.';
           if (grid_mask_loader) {
             grid_mask_loader.hidden = true;
           }
+          grid.setData();          
         }
       );
     }

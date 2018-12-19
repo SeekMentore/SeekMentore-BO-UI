@@ -22,20 +22,20 @@
           <td class="td-label"><label>Name</label></td>
           <td><input class="input_field" type="text" value="{{customerRecord.property['name']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('name', $event.target.value, 'string')">
+                     (change)="updateCustomerProperty('name', $event, 'string')">
           </td>
         </tr>
         <tr>
           <td class="td-label"><label>Contact Number</label></td>
           <td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('contactNumber', $event.target.value, 'string')"></td>
+                     (change)="updateCustomerProperty('contactNumber', $event, 'string')"></td>
         </tr>
         <tr>
           <td class="td-label"><label>Email Id</label></td>
           <td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('emailId', $event.target.value, 'string')"></td>
+                     (change)="updateCustomerProperty('emailId', $event, 'string')"></td>
         </tr>        
         <tr>
           <td class="td-label"><label>Student Grades</label></td>
@@ -43,7 +43,10 @@
             <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
                                      [(ngModel)]="selectedGradesOptions" name="studentGrades"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('studentGrades', $event.value, 'list')">
+                                     (onSelect)="updateCustomerProperty('studentGrades', $event, 'multilist')"
+                                     (onDeSelect)="updateCustomerProperty('studentGrades', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateCustomerProperty('studentGrades', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateCustomerProperty('studentGrades', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -53,7 +56,10 @@
             <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
                                      [(ngModel)]="selectedSubjectOptions" name="interestedSubjects"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('interestedSubjects', $event.value, 'list')">
+                                     (onSelect)="updateCustomerProperty('interestedSubjects', $event, 'multilist')"
+                                     (onDeSelect)="updateCustomerProperty('interestedSubjects', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateCustomerProperty('interestedSubjects', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateCustomerProperty('interestedSubjects', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -63,7 +69,8 @@
             <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
                                      [(ngModel)]="selectedLocationOption" name="selectedLocation"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('location', $event.value, 'list')">
+                                     (onSelect)="updateCustomerProperty('location', $event, 'list')"
+                                     (onDeSelect)="updateCustomerProperty('location', $event, 'list', true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -73,7 +80,7 @@
               <textarea 
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
-                      (change)="updateCustomerProperty('addressDetails', $event.target.value, 'string')"
+                      (change)="updateCustomerProperty('addressDetails', $event, 'string')"
                       >{{customerRecord.property['addressDetails']}}</textarea>
           </td>
         </tr>
@@ -83,7 +90,7 @@
               <textarea 
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
-                      (change)="updateCustomerProperty('additionalDetails', $event.target.value, 'string')"
+                      (change)="updateCustomerProperty('additionalDetails', $event, 'string')"
                       >{{customerRecord.property['additionalDetails']}}</textarea>
           </td>
         </tr>
@@ -97,7 +104,7 @@
         </tr>
         <tr>
           <td class="td-label"><label>Updated By</label></td>        
-          <td><label class="data">{{customerRecord.property['updatedBy']}}</label></td>
+          <td><label class="data">{{customerRecord.property['updatedByName']}}</label></td>
         </tr>
       </table>
       <button *ngIf="customerDataAccess.formDataEditAccess && editRecordForm" type="submit"

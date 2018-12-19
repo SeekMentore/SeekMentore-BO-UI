@@ -18,6 +18,8 @@ export class Column {
   filterOptions: FilterOption[];
   lengthyData: boolean = false;
   multiList: boolean = false;
+  clubbedMapping: boolean = false;
+  clubbedProperties: string[] = [];
   uiRenderer: UIRenderer;
   eventHandler: EventHandler;
   filter: Filter;
@@ -39,22 +41,28 @@ export class Column {
           multiList: boolean = false,
           filterOptionsMetadata: Object[] = [],
           renderer: any = null, 
-          clickEvent: any = null
+          clickEvent: any = null,
+          clubbedMapping: boolean = false,
+          clubbedProperties: string[] = []
   ) {    
     this.id = id;
     this.headerName = headerName;
     this.dataType = dataType;
+    this.multiList = multiList;
+    this.clubbedMapping = clubbedMapping;
+    if (this.clubbedMapping) {
+      this.clubbedProperties = clubbedProperties;
+    }
     this.mapping = mapping;
     this.sortable = sortable;
     this.filterable = filterable;
     this.filter = null;
     if (this.filterable) {
-      this.filter = new Filter(this.id + '-Filter', this.dataType, this.mapping, this.id);
+      this.filter = new Filter(this.id + '-Filter', this.dataType, this.mapping, this.id, this.multiList, this.clubbedMapping, this.clubbedProperties);
     }
     this.hideable = hideable;
     this.hidden = hidden;
     this.lengthyData = lengthyData;
-    this.multiList = multiList;
     if (this.lengthyData || this.multiList) {
       this.appliedClassNames = this.appliedClassNames + ' ' + 'column-pointer';
     }

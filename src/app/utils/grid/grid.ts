@@ -72,6 +72,8 @@ export class Grid {
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.filterOptions) ? columnMetadata.filterOptions : [],
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.renderer) ? columnMetadata.renderer : null,
                                         GridCommonFunctions.checkObjectAvailability(columnMetadata.clickEvent) ? columnMetadata.clickEvent : null,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.clubbedMapping) ? columnMetadata.clubbedMapping : null,
+                                        GridCommonFunctions.checkObjectAvailability(columnMetadata.clubbedProperties) ? columnMetadata.clubbedProperties : null
                                 ));
               }
           }

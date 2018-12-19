@@ -22,11 +22,16 @@ export class SubscriptionDataComponent implements OnInit {
   @Input()
   subscriptionDataAccess: SubscriptionDataAccess = null;
 
+  @Input()
+  selectedRecordGridType: string = null;
+
   updatedSubscriptionRecord = {};
 
   showSubscriptionActionDetails = false;
+  showSubscriptionActionButtons = false;
 
-  mandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
+  takeActionDisabled = true;
   superAccessAwarded = false;
   editRecordForm = false;
 
@@ -57,6 +62,23 @@ export class SubscriptionDataComponent implements OnInit {
     this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.subscriptionRecord.getProperty('location'));
     this.selectedCallTimeOption = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.subscriptionRecord.getProperty('preferredTimeToCall'));
     this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.subscriptionRecord.getProperty('reference'));
+    this.setDisabledStatus();
+  }
+
+  private setDisabledStatus() {
+    if (
+      this.selectedRecordGridType === 'nonContactedSubscriptionGrid' 
+      || this.selectedRecordGridType === 'nonVerifiedSubscriptionGrid' 
+      || this.selectedRecordGridType === 'verifiedSubscriptionGrid'
+      || this.selectedRecordGridType === 'verificationFailedSubscriptionGrid'
+      || this.selectedRecordGridType === 'toBeReContactedSubscriptionGrid'
+    ) {
+      this.formEditMandatoryDisbaled = false;
+      this.takeActionDisabled = false;
+    }
+    if (this.selectedRecordGridType === 'rejectedSubscriptionGrid') {
+      this.takeActionDisabled = false;
+    }
   }
 
   getDateFromMillis(millis: number) {
@@ -67,26 +89,59 @@ export class SubscriptionDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateSubscriptionProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord);
+  updateSubscriptionProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedSubscriptionRecord, this.subscriptionRecord, deselected, isAllOPeration);
   }
 
   updateSubscriptionRecord() {
-    const data = this.helperService.encodedGridFormData(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('tentativeSubscriptionId'));
-    this.utilityService.makerequest(this, this.onUpdateSubscriptionRecord, LcpRestUrls.subscription_request_update_record, 'POST',
+    const data = CommonUtilityFunctions.encodedGridFormData(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('tentativeSubscriptionId'));
+    this.utilityService.makerequest(this, this.onUpdateSubscriptionRecord, LcpRestUrls.subscription_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
-  onUpdateSubscriptionRecord(context: any, data: any) {
+  takeActionOnSubscriptionRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false, blacklist: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.subscriptionRecord.getProperty('tentativeSubscriptionId'),
+          button: actionText,
+          comments: message
+        };
+        let url: string = LcpRestUrls.take_action_on_subscription;
+        if (blacklist) {
+          url = LcpRestUrls.blackList_subscription_request;
+        }
+        this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionRecord,
+          url, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnSubscriptionRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+  }
+
+  onUpdateSubscriptionRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
 }

@@ -22,11 +22,16 @@ export class EnquiryDataComponent implements OnInit {
   @Input()
   enquiryDataAccess: EnquiryDataAccess = null;
 
+  @Input()
+  selectedRecordGridType: string = null;
+
   enquiryUpdatedRecord = {};
 
   showEmployeeActionDetails = false;
+  showEmployeeActionButtons = false;
 
-  mandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
+  takeActionDisabled = true;
   superAccessAwarded = false;
   editRecordForm = false;
 
@@ -56,7 +61,24 @@ export class EnquiryDataComponent implements OnInit {
     this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiryRecord.getProperty('subjects'));
     this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiryRecord.getProperty('location'));
     this.selectedCallTimeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.enquiryRecord.getProperty('preferredTimeToCall'));
-    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.enquiryRecord.getProperty('reference'));    
+    this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.enquiryRecord.getProperty('reference'));
+    this.setDisabledStatus();  
+  }
+
+  private setDisabledStatus() {
+    if (
+      this.selectedRecordGridType === 'nonContactedEnquiryGrid' 
+      || this.selectedRecordGridType === 'nonVerifiedEnquiryGrid' 
+      || this.selectedRecordGridType === 'verifiedEnquiryGrid'
+      || this.selectedRecordGridType === 'verificationFailedEnquiryGrid'
+      || this.selectedRecordGridType === 'toBeReContactedEnquiryGrid'
+    ) {
+      this.formEditMandatoryDisbaled = false;
+      this.takeActionDisabled = false;
+    }
+    if (this.selectedRecordGridType === 'rejectedEnquiryGrid') {
+      this.takeActionDisabled = false;
+    }
   }
 
   getDateFromMillis(millis: number) {
@@ -67,26 +89,59 @@ export class EnquiryDataComponent implements OnInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  updateEnquiryProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.enquiryUpdatedRecord, this.enquiryRecord);
+  updateEnquiryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enquiryRecord, deselected, isAllOPeration);
   }
 
   updateEnquiryRecord() {
-    const data = this.helperService.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
+    const data = CommonUtilityFunctions.encodedGridFormData(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
     this.utilityService.makerequest(this, this.onUpdateEnquiryRecord, LcpRestUrls.enquiry_request_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
-  onUpdateEnquiryRecord(context: any, data: any) {
+  takeActionOnEnquiryRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false, blacklist: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.enquiryRecord.getProperty('enquiryId'),
+          button: actionText,
+          comments: message
+        };
+        let url: string = LcpRestUrls.take_action_on_find_tutor;
+        if (blacklist) {
+          url = LcpRestUrls.blackList_enquiry_requests;
+        }
+        this.utilityService.makerequest(this, this.handleTakeActionOnEnquiryRecord,
+          url, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnEnquiryRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+  }
+
+  onUpdateEnquiryRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      this.editRecordForm = false;
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
     }
   }
 }

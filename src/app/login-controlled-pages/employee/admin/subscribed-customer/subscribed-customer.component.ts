@@ -68,7 +68,7 @@ export class SubscribedCustomerComponent implements OnInit {
               // Open the Data view port
               this.interimHoldSelectedCustomerRecord = record;
               if (this.customerDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST');
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
               } else {
                 this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
                 this.toggleVisibilitySubscribedCustomerGrid();
@@ -161,13 +161,22 @@ export class SubscribedCustomerComponent implements OnInit {
                   }
                 });
               } else {
-                const data = {
-                  allIdsList: customerIdsList.join(';'),
-                  comments: ''
-                };
-                this.utilityService.makerequest(this, this.handleBlackListRequest,
-                  LcpRestUrls.blackList_subscribed_customers, 'POST', this.utilityService.urlEncodeData(data),
-                  'application/x-www-form-urlencoded');
+                this.helperService.showPromptDialog({
+                  required: true,
+                  titleText: 'Enter comments to Blacklist',
+                  placeholderText: 'Please provide your comments for blacklisting the customers.',
+                  onOk: (message) => {
+                    const data = {
+                      allIdsList: customerIdsList.join(';'),
+                      comments: message
+                    };
+                    this.utilityService.makerequest(this, this.handleBlackListRequest,
+                      LcpRestUrls.blackList_subscribed_customers, 'POST', this.utilityService.urlEncodeData(data),
+                      'application/x-www-form-urlencoded');
+                  },
+                  onCancel: () => {
+                  }
+                });
               }
             }
           }]

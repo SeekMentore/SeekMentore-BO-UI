@@ -6,6 +6,7 @@ import { HelperService } from './helper.service';
 import { LcpConstants } from './lcp-constants';
 import { LcpRestUrls } from './lcp-rest-urls';
 import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AppUtilityService {
 
   type: 'GET' | 'POST' | 'DELETE' | 'PUT';
 
-  constructor(private http: HttpClient, private helperService: HelperService) {
+  constructor(private http: HttpClient, private helperService: HelperService, private router: Router) {
   }
 
   public makeRequestWithoutResponseHandler(url: string,
@@ -26,7 +27,7 @@ export class AppUtilityService {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
-    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
+    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType), withCredentials: true};
     if (requestType === 'GET') {
       if (params != null) {
         requestOptions['params'] = params;
@@ -50,7 +51,7 @@ export class AppUtilityService {
     if (!url.includes('http')) {
       url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     }
-    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType)};
+    const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType), withCredentials: true};
     if (requestType === 'GET') {
       if (params != null) {
         requestOptions['params'] = params;
@@ -62,7 +63,6 @@ export class AppUtilityService {
     }
 
     this.http.request(requestType, url, requestOptions).subscribe(result => {
-
       let response = result['response'];
       response = this.decodeObjectFromJSON(response);
       if (response != null) {
@@ -92,10 +92,17 @@ export class AppUtilityService {
   public submitForm(formId: string, url: string, method: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET') {
     const formElement: HTMLFormElement = <HTMLFormElement>document.getElementById(formId);
     if (formElement.checkValidity()) {
-      formElement.action = url;
+      formElement.action = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
       formElement.method = method;
       formElement.submit();
     } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Form is not valid',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
     }
   }
 
@@ -124,6 +131,7 @@ export class AppUtilityService {
           if (response != null && response['success']) {
             observer.next(true);
           } else {
+            this.router.navigateByUrl(response['redirectTo']);
             observer.next(false);
           }
         },

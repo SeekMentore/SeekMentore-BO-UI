@@ -54,6 +54,9 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
   selectedTutorRecord: GridRecord = null;
   interimHoldSelectedTutorRecord: GridRecord = null;  
   tutorDataAccess: BecomeTutorDataAccess = null;
+  selectedRecordGridType: string = null;
+
+  interimHoldSelectedTutorGridObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.nonContactedBecomeTutorGridMetaData = null;
@@ -97,7 +100,64 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  private getSelectionColumnBlacklistButton() {
+    return {
+      id: 'blacklist',
+      label: 'Blacklist',
+      btnclass: 'btnReject',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedTutorGridObject = gridComponentObject;
+        const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeTutorId');
+        if (tutorIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: true,
+            titleText: 'Enter comments to Blacklist',
+            placeholderText: 'Please provide your comments for blacklisting the tutors.',
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: tutorIdsList.join(';'),
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.blackList_become_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
+  private getSelectionColumnBaseButton() {
+    return [{
+      id: 'sendEmail',
+      label: 'Send Email',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
+        }
+      }
+    }];
+  }
+
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
@@ -105,20 +165,22 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
         isStatic: false,
         restURL: restURL
       },
-      columns: [
-        {
+      columns: [{
           id: 'name',
           headerName: 'Name',
           dataType: 'string',
           mapping: 'firstName',
+          clubbedMapping: true,
+          clubbedProperties: ['firstName', 'lastName'],
           renderer: (record: GridRecord, column: Column) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
           },
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             // Open the Data view port
-            this.interimHoldSelectedTutorRecord = record;            
+            this.interimHoldSelectedTutorRecord = record;
+            this.selectedRecordGridType = gridComponentObject.grid.id;           
             if (this.tutorDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.become_tutor_data_access, 'POST');
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.become_tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
               this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
               this.toggleVisibilityBecomeTutorGrid();
@@ -234,6 +296,13 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
           lengthyData: true
         },
         {
+          id: 'addressDetails',
+          headerName: 'Address Details',
+          dataType: 'string',
+          mapping: 'addressDetails',
+          lengthyData: true
+        },
+        {
           id: 'reference',
           headerName: 'Reference',
           dataType: 'list',
@@ -261,96 +330,118 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
       ],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: [{
-          id: 'sendEmail',
-          label: 'Send Email',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }, {
-          id: 'blacklist',
-          label: 'Blacklist',
-          btnclass: 'btnReject',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-            const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeTutorId');
-            if (tutorIdsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              const data = {
-                allIdsList: tutorIdsList.join(';'),
-                comments: ''
-              };
-              this.utilityService.makerequest(this, this.handleBlackListRequest,
-                LcpRestUrls.blackList_become_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            }
-          }
-        }]
+        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
       }
     };
     return grid;
   }
 
+  private getCustomButton (
+          id:string, 
+          label: string, 
+          btnclass: string = 'btnSubmit', 
+          actionText: string, 
+          commentsRequired: boolean = false,
+          titleText: string,
+          placeholderText: string
+  ) {
+    return {
+      id: id,
+      label: label,
+      btnclass: btnclass,
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedTutorGridObject = gridComponentObject;
+        const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeTutorId');
+        if (tutorIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: tutorIdsList.join(';'),
+                button: actionText,
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.take_action_on_become_tutor, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
   public setUpGridMetaData() {
+    let contactedButton = this.getCustomButton('contacted', 'Contacted', 'btnSubmit', 'contacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactButton = this.getCustomButton('recontact', 'To Be Re-Contacted', 'btnReset', 'recontact', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let verifyButton = this.getCustomButton('verify', 'Verify', 'btnSubmit', 'verify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let reverifyButton = this.getCustomButton('reverify', 'Re-Verify', 'btnSubmit', 'reverify', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let recontactedButton = this.getCustomButton('recontacted', 'Re-Contacted', 'btnReset', 'recontacted', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let selectButton = this.getCustomButton('select', 'Select', 'btnSubmit', 'select', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let failVerificationButton = this.getCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+
     this.nonContactedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('nonContactedBecomeTutorGrid', 'Non Contacted Tutors', '/rest/support/nonContactedBecomeTutorsList'),
+      grid: this.getGridObject('nonContactedBecomeTutorGrid', 'Non Contacted Tutors', '/rest/support/nonContactedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
       htmlDomElementId: 'non-contacted-become-tutor-grid',
       hidden: false
     };
 
     this.nonVerifiedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList'),
+      grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
       htmlDomElementId: 'non-verified-become-tutor-grid',
       hidden: false
     };
 
     this.verifiedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList'),
+      grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
       htmlDomElementId: 'verified-become-tutor-grid',
       hidden: false
     };
 
     this.verificationFailedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList'),
+      grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
       htmlDomElementId: 'verification-failed-become-tutor-grid',
       hidden: false
     };
 
     this.toBeReContactedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList'),
+      grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
       htmlDomElementId: 'to-be-recontacted-become-tutor-grid',
       hidden: false
     };
 
     this.selectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList'),
+      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList', []),
       htmlDomElementId: 'selected-become-tutor-grid',
       hidden: false
     };
 
     this.rejectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList'),
+      grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList', 
+                            [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
       htmlDomElementId: 'rejected-become-tutor-grid',
       hidden: false
     };
 
     this.registeredBecomeTutorGridMetaData = {
-      grid: this.getGridObject('registeredBecomeTutorGrid', 'Registered Tutors', '/rest/support/registeredBecomeTutorsList'),
+      grid: this.getGridObject('registeredBecomeTutorGrid', 'Registered Tutors', '/rest/support/registeredBecomeTutorsList', []),
       htmlDomElementId: 'registered-become-tutor-grid',
       hidden: false
     };
@@ -375,7 +466,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     }
   }
 
-  handleBlackListRequest(context: any, response: any) {
+  handleSelectionActionRequest(context: any, response: any) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
         isSuccess: response['success'],

@@ -10,6 +10,10 @@
       class="ok-button" (click)="toggleVisibilityQueryGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-query-data [queryRecord]="selectedQueryRecord" [queryDataAccess]="queryDataAccess"></app-query-data>
+    <app-query-data 
+                [queryRecord]="selectedQueryRecord" 
+                [queryDataAccess]="queryDataAccess"
+                [selectedRecordGridType]="selectedRecordGridType">
+    </app-query-data>
   </div>
 </div>

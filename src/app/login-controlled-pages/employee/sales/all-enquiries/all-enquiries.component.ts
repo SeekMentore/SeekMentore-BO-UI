@@ -22,6 +22,10 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   pendingEnquiriesGridObject: GridComponent;
   pendingEnquiriesGridMetaData: GridDataInterface;
 
+  @ViewChild('toBeMappedEnquiriesGrid')
+  toBeMappedEnquiriesGridObject: GridComponent;
+  toBeMappedEnquiriesGridMetaData: GridDataInterface;
+
   @ViewChild('completedEnquiriesGrid')
   completedEnquiriesGridObject: GridComponent;
   completedEnquiriesGridMetaData: GridDataInterface;
@@ -34,6 +38,9 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   selectedAllEnquiriesRecord: GridRecord = null;
   interimHoldSelectedAllEnquiriesRecord: GridRecord = null;
   allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
+  selectedRecordGridType: string = null;
+
+  interimHoldSelectedAllEnquiriesObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.pendingEnquiriesGridMetaData = null;
@@ -48,17 +55,55 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.pendingEnquiriesGridObject.init();
+      this.toBeMappedEnquiriesGridObject.init();
       this.completedEnquiriesGridObject.init();
       this.abortedEnquiriesGridObject.init();
     }, 0);
     setTimeout(() => {
       this.pendingEnquiriesGridObject.refreshGridData();
+      this.toBeMappedEnquiriesGridObject.refreshGridData();
       this.completedEnquiriesGridObject.refreshGridData();
       this.abortedEnquiriesGridObject.refreshGridData();
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  private getSelectionColumnBaseButton() {
+    return [{
+      id: 'sendEmailTutor',
+      label: 'Send Email Tutor',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorEmail');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
+        }
+      }
+    }, {
+      id: 'sendEmailCustomer',
+      label: 'Send Email Customer',
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerEmail');
+        if (selectedEmailsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
+        }
+      }
+    }];
+  }
+
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
@@ -71,10 +116,11 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         headerName: 'Customer Name',
         dataType: 'string',
         mapping: 'customerName',
-        clickEvent: (record: GridRecord, column: Column) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           this.interimHoldSelectedAllEnquiriesRecord = record;
+          this.selectedRecordGridType = gridComponentObject.grid.id; 
           if (this.allEnquiriesDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.pending_enquiry_data_access, 'POST');
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.pending_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
             this.selectedAllEnquiriesRecord = this.interimHoldSelectedAllEnquiriesRecord;            
             this.toggleVisibilityAllEnquiriesGrid();
@@ -101,7 +147,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         id: 'grade',
         headerName: 'Grade',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.complaintStatusFilterOptions,
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
         mapping: 'grade',
         renderer: AdminCommonFunctions.studentGradesRenderer
       }, {
@@ -157,9 +203,10 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       }, {
         id: 'locationDetails',
         headerName: 'Location Details',
-        dataType: 'string',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
         mapping: 'locationDetails',
-        lengthyData: true
+        renderer: AdminCommonFunctions.locationsRenderer
       }, {
         id: 'addressDetails',
         headerName: 'Address Details',
@@ -183,61 +230,83 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       }],
       hasSelectionColumn: true,
       selectionColumn: {
-        buttons: [{
-          id: 'sendEmailTutor',
-          label: 'Send Email Tutor',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            // Refer document
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorEmail');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }, {
-          id: 'sendEmailCustomer',
-          label: 'Send Email Customer',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-            // Refer document
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerEmail');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }]
+        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
       }
     }
     return grid;
   }
 
+  private getCustomButton (
+      id:string, 
+      label: string, 
+      btnclass: string = 'btnSubmit', 
+      actionText: string, 
+      commentsRequired: boolean = false,
+      titleText: string,
+      placeholderText: string
+  ) {
+    return {
+      id: id,
+      label: label,
+      btnclass: btnclass,
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
+        this.interimHoldSelectedAllEnquiriesObject = gridComponentObject;
+        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
+        if (enquiryIdsList.length === 0) {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: LcpConstants.grid_generic_no_record_selected_error,
+            onButtonClicked: () => {
+            }
+          });
+        } else {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => {                  
+              const data = {
+                allIdsList: enquiryIdsList.join(';'),
+                button: actionText,
+                comments: message
+              };
+              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+                LcpRestUrls.take_action_on_enquiry, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        }
+      }
+    };
+  }
+
   public setUpGridMetaData() {
+    let toBeMapped = this.getCustomButton('toBeMapped', 'To Be Mapped', 'btnSubmit', 'toBeMapped', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let aborted = this.getCustomButton('aborted', 'Aborted', 'btnReject', 'aborted', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+    let pending = this.getCustomButton('pending', 'Pending', 'btnReset', 'pending', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
+
     this.pendingEnquiriesGridMetaData = {
-      grid: this.getGridObject('pendingEnquiriesGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList'),
+      grid: this.getGridObject('pendingEnquiriesGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList', [toBeMapped, aborted]),
       htmlDomElementId: 'pending-enquiries-grid',
       hidden: false
     };
 
+    this.toBeMappedEnquiriesGridMetaData = {
+      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList', [pending, aborted]),
+      htmlDomElementId: 'to-be-mapped-enquiries-grid',
+      hidden: false
+    };
+
     this.completedEnquiriesGridMetaData = {
-      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList'),
+      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', []),
       htmlDomElementId: 'completed-enquiries-grid',
       hidden: false
     };
 
     this.abortedEnquiriesGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList'),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', [pending]),
       htmlDomElementId: 'aborted-enquiries-grid',
       hidden: false
     }; 
@@ -262,17 +331,32 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     }
   }
 
+  handleSelectionActionRequest(context: any, response: any) {
+    if (response['success'] === false) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    } else {
+      context.interimHoldSelectedAllEnquiriesObject.refreshGridData();
+    }
+  }
+
   toggleVisibilityAllEnquiriesGrid() {
     if (this.showAllEnquiriesData === true) {
       this.showAllEnquiriesData = false;
       this.selectedAllEnquiriesRecord = null;
       setTimeout(() => {
         this.pendingEnquiriesGridObject.init();
+        this.toBeMappedEnquiriesGridObject.init();
         this.completedEnquiriesGridObject.init();
         this.abortedEnquiriesGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.pendingEnquiriesGridObject.refreshGridData();
+        this.toBeMappedEnquiriesGridObject.refreshGridData();
         this.completedEnquiriesGridObject.refreshGridData();
         this.abortedEnquiriesGridObject.refreshGridData();
       }, 200);

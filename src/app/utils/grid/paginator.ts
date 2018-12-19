@@ -44,6 +44,11 @@ export class Paginator {
     return false;
   }
 
+  public navigateToFirstPage() {    
+    this.currentPage = 1;
+    this.computeStartRecordNumber();  
+  }
+
   private computeStartRecordNumber() {
     this.startRecordNumber = ((this.currentPage - 1) * this.numberOfRecordsPerPage) + 1;
   }

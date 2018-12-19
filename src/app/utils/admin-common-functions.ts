@@ -95,4 +95,12 @@ export class AdminCommonFunctions {
     public static complaintUserMultiRenderer(record: GridRecord, column: Column) {
         return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.complaintUserFilterOptions, ';'); 
     }
+
+    public static documentTypeRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.documentTypeFilterOptions); 
+    }
+
+    public static documentTypeMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.documentTypeFilterOptions, ';'); 
+    }
 }

@@ -1,0 +1,28 @@
+<div>
+  <div id="map-tutor-to-enquiry-mapped-tutor-list-page" *ngIf="!showMapTutorToEnquiryMappedTutorData">
+    <div class="form-container-div">
+      <form class="form-container" style="max-width: 80%">
+        <!-- This is the search form-->
+        <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
+                class="ok-button form-container-update-button"
+                (click)="searchEligibleMappingTutors()">
+          Search Tutors
+        </button>
+      </form>
+    </div>
+    <app-grid #allMappingEligibleTutorsGrid id="all-mapping-eligible-tutors-grid" [gridMetaData]="allMappingEligibleTutorsGridMetaData"></app-grid>   
+    <app-grid #allMappedTutorsGrid id="all-mapped-tutors-grid" [gridMetaData]="allMappedTutorsGridMetaData"></app-grid>
+  </div>
+  <div id="map-tutor-to-enquiry-mapped-tutor-data-page" *ngIf="showMapTutorToEnquiryMappedTutorData">
+    <button
+      id="back-to-all-mapped-tutor-listing-button"
+      class="ok-button" (click)="toggleVisibilityMappedTutorGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-mapped-tutor-data 
+                [enquiryRecord]="enquiryRecord" 
+                [mappedTutorRecord]="selectedMappedTutorRecord" 
+                [mappedTutorDataAccess]="mappedTutorDataAccess">
+    </app-mapped-tutor-data>
+  </div>
+</div>

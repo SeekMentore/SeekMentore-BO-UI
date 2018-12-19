@@ -78,8 +78,6 @@ export class LoginComponent implements OnInit {
 
   onSuccess(context: any, response: any) {
     if (response['success'] === true) {
-      const authToken = response['clientAuthToken'];
-      localStorage.setItem(LcpConstants.auth_token_key, authToken);
       localStorage.setItem(LcpConstants.user_type_key, context.userType);
       context.router.navigateByUrl('/user/home');
     } else {

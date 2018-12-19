@@ -1,6 +1,6 @@
 <div class="form-container-div">
   <form class="form-container" style="max-width: 80%">
-    <div *ngIf="subscriptionDataAccess.formDataEditAccess"
+    <div *ngIf="subscriptionDataAccess.formDataEditAccess && !formEditMandatoryDisbaled"
           class="form-container-toggle-button">
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
@@ -16,14 +16,14 @@
         <td class="td-label"><label>First Name</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['firstName']}}"
                     [disabled]="!editRecordForm"
-                    (change)="updateSubscriptionProperty('firstName', $event.target.value, 'string')">
+                    (change)="updateSubscriptionProperty('firstName', $event, 'string')">
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Last Name</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['lastName']}}"
                     [disabled]="!editRecordForm"
-                    (change)="updateSubscriptionProperty('lastName', $event.target.value, 'string')">
+                    (change)="updateSubscriptionProperty('lastName', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -38,14 +38,14 @@
         <td class="td-label"><label>Contact Number</label></td>
         <td><input class="input_field" type="text" value="{{subscriptionRecord.property['contactNumber']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateSubscriptionProperty('contactNumber', $event.target.value, 'string')">
+                   (change)="updateSubscriptionProperty('contactNumber', $event, 'string')">
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Email Id</label></td>
         <td><input class="input_field" type="email" value="{{subscriptionRecord.property['emailId']}}"
                    [disabled]="!editRecordForm"
-                   (change)="updateSubscriptionProperty('emailId', $event.target.value, 'string')">
+                   (change)="updateSubscriptionProperty('emailId', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -54,7 +54,10 @@
           <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
                                    [(ngModel)]="selectedStudentGradeOptions" name="studentGrades"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateSubscriptionProperty('studentGrades', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('studentGrades', $event, 'multilist')"
+                                   (onDeSelect)="updateSubscriptionProperty('studentGrades', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateSubscriptionProperty('studentGrades', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateSubscriptionProperty('studentGrades', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -64,7 +67,10 @@
           <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
                                    [(ngModel)]="selectedSubjectOptions" name="subjectOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateSubscriptionProperty('subjects', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('subjects', $event, 'multilist')"
+                                   (onDeSelect)="updateSubscriptionProperty('subjects', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateSubscriptionProperty('subjects', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateSubscriptionProperty('subjects', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -74,7 +80,8 @@
           <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
                                    [(ngModel)]="selectedLocationOptions" name="locationOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateSubscriptionProperty('locations', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('locations', $event, 'list')"
+                                   (onDeSelect)="updateSubscriptionProperty('locations', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -84,7 +91,10 @@
           <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
                                    [(ngModel)]="selectedCallTimeOption" name="callTimeOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateSubscriptionProperty('preferredTimeToCall', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('preferredTimeToCall', $event, 'multilist')"
+                                   (onDeSelect)="updateSubscriptionProperty('preferredTimeToCall', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateSubscriptionProperty('preferredTimeToCall', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateSubscriptionProperty('preferredTimeToCall', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -94,7 +104,7 @@
           <textarea 
               class="textarea_field"
               [disabled]="!editRecordForm" 
-              (change)="updateSubscriptionProperty('additionalDetails', $event.target.value, 'string')"
+              (change)="updateSubscriptionProperty('additionalDetails', $event, 'string')"
               >{{subscriptionRecord.property['additionalDetails']}}</textarea>
         </td>
       </tr>
@@ -104,8 +114,8 @@
           <textarea 
               class="textarea_field"
               [disabled]="!editRecordForm" 
-              (change)="updateSubscriptionProperty('addressDetails', $event.target.value, 'string')"
-              >{{subscriptionRecord.property['additionalDetails']}}</textarea>
+              (change)="updateSubscriptionProperty('addressDetails', $event, 'string')"
+              >{{subscriptionRecord.property['addressDetails']}}</textarea>
         </td>
       </tr>
       <tr>
@@ -114,13 +124,18 @@
           <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
                                    [(ngModel)]="selectedReferenceOption" name="referenceOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateSubscriptionProperty('reference', $event.value, 'list')">
+                                   (onSelect)="updateSubscriptionProperty('reference', $event, 'list')"
+                                   (onDeSelect)="updateSubscriptionProperty('reference', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Record Last Updated</label></td>
         <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['recordLastUpdatedMillis'])}}</label></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>Updated By</label></td>
+        <td><label class="data">{{subscriptionRecord.property['updatedByName']}}</label></td>
       </tr>
       <tr style="background-color: aliceblue;" *ngIf="!showSubscriptionActionDetails">
         <td class="td-label">
@@ -151,7 +166,7 @@
                 <td class="td-label"><label>Is Contacted</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(subscriptionRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
                 <td class="td-label"><label>Who Contacted</label></td>
-                <td><label class="data">{{subscriptionRecord.property['whoContacted']}}</label></td>              
+                <td><label class="data">{{subscriptionRecord.property['whoContactedName']}}</label></td>              
                 <td class="td-label"><label>Contacted Date</label></td>
                 <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['contactedDateMillis'])}}</label></td>
               </tr>
@@ -165,7 +180,7 @@
                 <td class="td-label"><label>Is Authentication Verified</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(subscriptionRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Verified</label></td>
-                <td><label class="data">{{subscriptionRecord.property['whoVerified']}}</label></td>              
+                <td><label class="data">{{subscriptionRecord.property['whoVerifiedName']}}</label></td>              
                 <td class="td-label"><label>Verification Date</label></td>
                 <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['verificationDateMillis'])}}</label></td>
               </tr>
@@ -179,7 +194,7 @@
                 <td class="td-label"><label>Is To Be Recontacted</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(subscriptionRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Suggested For Recontact</label></td>
-                <td><label class="data">{{subscriptionRecord.property['whoSuggestedForRecontact']}}</label></td>              
+                <td><label class="data">{{subscriptionRecord.property['whoSuggestedForRecontactName']}}</label></td>              
                 <td class="td-label"><label>Suggestion Date</label></td>
                 <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['suggestionDateMillis'])}}</label></td>
               </tr>
@@ -193,7 +208,7 @@
                 <td class="td-label"><label></label></td>
                 <td><label class="data"></label></td>
                 <td class="td-label"><label>Who Recontacted</label></td>
-                <td><label class="data">{{subscriptionRecord.property['whoRecontacted']}}</label></td>              
+                <td><label class="data">{{subscriptionRecord.property['whoRecontactedName']}}</label></td>              
                 <td class="td-label"><label>Recontacted Date</label></td>
                 <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['recontactedDateMillis'])}}</label></td>
               </tr>
@@ -207,7 +222,7 @@
                 <td class="td-label"><label>Is Selected</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(subscriptionRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Selected</label></td>
-                <td><label class="data">{{subscriptionRecord.property['whoSelected']}}</label></td>              
+                <td><label class="data">{{subscriptionRecord.property['whoSelectedName']}}</label></td>              
                 <td class="td-label"><label>Selection Date</label></td>
                 <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['selectionDateMillis'])}}</label></td>
               </tr>
@@ -221,7 +236,7 @@
                 <td class="td-label"><label>Is Rejected</label></td>
                 <td><label class="data">{{getLookupRendererFromValue(subscriptionRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
                 <td class="td-label"><label>Who Rejected</label></td>
-                <td><label class="data">{{subscriptionRecord.property['whoRejected']}}</label></td>              
+                <td><label class="data">{{subscriptionRecord.property['whoRejectedName']}}</label></td>              
                 <td class="td-label"><label>Rejection Date</label></td>
                 <td><label class="data">{{getDateFromMillis(subscriptionRecord.property['rejectionDateMillis'])}}</label></td>
               </tr>
@@ -234,8 +249,201 @@
           </table>
         </td>
       </tr>
+      <tr style="background-color: beige;" *ngIf="!showSubscriptionActionButtons && !takeActionDisabled">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-expander"
+                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showSubscriptionActionButtons = true"></i>
+        </td>
+        <td>
+          Show Action Buttons
+        </td>
+      </tr>  
+      <tr style="background-color: beige;" *ngIf="showSubscriptionActionButtons && !takeActionDisabled">
+        <td colspan="2">          
+          <table width="100%">
+              <tr>
+                <td class="td-label">
+                    <i
+                        id="employee-actions-details-collapser"
+                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                        (click)="showSubscriptionActionButtons = false"></i>
+                </td>
+                <td colspan="3">
+                  Hide Action Buttons
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'nonContactedSubscriptionGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
+                          Contacted
+                  </button>
+                </td>              
+                <td>
+                  <button type="submit"
+                          class="btnReset"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
+                          To Be Re-Contacted
+                  </button>
+                </td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'nonVerifiedSubscriptionGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
+                          Verify
+                  </button>
+                </td>              
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
+                          Fail Verify
+                  </button>
+                </td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'verifiedSubscriptionGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          Select
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'verificationFailedSubscriptionGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
+                          Re-Verify
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'toBeReContactedSubscriptionGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnReset"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          Re-Contacted
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="selectedRecordGridType === 'rejectedSubscriptionGrid'">
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnReject"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          Blacklist
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          class="btnReset"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          Re-Contacted
+                  </button>
+                </td>              
+                <td></td>
+                <td>
+                  <button type="submit"
+                          class="btnSubmit"
+                          (click)="takeActionOnSubscriptionRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          Select
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4"></td>
+              </tr>                         
+          </table>
+        </td>
+      </tr>
     </table>
-    <button *ngIf="subscriptionDataAccess.formDataEditAccess && editRecordForm" type="submit"
+    <button *ngIf="subscriptionDataAccess.formDataEditAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
               class="ok-button form-container-update-button"
              (click)="updateSubscriptionRecord()">
       Update

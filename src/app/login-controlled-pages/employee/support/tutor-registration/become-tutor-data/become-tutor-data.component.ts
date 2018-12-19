@@ -22,11 +22,16 @@ export class BecomeTutorDataComponent implements OnInit {
   @Input()
   tutorDataAccess: BecomeTutorDataAccess = null;
 
+  @Input()
+  selectedRecordGridType: string = null;
+
   updatedTutorRecord = {};
 
   showEmployeeActionDetails = false;
+  showEmployeeActionButtons = false;
 
-  mandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
+  takeActionDisabled = true;
   superAccessAwarded = false;
   editRecordForm = false;
 
@@ -71,25 +76,79 @@ export class BecomeTutorDataComponent implements OnInit {
     this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('locations'));
     this.selectedCallTimeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTimeToCallFilterOptions, this.tutorRecord.getProperty('preferredTimeToCall'));
     this.selectedReferenceOption = CommonUtilityFunctions.getSelectedFilterItems(this.referenceFilterOptions, this.tutorRecord.getProperty('reference'));
-    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));    
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
+    this.setDisabledStatus();
+  }
+
+  private setDisabledStatus() {
+    if (
+      this.selectedRecordGridType === 'nonContactedBecomeTutorGrid' 
+      || this.selectedRecordGridType === 'nonVerifiedBecomeTutorGrid' 
+      || this.selectedRecordGridType === 'verifiedBecomeTutorGrid'
+      || this.selectedRecordGridType === 'verificationFailedBecomeTutorGrid'
+      || this.selectedRecordGridType === 'toBeReContactedBecomeTutorGrid'
+    ) {
+      this.formEditMandatoryDisbaled = false;
+      this.takeActionDisabled = false;
+    }
+    if (this.selectedRecordGridType === 'rejectedBecomeTutorGrid') {
+      this.takeActionDisabled = false;
+    }
   }
 
   getDateFromMillis(millis: number) {
     return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
   }
 
+  getDateForDateInputParam(value: any) {
+    return CommonUtilityFunctions.getDateForDateInputParam(value);
+  }
+
   getLookupRendererFromValue(value: any, lookupList: any []) {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
-  updateTutorProperty(key: string, value: string, data_type: string) {
-    CommonUtilityFunctions.updateRecordProperty(key, value, data_type, this.updatedTutorRecord, this.tutorRecord);
+  updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.updatedTutorRecord, this.tutorRecord, deselected, isAllOPeration);
   }
 
   updateTutorRecord() {
-    const data = this.helperService.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
-    this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.customer_update_record, 'POST',
+    const data = CommonUtilityFunctions.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
+    this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.become_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
+  }
+
+  takeActionOnTutorRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false, blacklist: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.tutorRecord.getProperty('tentativeTutorId'),
+          button: actionText,
+          comments: message
+        };
+        let url: string = LcpRestUrls.take_action_on_become_tutor;
+        if (blacklist) {
+          url = LcpRestUrls.blackList_become_tutors;
+        }
+        this.utilityService.makerequest(this, this.handleTakeActionOnTutorRecord,
+          url, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnTutorRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
   }
 
   onUpdateTutorRecord(context: any, data: any) {
@@ -99,9 +158,9 @@ export class BecomeTutorDataComponent implements OnInit {
       onButtonClicked: () => {
       }
     };
-    this.helperService.showAlertDialog(myListener);
+    context.helperService.showAlertDialog(myListener);
     if (data['success']) {
-      this.editRecordForm = false;
+      context.editRecordForm = false;
     } 
   }
 }

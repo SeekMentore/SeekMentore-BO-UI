@@ -12,6 +12,8 @@ import { Sorter, SortingOrder } from './sorter';
 import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
 import { AlertDialogEvent } from '../alert-dialog/alert-dialog.component';
 import { ColumnExtraDataDisplayInputData } from './grid-column-extra-data/grid-column-extra-data.component';
+import { CommonUtilityFunctions } from '../common-utility-functions';
+import { GridConstants } from './grid-constants';
 
 @Component({
   selector: 'app-grid',
@@ -89,6 +91,17 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public addExtraParams(paramKey: string, paramValue: Object) {
       this.grid.addExtraParams(paramKey, paramValue);
+  }
+
+  public showMessageOnGridStoreLoadFailure(errorMessage: string) {
+    const myListener: AlertDialogEvent = {
+      isSuccess: false,
+      message: errorMessage,
+      onButtonClicked: () => {
+      }
+    };
+    this.helperService.showAlertDialog(myListener);
+    return;
   }
 
   public loadNextPage() {
@@ -194,6 +207,7 @@ export class GridComponent implements OnInit, AfterViewInit {
             this.grid.filters.push(column.filter);
           }
         }
+        this.grid.paginator.navigateToFirstPage();
         this.grid.loadData(this);
       } else {
         this.filterRecords();
@@ -215,8 +229,10 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.grid.filters = [];
       for (const column of this.grid.columns) {
         column.isFiltered = false;
+        this.removeFilterFromColumn(column);
       }
       if (!this.grid.offline) {
+        this.grid.paginator.navigateToFirstPage();
         this.grid.loadData(this);
       } else {
         this.filterRecords();
@@ -270,7 +286,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         if (sorterExists) {
           return;
         }
-        this.grid.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder));
+        this.grid.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder, column.clubbedMapping, column.clubbedProperties));
         return;
       }
       const myListener: AlertDialogEvent = {
@@ -896,11 +912,24 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public columnClicked(record: GridRecord, column: Column) {
     if (column.lengthyData || column.multiList) {
+      let data: string = this.defaultColumnValueRenderer(record, column, true);
       let hasClickEventHandlerAttached: boolean = false
       if (column.eventHandler !== null) {
         hasClickEventHandlerAttached = true;
       }
-      this.displayColumnExtraDataAsPopUp(column.headerName + ' - Complete Data', this.defaultColumnValueRenderer(record, column, true), record, column, hasClickEventHandlerAttached);
+      if (
+            GridCommonFunctions.checkStringAvailability(data) 
+            && (
+                  (column.multiList && (GridCommonFunctions.checkStringContainsText(data, ';') || data.length > GridConstants.LETTER_LENGTH_FOR_LENGTHY_DATA)) 
+                  || (column.lengthyData && data.length > GridConstants.LETTER_LENGTH_FOR_LENGTHY_DATA)
+                )
+        ) {
+        this.displayColumnExtraDataAsPopUp(column.headerName + ' - Complete Data', data, record, column, hasClickEventHandlerAttached);
+      } else {
+        if (column.eventHandler !== null) {
+          column.eventHandler.clickEventColumn(record, column, this);
+        }
+      }
     } else {
       if (column.eventHandler !== null) {
         column.eventHandler.clickEventColumn(record, column, this);
@@ -922,10 +951,15 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
     if (!returnCompleteData) {
       if (column.lengthyData || column.multiList) {
-        data = data.substring(0, 21);
+        data = data.substring(0, GridConstants.LETTER_LENGTH_FOR_LENGTHY_DATA);
       }
     }
     return data;
+  }
+
+  public showMoreLink(record: GridRecord, column: Column) {
+    let data: string = this.defaultColumnValueRenderer(record, column, true);
+    return data.length > GridConstants.LETTER_LENGTH_FOR_LENGTHY_DATA;
   }
 
   private hideShowRemoveFilterTab(column: Column = null) {

@@ -223,14 +223,23 @@ export class EmailComponent implements OnInit, OnChanges {
   }
 
   onSuccessEmailSent(context: any, response: any) {
-    context.helperService.showAlertDialog({
-      isSuccess: response['success'],
-      message: response['message'],
-      onButtonClicked: () => {
-        context.setDefaultData();
-        CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, '');
-      }
-    });
+    if (response['success']) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+          context.setDefaultData();
+          CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, '');
+        }
+      });
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    }
   }
 
   setDefaultData() {

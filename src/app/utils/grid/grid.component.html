@@ -378,7 +378,7 @@
         <i id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-i-loadPreviousPage'}}"
            class="fas fa-arrow-left" style="color: #1E1E1E" (click)="loadPreviousPage()"></i>
         <span id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-span-page-info'}}"
-              style="margin: 0 20px"><b>Page {{grid.paginator.currentPage}} of {{grid.paginator.totalPages}}</b></span>
+              style="margin: 0 20px"><b>Page {{grid.paginator.totalPages > 0 ? grid.paginator.currentPage : 0}} of {{grid.paginator.totalPages}}</b></span>
         <i id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-i-loadNextPage'}}"
            class="fas fa-arrow-right" style="color: #1E1E1E" (click)="loadNextPage()"></i>
         <input id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-input-goto-page'}}"

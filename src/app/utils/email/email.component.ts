@@ -154,20 +154,22 @@ export class EmailComponent implements OnInit, OnChanges {
   }
 
   onSuccessTemplateData(context: any, response: any) {
-    for (const element in context.emailData) {
-      try {
-        if (element === 'to') {
-          if (context.emailData['to'].trim() === '') {
-            context.emailData['to'] = response[element];
-          }
-        } else {
-          context.emailData[element] = response[element];
+    if (response['success']) {
+      let emailTemplate = response['emailTemplate'];
+      context.emailData['to'] = emailTemplate['to'];
+      context.emailData['cc'] = emailTemplate['cc'];
+      context.emailData['bcc'] = emailTemplate['bcc'];
+      context.emailData['subject'] = emailTemplate['subject'];
+      context.emailData['body'] = emailTemplate['body'];      
+      CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, context.emailData.body);
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
         }
-      } catch (Error) {
-        console.log(Error.message);
-      }
+      });
     }
-    CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, context.emailData.body);
   }
 
   hideDialog() {

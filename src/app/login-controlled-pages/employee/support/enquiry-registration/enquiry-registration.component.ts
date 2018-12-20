@@ -151,13 +151,19 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[]) {
     let grid = {
       id: id,
       title: title,
       store: {
         isStatic: false,
-        restURL: restURL
+        restURL: restURL,
+        download: {
+          url: downloadURL,
+          preDownload: (gridComponentObject: GridComponent) => {
+            gridComponentObject.addExtraParams('grid', gridExtraParam);
+          }
+        }
       },
       columns: [{
           id: 'name',
@@ -322,48 +328,48 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
 
     this.nonContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquiriesList', 
+      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/nonContactedEnquiriesList',
                               [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
       htmlDomElementId: 'non-contacted-enquiry-grid',
       hidden: false
     };
 
     this.nonVerifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquiriesList', 
+      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/nonVerifiedEnquiriesList', 
                               [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
       htmlDomElementId: 'non-verified-enquiry-grid',
       hidden: false
     };
 
     this.verifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquiriesList', 
+      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/verifiedEnquiriesList', 
                               [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
       htmlDomElementId: 'verified-enquiry-grid',
       hidden: false
     };
 
     this.verificationFailedEnquiryGridMetaData = {
-      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquiriesList', 
+      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/verificationFailedEnquiriesList', 
                               [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
       htmlDomElementId: 'verification-failed-enquiry-grid',
       hidden: false
     };
 
     this.toBeReContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquiriesList', 
+      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/toBeReContactedEnquiriesList', 
                               [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
       htmlDomElementId: 'to-be-recontacted-enquiry-grid',
       hidden: false
     };
 
     this.selectedEnquiryGridMetaData = {
-      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList', []),
+      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/selectedEnquiriesList', []),
       htmlDomElementId: 'selected-enquiry-grid',
       hidden: false
     };
 
     this.rejectedEnquiryGridMetaData = {
-      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquiriesList', 
+      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/rejectedEnquiriesList', 
                               [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
       htmlDomElementId: 'rejected-enquiry-grid',
       hidden: false

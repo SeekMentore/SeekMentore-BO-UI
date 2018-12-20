@@ -26,6 +26,7 @@ export class Grid {
     store: Store;
     filtered_records: GridRecord[] = [];
     offline: boolean;
+    showDownload: boolean = false;
 
     constructor(
         id: string,
@@ -46,7 +47,26 @@ export class Grid {
       this.title = title;
       this.store = null;
       if (GridCommonFunctions.checkObjectAvailability(storeMetaData)) {
-          this.store = new Store(this.id + '-Store', storeMetaData.isStatic, storeMetaData.restURL, storeMetaData.downloadURL);
+          let downloadURL: string = null;
+          let downloadWithSorterRequired: boolean = false;
+          let downloadWithFilterRequired: boolean = false;
+          let precall_download: any = null;
+          if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download)) {
+            downloadURL = storeMetaData.download.url;
+            if (GridCommonFunctions.checkStringAvailability(downloadURL)) {
+                this.showDownload = true;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.withSorter)) {
+                downloadWithSorterRequired = storeMetaData.download.withSorter;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.withFilter)) {
+                downloadWithFilterRequired = storeMetaData.download.withFilter;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.preDownload)) {
+                precall_download = storeMetaData.download.preDownload;
+            }
+          }
+          this.store = new Store(this.id + '-Store', storeMetaData.isStatic, storeMetaData.restURL, downloadURL, downloadWithSorterRequired, downloadWithFilterRequired, precall_download);
       }
       this.isSortingCapable = isSortingCapable;
       this.isFilterCapable = isFilterCapable;

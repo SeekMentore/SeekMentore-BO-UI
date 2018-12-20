@@ -8,7 +8,7 @@
               class="span-title">{{grid.title}}</span>
         <button
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
-          class="uigrid-green-button" (click)="downloadGridData()">
+          class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
           Download Data
         </button>
         <button id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-applyFilter'}}"

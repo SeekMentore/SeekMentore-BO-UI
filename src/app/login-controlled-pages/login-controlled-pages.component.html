@@ -38,11 +38,18 @@
   </div>
 
   <div class="bread-crumb">Bread > Crumb > Place Holder</div>
-  <!--<router-outlet></router-outlet>-->
   <div id="lcp-view-port" class="view-port">
     <router-outlet></router-outlet>
   </div>
+  <!--Below iFrame and Form is required for Grid Download functionality-->
   <iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+  <form id="gridDownloadForm" target="ifrDownload" method="post" class="noscreen">
+    <input type="text" value="" size="10" name="start" id="gridDownload-start" />
+    <input type="text" value="" size="10" name="limit" id="gridDownload-limit" />
+    <input type="text" value="" size="10" name="otherParams" id="gridDownload-otherParams" />
+    <input type="text" value="" size="10" name="sorters" id="gridDownload-sorters" />
+    <input type="text" value="" size="10" name="filters" id="gridDownload-filters" />
+  </form>
 </div>
 
 <!--Email Dialog-->

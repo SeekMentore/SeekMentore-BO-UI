@@ -41,6 +41,11 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
     this.data.data[index].selected = !(this.data.data[index].selected);
   }
 
+  public dataSearched(element: HTMLInputElement) {
+    //this.searchedValue = element.value.trim();
+    //this.filteredListData = CommonUtilityFunctions.searchItemsInStringListThatHasSearchedSubstring(this.listdata, element.value);
+  }
+
   selectUnselectAll(element: HTMLInputElement) {
     for (const list_option of this.data.data) {
       if (list_option.enabled === true) {

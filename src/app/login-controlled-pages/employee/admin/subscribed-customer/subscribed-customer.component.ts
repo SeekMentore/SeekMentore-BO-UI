@@ -56,7 +56,10 @@ export class SubscribedCustomerComponent implements OnInit {
         title: 'Subscribed Customers',
         store: {
           isStatic: false,
-          restURL: '/rest/admin/subscribedCustomersList'
+          restURL: '/rest/admin/subscribedCustomersList',
+          download: {
+            url: '/rest/admin/downloadAdminReportSubscribedCustomerList'
+          }
         },
         columns: [
           {

@@ -27,6 +27,9 @@ export class Grid {
     filtered_records: GridRecord[] = [];
     offline: boolean;
     showDownload: boolean = false;
+    showOfflineToggle: boolean = false;
+    stateExpanded: boolean = true;
+    isCollapsable: boolean = true;
 
     constructor(
         id: string,
@@ -41,7 +44,10 @@ export class Grid {
         selectionColumnMetadata: any = null,
         hasActionColumn: boolean = false,
         actionColumnMetadata: any = null,
-        offline: boolean = false
+        offline: boolean = false,
+        showOfflineToggle: boolean = false,
+        isCollapsable: boolean = true,
+        collapsed: boolean = false
     ) {       
       this.id = id;
       this.title = title;
@@ -133,6 +139,12 @@ export class Grid {
         }
       }
       this.offline = offline;
+      this.showOfflineToggle = showOfflineToggle;
+      this.isCollapsable = isCollapsable;
+      if (collapsed) {
+          this.isCollapsable = true;
+          this.stateExpanded = false;
+      }
     }
 
     public loadData(gridObject: GridComponent) {

@@ -121,10 +121,11 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  public getMappingGridObject(id: string, title: string, restURL: string) {
+  public getMappingGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -209,10 +210,11 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
     return grid;
   }
 
-  public getDemoGridObject(id: string, title: string, restURL: string) {
+  public getDemoGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -354,25 +356,25 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.currentTutorMappingGridMetaData = {
-      grid: this.getMappingGridObject('currentTutorMappingGrid', 'Current Tutor Mapping', '/rest/sales/currentTutorMappingList'),
+      grid: this.getMappingGridObject('currentTutorMappingGrid', 'Current Tutor Mapping', '/rest/sales/currentTutorMappingList', true),
       htmlDomElementId: 'current-tutor-mapping-grid',
       hidden: false,
     };
 
     this.currentCustomerMappingGridMetaData = {
-      grid: this.getMappingGridObject('currentCustomerMappingGrid', 'Current Customer Mapping', '/rest/sales/currentCustomerMappingList'),
+      grid: this.getMappingGridObject('currentCustomerMappingGrid', 'Current Customer Mapping', '/rest/sales/currentCustomerMappingList', true),
       htmlDomElementId: 'current-tutor-mapping-grid',
       hidden: false,
     };
 
     this.currentTutorScheduledDemoGridMetaData = {
-      grid: this.getDemoGridObject('currentTutorScheduledDemoGrid', 'Current Tutor Scheduled Demo', '/rest/sales/currentTutorScheduledDemoList'),
+      grid: this.getDemoGridObject('currentTutorScheduledDemoGrid', 'Current Tutor Scheduled Demo', '/rest/sales/currentTutorScheduledDemoList', true),
       htmlDomElementId: 'current-tutor-mapping-grid',
       hidden: false,
     };
 
     this.currentCustomerScheduledDemoGridMetaData = {
-      grid: this.getDemoGridObject('currentCustomerScheduledDemoGrid', 'Current Customer Scheduled Demo', '/rest/sales/currentCustomerScheduledDemoList'),
+      grid: this.getDemoGridObject('currentCustomerScheduledDemoGrid', 'Current Customer Scheduled Demo', '/rest/sales/currentCustomerScheduledDemoList', true),
       htmlDomElementId: 'current-tutor-mapping-grid',
       hidden: false,
     };

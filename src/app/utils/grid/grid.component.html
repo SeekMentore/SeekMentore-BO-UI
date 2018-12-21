@@ -1,9 +1,34 @@
-<div id="{{'uigrid-'+grid.id}}" class="uigrid" *ngIf="!hidden">
+<div id="{{'uigrid-collapsed-form'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.isCollapsable && !grid.stateExpanded">
+  <!--Title Bar-->
+  <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
+      <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'}}" class="uigrid-row">
+          <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'}}" class="uigrid-cell fill"
+                style="justify-content: center; align-items: center">
+             <i
+              id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-expandCollapseGrid'}}"
+              class="fas fa-plus uigrid-order-icon-button collapse-expand-icon" style="padding: 2px"
+              (click)="expandGrid()" *ngIf="!grid.stateExpanded"></i>
+            <span id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
+                  class="span-title">{{grid.title}}</span>
+            <button
+              id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
+              class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
+              Download Data
+            </button>
+          </div>
+      </div>
+  </div>
+</div>
+<div id="{{'uigrid-expanded-form'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.stateExpanded">
   <!--Title Bar-->
   <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
     <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'}}" class="uigrid-row">
       <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'}}" class="uigrid-cell fill"
            style="justify-content: center; align-items: center">
+         <i
+          id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-expandCollapseGrid'}}"
+          class="fas fa-minus uigrid-order-icon-button collapse-expand-icon" style="padding: 2px"
+          (click)="collapseGrid()" *ngIf="grid.isCollapsable && grid.stateExpanded"></i>
         <span id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
               class="span-title">{{grid.title}}</span>
         <button
@@ -21,7 +46,7 @@
         </button>
         <label
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE'}}"
-          class="tab_container" (change)="toggleRemoteLoad('ONLINE')">
+          class="tab_container" (change)="toggleRemoteLoad('ONLINE')" *ngIf="grid.showOfflineToggle">
           <input
             id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE-radio-onlineOfflineBtn'}}"
             type="radio"
@@ -33,7 +58,7 @@
         </label>
         <label
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE'}}"
-          class="tab_container" (change)="toggleRemoteLoad('OFFLINE')">
+          class="tab_container" (change)="toggleRemoteLoad('OFFLINE')" *ngIf="grid.showOfflineToggle">
           <input
             id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-radio-onlineOfflineBtn'}}"
             type="radio"

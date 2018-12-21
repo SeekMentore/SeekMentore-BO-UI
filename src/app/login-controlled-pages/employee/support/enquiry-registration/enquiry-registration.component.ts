@@ -151,10 +151,11 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL,
@@ -336,41 +337,41 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
 
     this.nonVerifiedEnquiryGridMetaData = {
       grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/nonVerifiedEnquiriesList', 
-                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton], true),
       htmlDomElementId: 'non-verified-enquiry-grid',
       hidden: false
     };
 
     this.verifiedEnquiryGridMetaData = {
       grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/verifiedEnquiriesList', 
-                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton], true),
       htmlDomElementId: 'verified-enquiry-grid',
       hidden: false
     };
 
     this.verificationFailedEnquiryGridMetaData = {
       grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/verificationFailedEnquiriesList', 
-                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton], true),
       htmlDomElementId: 'verification-failed-enquiry-grid',
       hidden: false
     };
 
     this.toBeReContactedEnquiryGridMetaData = {
       grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/toBeReContactedEnquiriesList', 
-                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton], true),
       htmlDomElementId: 'to-be-recontacted-enquiry-grid',
       hidden: false
     };
 
     this.selectedEnquiryGridMetaData = {
-      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/selectedEnquiriesList', []),
+      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/selectedEnquiriesList', [], true),
       htmlDomElementId: 'selected-enquiry-grid',
       hidden: false
     };
 
     this.rejectedEnquiryGridMetaData = {
       grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/rejectedEnquiriesList', 
-                              [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton], true),
       htmlDomElementId: 'rejected-enquiry-grid',
       hidden: false
     };

@@ -65,10 +65,11 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string) {
+  public getGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -166,19 +167,19 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
     };
 
     this.tutorComplaintGridMetaData = {
-      grid: this.getGridObject('tutorComplaintGrid', 'Tutor Complaints', '/rest/support/tutorComplaintList'),
+      grid: this.getGridObject('tutorComplaintGrid', 'Tutor Complaints', '/rest/support/tutorComplaintList', true),
       htmlDomElementId: 'tutor-complaint-grid',
       hidden: false
     };
 
     this.employeeComplaintGridMetaData = {
-      grid: this.getGridObject('employeeComplaintGrid', 'Employee Complaints', '/rest/support/employeeComplaintList'),
+      grid: this.getGridObject('employeeComplaintGrid', 'Employee Complaints', '/rest/support/employeeComplaintList', true),
       htmlDomElementId: 'employee-complaint-grid',
       hidden: false
     };
 
     this.resolvedComplaintGridMetaData = {
-      grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList'),
+      grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList', true),
       htmlDomElementId: 'resolved-complaint-grid',
       hidden: false
     };

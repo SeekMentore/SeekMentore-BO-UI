@@ -61,10 +61,19 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], hasActionColumn: boolean = false, actionColumn: any = null) {
+  public getGridObject (
+    id: string, 
+    title: string, 
+    restURL: string, 
+    customSelectionButtons: any[], 
+    hasActionColumn: boolean = false, 
+    actionColumn: any = null, 
+    collapsed: boolean = false
+  ) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -254,7 +263,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     };
 
     this.pendingMappedTutorsGridMetaData = {
-      grid: this.getGridObject('pendingMappedTutorsGrid', 'Pending Mapped Tutors', '/rest/sales/pendingMappedTutorsList', [demoReady, unmapTutorsSelectionButton], true, actionColumn),
+      grid: this.getGridObject('pendingMappedTutorsGrid', 'Pending Mapped Tutors', '/rest/sales/pendingMappedTutorsList', [demoReady, unmapTutorsSelectionButton], true, actionColumn, true),
       htmlDomElementId: 'pending-mapped-tutors-grid',
       hidden: false,
     };
@@ -266,7 +275,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     };
 
     this.demoScheduledMappedTutorsGridMetaData = {
-      grid: this.getGridObject('demoScheduledMappedTutorsGrid', 'Demo Scheduled Mapped Tutors', '/rest/sales/demoScheduledMappedTutorsList', []),
+      grid: this.getGridObject('demoScheduledMappedTutorsGrid', 'Demo Scheduled Mapped Tutors', '/rest/sales/demoScheduledMappedTutorsList', [], false, null, true),
       htmlDomElementId: 'demo-scheduled-mapped-tutors-grid',
       hidden: false,
     };

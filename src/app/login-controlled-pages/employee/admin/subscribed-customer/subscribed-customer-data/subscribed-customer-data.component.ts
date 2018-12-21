@@ -101,6 +101,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
       grid: {
         id: 'currentPackagesGrid',
         title: 'Current Packages',
+        collapsed: true,
         store: {
           isStatic: false,
           restURL: '/rest/subscribedCustomer/currentPackageList'
@@ -136,6 +137,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
       grid: {
         id: 'historyPackagesGrid',
         title: 'History Packages',
+        collapsed: true,
         store: {
           isStatic: false,
           restURL: '/rest/subscribedCustomer/historyPackageList'

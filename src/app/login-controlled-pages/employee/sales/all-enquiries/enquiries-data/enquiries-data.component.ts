@@ -117,6 +117,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
       grid: {
         id: 'currentCustomerAllPendingEnquiriesGrid',
         title: 'Current Customer Pending Enquiries',
+        collapsed: true,
         store: {
           isStatic: false,
           restURL: '/rest/sales/currentCustomerAllPendingEnquiriesList'

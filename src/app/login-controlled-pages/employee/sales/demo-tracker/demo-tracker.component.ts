@@ -68,10 +68,11 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -294,19 +295,19 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     };
 
     this.successfulDemoGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', []),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', [], true),
       htmlDomElementId: 'successful-demo-grid',
       hidden: false
     }; 
 
     this.failedDemoGridMetaData = {
-      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', []),
+      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', [], true),
       htmlDomElementId: 'failed-demo-grid',
       hidden: false
     }; 
 
     this.cancelledDemoGridMetaData = {
-      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', []),
+      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', [], true),
       htmlDomElementId: 'cancelled-demo-grid',
       hidden: false
     }; 

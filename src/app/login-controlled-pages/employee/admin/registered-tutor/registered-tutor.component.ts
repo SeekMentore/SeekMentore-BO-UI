@@ -55,7 +55,10 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
         title: 'Registered Tutors',
         store: {
           isStatic: false,
-          restURL: '/rest/admin/registeredTutorsList'
+          restURL: '/rest/admin/registeredTutorsList',
+          download: {
+            url: '/rest/admin/downloadAdminReportRegisteredTutorList'
+          }
         },
         columns: [{
             id: 'name',

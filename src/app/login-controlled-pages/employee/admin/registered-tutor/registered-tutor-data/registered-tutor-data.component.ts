@@ -446,6 +446,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       grid: {
         id: 'currentPackagesGrid',
         title: 'Current Packages',
+        collapsed: true,
         store: {
           isStatic: false,
           restURL: '/rest/registeredTutor/currentPackageList'
@@ -481,6 +482,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
       grid: {
         id: 'historyPackagesGrid',
         title: 'History Packages',
+        collapsed: true,
         store: {
           isStatic: false,
           restURL: '/rest/registeredTutor/historyPackageList'

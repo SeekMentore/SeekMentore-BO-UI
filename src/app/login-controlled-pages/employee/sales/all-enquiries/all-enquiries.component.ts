@@ -103,10 +103,11 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -294,19 +295,19 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     };
 
     this.toBeMappedEnquiriesGridMetaData = {
-      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList', [pending, aborted]),
+      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList', [pending, aborted], true),
       htmlDomElementId: 'to-be-mapped-enquiries-grid',
       hidden: false
     };
 
     this.completedEnquiriesGridMetaData = {
-      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', []),
+      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', [], true),
       htmlDomElementId: 'completed-enquiries-grid',
       hidden: false
     };
 
     this.abortedEnquiriesGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', [pending]),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', [pending], true),
       htmlDomElementId: 'aborted-enquiries-grid',
       hidden: false
     }; 

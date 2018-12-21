@@ -78,7 +78,10 @@ export class GridComponent implements OnInit, AfterViewInit {
         hasSelectionColumn ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.selectionColumn) ? this.gridMetaData.grid.selectionColumn : null) : null,
         hasActionColumn,
         hasActionColumn ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.actionColumn) ? this.gridMetaData.grid.actionColumn : null) : null,
-        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.onlineOfflineToggle) ? this.gridMetaData.grid.onlineOfflineToggle : false,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.isCollapsable) ? this.gridMetaData.grid.isCollapsable : true,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.collapsed) ? this.gridMetaData.grid.collapsed : false
       );
     }
     this.hidden = this.gridMetaData.hidden;
@@ -174,6 +177,14 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
     };
     this.helperService.showAlertDialog(myListener);
+  }
+
+  public collapseGrid() {
+    this.grid.stateExpanded = false;
+  }
+
+  public expandGrid() {
+    this.grid.stateExpanded = true;
   }
 
   public downloadGridData() {

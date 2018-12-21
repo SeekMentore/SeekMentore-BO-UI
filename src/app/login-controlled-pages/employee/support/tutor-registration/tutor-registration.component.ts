@@ -157,10 +157,11 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL,
@@ -407,47 +408,47 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
 
     this.nonVerifiedBecomeTutorGridMetaData = {
       grid: this.getGridObject('nonVerifiedBecomeTutorGrid', 'Non Verified Tutors', '/rest/support/nonVerifiedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/nonVerifiedBecomeTutorsList',
-                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton], true),
       htmlDomElementId: 'non-verified-become-tutor-grid',
       hidden: false
     };
 
     this.verifiedBecomeTutorGridMetaData = {
       grid: this.getGridObject('verifiedBecomeTutorGrid', 'Verified Tutors', '/rest/support/verifiedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/verifiedBecomeTutorsList',
-                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton], true),
       htmlDomElementId: 'verified-become-tutor-grid',
       hidden: false
     };
 
     this.verificationFailedBecomeTutorGridMetaData = {
       grid: this.getGridObject('verificationFailedBecomeTutorGrid', 'Verification Failed Tutors', '/rest/support/verificationFailedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/verificationFailedBecomeTutorsList',
-                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton], true),
       htmlDomElementId: 'verification-failed-become-tutor-grid',
       hidden: false
     };
 
     this.toBeReContactedBecomeTutorGridMetaData = {
       grid: this.getGridObject('toBeReContactedBecomeTutorGrid', 'To Be Re-Contacted Tutors', '/rest/support/toBeReContactedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/toBeReContactedBecomeTutorsList',
-                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton], true),
       htmlDomElementId: 'to-be-recontacted-become-tutor-grid',
       hidden: false
     };
 
     this.selectedBecomeTutorGridMetaData = {
-      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/selectedBecomeTutorsList', []),
+      grid: this.getGridObject('selectedBecomeTutorGrid', 'Selected Tutors', '/rest/support/selectedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/selectedBecomeTutorsList', [], true),
       htmlDomElementId: 'selected-become-tutor-grid',
       hidden: false
     };
 
     this.rejectedBecomeTutorGridMetaData = {
       grid: this.getGridObject('rejectedBecomeTutorGrid', 'Rejected Tutors', '/rest/support/rejectedBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/rejectedBecomeTutorsList',
-                            [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
+                            [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton], true),
       htmlDomElementId: 'rejected-become-tutor-grid',
       hidden: false
     };
 
     this.registeredBecomeTutorGridMetaData = {
-      grid: this.getGridObject('registeredBecomeTutorGrid', 'Registered Tutors', '/rest/support/registeredBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/registeredBecomeTutorsList', []),
+      grid: this.getGridObject('registeredBecomeTutorGrid', 'Registered Tutors', '/rest/support/registeredBecomeTutorsList', '/rest/support/downloadAdminReportBecomeTutorList', '/registeredBecomeTutorsList', [], true),
       htmlDomElementId: 'registered-become-tutor-grid',
       hidden: false
     };

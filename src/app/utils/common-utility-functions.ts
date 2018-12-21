@@ -206,4 +206,27 @@ export class CommonUtilityFunctions {
   public static removeHTMLBRTagsFromServerResponse(responseString: string) {
     return CommonUtilityFunctions.checkStringAvailability(responseString) ? responseString.replace(/\<BR\/\>/g, '\n').replace('\n','') : '';
   }
+
+  public static searchItemsInStringListThatHasSearchedSubstring(stringList: string[], substring: string, caseSensitiveSearch: boolean = false) {
+    let searchedStringItemList: string[] = stringList;
+    if (this.checkObjectAvailability(stringList) && stringList.length > 0 && this.checkStringAvailability(substring)) {
+      substring = substring.trim();
+      searchedStringItemList = [];
+      for(var index = 0; index < stringList.length; index++) {
+        let stringItem: string = stringList[index];
+        if (this.checkStringAvailability(stringItem)) {
+          if (caseSensitiveSearch) {
+            if (stringItem.indexOf(substring) !== -1) {
+              searchedStringItemList.push(stringItem);
+            }
+          } else {
+            if (stringItem.toUpperCase().indexOf(substring.toUpperCase()) !== -1) {
+              searchedStringItemList.push(stringItem);
+            }
+          }
+        }
+      }
+    }
+    return searchedStringItemList;
+  }
 }

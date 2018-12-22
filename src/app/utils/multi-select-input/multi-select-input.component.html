@@ -11,6 +11,7 @@
     <input    type="text" placeholder="search"
               style="width: 88%;border: 1px solid lightgreen;margin-bottom: 6px;"
               class=""
+              value="{{searchedValue}}"
               (input)="dataSearched($event.target)"/>
     [ {{filteredListData.length}} ]
   </span>
@@ -20,6 +21,10 @@
       <span style="flex: 1 1 auto; padding: 0">{{data.data[element].label}}</span>
       <input type="checkbox" [disabled]="!data.data[element].enabled" style="align-self: center"
              [checked]="data.data[element].selected" (click)="dataOptionToggled(i)">
+    </div>
+    <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary)"
+          *ngIf="data.data.length > 0 && filteredListData.length === 0">
+      <span style="flex: 1 1 auto; padding: 0; color: red; text-align: center;">No data for search '{{searchedValue}}'</span>
     </div>
   </div>
   <button class="ok-button" style="align-self: flex-end" (click)="applySelected()">Apply</button>

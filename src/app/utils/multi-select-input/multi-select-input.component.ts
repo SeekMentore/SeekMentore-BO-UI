@@ -37,22 +37,20 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
         if (propName === 'data' && changedProp.currentValue !== null) {
           this.data = changedProp.currentValue;
           this.title = this.data.meta_data['title'];
-          this.filteredListData = [];
-          if (CommonUtilityFunctions.checkStringAvailability(this.searchedValue)) {
-            this.filteredListData = this.searchItemsInListThatHasLabelAsSearchedSubstring(this.searchedValue);
-          } else {
-            this.prepareFilteredListData();
-          }
+          this.filteredListData = this.prepareFilteredListData();
+          this.searchedValue = '';
         }
       }
     }
   }
 
   private prepareFilteredListData() {
+    let searchedStringItemList: number[] = [];
     for(var index = 0; index < this.data.data.length; index++) {
       let data = this.data.data[index];
-      this.filteredListData.push(index);
+      searchedStringItemList.push(index);
     }
+    return searchedStringItemList;
   }
 
   dataOptionToggled(iteration: number) {
@@ -65,7 +63,7 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
   }
 
   public searchItemsInListThatHasLabelAsSearchedSubstring(substring: string) {
-    let searchedStringItemList: number[] = this.filteredListData;
+    let searchedStringItemList: number[] = this.prepareFilteredListData();
     if (CommonUtilityFunctions.checkStringAvailability(substring)) {
       substring = substring.trim();
       searchedStringItemList = [];

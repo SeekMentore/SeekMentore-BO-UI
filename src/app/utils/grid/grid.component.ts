@@ -866,7 +866,7 @@ export class GridComponent implements OnInit, AfterViewInit {
               if (option['value'] === element['value']) {
                 option['isSelected'] = element['selected'];
                 if (option['isSelected']) {
-                  selectedOptionsValue.push(option['value']);
+                  selectedOptionsValue.push(option['label']);
                 }
               }
             }

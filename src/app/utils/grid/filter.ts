@@ -1,4 +1,5 @@
 export class Filter {
+  
   id: string;
   type: string; // (listed values {number | string | date | list})
   mapping: string;

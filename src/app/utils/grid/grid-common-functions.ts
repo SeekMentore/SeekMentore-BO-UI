@@ -84,12 +84,12 @@ export class GridCommonFunctions {
     return GridCommonFunctions.lookupMultiRendererForValue(multivalue.split(valueSplitter), lookupList);
   }
 
-  private static lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: any []) {
+  public static lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: any [], seperationJoiner: string = '; ') {
     var returnHTMLList = [];
     multivalueSplittedList.forEach(splittedValue => {
       returnHTMLList.push(GridCommonFunctions.lookupRendererForValue(splittedValue, lookupList));
     });
-    return returnHTMLList.join('; ');
+    return returnHTMLList.join(seperationJoiner);
   }
 
   public static yesNoRenderer(record, column) {

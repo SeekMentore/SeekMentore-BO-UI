@@ -318,7 +318,7 @@
               <i
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-list'+'-i-list'}}"
                 class="fas fa-list {{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}"
-                style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #filterList
+                style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" title="{{lookupMultiRendererForValue(column.filter.listValue, column.filterOptions)}}" #filterList
                 (click)="showMultiSelectFilter(column, filterList)"></i>
             </div>
           </div>

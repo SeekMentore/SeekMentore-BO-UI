@@ -850,10 +850,10 @@ export class GridComponent implements OnInit, AfterViewInit {
   public handleMulitSelectApply(data: MultiSelectInputData) {
     switch (data.operation) {
       case 'column_filter': {
-        let columnInstance = null;
+        let columnInstance: Column = null;
         const columnId = data.meta_data['columnId'];
         const selectedOptionsValue: string[] = [];
-        const sourceButton: HTMLElement = data.meta_data['sourceButton'];
+        //const sourceButton: HTMLElement = data.meta_data['sourceButton'];
         for (const column of this.grid.columns) {
           if (column.id === columnId) {
             columnInstance = column;
@@ -872,7 +872,7 @@ export class GridComponent implements OnInit, AfterViewInit {
             }
           }
         }
-        sourceButton.title = selectedOptionsValue.join(', ');
+        //sourceButton.title = selectedOptionsValue.join(', ');
         this.addListFilterQuery(columnInstance);
         break;
       }
@@ -888,6 +888,14 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
     }
     this.closeMultiSelectInput();
+  }
+
+  public lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: any []) {
+    let columnFilterIconTitle: string = GridCommonFunctions.lookupMultiRendererForValue(multivalueSplittedList, lookupList, ', ');
+    if (GridCommonFunctions.checkStringAvailability(columnFilterIconTitle)) {
+      return columnFilterIconTitle;
+    }
+    return 'No filter selected';
   }
 
   /*

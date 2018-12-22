@@ -19,6 +19,13 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
 
   title = '';
 
+  filteredListData: {
+                      label: string,
+                      value: string,
+                      enabled: boolean,
+                      selected: boolean,
+                    }[] = [];
+
   constructor() {
   }
 
@@ -32,6 +39,7 @@ export class MultiSelectInputComponent implements OnInit, OnChanges {
         if (propName === 'data' && changedProp.currentValue !== null) {
           this.data = changedProp.currentValue;
           this.title = this.data.meta_data['title'];
+          this.filteredListData = this.data.data;
         }
       }
     }

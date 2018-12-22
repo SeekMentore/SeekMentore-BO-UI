@@ -7,16 +7,16 @@
   <div align="right" style="margin: 0px 10px; padding-right: 10px; font-size: small; font-weight: 600">
     Select/Unselect All &nbsp; <input #selectAllBox type="checkbox" (click)="selectUnselectAll(selectAllBox)">
   </div>
-  <span style="padding: 0px;" *ngIf="data && data.data.length > 10">
+  <span style="padding: 0px;margin-left: 10px;margin-top: 5px;" *ngIf="data && data.data.length > 10">
     <input    type="text" placeholder="search"
               style="width: 88%;border: 1px solid lightgreen;margin-bottom: 6px;"
               class=""
               (input)="dataSearched($event.target)"/>
-    [ {{data.data.length}} ]
+    [ {{filteredListData.length}} ]
   </span>
   <div *ngIf="data" style="max-height: 400px; overflow-y: auto">
     <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary)"
-         *ngFor="let element of data.data; let i = index">
+         *ngFor="let element of filteredListData; let i = index">
       <span style="flex: 1 1 auto; padding: 0">{{element.label}}</span>
       <input type="checkbox" [disabled]="!element.enabled" style="align-self: center"
              [checked]="element.selected" (click)="dataOptionToggled(i)">

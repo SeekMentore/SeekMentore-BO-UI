@@ -42,6 +42,8 @@ export class GridColumnExtraDataComponent implements OnInit {
           if (this.columnExtraDataDisplayInput.multiList) {
             this.listdata = this.columnExtraDataDisplayInput.dataText.split('; ');
             this.filteredListData = this.listdata;
+          } else {
+            this.columnExtraDataDisplayInput.dataText = CommonUtilityFunctions.checkStringAvailability(this.columnExtraDataDisplayInput.dataText) ? this.columnExtraDataDisplayInput.dataText.replace(/\<br\>/g, '\n') : '';
           }
         }
       }

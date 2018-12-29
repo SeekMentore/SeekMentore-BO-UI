@@ -39,7 +39,7 @@ export class BecomeTutorDataComponent implements OnInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-  applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
+  applicationStatusFilterOptions = CommonFilterOptions.publicApplicationStatusFilterOptions;
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
   primaryProfessionFilterOptions = CommonFilterOptions.primaryProfessionFilterOptions;

@@ -194,7 +194,8 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         headerName: 'Match Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-        mapping: 'matchStatus'
+        mapping: 'matchStatus',
+        renderer: AdminCommonFunctions.matchStatusRenderer
       }, {
         id: 'adminRemarks',
         headerName: 'Admin Remarks',

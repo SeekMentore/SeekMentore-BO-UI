@@ -19,6 +19,7 @@ export class Filter {
   listValue: string[] = [];
   clubbedFilterMapping: boolean = false;
   clubbedFilterProperties: string[] = [];
+  localTimezoneOffsetInMilliseconds: number = (new Date().getTimezoneOffset() * 60 * 1000);
 
   constructor(
       id: string, 

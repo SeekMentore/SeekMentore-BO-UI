@@ -30,6 +30,10 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   employeeComplaintGridObject: GridComponent;
   employeeComplaintGridMetaData: GridDataInterface;
 
+  @ViewChild('holdComplaintGrid')
+  holdComplaintGridObject: GridComponent;
+  holdComplaintGridMetaData: GridDataInterface;
+
   @ViewChild('resolvedComplaintGrid')
   resolvedComplaintGridObject: GridComponent;
   resolvedComplaintGridMetaData: GridDataInterface;
@@ -43,6 +47,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
     this.customerComplaintGridMetaData = null;
     this.tutorComplaintGridMetaData = null;
     this.employeeComplaintGridMetaData = null;
+    this.holdComplaintGridMetaData = null;
     this.resolvedComplaintGridMetaData = null;
     this.setUpGridMetaData();
   }
@@ -55,12 +60,14 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
       this.customerComplaintGridObject.init();
       this.tutorComplaintGridObject.init();
       this.employeeComplaintGridObject.init();
+      this.holdComplaintGridObject.init();
       this.resolvedComplaintGridObject.init();
     }, 0);
     setTimeout(() => {
       this.customerComplaintGridObject.refreshGridData();
       this.tutorComplaintGridObject.refreshGridData();
       this.employeeComplaintGridObject.refreshGridData();
+      this.holdComplaintGridObject.refreshGridData();
       this.resolvedComplaintGridObject.refreshGridData();
     }, 0);
   }
@@ -103,7 +110,8 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
           headerName: 'Complaint Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.complaintStatusFilterOptions,
-          mapping: 'complaintStatus'
+          mapping: 'complaintStatus',
+          renderer: AdminCommonFunctions.complaintStatusRenderer
         },
         {
           id: 'userId',
@@ -129,9 +137,9 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
           id: 'complaintUser',
           headerName: 'Complaint User',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.complaintUserFilterOptions,
+          filterOptions: CommonFilterOptions.userFilterOptions,
           mapping: 'complaintUser',
-          renderer: AdminCommonFunctions.complaintUserRenderer
+          renderer: AdminCommonFunctions.userRenderer
         }
       ],
       hasSelectionColumn: true,
@@ -178,6 +186,12 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
       hidden: false
     };
 
+    this.holdComplaintGridMetaData = {
+      grid: this.getGridObject('holdComplaintGrid', 'Put On Hold Complaints', '/rest/support/holdComplaintList', true),
+      htmlDomElementId: 'hold-complaint-grid',
+      hidden: false
+    };
+
     this.resolvedComplaintGridMetaData = {
       grid: this.getGridObject('resolvedComplaintGrid', 'Resolved Complaints', '/rest/support/resolvedComplaintList', true),
       htmlDomElementId: 'resolved-complaint-grid',
@@ -212,12 +226,14 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
         this.customerComplaintGridObject.init();
         this.tutorComplaintGridObject.init();
         this.employeeComplaintGridObject.init();
+        this.holdComplaintGridObject.init();
         this.resolvedComplaintGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.customerComplaintGridObject.refreshGridData();
         this.tutorComplaintGridObject.refreshGridData();
         this.employeeComplaintGridObject.refreshGridData();
+        this.holdComplaintGridObject.refreshGridData();
         this.resolvedComplaintGridObject.refreshGridData();
       }, 200);
     } else {

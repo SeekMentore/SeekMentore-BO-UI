@@ -35,7 +35,7 @@ export class EnquiryDataComponent implements OnInit {
   superAccessAwarded = false;
   editRecordForm = false;
 
-  enquiryStatusFilterOptions = CommonFilterOptions.enquiryStatusFilterOptions;
+  enquiryStatusFilterOptions = CommonFilterOptions.publicApplicationStatusFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;

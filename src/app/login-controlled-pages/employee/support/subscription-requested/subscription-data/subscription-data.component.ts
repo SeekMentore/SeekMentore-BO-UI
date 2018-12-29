@@ -39,7 +39,7 @@ export class SubscriptionDataComponent implements OnInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-  applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
+  applicationStatusFilterOptions = CommonFilterOptions.publicApplicationStatusFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;

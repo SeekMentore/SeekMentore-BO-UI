@@ -9,6 +9,7 @@ import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-schedule-demo',
@@ -145,7 +146,8 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         headerName: 'Mapping Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
-        mapping: 'mappingStatus'
+        mapping: 'mappingStatus',
+        renderer: AdminCommonFunctions.mappingStatusRenderer
       }],
       hasSelectionColumn: true,
       selectionColumn: {

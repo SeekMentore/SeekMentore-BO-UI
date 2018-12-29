@@ -198,8 +198,9 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           id: 'applicationStatus',
           headerName: 'Application Status',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.applicationStatusFilterOptions,
-          mapping: 'applicationStatus'
+          filterOptions: CommonFilterOptions.publicApplicationStatusFilterOptions,
+          mapping: 'applicationStatus',
+          renderer: AdminCommonFunctions.publicApplicationStatusRenderer
         },
         {
           id: 'contactNumber',

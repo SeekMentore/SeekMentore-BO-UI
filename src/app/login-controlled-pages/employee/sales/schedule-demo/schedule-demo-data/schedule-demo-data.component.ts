@@ -204,7 +204,8 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
         headerName: 'Mapping Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
-        mapping: 'mappingStatus'
+        mapping: 'mappingStatus',
+        renderer: AdminCommonFunctions.mappingStatusRenderer
       }]
     };
     return grid;
@@ -247,7 +248,8 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
         headerName: 'Demo Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.demoStatusFilterOptions,
-        mapping: 'demoStatus'
+        mapping: 'demoStatus',
+        renderer: AdminCommonFunctions.demoStatusRenderer
       }, {
         id: 'clientSatisfiedFromTutor',
         headerName: 'Client Satisfied From Tutor',

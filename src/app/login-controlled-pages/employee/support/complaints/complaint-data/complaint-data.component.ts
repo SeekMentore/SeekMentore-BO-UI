@@ -35,7 +35,7 @@ export class ComplaintDataComponent implements OnInit {
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   complaintStatusFilterOptions = CommonFilterOptions.complaintStatusFilterOptions;  
-  complaintUserFilterOptions = CommonFilterOptions.complaintUserFilterOptions;
+  complaintUserFilterOptions = CommonFilterOptions.userFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions; 
 
   selectedComplaintStatus: any[] = [];

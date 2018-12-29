@@ -10,6 +10,7 @@ import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-demo-tracker',
@@ -115,7 +116,8 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         headerName: 'Demo Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.demoStatusFilterOptions,
-        mapping: 'demoStatus'
+        mapping: 'demoStatus',
+        renderer: AdminCommonFunctions.demoStatusRenderer
       }, {
         id: 'clientSatisfiedFromTutor',
         headerName: 'Client Satisfied From Tutor',

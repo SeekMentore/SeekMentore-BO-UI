@@ -9,6 +9,7 @@ import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
 import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 import {ActionButton} from 'src/app/utils/grid/action-button';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-query-submitted',
@@ -118,7 +119,8 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
           headerName: 'Query Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.queryStatusFilterOptions,
-          mapping: 'queryStatus'
+          mapping: 'queryStatus',
+          renderer: AdminCommonFunctions.queryStatusRenderer
         },
         {
           id: 'emailId',

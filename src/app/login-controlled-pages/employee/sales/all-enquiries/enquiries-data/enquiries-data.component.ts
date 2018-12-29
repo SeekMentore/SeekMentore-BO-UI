@@ -182,7 +182,8 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           headerName: 'Match Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-          mapping: 'matchStatus'
+          mapping: 'matchStatus',
+          renderer: AdminCommonFunctions.matchStatusRenderer
         }, {
           id: 'adminRemarks',
           headerName: 'Admin Remarks',
@@ -192,9 +193,10 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
         }, {
           id: 'locationDetails',
           headerName: 'Location Details',
-          dataType: 'string',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.locationsFilterOptions,
           mapping: 'locationDetails',
-          lengthyData: true
+          renderer: AdminCommonFunctions.locationsRenderer
         }, {
           id: 'addressDetails',
           headerName: 'Address Details',

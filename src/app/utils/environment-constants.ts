@@ -4,5 +4,5 @@ export class EnvironmentConstants {
   static PUBLIC_PAGES_URL = 'http://www.seekmentore.com';
   static CONTEXT_PATH = '/seekmentore';
   static APPLICATION_NAME = 'SeekMentore (Dev) – Back Office';
-  static IMAGE_SERVER = 'http://uitest.seekmentore.com';
+  static IMAGE_SERVER = 'http://imageserver.seekmentore.com';
 }

@@ -1019,37 +1019,103 @@ export class CommonFilterOptions {
                                 label : 'Aadhaar Card'
                               }];
 
-  static applicationStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static publicApplicationStatusFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Fresh'
+                              },{
+                                value : '02',
+                                label : 'Contacted Verification Pending'
+                              },{
+                                value : '03',
+                                label : 'Re-Contacted Verification Pending'
+                              },{
+                                value : '04',
+                                label : 'Verification Successful'
+                              },{
+                                value : '05',
+                                label : 'Verification Failed'
+                              },{
+                                value : '06',
+                                label : 'Suggested To Be Re-Contacted'
+                              },{
+                                value : '07',
+                                label : 'Selected'
+                              },{
+                                value : '08',
+                                label : 'Rejected'
+                              }];
 
-  static enquiryStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static queryStatusFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Fresh'
+                              },{
+                                value : '02',
+                                label : 'Responded'
+                              },{
+                                value : '03',
+                                label : 'Put On Hold'
+                              }];
 
-  static queryStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static complaintStatusFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Fresh'
+                              },{
+                                value : '02',
+                                label : 'Resolved'
+                              },{
+                                value : '03',
+                                label : 'Put On Hold'
+                              }];
 
-  static complaintStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static userFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Employee'
+                              },{
+                                value : '02',
+                                label : 'Tutor'
+                              },{
+                                value : '03',
+                                label : 'Customer'
+                              }];
 
-  static complaintUserFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static matchStatusFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Pending'
+                              },{
+                                value : '02',
+                                label : 'To Be Mapped'
+                              },{
+                                value : '03',
+                                label : 'Completed'
+                              },{
+                                value : '04',
+                                label : 'Aborted'
+                              }];
 
-  static matchStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static mappingStatusFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Pending'
+                              },{
+                                value : '02',
+                                label : 'Demo Ready'
+                              },{
+                                value : '03',
+                                label : 'Demo Scheduled'
+                              }];
 
-  static mappingStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
-
-  static demoStatusFilterOptions: any [] = [
-  // Leave it blank right now , I will write this content later
-  ];
+  static demoStatusFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Scheduled'
+                              },{
+                                value : '02',
+                                label : 'Successfull'
+                              },{
+                                value : '03',
+                                label : 'Failed'
+                              },{
+                                value : '04',
+                                label : 'Canceled'
+                              }];
 
   static singleSelectOptionsConfiguration = {
     singleSelection: true,

@@ -193,8 +193,9 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
           id: 'enquiryStatus',
           headerName: 'Enquiry Status',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.enquiryStatusFilterOptions,
-          mapping: 'enquiryStatus'
+          filterOptions: CommonFilterOptions.publicApplicationStatusFilterOptions,
+          mapping: 'enquiryStatus',
+          renderer: AdminCommonFunctions.publicApplicationStatusRenderer
         },
         {
           id: 'contactNumber',

@@ -301,7 +301,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           headerName: 'Mapping Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
-          mapping: 'mappingStatus'
+          mapping: 'mappingStatus',
+          renderer: AdminCommonFunctions.mappingStatusRenderer
         }],
         hasSelectionColumn: true,
         selectionColumn: {

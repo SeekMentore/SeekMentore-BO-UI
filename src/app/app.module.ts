@@ -50,6 +50,7 @@ import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/s
 import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
 import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
 import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
+import { ChangePasswordComponent } from './login-controlled-pages/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sale
     ScheduleDemoComponent,
     ScheduleDemoDataComponent,
     PromptDialogComponent,
-    DemoTrackerDataComponent
+    DemoTrackerDataComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

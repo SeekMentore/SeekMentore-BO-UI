@@ -95,15 +95,108 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
           }
         }        
       },{
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      },{
         id: 'tutorContactNumber',
         headerName: 'Tutor Contact Number',
         dataType: 'string',
         mapping: 'tutorContactNumber'
       },{
-        id: 'tutorEmail',
-        headerName: 'Tutor Email Id',
+        id: 'customerName',
+        headerName: 'Customer Name',
         dataType: 'string',
-        mapping: 'tutorEmail'
+        mapping: 'customerName'
+      }, {
+        id: 'customerEmail',
+        headerName: 'Customer Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      }, {
+        id: 'customerContactNumber',
+        headerName: 'Customer Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
+      }, {
+        id: 'enquirySubject',
+        headerName: 'Enquiry Subject',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.subjectsFilterOptions,
+        mapping: 'enquirySubject',
+        renderer: AdminCommonFunctions.subjectsRenderer
+      }, {
+        id: 'enquiryGrade',
+        headerName: 'Enquiry Grade',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+        mapping: 'enquiryGrade',
+        renderer: AdminCommonFunctions.studentGradesRenderer
+      }, {
+        id: 'enquiryPreferredTeachingType',
+        headerName: 'Enquiry Preferred Teaching Type',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'enquiryPreferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+      }, {
+        id: 'enquiryLocation',
+        headerName: 'Enquiry Location',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
+        mapping: 'enquiryLocation',
+        renderer: AdminCommonFunctions.locationsRenderer
+      }, {
+        id: 'enquiryAddressDetails',
+        headerName: 'Enquiry Address Details',
+        dataType: 'string',
+        mapping: 'enquiryAddressDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryAdditionalDetails',
+        headerName: 'Enquiry Additional Details',
+        dataType: 'string',
+        mapping: 'enquiryAdditionalDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryQuotedClientRate',
+        headerName: 'Enquiry Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'enquiryQuotedClientRate'
+      }, {
+        id: 'enquiryNegotiatedRateWithClient',
+        headerName: 'Enquiry Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'enquiryNegotiatedRateWithClient'
+      }, {
+        id: 'enquiryClientNegotiationRemarks',
+        headerName: 'Enquiry Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'enquiryClientNegotiationRemarks',
+        lengthyData: true
+      },{
+        id: 'mappingStatus',
+        headerName: 'Mapping Status',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
+        mapping: 'mappingStatus',
+        renderer: AdminCommonFunctions.mappingStatusRenderer
+      },{
+        id: 'isTutorContacted',
+        headerName: 'Is Tutor Contacted',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isTutorContacted',
+        renderer: GridCommonFunctions.yesNoRenderer
+      },{
+        id: 'isTutorAgreed',
+        headerName: 'Is Tutor Agreed',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isTutorAgreed',
+        renderer: GridCommonFunctions.yesNoRenderer
       },{
         id: 'quotedTutorRate',
         headerName: 'Quoted Tutor Rate',
@@ -121,33 +214,12 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         mapping: 'tutorNegotiationRemarks',
         lengthyData: true
       },{
-        id: 'isTutorContacted',
-        headerName: 'Is Tutor Contacted',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'isTutorContacted',
-        renderer: GridCommonFunctions.yesNoRenderer
-      },{
-        id: 'isTutorAgreed',
-        headerName: 'Is Tutor Agreed',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'isTutorAgreed',
-        renderer: GridCommonFunctions.yesNoRenderer
-      },{
         id: 'isDemoScheduled',
         headerName: 'Is Demo Scheduled',
         dataType: 'list',
         filterOptions: CommonFilterOptions.yesNoFilterOptions,
         mapping: 'isDemoScheduled',
         renderer: GridCommonFunctions.yesNoRenderer
-      },{
-        id: 'mappingStatus',
-        headerName: 'Mapping Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
-        mapping: 'mappingStatus',
-        renderer: AdminCommonFunctions.mappingStatusRenderer
       }],
       hasSelectionColumn: true,
       selectionColumn: {

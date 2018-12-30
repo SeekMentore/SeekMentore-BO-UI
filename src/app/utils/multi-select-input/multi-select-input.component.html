@@ -16,11 +16,11 @@
     [ {{filteredListData.length}} ]
   </span>
   <div *ngIf="data" style="max-height: 400px; overflow-y: auto">
-    <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary)"
-         *ngFor="let element of filteredListData; let i = index">
+    <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary); cursor: pointer;"
+         *ngFor="let element of filteredListData; let i = index" (click)="dataOptionToggled(i)">
       <span style="flex: 1 1 auto; padding: 0">{{data.data[element].label}}</span>
       <input type="checkbox" [disabled]="!data.data[element].enabled" style="align-self: center"
-             [checked]="data.data[element].selected" (click)="dataOptionToggled(i)">
+             [checked]="data.data[element].selected">
     </div>
     <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary)"
           *ngIf="data.data.length > 0 && filteredListData.length === 0">

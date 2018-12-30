@@ -152,56 +152,13 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'grade',
         renderer: AdminCommonFunctions.studentGradesRenderer
       }, {
-        id: 'tutorName',
-        headerName: 'Tutor Name',
-        dataType: 'string',
-        mapping: 'tutorName'
-      }, {
-        id: 'tutorEmail',
-        headerName: 'Tutor Email',
-        dataType: 'string',
-        mapping: 'tutorEmail'
-      }, {
-        id: 'tutorContactNumber',
-        headerName: 'Tutor Contact Number',
-        dataType: 'string',
-        mapping: 'tutorContactNumber'
-      }, {
-        id: 'quotedClientRate',
-        headerName: 'Quoted Client Rate',
-        dataType: 'number',
-        mapping: 'quotedClientRate'
-      }, {
-        id: 'negotiatedRateWithClient',
-        headerName: 'Negotiated Rate With Client',
-        dataType: 'number',
-        mapping: 'negotiatedRateWithClient'
-      }, {
-        id: 'clientNegotiationRemarks',
-        headerName: 'Client Negotiation Remarks',
-        dataType: 'string',
-        mapping: 'clientNegotiationRemarks',
-        lengthyData: true
-      }, {
-        id: 'isMapped',
-        headerName: 'Is Mapped',
+        id: 'preferredTeachingType',
+        headerName: 'Preferred Teaching Type',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'isMapped',
-        renderer: GridCommonFunctions.yesNoRenderer
-      }, {
-        id: 'matchStatus',
-        headerName: 'Match Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-        mapping: 'matchStatus',
-        renderer: AdminCommonFunctions.matchStatusRenderer
-      }, {
-        id: 'adminRemarks',
-        headerName: 'Admin Remarks',
-        dataType: 'string',
-        mapping: 'adminRemarks',
-        lengthyData: true
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'preferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
       }, {
         id: 'locationDetails',
         headerName: 'Location Details',
@@ -222,13 +179,56 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'additionalDetails',
         lengthyData: true
       }, {
-        id: 'preferredTeachingType',
-        headerName: 'Preferred Teaching Type',
+        id: 'matchStatus',
+        headerName: 'Match Status',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
-        mapping: 'preferredTeachingType',
-        multiList: true,
-        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+        filterOptions: CommonFilterOptions.matchStatusFilterOptions,
+        mapping: 'matchStatus',
+        renderer: AdminCommonFunctions.matchStatusRenderer
+      }, {
+        id: 'quotedClientRate',
+        headerName: 'Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'quotedClientRate'
+      }, {
+        id: 'negotiatedRateWithClient',
+        headerName: 'Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'negotiatedRateWithClient'
+      }, {
+        id: 'clientNegotiationRemarks',
+        headerName: 'Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'clientNegotiationRemarks',
+        lengthyData: true
+      }, {
+        id: 'adminRemarks',
+        headerName: 'Admin Remarks',
+        dataType: 'string',
+        mapping: 'adminRemarks',
+        lengthyData: true
+      }, {
+        id: 'isMapped',
+        headerName: 'Is Mapped',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isMapped',
+        renderer: GridCommonFunctions.yesNoRenderer
+      }, {
+        id: 'tutorName',
+        headerName: 'Tutor Name',
+        dataType: 'string',
+        mapping: 'tutorName'
+      }, {
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      }, {
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
       }],
       hasSelectionColumn: true,
       selectionColumn: {

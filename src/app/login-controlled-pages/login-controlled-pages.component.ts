@@ -7,6 +7,7 @@ import { HelperService } from "src/app/utils/helper.service";
 import { LcpConstants } from "src/app/utils/lcp-constants";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
 import { EmailInterface } from "../utils/email/email.component";
+import { AlertDialogEvent } from "../utils/alert-dialog/alert-dialog.component";
 
 @Component({
   selector: 'app-login-controlled-pages',
@@ -64,26 +65,36 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     context.menu = response['menu'];
     context.accessOptions = response['accessoptions'];
     context.userMenu.push(
-      {name: 'Personalize', url: '', functioncall: false},
-      {name: 'Profile', url: '', functioncall: false},
-      {name: 'Complaint Box', url: '', functioncall: false},
-      {name: 'Help & Support', url: '', functioncall: false}
+      {name: 'Personalize', url: '', functioncall: true},
+      {name: 'Profile', url: '', functioncall: true},
+      {name: 'Complaint Box', url: '', functioncall: true},
+      {name: 'Help & Support', url: '', functioncall: true}
     );
 
-    context.settingMenu.push({name: 'Change Password', url: '', functioncall: false});
+    context.settingMenu.push({name: 'Change Password', url: '/user/changepassword', functioncall: false});
     if (context.accessOptions.impersonationaccess) {
-      context.settingMenu.push({name: 'Impersonate', url: '', functioncall: false});
+      context.settingMenu.push({name: 'Impersonate', url: '', functioncall: true});
     }
     context.settingMenu.push(
-      {name: 'User Settings', url: '', functioncall: false},
+      {name: 'User Settings', url: '', functioncall: true},
       {name: 'Sign Out', url: '', functioncall: true});
   }
 
   public functionCallMenuItem(itemName: string) {
     switch (itemName) {
-      case 'Sign Out':
+      case 'Sign Out': {
         this.doLogout();
         break;
+      }
+      default : {
+        const myListener: AlertDialogEvent = {
+          isSuccess: false,
+          message: itemName + ' - Does not have any action configured',
+          onButtonClicked: () => {
+          }
+        };
+        this.helperService.showAlertDialog(myListener);
+      }
     }
   } 
 

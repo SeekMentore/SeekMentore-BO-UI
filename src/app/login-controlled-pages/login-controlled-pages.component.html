@@ -7,7 +7,10 @@
     <div class="dropdown">
       <i class="fas fa-user-alt"></i>
       <div class="dropdown-content" style="left: -100px">
-        <button *ngFor="let element of userMenu">{{element.name}}</button>
+        <div *ngFor="let element of userMenu">
+            <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name}}</button>
+            <button *ngIf="!element.functioncall" routerLink="{{element.url}}">{{element.name}}</button>
+        </div>
       </div>
     </div>
 
@@ -16,7 +19,7 @@
       <div class="dropdown-content" style="left: -100px">
         <div *ngFor="let element of settingMenu">
           <button *ngIf="element.functioncall" (click)="functionCallMenuItem(element.name)">{{element.name}}</button>
-          <button *ngIf="!element.functioncall">{{element.name}}</button>
+          <button *ngIf="!element.functioncall" routerLink="{{element.url}}">{{element.name}}</button>
         </div>
       </div>
     </div>
@@ -42,7 +45,7 @@
     <router-outlet></router-outlet>
   </div>
   <!--Below iFrame and Form is required for Grid Download functionality-->
-  <iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+  <iframe id="ifrDownload" name="ifrDownload" width="0" height="0" class="noscreen"></iframe>
   <form id="gridDownloadForm" target="ifrDownload" method="post" class="noscreen">
     <input type="text" value="" size="10" name="start" id="gridDownload-start" />
     <input type="text" value="" size="10" name="limit" id="gridDownload-limit" />

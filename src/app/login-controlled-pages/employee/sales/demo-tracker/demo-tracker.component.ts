@@ -94,10 +94,30 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
           }
         }
       }, {
+        id: 'customerEmail',
+        headerName: 'Customer Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      }, {
+        id: 'customerContactNumber',
+        headerName: 'Customer Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
+      }, {
         id: 'tutorName',
         headerName: 'Tutor Name',
         dataType: 'string',
         mapping: 'tutorName'
+      },{
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      },{
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
       }, {
         id: 'demoDateAndTime',
         headerName: 'Demo Date And Time',
@@ -105,19 +125,92 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         mapping: 'demoDateAndTimeMillis',
         renderer: GridCommonFunctions.renderDateFromMillisWithTime
       }, {
-        id: 'demoOccurred',
-        headerName: 'Demo Occurred',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'demoOccurred',
-        renderer: GridCommonFunctions.yesNoRenderer
-      }, {
         id: 'demoStatus',
         headerName: 'Demo Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.demoStatusFilterOptions,
         mapping: 'demoStatus',
         renderer: AdminCommonFunctions.demoStatusRenderer
+      }, {
+        id: 'enquirySubject',
+        headerName: 'Enquiry Subject',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.subjectsFilterOptions,
+        mapping: 'enquirySubject',
+        renderer: AdminCommonFunctions.subjectsRenderer
+      }, {
+        id: 'enquiryGrade',
+        headerName: 'Enquiry Grade',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+        mapping: 'enquiryGrade',
+        renderer: AdminCommonFunctions.studentGradesRenderer
+      }, {
+        id: 'enquiryPreferredTeachingType',
+        headerName: 'Enquiry Preferred Teaching Type',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'enquiryPreferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+      }, {
+        id: 'enquiryLocation',
+        headerName: 'Enquiry Location',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
+        mapping: 'enquiryLocation',
+        renderer: AdminCommonFunctions.locationsRenderer
+      }, {
+        id: 'enquiryAddressDetails',
+        headerName: 'Enquiry Address Details',
+        dataType: 'string',
+        mapping: 'enquiryAddressDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryAdditionalDetails',
+        headerName: 'Enquiry Additional Details',
+        dataType: 'string',
+        mapping: 'enquiryAdditionalDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryQuotedClientRate',
+        headerName: 'Enquiry Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'enquiryQuotedClientRate'
+      }, {
+        id: 'enquiryNegotiatedRateWithClient',
+        headerName: 'Enquiry Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'enquiryNegotiatedRateWithClient'
+      }, {
+        id: 'enquiryClientNegotiationRemarks',
+        headerName: 'Enquiry Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'enquiryClientNegotiationRemarks',
+        lengthyData: true
+      },{
+        id: 'tutorMapperQuotedTutorRate',
+        headerName: 'Mapping Quoted Tutor Rate',
+        dataType: 'number',
+        mapping: 'tutorMapperQuotedTutorRate'
+      },{
+        id: 'tutorMapperNegotiatedRateWithTutor',
+        headerName: 'Mapping Negotiated Rate With Tutor',
+        dataType: 'number',
+        mapping: 'tutorMapperNegotiatedRateWithTutor'
+      },{
+        id: 'tutorMapperTutorNegotiationRemarks',
+        headerName: 'Mapping Tutor Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'tutorMapperTutorNegotiationRemarks',
+        lengthyData: true
+      }, {
+        id: 'demoOccurred',
+        headerName: 'Demo Occurred',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'demoOccurred',
+        renderer: GridCommonFunctions.yesNoRenderer
       }, {
         id: 'clientSatisfiedFromTutor',
         headerName: 'Client Satisfied From Tutor',

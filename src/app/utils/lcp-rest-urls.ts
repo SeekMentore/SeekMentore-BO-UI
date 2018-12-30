@@ -3,6 +3,7 @@ export class LcpRestUrls {
   static email_templates_url = '/rest/commons/getEmailTemplates';
   static email_template_data_url = '/rest/commons/loadEmailTemplate';
   static logout_url = '/rest/login/logout';
+  static change_password_url = '/rest/login/changePassword';
   static send_email_url = '/rest/commons/sendEmail';
   static ui_access_url = '/rest/login/checkUIpathAccess';
   static tutor_data_access = '/rest/admin/registeredTutorCheckDataAccess';

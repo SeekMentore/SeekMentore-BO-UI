@@ -11,7 +11,7 @@ import { NlpRestUrls } from '../../utils/nlp-rest-urls';
 })
 export class ResetPasswordComponent implements OnInit {
 
-  username;
+  username: string;
   userType = 'Blank';
   errorAjaxResponse: string;
   errorUsername: string;

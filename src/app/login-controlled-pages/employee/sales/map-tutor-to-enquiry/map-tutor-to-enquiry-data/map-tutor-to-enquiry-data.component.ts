@@ -39,6 +39,26 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   interimHoldSelectedMappedTutorRecord: GridRecord = null;
   mappedTutorDataAccess: MappedTutorDataAccess = null;
 
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
+  matchStatusFilterOptions = CommonFilterOptions.matchStatusFilterOptions;
+  mappingStatusFilterOptions = CommonFilterOptions.mappingStatusFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
+
+  tutorEligibilityCriteria : {
+    matchSubject: boolean,
+    matchGrade: boolean,
+    matchTeachingType: boolean,
+    matchLocation: boolean
+  } = {
+    matchSubject : false,
+    matchGrade: false,
+    matchTeachingType: false,
+    matchLocation: false
+  }
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.allMappingEligibleTutorsGridMetaData = null;
     this.allMappedTutorsGridMetaData = null;
@@ -73,6 +93,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         this.allMappedTutorsGridObject.refreshGridData();
       }
     }, 0);
+  }
+
+  public selectUnselectEligibility(clause: string, element: HTMLInputElement) {
+    this.tutorEligibilityCriteria[clause] = element.checked;
   }
 
   public setUpGridMetaData() {
@@ -260,22 +284,6 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'tutorEmail'
         },{
-          id: 'quotedTutorRate',
-          headerName: 'Quoted Tutor Rate',
-          dataType: 'number',
-          mapping: 'quotedTutorRate'
-        },{
-          id: 'negotiatedRateWithTutor',
-          headerName: 'Negotiated Rate With Tutor',
-          dataType: 'number',
-          mapping: 'negotiatedRateWithTutor'
-        },{
-          id: 'tutorNegotiationRemarks',
-          headerName: 'Tutor Negotiation Remarks',
-          dataType: 'string',
-          mapping: 'tutorNegotiationRemarks',
-          lengthyData: true
-        },{
           id: 'isTutorContacted',
           headerName: 'Is Tutor Contacted',
           dataType: 'list',
@@ -303,6 +311,22 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
           mapping: 'mappingStatus',
           renderer: AdminCommonFunctions.mappingStatusRenderer
+        },{
+          id: 'quotedTutorRate',
+          headerName: 'Quoted Tutor Rate',
+          dataType: 'number',
+          mapping: 'quotedTutorRate'
+        },{
+          id: 'negotiatedRateWithTutor',
+          headerName: 'Negotiated Rate With Tutor',
+          dataType: 'number',
+          mapping: 'negotiatedRateWithTutor'
+        },{
+          id: 'tutorNegotiationRemarks',
+          headerName: 'Tutor Negotiation Remarks',
+          dataType: 'string',
+          mapping: 'tutorNegotiationRemarks',
+          lengthyData: true
         }],
         hasSelectionColumn: true,
         selectionColumn: {

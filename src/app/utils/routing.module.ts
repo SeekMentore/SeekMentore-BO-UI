@@ -21,35 +21,32 @@ import { SubscriptionRequestedComponent } from 'src/app/login-controlled-pages/e
 import { ComplaintsComponent } from 'src/app/login-controlled-pages/employee/support/complaints/complaints.component';
 import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
 import { ScheduleDemoComponent } from 'src/app/login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
+import { ChangePasswordComponent } from '../login-controlled-pages/change-password/change-password.component';
 
 const routes: Routes = [
   {
-    path: 'user', component: LoginControlledPagesComponent,
-    canActivate: [RoutingGuardService],
+    path: 'user', component: LoginControlledPagesComponent, canActivate: [RoutingGuardService],
     children: [
       {path: 'home', component: HomeComponent, canActivate: [RoutingGuardService]},
+      {path: 'changepassword', component: ChangePasswordComponent, canActivate: [RoutingGuardService]},
       {
-        path: 'employee',
-        canActivate: [RoutingGuardService],
+        path: 'employee', canActivate: [RoutingGuardService],
         children: [
           {
-            path: 'superadmin',
-            canActivate: [RoutingGuardService],
+            path: 'superadmin', canActivate: [RoutingGuardService],
             children: [
               {path: 'controlpanel', component: ControlPanelComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
-            path: 'admin',
-            canActivate: [RoutingGuardService],
+            path: 'admin', canActivate: [RoutingGuardService],
             children: [
               {path: 'registeredtutor', component: RegisteredTutorComponent, canActivate: [RoutingGuardService]},
               {path: 'subscribedcustomer', component: SubscribedCustomerComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
-            path: 'sales',
-            canActivate: [RoutingGuardService],
+            path: 'sales', canActivate: [RoutingGuardService],
             children: [
               {path: 'allenquiries', component: AllEnquiriesComponent, canActivate: [RoutingGuardService]},
               {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent, canActivate: [RoutingGuardService]},
@@ -59,8 +56,7 @@ const routes: Routes = [
             ]
           },
           {
-            path: 'support',
-            canActivate: [RoutingGuardService],
+            path: 'support', canActivate: [RoutingGuardService],
             children: [
               {path: 'tutorregistration', component: TutorRegistrationComponent, canActivate: [RoutingGuardService]},
               {path: 'enquiryregistration', component: EnquiryRegistrationComponent, canActivate: [RoutingGuardService]},

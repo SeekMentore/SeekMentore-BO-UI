@@ -122,6 +122,10 @@
             id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'+'-input-selectionColumnSelectUnselectAll'}}"
             title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
         </span>
+        <span
+          id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'}}"
+          *ngIf="!grid.hasSelectionColumn" class="uigrid-cell select_box">
+        </span>
         <div
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id}}"
           class="uigrid-cell uigrid-cell-column-name" *ngFor="let column of grid.columns"
@@ -180,6 +184,9 @@
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-span-uigrid-cell-select-box'}}"
           *ngIf="grid.hasSelectionColumn" class="uigrid-cell select_box"></span>
+        <span
+          id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-span-uigrid-cell-select-box'}}"
+          *ngIf="!grid.hasSelectionColumn" class="uigrid-cell select_box"></span>
         <div
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id}}"
           *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}"
@@ -339,6 +346,9 @@
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'+'-input-checkbox'}}"
           title="select" type="checkbox"
           (change)="selectionButtonCheckedUnchecked(record, $event.target)">
+      </div>
+      <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'}}"
+            class="uigrid-cell select_box" *ngIf="!grid.hasSelectionColumn">
       </div>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}"
             class="uigrid-cell {{column.appliedClassNames}}" *ngFor="let column of grid.columns"

@@ -274,15 +274,15 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             }
           }        
         },{
+          id: 'tutorEmail',
+          headerName: 'Tutor Email',
+          dataType: 'string',
+          mapping: 'tutorEmail'
+        },{
           id: 'tutorContactNumber',
           headerName: 'Tutor Contact Number',
           dataType: 'string',
           mapping: 'tutorContactNumber'
-        },{
-          id: 'tutorEmail',
-          headerName: 'Tutor Email Id',
-          dataType: 'string',
-          mapping: 'tutorEmail'
         },{
           id: 'isTutorContacted',
           headerName: 'Is Tutor Contacted',

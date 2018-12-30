@@ -27,6 +27,10 @@ export class DemoTrackerDataComponent implements OnInit {
 
   demoTrackerUpdatedRecord = {};
 
+  showCustomerDetails = false;
+  showEnquiryDetails = false;
+  showTutorDetails = false;
+  showTutorMapperDetails = false;
   showEmployeeActionDetails = false;
   showEmployeeActionButtons = false;
 
@@ -40,8 +44,14 @@ export class DemoTrackerDataComponent implements OnInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-  demoStatusFilterOptions = CommonFilterOptions.demoStatusFilterOptions;
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
+  matchStatusFilterOptions = CommonFilterOptions.matchStatusFilterOptions;
+  mappingStatusFilterOptions = CommonFilterOptions.mappingStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
+  demoStatusFilterOptions = CommonFilterOptions.demoStatusFilterOptions;
 
   selectedDemoOccurredOption: any[] = [];
   selectedClientSatisfiedFromTutorOption: any[] = [];

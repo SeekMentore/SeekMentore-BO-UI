@@ -46,6 +46,8 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
 
   scheduleDemoMappedTutorUpdatedRecord = {};
 
+  showCustomerDetails = false;
+  showEnquiryDetails = false;
   showTutorDetails = false;
   showTutorContactedDetails = false;
   showClientContactedDetails = false;

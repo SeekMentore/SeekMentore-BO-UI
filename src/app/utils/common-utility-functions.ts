@@ -36,7 +36,7 @@ export class CommonUtilityFunctions {
   }
 
   public static getDateStringInDDMMYYYYHHmmSS(datemillisInUTC: number) {
-    if (CommonUtilityFunctions.checkObjectAvailability(datemillisInUTC)) {
+    if (datemillisInUTC > 0 && CommonUtilityFunctions.checkObjectAvailability(datemillisInUTC)) {
       const date_value = new Date(datemillisInUTC);
       const dateString = 
                 (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))

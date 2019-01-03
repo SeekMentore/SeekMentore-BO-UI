@@ -51,6 +51,7 @@ import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sal
 import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
 import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
 import { ChangePasswordComponent } from './login-controlled-pages/change-password/change-password.component';
+import { SubscriptionPackageDataComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-data.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { ChangePasswordComponent } from './login-controlled-pages/change-passwor
     ScheduleDemoDataComponent,
     PromptDialogComponent,
     DemoTrackerDataComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    SubscriptionPackageDataComponent
   ],
   imports: [
     BrowserModule,

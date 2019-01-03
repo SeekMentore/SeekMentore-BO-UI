@@ -35,6 +35,10 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   cancelledDemoGridObject: GridComponent;
   cancelledDemoGridMetaData: GridDataInterface;
 
+  @ViewChild('enquiryClosedDemoGrid')
+  enquiryClosedDemoGridObject: GridComponent;
+  enquiryClosedDemoGridMetaData: GridDataInterface;
+
   showDemoTrackerData = false;
   selectedDemoTrackerRecord: GridRecord = null;
   interimHoldSelectedDemoTrackerRecord: GridRecord = null;
@@ -48,6 +52,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     this.successfulDemoGridMetaData = null;
     this.failedDemoGridMetaData = null;
     this.cancelledDemoGridMetaData = null;
+    this.enquiryClosedDemoGridMetaData = null;
   }
 
   ngOnInit() {
@@ -60,12 +65,14 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       this.successfulDemoGridObject.init();
       this.failedDemoGridObject.init();
       this.cancelledDemoGridObject.init();
+      this.enquiryClosedDemoGridObject.init();
     }, 0);
     setTimeout(() => {
       this.scheduledDemoGridObject.refreshGridData();
       this.successfulDemoGridObject.refreshGridData();
       this.failedDemoGridObject.refreshGridData();
       this.cancelledDemoGridObject.refreshGridData();
+      this.enquiryClosedDemoGridObject.refreshGridData();
     }, 0);
   }
 
@@ -406,6 +413,12 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       htmlDomElementId: 'cancelled-demo-grid',
       hidden: false
     }; 
+
+    this.enquiryClosedDemoGridMetaData = {
+      grid: this.getGridObject('enquiryClosedDemoGrid', 'Enquiry Closed Demo', '/rest/sales/enquiryClosedDemoList', [], true),
+      htmlDomElementId: 'enquiry-closed-grid',
+      hidden: false
+    }; 
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -436,12 +449,14 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         this.successfulDemoGridObject.init();
         this.failedDemoGridObject.init();
         this.cancelledDemoGridObject.init();
+        this.enquiryClosedDemoGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.scheduledDemoGridObject.refreshGridData();
         this.successfulDemoGridObject.refreshGridData();
         this.failedDemoGridObject.refreshGridData();
         this.cancelledDemoGridObject.refreshGridData();
+        this.enquiryClosedDemoGridObject.refreshGridData();
       }, 200);
     } else {
       this.showDemoTrackerData = true;

@@ -30,6 +30,10 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
   demoScheduledMappedTutorsGridObject: GridComponent;
   demoScheduledMappedTutorsGridMetaData: GridDataInterface;
 
+  @ViewChild('enquiryClosedMappedTutorsGrid')
+  enquiryClosedMappedTutorsGridObject: GridComponent;
+  enquiryClosedMappedTutorsGridMetaData: GridDataInterface;
+
   showScheduleDemoMappedTutorData = false;
   selectedMappedTutorRecord: GridRecord = null;
   interimHoldSelectedMappedTutorRecord: GridRecord = null;
@@ -43,6 +47,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     this.pendingMappedTutorsGridMetaData = null;
     this.demoReadyMappedTutorsGridMetaData = null;
     this.demoScheduledMappedTutorsGridObject = null;
+    this.enquiryClosedMappedTutorsGridMetaData = null;
   }
 
   ngOnInit() {
@@ -53,12 +58,14 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.pendingMappedTutorsGridObject.init(); 
       this.demoReadyMappedTutorsGridObject.init(); 
-      this.demoScheduledMappedTutorsGridObject.init();      
+      this.demoScheduledMappedTutorsGridObject.init();  
+      this.enquiryClosedMappedTutorsGridObject.init();     
     }, 0);
     setTimeout(() => {
       this.pendingMappedTutorsGridObject.refreshGridData();
       this.demoReadyMappedTutorsGridObject.refreshGridData();
       this.demoScheduledMappedTutorsGridObject.refreshGridData();
+      this.enquiryClosedMappedTutorsGridObject.refreshGridData();
     }, 0);
   }
 
@@ -353,6 +360,12 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
       htmlDomElementId: 'demo-scheduled-mapped-tutors-grid',
       hidden: false,
     };
+
+    this.enquiryClosedMappedTutorsGridMetaData = {
+      grid: this.getGridObject('enquiryClosedMappedTutorsGrid', 'Enquiry Closed Mapped Tutors', '/rest/sales/enquiryClosedMappedTutorsList', [], false, null, true),
+      htmlDomElementId: 'enquiry-closed-mapped-tutors-grid',
+      hidden: false,
+    };
   }
 
   handleSelectionActionRequest(context: any, response: any) {
@@ -408,11 +421,13 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         this.pendingMappedTutorsGridObject.init();
         this.demoReadyMappedTutorsGridObject.init();
         this.demoScheduledMappedTutorsGridObject.init();
+        this.enquiryClosedMappedTutorsGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.pendingMappedTutorsGridObject.refreshGridData();
         this.demoReadyMappedTutorsGridObject.refreshGridData();
         this.demoScheduledMappedTutorsGridObject.refreshGridData();
+        this.enquiryClosedMappedTutorsGridObject.refreshGridData();
       }, 200);
     } else {
       this.showScheduleDemoMappedTutorData = true;

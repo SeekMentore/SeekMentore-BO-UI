@@ -1,9 +1,9 @@
 <div id="bread-crumb-main-div" class="bread-crumb">
   <span *ngFor="let crumb of crumbs; let i = index">
-      <span routerLink="{{crumb.url}}" *ngIf="crumb.isActivated">
+      <span class="activated-bread-crumb" routerLink="{{crumb.url}}" *ngIf="crumb.isActivated">
           {{crumb.label}}
       </span>
-      <span *ngIf="crumb.isActivated">
+      <span *ngIf="!crumb.isActivated">
           {{crumb.label}}
       </span>
       <span *ngIf="!crumb.isLast">

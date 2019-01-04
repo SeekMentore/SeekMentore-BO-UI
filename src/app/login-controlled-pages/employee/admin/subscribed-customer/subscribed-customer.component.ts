@@ -10,6 +10,7 @@ import {LcpConstants} from 'src/app/utils/lcp-constants';
 import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 import {AppUtilityService} from "src/app/utils/app-utility.service";
 import {HelperService} from "src/app/utils/helper.service";
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
 
 @Component({
   selector: 'app-subscribed-customer',
@@ -37,6 +38,30 @@ export class SubscribedCustomerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setBreadCrumb();
+  }
+
+  private setBreadCrumb() {
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: [{
+        label: 'Home',
+        url: '/user/home',
+        isLast: false,
+        isActivated: true
+      }, {
+        label: 'Admin',
+        url: null,
+        isLast: false,
+        isActivated: false
+      }, {
+        label: 'Subscribed Customer',
+        url: '/user/employee/admin/subscribedcustomer',
+        isLast: true,
+        isActivated: true
+      }],    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

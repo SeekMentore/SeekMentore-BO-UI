@@ -25,26 +25,16 @@ export class BreadCrumbComponent implements OnInit {
       if (eventListener.resetCrumbList) {
         this.crumbs = [];
       }
-      if (CommonUtilityFunctions.checkObjectAvailability(eventListener.newCrumb)) {
-        this.crumbs.push(eventListener.newCrumb);
-      }
       if (CommonUtilityFunctions.checkObjectAvailability(eventListener.newCrumbList)) {
-        this.crumbs.concat(eventListener.newCrumbList);
+        this.crumbs = this.crumbs.concat(eventListener.newCrumbList);
       }
       console.log(eventListener)
-      console.log(this.crumbs)
     });
   }
 
 }
 
 export interface BreadCrumbEvent {
-  newCrumb: {
-    label: string,
-    url: string,
-    isLast: boolean,
-    isActivated: boolean
-  };
   newCrumbList: {
     label: string,
     url: string,

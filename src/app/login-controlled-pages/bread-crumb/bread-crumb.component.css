@@ -1,4 +1,11 @@
 .bread-crumb {
-    margin-left: 1.5%;
-    margin-top: 3%;
+    margin-top: 60px;
+    margin-left: 22px;
+    font-size: 1.2em;
+    font-family: inherit;
+}
+
+.activated-bread-crumb {
+    color: blue;
+    cursor: pointer;
 }

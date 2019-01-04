@@ -10,6 +10,7 @@ import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
 
 @Component({
   selector: 'app-all-enquiries',
@@ -50,6 +51,30 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.setBreadCrumb();
+  }
+
+  private setBreadCrumb() {
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: [{
+        label: 'Home',
+        url: '/user/home',
+        isLast: false,
+        isActivated: true
+      }, {
+        label: 'Sales',
+        url: null,
+        isLast: false,
+        isActivated: false
+      }, {
+        label: 'Enquiries',
+        url: '/user/employee/sales/allenquiries',
+        isLast: true,
+        isActivated: true
+      }],    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

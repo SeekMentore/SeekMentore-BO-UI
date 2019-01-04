@@ -19,17 +19,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const breadCrumb: BreadCrumbEvent = {
-      newCrumb: {
-        label: 'Home',
-        url: '/user/home',
-        isLast: false,
-        isActivated: true
-      },
-      newCrumbList: null,    
-      resetCrumbList: false
-    };
-    this.helperService.setBreadCrumb(breadCrumb); 
     this.userType = localStorage.getItem(LcpConstants.user_type_key);    
   }
 }

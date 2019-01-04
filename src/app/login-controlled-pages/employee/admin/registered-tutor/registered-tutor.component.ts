@@ -36,10 +36,14 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
     this.setUpGridMetaData();
   }
 
-  ngOnInit() {
+  private setBreadCrumb() {
     const breadCrumb: BreadCrumbEvent = {
-      newCrumb: null,
       newCrumbList: [{
+        label: 'Home',
+        url: '/user/home',
+        isLast: false,
+        isActivated: true
+      }, {
         label: 'Admin',
         url: null,
         isLast: false,
@@ -53,6 +57,10 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
       resetCrumbList: true
     };
     this.helperService.setBreadCrumb(breadCrumb);
+  }
+
+  ngOnInit() {
+    this.setBreadCrumb();
   }
 
   ngAfterViewInit() {

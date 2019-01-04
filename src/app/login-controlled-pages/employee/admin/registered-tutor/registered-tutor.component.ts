@@ -10,6 +10,7 @@ import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.componen
 import {HelperService} from 'src/app/utils/helper.service';
 import {LcpConstants} from "src/app/utils/lcp-constants";
 import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
 
 @Component({
   selector: 'app-registered-tutor',
@@ -36,6 +37,22 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumb: null,
+      newCrumbList: [{
+        label: 'Admin',
+        url: null,
+        isLast: false,
+        isActivated: false
+      }, {
+        label: 'Registered Tutor',
+        url: '/user/employee/admin/registeredtutor',
+        isLast: true,
+        isActivated: true
+      }],    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

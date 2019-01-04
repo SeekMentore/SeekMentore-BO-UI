@@ -52,6 +52,7 @@ import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.compo
 import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
 import { ChangePasswordComponent } from './login-controlled-pages/change-password/change-password.component';
 import { SubscriptionPackageDataComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-data.component';
+import { BreadCrumbComponent } from './login-controlled-pages/bread-crumb/bread-crumb.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { SubscriptionPackageDataComponent } from './login-controlled-pages/emplo
     PromptDialogComponent,
     DemoTrackerDataComponent,
     ChangePasswordComponent,
-    SubscriptionPackageDataComponent
+    SubscriptionPackageDataComponent,
+    BreadCrumbComponent
   ],
   imports: [
     BrowserModule,

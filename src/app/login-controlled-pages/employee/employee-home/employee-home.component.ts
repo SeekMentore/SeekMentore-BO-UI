@@ -3,6 +3,11 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { Column } from 'src/app/utils/grid/column';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { BreadCrumbEvent } from '../../bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { HelperService } from 'src/app/utils/helper.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-home',
@@ -23,7 +28,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
   workflowGridObject: GridComponent;
   workflowGridMetaData: GridDataInterface;
 
-  constructor() {
+  constructor(public utilityService: AppUtilityService, public helperService: HelperService, private router: Router) {
     this.alertGridMetaData = null;
     this.taskGridMetaData = null;
     this.workflowGridMetaData = null;
@@ -34,15 +39,20 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
     const displayData = {
       'Initiate Date': (new Date(record.getProperty('initiatedDateMillis'))).toDateString(),
       'Subject': record.getProperty('subject'),
-      'Initiated By': record.getProperty('initiatedBy'),
+      'Initiated By': record.getProperty('initiatedByName'),
       'Due Date': (new Date(record.getProperty('dueDateMillis'))).toDateString(),
       'Action Date': (new Date(record.getProperty('actionDateMillis'))).toDateString(),
-      'Action By': record.getProperty('actionBy')
+      'Action By': record.getProperty('actionByName')
     };
     return displayData;
   }
 
   ngOnInit() {
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {
@@ -87,7 +97,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           id: 'initiatedBy',
           headerName: 'Initiated By',
           dataType: 'string',
-          mapping: 'initiatedBy'
+          mapping: 'initiatedByName'
         }, {
           id: 'dueDate',
           headerName: 'Due Date',
@@ -104,7 +114,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           id: 'actionBy',
           headerName: 'Action By',
           dataType: 'string',
-          mapping: 'actionBy'
+          mapping: 'actionByName'
         }
         ]
       },
@@ -139,7 +149,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           id: 'initiatedBy',
           headerName: 'Initiated By',
           dataType: 'string',
-          mapping: 'initiatedBy'
+          mapping: 'initiatedByName'
         }, {
           id: 'dueDate',
           headerName: 'Due Date',
@@ -156,7 +166,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           id: 'actionBy',
           headerName: 'Action By',
           dataType: 'string',
-          mapping: 'actionBy'
+          mapping: 'actionByName'
         }
         ]
       },
@@ -192,7 +202,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           id: 'initiatedBy',
           headerName: 'Initiated By',
           dataType: 'string',
-          mapping: 'initiatedBy'
+          mapping: 'initiatedByName'
         }, {
           id: 'dueDate',
           headerName: 'Due Date',
@@ -209,7 +219,7 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           id: 'actionBy',
           headerName: 'Action By',
           dataType: 'string',
-          mapping: 'actionBy'
+          mapping: 'actionByName'
         }
         ]
       },

@@ -10,6 +10,9 @@ import {ActionButton} from 'src/app/utils/grid/action-button';
 import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
 import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-tutor-registration',
@@ -58,7 +61,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedTutorGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.nonContactedBecomeTutorGridMetaData = null;
     this.nonVerifiedBecomeTutorGridMetaData = null;
     this.verifiedBecomeTutorGridMetaData = null;
@@ -70,10 +73,15 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     this.showTutorData = false;
     this.selectedTutorRecord = null;
     this.tutorDataAccess = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

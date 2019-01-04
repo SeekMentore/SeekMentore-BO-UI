@@ -10,6 +10,9 @@ import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 import {ActionButton} from 'src/app/utils/grid/action-button';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-query-submitted',
@@ -38,14 +41,19 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedQueryGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.nonContactedQueryGridMetaData = null;
     this.nonAnsweredQueryGridMetaData = null;
     this.answeredQueryGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

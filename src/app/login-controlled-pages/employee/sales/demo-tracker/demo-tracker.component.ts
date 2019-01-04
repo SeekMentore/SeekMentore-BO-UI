@@ -11,6 +11,9 @@ import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-demo-tracker',
@@ -47,7 +50,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   selectedRecordGridType: string = null;
   interimHoldSelectedDemoTrackerObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.scheduledDemoGridMetaData = null;
     this.successfulDemoGridMetaData = null;
     this.failedDemoGridMetaData = null;
@@ -57,6 +60,11 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

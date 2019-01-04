@@ -10,6 +10,9 @@ import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { HelperService } from 'src/app/utils/helper.service';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-map-tutor-to-enquiry',
@@ -27,12 +30,17 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
   interimHoldSelectedEnquiryRecord: GridRecord = null;
   enquiryMappingDataAccess: EnquiryMappingDataAccess = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.toBeMappedEnquiriesGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

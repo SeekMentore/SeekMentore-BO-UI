@@ -10,6 +10,9 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-enquiry-registration',
@@ -54,7 +57,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedEnquiryGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.nonContactedEnquiryGridMetaData = null;
     this.nonVerifiedEnquiryGridMetaData = null;
     this.verifiedEnquiryGridMetaData = null;
@@ -65,10 +68,15 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     this.showEnquiryData = false;
     this.selectedEnquiryRecord = null;
     this.enquiryDataAccess = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

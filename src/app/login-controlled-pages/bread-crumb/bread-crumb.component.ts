@@ -28,7 +28,6 @@ export class BreadCrumbComponent implements OnInit {
       if (CommonUtilityFunctions.checkObjectAvailability(eventListener.newCrumbList)) {
         this.crumbs = this.crumbs.concat(eventListener.newCrumbList);
       }
-      console.log(eventListener)
     });
   }
 

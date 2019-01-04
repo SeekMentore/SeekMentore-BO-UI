@@ -1,16 +1,18 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
-import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
-import {ActionButton} from 'src/app/utils/grid/action-button';
-import {Column} from 'src/app/utils/grid/column';
-import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
-import {LcpConstants} from 'src/app/utils/lcp-constants';
-import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
-import {AppUtilityService} from "src/app/utils/app-utility.service";
-import {HelperService} from "src/app/utils/helper.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from "src/app/utils/app-utility.service";
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { ActionButton } from 'src/app/utils/grid/action-button';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from "src/app/utils/helper.service";
+import { LcpConstants } from 'src/app/utils/lcp-constants';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-subscribed-customer',
@@ -29,36 +31,17 @@ export class SubscribedCustomerComponent implements OnInit {
   customerDataAccess: SubscribedCustomerDataAccess = null;
 
 
-  constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
+  constructor(public utilityService: AppUtilityService, public helperService: HelperService, private router: Router) {
     this.subscribedCustomerGridMetaData = null;
     this.showCustomerData = false;
     this.selectedCustomerRecord = null;
     this.customerDataAccess = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
-    this.setBreadCrumb();
-  }
-
-  private setBreadCrumb() {
+    this.setUpGridMetaData();
     const breadCrumb: BreadCrumbEvent = {
-      newCrumbList: [{
-        label: 'Home',
-        url: '/user/home',
-        isLast: false,
-        isActivated: true
-      }, {
-        label: 'Admin',
-        url: null,
-        isLast: false,
-        isActivated: false
-      }, {
-        label: 'Subscribed Customer',
-        url: '/user/employee/admin/subscribedcustomer',
-        isLast: true,
-        isActivated: true
-      }],    
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
     };
     this.helperService.setBreadCrumb(breadCrumb);

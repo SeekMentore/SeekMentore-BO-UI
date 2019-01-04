@@ -5,7 +5,7 @@
   <div id="tutor-data-page" *ngIf="showTutorData">
     <button
       id="back-to-tutor-listing-button"
-      class="ok-button" (click)="toggleVisibilityRegisterTutorGrid()">
+      class="back-to-listing-button ok-button" (click)="toggleVisibilityRegisterTutorGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-registered-tutor-data [tutorRecord]="selectedTutorRecord" [tutorDataAccess]="tutorDataAccess"></app-registered-tutor-data>

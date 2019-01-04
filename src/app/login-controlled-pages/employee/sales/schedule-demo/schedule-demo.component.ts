@@ -10,6 +10,9 @@ import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-schedule-demo',
@@ -43,7 +46,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedMappedTutorObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.pendingMappedTutorsGridMetaData = null;
     this.demoReadyMappedTutorsGridMetaData = null;
     this.demoScheduledMappedTutorsGridObject = null;
@@ -52,6 +55,11 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

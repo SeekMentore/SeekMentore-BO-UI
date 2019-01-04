@@ -10,6 +10,9 @@ import {ActionButton} from 'src/app/utils/grid/action-button';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
 import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
 import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-complaints',
@@ -43,16 +46,21 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   interimHoldSelectedComplaintRecord: GridRecord = null;
   complaintDataAccess: ComplaintDataAccess = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.customerComplaintGridMetaData = null;
     this.tutorComplaintGridMetaData = null;
     this.employeeComplaintGridMetaData = null;
     this.holdComplaintGridMetaData = null;
     this.resolvedComplaintGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

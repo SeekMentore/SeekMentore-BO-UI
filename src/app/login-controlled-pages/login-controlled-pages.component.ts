@@ -6,8 +6,8 @@ import { EnvironmentConstants } from "src/app/utils/environment-constants";
 import { HelperService } from "src/app/utils/helper.service";
 import { LcpConstants } from "src/app/utils/lcp-constants";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
-import { EmailInterface } from "../utils/email/email.component";
 import { AlertDialogEvent } from "../utils/alert-dialog/alert-dialog.component";
+import { EmailInterface } from "../utils/email/email.component";
 
 @Component({
   selector: 'app-login-controlled-pages',

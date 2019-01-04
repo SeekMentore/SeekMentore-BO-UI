@@ -10,6 +10,9 @@ import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
 import {ActionButton} from 'src/app/utils/grid/action-button';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-subscription-requested',
@@ -54,7 +57,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedSubscriptionGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.nonContactedSubscriptionGridMetaData = null;
     this.nonVerifiedSubscriptionGridMetaData = null;
     this.verifiedSubscriptionGridMetaData = null;
@@ -65,10 +68,15 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     this.showSubscriptionData = false;
     this.selectedSubscriptionRecord = null;
     this.subscriptionDataAccess = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

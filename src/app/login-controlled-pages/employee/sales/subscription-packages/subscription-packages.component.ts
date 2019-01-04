@@ -8,6 +8,9 @@ import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { Column } from 'src/app/utils/grid/column';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-subscription-packages',
@@ -32,13 +35,18 @@ export class SubscriptionPackagesComponent implements OnInit {
 
   interimHoldSelectedSubscriptionPackageGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.currentSubscriptionPackagesGridMetaData = null;
     this.historySubscriptionPackagesGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {

@@ -5,7 +5,7 @@
   <div id="customer-data-page" *ngIf="showCustomerData">
     <button
       id="back-to-customer-listing-button"
-      class="ok-button" (click)="toggleVisibilitySubscribedCustomerGrid()">
+      class="back-to-listing-button ok-button" (click)="toggleVisibilitySubscribedCustomerGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-subscribed-customer-data [customerRecord]="selectedCustomerRecord" [customerDataAccess]="customerDataAccess"></app-subscribed-customer-data>

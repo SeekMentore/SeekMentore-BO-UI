@@ -27,15 +27,17 @@
         </tr>
         <tr>
           <td class="td-label"><label>Contact Number</label></td>
-          <td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
+          <td><label class="data">{{customerRecord.property['contactNumber']}}</label></td>
+          <!--<td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('contactNumber', $event, 'string')"></td>
+                     (change)="updateCustomerProperty('contactNumber', $event, 'string')"></td>-->
         </tr>
         <tr>
           <td class="td-label"><label>Email Id</label></td>
-          <td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
+          <td><label class="data">{{customerRecord.property['emailId']}}</label></td>
+          <!--<td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('emailId', $event, 'string')"></td>
+                     (change)="updateCustomerProperty('emailId', $event, 'string')"></td>-->
         </tr>        
         <tr>
           <td class="td-label"><label>Student Grades</label></td>

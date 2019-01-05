@@ -29,15 +29,17 @@
         </tr>
         <tr>
           <td class="td-label"><label>Contact Number</label></td>
-          <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
+          <td><label class="data">{{tutorRecord.property['contactNumber']}}</label></td>
+          <!-- <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateTutorProperty('contactNumber', $event, 'string')"></td>
+                     (change)="updateTutorProperty('contactNumber', $event, 'string')"></td>-->
         </tr>
         <tr>
           <td class="td-label"><label>Email</label></td>
-          <td><input class="input_field" type="text" value="{{tutorRecord.property['emailId']}}"
+          <td><label class="data">{{tutorRecord.property['emailId']}}</label></td>
+          <!--<td><input class="input_field" type="text" value="{{tutorRecord.property['emailId']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateTutorProperty('emailId', $event, 'string')"></td>
+                     (change)="updateTutorProperty('emailId', $event, 'string')"></td>-->
         </tr>
         <tr>
           <td class="td-label"><label>Date of Brith</label></td>

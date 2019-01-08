@@ -17,7 +17,10 @@ export class Store {
   extraParams: Object;
   downloadWithSorterRequired: boolean = false;
   downloadWithFilterRequired: boolean = false;
-  private precall_download: any;	
+  private precall_load: any;
+  private postcall_load: any;
+  private precall_download: any;
+  private postcall_download: any;
 
   constructor(
       id: string, 
@@ -26,24 +29,36 @@ export class Store {
       downloadURL: string = null, 
       downloadWithSorterRequired: boolean = false,
       downloadWithFilterRequired: boolean = false,
-      precall_download: any = null
+      precall_load: any = null,
+      postcall_load: any = null,
+      precall_download: any = null,
+      postcall_download: any = null
   ) {
     this.id = id;
     this.restURL = restURL;
     this.downloadURL = downloadURL;
     this.downloadWithSorterRequired = downloadWithSorterRequired;
     this.downloadWithFilterRequired = downloadWithFilterRequired;
+    this.precall_load = precall_load;
+    this.postcall_load = postcall_load;
     this.precall_download = precall_download;
+    this.postcall_download = postcall_download;
     this.isStatic = isStatic;
     this.data = [];
     this.extraParams = {};
   }
 
   public load(grid: Grid, gridComponentObject: GridComponent) {
+    if (GridCommonFunctions.checkObjectAvailability(this.precall_load)) {
+      this.precall_load(gridComponentObject);
+    }
     if (this.isStatic) {
       // --> convert staticData into data using convertIntoRecordData
       this.convertIntoRecordData(this.getStaticData());
       grid.setData();
+      if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
+        this.postcall_load(gridComponentObject);
+      }
     } else {
       // --> Make a rest call and store the response.data in restData
       const params = {
@@ -91,6 +106,9 @@ export class Store {
             }
           }
           grid.setData();
+          if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
+            this.postcall_load(gridComponentObject);
+          }
         },
         error2 => {
           this.data = [];
@@ -100,10 +118,13 @@ export class Store {
           if (grid_mask_loader) {
             grid_mask_loader.hidden = true;
           }
-          grid.setData();          
+          grid.setData();
+          if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
+            this.postcall_load(gridComponentObject);
+          }          
         }
       );
-    }
+    }    
   }
 
   public downloadGridData(grid: Grid, gridComponentObject: GridComponent) {
@@ -125,6 +146,9 @@ export class Store {
         sorters.value = (this.downloadWithSorterRequired && grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null;
         filters.value = (this.downloadWithFilterRequired && grid.isFilterCapable) ? JSON.stringify(grid.filters) : null;
         gridComponentObject.utility_service.submitForm('gridDownloadForm', this.downloadURL, 'POST');
+        if (GridCommonFunctions.checkObjectAvailability(this.postcall_download)) {
+          this.postcall_download(gridComponentObject);
+        }
         return true;
       }
       return false;

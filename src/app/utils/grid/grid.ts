@@ -56,7 +56,16 @@ export class Grid {
           let downloadURL: string = null;
           let downloadWithSorterRequired: boolean = false;
           let downloadWithFilterRequired: boolean = false;
+          let precall_load: any = null;
+          let postcall_load: any = null;
           let precall_download: any = null;
+          let postcall_download: any = null;
+          if (GridCommonFunctions.checkObjectAvailability(storeMetaData.preLoad)) {
+              precall_load = storeMetaData.preLoad;
+          }
+          if (GridCommonFunctions.checkObjectAvailability(storeMetaData.postLoad)) {
+              postcall_load = storeMetaData.postLoad;
+          }
           if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download)) {
             downloadURL = storeMetaData.download.url;
             if (GridCommonFunctions.checkStringAvailability(downloadURL)) {
@@ -71,8 +80,22 @@ export class Grid {
             if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.preDownload)) {
                 precall_download = storeMetaData.download.preDownload;
             }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.postDownload)) {
+                postcall_download = storeMetaData.download.postDownload;
+            }
           }
-          this.store = new Store(this.id + '-Store', storeMetaData.isStatic, storeMetaData.restURL, downloadURL, downloadWithSorterRequired, downloadWithFilterRequired, precall_download);
+          this.store = new Store(
+                            this.id + '-Store', 
+                            storeMetaData.isStatic, 
+                            storeMetaData.restURL, 
+                            downloadURL, 
+                            downloadWithSorterRequired, 
+                            downloadWithFilterRequired,
+                            precall_load,
+                            postcall_load,
+                            precall_download,
+                            postcall_download
+                        );
       }
       this.isSortingCapable = isSortingCapable;
       this.isFilterCapable = isFilterCapable;

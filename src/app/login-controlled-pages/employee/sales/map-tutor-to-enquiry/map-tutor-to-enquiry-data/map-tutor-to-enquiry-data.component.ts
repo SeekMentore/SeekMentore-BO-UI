@@ -57,7 +57,9 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     matchGrade: false,
     matchTeachingType: false,
     matchLocation: false
-  }
+  };
+
+  searchTutorExtraParam : any = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.allMappingEligibleTutorsGridMetaData = null;
@@ -106,7 +108,11 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         title: 'Eligible Tutors',
         store: {
           isStatic: false,
-          restURL: '/rest/sales/allMappingEligibleTutorsList'
+          restURL: '/rest/sales/allMappingEligibleTutorsList',
+          preLoad: (gridComponentObject: GridComponent) => {
+            console.log('PreLoad');
+            gridComponentObject.addExtraParams('searchTutorExtraParam', this.searchTutorExtraParam);
+          }
         },
         columns: [{
           id: 'name',
@@ -406,7 +412,17 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   }
 
   searchEligibleMappingTutors() {
-    console.log('to be coded');
+    this.searchTutorExtraParam = this.tutorEligibilityCriteria;
+    this.allMappingEligibleTutorsGridObject.refreshGridData();
+  }
+
+  resetSearchEligibleMappingTutors() {
+    this.tutorEligibilityCriteria['matchSubject'] = false;
+    this.tutorEligibilityCriteria['matchGrade'] = false;
+    this.tutorEligibilityCriteria['matchTeachingType'] = false;
+    this.tutorEligibilityCriteria['matchLocation'] = false;
+    this.searchTutorExtraParam = null;
+    this.allMappingEligibleTutorsGridObject.refreshGridData();
   }
 
   handleDataAccessRequest(context: any, response: any) {

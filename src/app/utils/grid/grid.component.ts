@@ -13,6 +13,7 @@ import { GridConstants } from './grid-constants';
 import { GridRecord } from './grid-record';
 import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
 import { Sorter, SortingOrder } from './sorter';
+import { Filter } from './filter';
 
 @Component({
   selector: 'app-grid',
@@ -468,101 +469,51 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public toggleCaseSensitiveSearch(column: Column, caseSensitive: boolean) {
     column.filter.textCaseSensitiveSearch = caseSensitive;
-    // console.log("My Input", column);
   }
 
-  /**REVIEW */
-  public columnFilteredGreaterNumberChanged(column: Column, element: HTMLInputElement) {
+  public columnFilteredNumberChanged(column: Column, element: HTMLInputElement, field: string) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
-        const filter = column.filter;
-        const parsedValue = parseInt(element.value, 10);
-        if (isNaN(parsedValue)) {
-          /**Validation */
-          return;
+        const filter: Filter = column.filter;
+        const stringValue: string = element.value
+        if (GridCommonFunctions.checkStringAvailability(stringValue)) {
+          const numberValue: number = parseInt(stringValue);
+          if (isNaN(numberValue)) {
+            const myListener: AlertDialogEvent = {
+              isSuccess: false,
+              message: 'Please provide valid number in ' + field + ' filter for ' + column.headerName,
+              onButtonClicked: () => {
+              }
+            };
+            this.helperService.showAlertDialog(myListener);
+            return;
+          } else {
+            if (field === 'GT') {
+              filter.greaterThan = numberValue;
+            } else if (field === 'EQ') {
+              filter.equalTo = numberValue;
+            } else if (field === 'LT') {
+              filter.lessThan = numberValue;
+            } 
+          }          
+        } else {
+          if (field === 'GT') {
+            filter.greaterThan = null;
+          } else if (field === 'EQ') {
+            filter.equalTo = null;
+          } else if (field === 'LT') {
+            filter.lessThan = null;
+          } 
         }
-        if (element.value && element.value.toString().trim() !== '') {
-          filter.greaterThan = parsedValue;
-          column.isFiltered = true;
+        if (GridCommonFunctions.checkObjectAvailability(filter.greaterThan)
+            || GridCommonFunctions.checkObjectAvailability(filter.equalTo)
+            || GridCommonFunctions.checkObjectAvailability(filter.lessThan)) {
+              column.isFiltered = true;
         } else {
           column.isFiltered = false;
         }
         this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  /**REVIEW */
-  public columnFilteredEqualNumberChanged(column: Column, element: HTMLInputElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const filter = column.filter;
-        const parsedValue = parseInt(element.value, 10);
-        if (isNaN(parsedValue)) {
-          /**Validation */
-          return;
-        }
-        if (element.value && element.value.toString().trim() !== '') {
-          filter.equalTo = parsedValue;
-          column.isFiltered = true;
-        } else {
-          column.isFiltered = false;
-        }
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  /**REVIEW */
-  public columnFilteredLowerNumberChanged(column: Column, element: HTMLInputElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const filter = column.filter;
-        const parsedValue = parseInt(element.value, 10);
-        if (isNaN(parsedValue)) {
-          /**Validation */
-          return;
-        }
-        if (element.value && element.value.toString().trim() !== '') {
-          filter.lessThan = parsedValue;
-          column.isFiltered = true;
-        } else {
-          column.isFiltered = false;
-        }
-        this.hideShowRemoveFilterTab(column);
-        return;
+        return;  
       }
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -589,7 +540,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         const filter = column.filter;
         filter.beforeDate = date_value;
         filter.beforeDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getUTCFullYear() % 100);
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getFullYear() % 100);
         column.isFiltered = true;
         this.hideShowRemoveFilterTab(column);
         return;

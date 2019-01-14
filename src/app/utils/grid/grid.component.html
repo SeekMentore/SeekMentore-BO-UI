@@ -252,7 +252,7 @@
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-input-GT'}}"
                 #filterNumberGT
                 class="number_input {{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                (input)="columnFilteredGreaterNumberChanged(column,$event.target)"
+                (input)="columnFilteredNumberChanged(column, $event.target, 'GT')"
                 type="number" title="GT"><br>
               <span
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-span-EQ'}}">EQ</span>
@@ -260,7 +260,7 @@
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-input-EQ'}}"
                 #filterNumberEQ
                 class="number_input {{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                (input)="columnFilteredEqualNumberChanged(column, $event.target)"
+                (input)="columnFilteredNumberChanged(column, $event.target, 'EQ')"
                 type="number" title="EQ"><br>
               <span
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-span-LT'}}">LT</span>
@@ -268,7 +268,7 @@
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-input-LT'}}"
                 #filterNnumberLT
                 class="number_input {{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                (input)="columnFilteredLowerNumberChanged(column, $event.target)"
+                (input)="columnFilteredNumberChanged(column, $event.target, 'LT')"
                 type="number" title="LT">
             </div>
             <div

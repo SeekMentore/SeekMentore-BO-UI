@@ -439,7 +439,6 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  /**REVIEW */
   public columnFilteredTextChanged(column: Column, element: HTMLInputElement) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
@@ -533,74 +532,23 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  public columnFilteredBeforeDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
+  public columnFilteredDateChanged(column: Column, datePickerValue: any, label: HTMLElement, field: string) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
         const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-        const filter = column.filter;
-        filter.beforeDate = date_value;
-        filter.beforeDateMillis = date_value.getTime();
+        const filter: Filter = column.filter;
+        const localTimezoneOffsetInMilliseconds: number = (new Date().getTimezoneOffset() * 60 * 1000);
+        if (field === 'After') {
+          filter.afterDate = date_value;
+          filter.afterDateMillis = date_value.getTime() - localTimezoneOffsetInMilliseconds;
+        } else if (field === 'On') {
+          filter.onDate = date_value;
+          filter.onDateMillis = date_value.getTime() - localTimezoneOffsetInMilliseconds;
+        } else if (field === 'Before') {
+          filter.beforeDate = date_value;
+          filter.beforeDateMillis = date_value.getTime() - localTimezoneOffsetInMilliseconds;
+        }        
         label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getFullYear() % 100);
-        column.isFiltered = true;
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  public columnFilteredAfterDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-        const filter = column.filter;
-        filter.afterDate = date_value;
-        filter.afterDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getUTCFullYear() % 100);
-        column.isFiltered = true;
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  public columnFilteredOnDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-        const filter = column.filter;
-        filter.onDate = date_value;
-        filter.onDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getUTCFullYear() % 100);
         column.isFiltered = true;
         this.hideShowRemoveFilterTab(column);
         return;

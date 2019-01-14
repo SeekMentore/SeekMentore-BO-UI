@@ -95,11 +95,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         this.allMappedTutorsGridObject.refreshGridData();
       }
     }, 0);
-  }
-
-  public selectUnselectEligibility(clause: string, element: HTMLInputElement) {
-    this.tutorEligibilityCriteria[clause] = element.checked;
-  }
+  }  
 
   public setUpGridMetaData() {
     this.allMappingEligibleTutorsGridMetaData = {
@@ -110,7 +106,6 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           isStatic: false,
           restURL: '/rest/sales/allMappingEligibleTutorsList',
           preLoad: (gridComponentObject: GridComponent) => {
-            console.log('PreLoad');
             gridComponentObject.addExtraParams('searchTutorExtraParam', this.searchTutorExtraParam);
           }
         },
@@ -397,6 +392,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     };
   }
 
+  public selectUnselectEligibility(clause: string, element: HTMLInputElement) {
+    this.tutorEligibilityCriteria[clause] = element.checked;
+  }
+
   handleMappingRequest(context: any, response: any) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
@@ -422,6 +421,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     this.tutorEligibilityCriteria['matchTeachingType'] = false;
     this.tutorEligibilityCriteria['matchLocation'] = false;
     this.searchTutorExtraParam = null;
+    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('tutor-grid-eligibilty-criteria-checkbox');
+    for (let i = 0; i < elements.length; i++) {
+      (<HTMLInputElement>elements.item(i)).checked = false;
+    }
     this.allMappingEligibleTutorsGridObject.refreshGridData();
   }
 

@@ -109,15 +109,15 @@
               <table class="form-container-generic-table">
                 <tr>
                   <td class="td-label"><label>Match Subject</label></td>
-                  <td><label class="data"><input type="checkbox" id="matchSubject-eligible-checkbox" (click)="selectUnselectEligibility('matchSubject', $event.target)"></label></td>              
+                  <td><label class="data"><input type="checkbox" class="tutor-grid-eligibilty-criteria-checkbox" id="matchSubject-eligible-checkbox" (click)="selectUnselectEligibility('matchSubject', $event.target)"></label></td>              
                   <td class="td-label"><label>Match Grade</label></td>
-                  <td><label class="data"><input type="checkbox" id="matchGrade-eligible-checkbox" (click)="selectUnselectEligibility('matchGrade', $event.target)"></label></td>              
+                  <td><label class="data"><input type="checkbox" class="tutor-grid-eligibilty-criteria-checkbox" id="matchGrade-eligible-checkbox" (click)="selectUnselectEligibility('matchGrade', $event.target)"></label></td>              
                   <td class="td-label"><label>Match Teaching Type</label></td>
-                  <td><label class="data"><input type="checkbox" id="matchTeachingType-eligible-checkbox" (click)="selectUnselectEligibility('matchTeachingType', $event.target)"></label></td>
+                  <td><label class="data"><input type="checkbox" class="tutor-grid-eligibilty-criteria-checkbox" id="matchTeachingType-eligible-checkbox" (click)="selectUnselectEligibility('matchTeachingType', $event.target)"></label></td>
                 </tr>
                 <tr>
                   <td class="td-label"><label>Match Location</label></td>
-                  <td><label class="data"><input type="checkbox" id="matchLocation-eligible-checkbox" (click)="selectUnselectEligibility('matchLocation', $event.target)"></label></td>              
+                  <td><label class="data"><input type="checkbox" class="tutor-grid-eligibilty-criteria-checkbox" id="matchLocation-eligible-checkbox" (click)="selectUnselectEligibility('matchLocation', $event.target)"></label></td>              
                   <td class="td-label"><label></label></td>
                   <td><label class="data"></label></td>              
                   <td class="td-label"><label></label></td>
@@ -128,16 +128,24 @@
           </tr>
         </table>
         <!-- This is the search form-->
-        <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
-                class="ok-button form-container-update-button"
-                (click)="searchEligibleMappingTutors()">
-          Search Tutors
-        </button>
-        <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
-                class="cancel-button form-container-update-button"
-                (click)="resetSearchEligibleMappingTutors()">
-          Reset Search
-        </button>
+        <table class="form-container-generic-table">
+          <tr>
+            <td align="right">
+              <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
+                      class="ok-button form-container-update-button"
+                      (click)="searchEligibleMappingTutors()">
+                Search Tutors
+              </button>
+            </td>
+            <td>
+              <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
+                      class="cancel-button form-container-update-button"
+                      (click)="resetSearchEligibleMappingTutors()">
+                Reset Search
+              </button>
+            </td>
+          </tr>
+        </table>
       </form>
     </div>
     <app-grid #allMappingEligibleTutorsGrid id="all-mapping-eligible-tutors-grid" [gridMetaData]="allMappingEligibleTutorsGridMetaData"></app-grid>   

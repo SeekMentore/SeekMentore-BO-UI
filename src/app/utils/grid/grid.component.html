@@ -13,7 +13,7 @@
             <button
               id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
               class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
-              Download Data
+              <i class="fa fa-download" style="color: white;"></i>Download Data
             </button>
           </div>
       </div>
@@ -34,7 +34,7 @@
         <button
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
           class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
-          Download Data
+          <i class="fa fa-download" style="color: white;"></i>Download Data
         </button>
         <button id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-applyFilter'}}"
                 *ngIf="grid.isFilterCapable" class="uigrid-green-button" (click)="applyFilter()">

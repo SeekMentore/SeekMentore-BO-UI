@@ -163,4 +163,10 @@ export class BecomeTutorDataComponent implements OnInit {
       context.editRecordForm = false;
     } 
   }
+
+  downloadProfile() {
+    const tentativeTutorId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-tentativeTutorId');
+    tentativeTutorId.value = this.tutorRecord.getProperty('tentativeTutorId');
+    this.utilityService.submitForm('profileDownloadForm', '/rest/support/downloadAdminBecomeTutorProfilePdf', 'POST')
+  }
 }

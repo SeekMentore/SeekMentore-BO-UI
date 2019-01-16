@@ -144,4 +144,10 @@ export class EnquiryDataComponent implements OnInit {
       context.editRecordForm = false;
     }
   }
+
+  downloadProfile() {
+    const enquiryId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-enquiryId');
+    enquiryId.value = this.enquiryRecord.getProperty('enquiryId');
+    this.utilityService.submitForm('profileDownloadForm', '/rest/support/downloadAdminFindTutorProfilePdf', 'POST')
+  }
 }

@@ -67,13 +67,14 @@ const routes: Routes = [
           }
         ]
       },
-      {path: '', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'},
-      {path: '**', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'}
+      {path: '', redirectTo: '/public/error/101', pathMatch: 'full'},
+      {path: '**', redirectTo: '/public/error/101', pathMatch: 'full'}
     ]
   },
   {
     path: 'public', component: NonLoginPagesComponent,
     children: [
+      {path: 'error/:code', component: ErrorComponent},
       {path: 'error', component: ErrorComponent},
       {path: 'login', component: LoginComponent},
       {path: 'resetpassword', component: ResetPasswordComponent},
@@ -89,7 +90,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {useHash: true})
   ],
   exports: [
     RouterModule

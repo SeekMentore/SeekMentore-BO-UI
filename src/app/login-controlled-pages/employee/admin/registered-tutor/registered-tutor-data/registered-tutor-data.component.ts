@@ -821,4 +821,10 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     this.aadharCard = null;
     this.photograph = null;    
   }
+
+  downloadProfile() {
+    const tutorId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-tutorId');
+    tutorId.value = this.tutorRecord.getProperty('tutorId');
+    this.utilityService.submitForm('profileDownloadForm', '/rest/registeredTutor/downloadAdminRegisteredTutorProfilePdf', 'POST');
+  }
 }

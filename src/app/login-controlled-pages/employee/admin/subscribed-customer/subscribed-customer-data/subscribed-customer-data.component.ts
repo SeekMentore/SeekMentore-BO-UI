@@ -356,4 +356,10 @@ export class SubscribedCustomerDataComponent implements OnInit {
       context.editRecordForm = false;
     }
   }
+
+  downloadProfile() {
+    const customerId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-customerId');
+    customerId.value = this.customerRecord.getProperty('customerId');
+    this.utilityService.submitForm('profileDownloadForm', '/rest/subscribedCustomer/downloadAdminSubscribedCustomerProfilePdf', 'POST');
+  }
 }

@@ -22,6 +22,7 @@ import { ComplaintsComponent } from 'src/app/login-controlled-pages/employee/sup
 import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
 import { ScheduleDemoComponent } from 'src/app/login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
 import { ChangePasswordComponent } from '../login-controlled-pages/change-password/change-password.component';
+import { ForgotPasswordTokenResetComponent } from '../non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
 
 const routes: Routes = [
   {
@@ -78,6 +79,7 @@ const routes: Routes = [
       {path: 'error', component: ErrorComponent},
       {path: 'login', component: LoginComponent},
       {path: 'resetpassword', component: ResetPasswordComponent},
+      {path: 'resetpassword/:token', component: ForgotPasswordTokenResetComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'},
       {path: '**', redirectTo: 'login', pathMatch: 'full'}
     ]

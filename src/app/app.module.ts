@@ -53,6 +53,7 @@ import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sale
 import { ChangePasswordComponent } from './login-controlled-pages/change-password/change-password.component';
 import { SubscriptionPackageDataComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-data.component';
 import { BreadCrumbComponent } from './login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ForgotPasswordTokenResetComponent } from './non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { BreadCrumbComponent } from './login-controlled-pages/bread-crumb/bread-
     DemoTrackerDataComponent,
     ChangePasswordComponent,
     SubscriptionPackageDataComponent,
-    BreadCrumbComponent
+    BreadCrumbComponent,
+    ForgotPasswordTokenResetComponent
   ],
   imports: [
     BrowserModule,

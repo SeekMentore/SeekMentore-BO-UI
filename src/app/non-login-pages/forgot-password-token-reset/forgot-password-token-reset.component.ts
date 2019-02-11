@@ -26,7 +26,6 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
     this.route.params.subscribe(params => {  
       this.tokenId = params['tokenId'];
       this.token = params['token'];
-      console.log(this.token);
     });
   }
 

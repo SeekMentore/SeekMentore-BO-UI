@@ -84,16 +84,16 @@ export class AdminCommonFunctions {
         return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.preferredTeachingTypeFilterOptions, ';'); 
     }
 
-    public static applicationStatusRenderer(record: GridRecord, column: Column) {
-        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.applicationStatusFilterOptions); 
+    public static publicApplicationStatusRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.publicApplicationStatusFilterOptions); 
     }
 
-    public static complaintUserRenderer(record: GridRecord, column: Column) {
-        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.complaintUserFilterOptions); 
+    public static userRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.userFilterOptions); 
     }
     
-    public static complaintUserMultiRenderer(record: GridRecord, column: Column) {
-        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.complaintUserFilterOptions, ';'); 
+    public static userMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.userFilterOptions, ';'); 
     }
 
     public static documentTypeRenderer(record: GridRecord, column: Column) {
@@ -102,5 +102,25 @@ export class AdminCommonFunctions {
 
     public static documentTypeMultiRenderer(record: GridRecord, column: Column) {
         return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.documentTypeFilterOptions, ';'); 
+    }
+
+    public static queryStatusRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.queryStatusFilterOptions); 
+    }
+
+    public static complaintStatusRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.complaintStatusFilterOptions); 
+    }
+
+    public static matchStatusRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.matchStatusFilterOptions); 
+    }
+
+    public static mappingStatusRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.mappingStatusFilterOptions); 
+    }
+
+    public static demoStatusRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.demoStatusFilterOptions); 
     }
 }

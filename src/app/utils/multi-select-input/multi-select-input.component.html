@@ -7,12 +7,24 @@
   <div align="right" style="margin: 0px 10px; padding-right: 10px; font-size: small; font-weight: 600">
     Select/Unselect All &nbsp; <input #selectAllBox type="checkbox" (click)="selectUnselectAll(selectAllBox)">
   </div>
+  <span style="padding: 0px;margin-left: 10px;margin-top: 5px;" *ngIf="data && data.data.length > 10">
+    <input    type="text" placeholder="search"
+              style="width: 88%;border: 1px solid lightgreen;margin-bottom: 6px;"
+              class=""
+              value="{{searchedValue}}"
+              (input)="dataSearched($event.target)"/>
+    [ {{filteredListData.length}} ]
+  </span>
   <div *ngIf="data" style="max-height: 400px; overflow-y: auto">
+    <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary); cursor: pointer;"
+         *ngFor="let element of filteredListData; let i = index" (click)="dataOptionToggled(i)">
+      <span style="flex: 1 1 auto; padding: 0">{{data.data[element].label}}</span>
+      <input type="checkbox" [disabled]="!data.data[element].enabled" style="align-self: center"
+             [checked]="data.data[element].selected">
+    </div>
     <div style="display: flex; flex-direction: row; margin: 5px 10px; padding: 10px; border: 1px solid var(--colorPrimary)"
-         *ngFor="let element of data.data; let i = index">
-      <span style="flex: 1 1 auto; padding: 0">{{element.label}}</span>
-      <input type="checkbox" [disabled]="!element.enabled" style="align-self: center"
-             [checked]="element.selected" (click)="dataOptionToggled(i)">
+          *ngIf="data.data.length > 0 && filteredListData.length === 0">
+      <span style="flex: 1 1 auto; padding: 0; color: red; text-align: center;">No data for search '{{searchedValue}}'</span>
     </div>
   </div>
   <button class="ok-button" style="align-self: flex-end" (click)="applySelected()">Apply</button>

@@ -31,6 +31,7 @@ export class MappedTutorDataComponent implements OnInit {
   showClientContactedDetails = false;
   showEmployeeActionDetails = false;
   showEnquiryDetails = false;
+  showCustomerDetails = false;
   showEmployeeActionButtons = false;
 
   formEditMandatoryDisbaled = true;
@@ -70,11 +71,11 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   private setDisabledStatus() {
-    if (this.selectedRecordMappingStatus === 'PENDING') {
+    if (this.selectedRecordMappingStatus === 'Pending') {
       this.formEditMandatoryDisbaled = false;
       this.takeActionDisabled = false;
     }
-    if (this.selectedRecordMappingStatus === 'DEMO_READY') {
+    if (this.selectedRecordMappingStatus === 'Demo Ready') {
       this.takeActionDisabled = false;
     }
   }

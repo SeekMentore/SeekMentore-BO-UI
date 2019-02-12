@@ -39,7 +39,7 @@ export class BecomeTutorDataComponent implements OnInit {
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
-  applicationStatusFilterOptions = CommonFilterOptions.applicationStatusFilterOptions;
+  applicationStatusFilterOptions = CommonFilterOptions.publicApplicationStatusFilterOptions;
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
   primaryProfessionFilterOptions = CommonFilterOptions.primaryProfessionFilterOptions;
@@ -162,5 +162,11 @@ export class BecomeTutorDataComponent implements OnInit {
     if (data['success']) {
       context.editRecordForm = false;
     } 
+  }
+
+  downloadProfile() {
+    const tentativeTutorId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-tentativeTutorId');
+    tentativeTutorId.value = this.tutorRecord.getProperty('tentativeTutorId');
+    this.utilityService.submitForm('profileDownloadForm', '/rest/support/downloadAdminBecomeTutorProfilePdf', 'POST')
   }
 }

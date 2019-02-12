@@ -1,3 +1,18 @@
-<p>
-  subscription-packages works!
-</p>
+<div>
+  <div id="subscription-packages-list-page" *ngIf="!showSubscriptionPackagesData">
+    <app-grid #currentSubscriptionPackagesGrid id="current-subscription-packages-grid" [gridMetaData]="currentSubscriptionPackagesGridMetaData"></app-grid>
+    <app-grid #historySubscriptionPackagesGrid id="history-subscription-packages-grid" [gridMetaData]="historySubscriptionPackagesGridMetaData"></app-grid>
+  </div>
+  <div id="subscription-packages-data-page" *ngIf="showSubscriptionPackagesData">
+    <button
+      id="back-to-subscription-packages-listing-button"
+      class="back-to-listing-button ok-button" (click)="toggleVisibilitySubscriptionPackagesGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-subscription-package-data 
+                  [subscriptionPackageRecord]="subscriptionPackageRecord" 
+                  [subscriptionPackageDataAccess]="subscriptionPackageDataAccess"
+                  [selectedRecordGridType]="selectedRecordGridType">
+    </app-subscription-package-data>
+  </div>
+</div>

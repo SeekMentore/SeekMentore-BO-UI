@@ -20,4 +20,7 @@ export class LcpConstants {
   static user_type_admin = 'admin';
   static grid_generic_no_record_selected_error = 'No record selected for operation';
   static prompt_dialog_title = 'Please provide your comments';
+  static enter_old_password = 'Please enter Old Password';
+  static enter_new_password = 'Please enter New Password';
+  static enter_retype_new_password = 'Please enter Re-Type New Password';
 }

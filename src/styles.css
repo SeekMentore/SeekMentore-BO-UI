@@ -671,3 +671,8 @@ div.form-container-div {
   transition: all 0.3s;
   align-self: stretch;
 }
+
+.back-to-listing-button {
+  margin-left: 20px;
+  margin-top: 2%;
+}

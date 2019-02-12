@@ -1,15 +1,40 @@
-<div id="{{'uigrid-'+grid.id}}" class="uigrid" *ngIf="!hidden">
+<div id="{{'uigrid-collapsed-form'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.isCollapsable && !grid.stateExpanded">
+  <!--Title Bar-->
+  <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
+      <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'}}" class="uigrid-row">
+          <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'}}" class="uigrid-cell fill"
+                style="justify-content: center; align-items: center">
+             <i
+              id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-expandCollapseGrid'}}"
+              class="fas fa-plus uigrid-order-icon-button collapse-expand-icon" style="padding: 2px"
+              (click)="expandGrid()" *ngIf="!grid.stateExpanded"></i>
+            <span id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
+                  class="span-title">{{grid.title}}</span>
+            <button
+              id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
+              class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
+              <i class="fa fa-download" style="color: white;"></i>Download Data
+            </button>
+          </div>
+      </div>
+  </div>
+</div>
+<div id="{{'uigrid-expanded-form'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.stateExpanded">
   <!--Title Bar-->
   <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
     <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'}}" class="uigrid-row">
       <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'}}" class="uigrid-cell fill"
            style="justify-content: center; align-items: center">
+         <i
+          id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-expandCollapseGrid'}}"
+          class="fas fa-minus uigrid-order-icon-button collapse-expand-icon" style="padding: 2px"
+          (click)="collapseGrid()" *ngIf="grid.isCollapsable && grid.stateExpanded"></i>
         <span id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
               class="span-title">{{grid.title}}</span>
         <button
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
-          class="uigrid-green-button" (click)="downloadGridData()">
-          Download Data
+          class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
+          <i class="fa fa-download" style="color: white;"></i>Download Data
         </button>
         <button id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-applyFilter'}}"
                 *ngIf="grid.isFilterCapable" class="uigrid-green-button" (click)="applyFilter()">
@@ -21,7 +46,7 @@
         </button>
         <label
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE'}}"
-          class="tab_container" (change)="toggleRemoteLoad('ONLINE')">
+          class="tab_container" (change)="toggleRemoteLoad('ONLINE')" *ngIf="grid.showOfflineToggle">
           <input
             id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE-radio-onlineOfflineBtn'}}"
             type="radio"
@@ -33,7 +58,7 @@
         </label>
         <label
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE'}}"
-          class="tab_container" (change)="toggleRemoteLoad('OFFLINE')">
+          class="tab_container" (change)="toggleRemoteLoad('OFFLINE')" *ngIf="grid.showOfflineToggle">
           <input
             id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-radio-onlineOfflineBtn'}}"
             type="radio"
@@ -97,6 +122,10 @@
             id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'+'-input-selectionColumnSelectUnselectAll'}}"
             title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
         </span>
+        <span
+          id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'}}"
+          *ngIf="!grid.hasSelectionColumn" class="uigrid-cell select_box">
+        </span>
         <div
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id}}"
           class="uigrid-cell uigrid-cell-column-name" *ngFor="let column of grid.columns"
@@ -155,6 +184,9 @@
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-span-uigrid-cell-select-box'}}"
           *ngIf="grid.hasSelectionColumn" class="uigrid-cell select_box"></span>
+        <span
+          id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-span-uigrid-cell-select-box'}}"
+          *ngIf="!grid.hasSelectionColumn" class="uigrid-cell select_box"></span>
         <div
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id}}"
           *ngFor="let column of grid.columns" [ngStyle]="{'display' : getColumnDisplayStyle(column)}"
@@ -220,7 +252,7 @@
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-input-GT'}}"
                 #filterNumberGT
                 class="number_input {{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                (input)="columnFilteredGreaterNumberChanged(column,$event.target)"
+                (input)="columnFilteredNumberChanged(column, $event.target, 'GT')"
                 type="number" title="GT"><br>
               <span
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-span-EQ'}}">EQ</span>
@@ -228,7 +260,7 @@
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-input-EQ'}}"
                 #filterNumberEQ
                 class="number_input {{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                (input)="columnFilteredEqualNumberChanged(column, $event.target)"
+                (input)="columnFilteredNumberChanged(column, $event.target, 'EQ')"
                 type="number" title="EQ"><br>
               <span
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-span-LT'}}">LT</span>
@@ -236,7 +268,7 @@
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'+'-input-LT'}}"
                 #filterNnumberLT
                 class="number_input {{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
-                (input)="columnFilteredLowerNumberChanged(column, $event.target)"
+                (input)="columnFilteredNumberChanged(column, $event.target, 'LT')"
                 type="number" title="LT">
             </div>
             <div
@@ -254,7 +286,7 @@
                 <input
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-date'+'-div-after'+'-input-after'}}"
                   type="text" ngbDatepicker #date1="ngbDatepicker" class="date_input"
-                  (dateSelect)="columnFilteredAfterDateChanged(column, $event, filterDdateLabelAfter)">
+                  (dateSelect)="columnFilteredDateChanged(column, $event, filterDdateLabelAfter, 'After')">
               </div>
               <div
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-date'+'-div-on'}}">
@@ -268,7 +300,7 @@
                 <input
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-date'+'-div-after'+'-input-on'}}"
                   type="text" ngbDatepicker #date2="ngbDatepicker" class="date_input"
-                  (dateSelect)="columnFilteredOnDateChanged(column, $event, filterDateLabelOn)"
+                  (dateSelect)="columnFilteredDateChanged(column, $event, filterDateLabelOn, 'On')"
                   title="On">
               </div>
               <div
@@ -283,7 +315,7 @@
                 <input
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-date'+'-div-after'+'-input-before'}}"
                   type="text" ngbDatepicker #date3="ngbDatepicker" class="date_input"
-                  (dateSelect)="columnFilteredBeforeDateChanged(column, $event, filterDateLabelBefore)"
+                  (dateSelect)="columnFilteredDateChanged(column, $event, filterDateLabelBefore, 'Before')"
                   title="Before">
               </div>
             </div>
@@ -293,7 +325,7 @@
               <i
                 id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-list'+'-i-list'}}"
                 class="fas fa-list {{id + 'grid_label'}} {{id + 'grid_column_label' + column.id}}"
-                style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" #filterList
+                style="color: var(--colorPrimary); margin: 0 10px; cursor: pointer;" title="{{lookupMultiRendererForValue(column.filter.listValue, column.filterOptions)}}" #filterList
                 (click)="showMultiSelectFilter(column, filterList)"></i>
             </div>
           </div>
@@ -314,6 +346,9 @@
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'+'-input-checkbox'}}"
           title="select" type="checkbox"
           (change)="selectionButtonCheckedUnchecked(record, $event.target)">
+      </div>
+      <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'}}"
+            class="uigrid-cell select_box" *ngIf="!grid.hasSelectionColumn">
       </div>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-column-'+column.id}}"
             class="uigrid-cell {{column.appliedClassNames}}" *ngFor="let column of grid.columns"
@@ -378,7 +413,7 @@
         <i id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-i-loadPreviousPage'}}"
            class="fas fa-arrow-left" style="color: #1E1E1E" (click)="loadPreviousPage()"></i>
         <span id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-span-page-info'}}"
-              style="margin: 0 20px"><b>Page {{grid.paginator.currentPage}} of {{grid.paginator.totalPages}}</b></span>
+              style="margin: 0 20px"><b>Page {{grid.paginator.totalPages > 0 ? grid.paginator.currentPage : 0}} of {{grid.paginator.totalPages}}</b></span>
         <i id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-i-loadNextPage'}}"
            class="fas fa-arrow-right" style="color: #1E1E1E" (click)="loadNextPage()"></i>
         <input id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-input-goto-page'}}"

@@ -21,35 +21,33 @@ import { SubscriptionRequestedComponent } from 'src/app/login-controlled-pages/e
 import { ComplaintsComponent } from 'src/app/login-controlled-pages/employee/support/complaints/complaints.component';
 import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/super-admin/control-panel/control-panel.component';
 import { ScheduleDemoComponent } from 'src/app/login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
+import { ChangePasswordComponent } from '../login-controlled-pages/change-password/change-password.component';
+import { ForgotPasswordTokenResetComponent } from '../non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
 
 const routes: Routes = [
   {
-    path: 'user', component: LoginControlledPagesComponent,
-    canActivate: [RoutingGuardService],
+    path: 'user', component: LoginControlledPagesComponent, canActivate: [RoutingGuardService],
     children: [
       {path: 'home', component: HomeComponent, canActivate: [RoutingGuardService]},
+      {path: 'changepassword', component: ChangePasswordComponent, canActivate: [RoutingGuardService]},
       {
-        path: 'employee',
-        canActivate: [RoutingGuardService],
+        path: 'employee', canActivate: [RoutingGuardService],
         children: [
           {
-            path: 'superadmin',
-            canActivate: [RoutingGuardService],
+            path: 'superadmin', canActivate: [RoutingGuardService],
             children: [
               {path: 'controlpanel', component: ControlPanelComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
-            path: 'admin',
-            canActivate: [RoutingGuardService],
+            path: 'admin', canActivate: [RoutingGuardService],
             children: [
               {path: 'registeredtutor', component: RegisteredTutorComponent, canActivate: [RoutingGuardService]},
               {path: 'subscribedcustomer', component: SubscribedCustomerComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {
-            path: 'sales',
-            canActivate: [RoutingGuardService],
+            path: 'sales', canActivate: [RoutingGuardService],
             children: [
               {path: 'allenquiries', component: AllEnquiriesComponent, canActivate: [RoutingGuardService]},
               {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent, canActivate: [RoutingGuardService]},
@@ -59,8 +57,7 @@ const routes: Routes = [
             ]
           },
           {
-            path: 'support',
-            canActivate: [RoutingGuardService],
+            path: 'support', canActivate: [RoutingGuardService],
             children: [
               {path: 'tutorregistration', component: TutorRegistrationComponent, canActivate: [RoutingGuardService]},
               {path: 'enquiryregistration', component: EnquiryRegistrationComponent, canActivate: [RoutingGuardService]},
@@ -71,16 +68,18 @@ const routes: Routes = [
           }
         ]
       },
-      {path: '', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'},
-      {path: '**', redirectTo: '/public/error?errorCode=101', pathMatch: 'full'}
+      {path: '', redirectTo: '/public/error/101', pathMatch: 'full'},
+      {path: '**', redirectTo: '/public/error/101', pathMatch: 'full'}
     ]
   },
   {
     path: 'public', component: NonLoginPagesComponent,
     children: [
+      {path: 'error/:code', component: ErrorComponent},
       {path: 'error', component: ErrorComponent},
       {path: 'login', component: LoginComponent},
       {path: 'resetpassword', component: ResetPasswordComponent},
+      {path: 'resetpassword/:tokenId/:token', component: ForgotPasswordTokenResetComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'},
       {path: '**', redirectTo: 'login', pathMatch: 'full'}
     ]
@@ -93,7 +92,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {useHash: true})
   ],
   exports: [
     RouterModule

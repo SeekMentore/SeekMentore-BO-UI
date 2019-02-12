@@ -10,6 +10,9 @@ import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 import {AdminCommonFunctions} from 'src/app/utils/admin-common-functions';
 import {ActionButton} from 'src/app/utils/grid/action-button';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-subscription-requested',
@@ -54,7 +57,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedSubscriptionGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.nonContactedSubscriptionGridMetaData = null;
     this.nonVerifiedSubscriptionGridMetaData = null;
     this.verifiedSubscriptionGridMetaData = null;
@@ -65,10 +68,15 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     this.showSubscriptionData = false;
     this.selectedSubscriptionRecord = null;
     this.subscriptionDataAccess = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {
@@ -151,13 +159,20 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
-        restURL: restURL
+        restURL: restURL,
+        download: {
+          url: downloadURL,
+          preDownload: (gridComponentObject: GridComponent) => {
+            gridComponentObject.addExtraParams('grid', gridExtraParam);
+          }
+        }
       },
       columns: [
         {
@@ -191,8 +206,9 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           id: 'applicationStatus',
           headerName: 'Application Status',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.applicationStatusFilterOptions,
-          mapping: 'applicationStatus'
+          filterOptions: CommonFilterOptions.publicApplicationStatusFilterOptions,
+          mapping: 'applicationStatus',
+          renderer: AdminCommonFunctions.publicApplicationStatusRenderer
         },
         {
           id: 'contactNumber',
@@ -329,49 +345,49 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
 
     this.nonContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList', 
+      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/nonContactedSubscriptionsList',
                               [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
       htmlDomElementId: 'non-contacted-subscription-grid',
       hidden: false
     };
 
     this.nonVerifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList', 
-                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton]),
+      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/nonVerifiedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton], true),
       htmlDomElementId: 'non-verified-subscription-grid',
       hidden: false
     };
 
     this.verifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList', 
-                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton]),
+      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/verifiedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton], true),
       htmlDomElementId: 'verified-subscription-grid',
       hidden: false
     };
 
     this.verificationFailedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList', 
-                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton]),
+      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/verificationFailedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton], true),
       htmlDomElementId: 'verification-failed-subscription-grid',
       hidden: false
     };
 
     this.toBeReContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList', 
-                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton]),
+      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/toBeReContactedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton], true),
       htmlDomElementId: 'to-be-recontacted-subscription-grid',
       hidden: false
     };
 
     this.selectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList', []),
+      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/selectedSubscriptionsList', [], true),
       htmlDomElementId: 'selected-subscription-grid',
       hidden: false
     };
 
     this.rejectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList', 
-                              [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton]),
+      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/rejectedSubscriptionsList', 
+                              [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton], true),
       htmlDomElementId: 'rejected-subscription-grid',
       hidden: false
     };

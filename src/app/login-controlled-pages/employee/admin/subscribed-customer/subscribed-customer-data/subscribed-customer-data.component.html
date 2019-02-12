@@ -3,11 +3,19 @@
             [gridMetaData]="currentPackagesGridMetaData"></app-grid>
   <app-grid *ngIf="customerDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
             [gridMetaData]="historyPackagesGridMetaData"></app-grid>
-
+  <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
+    <input type="text" value="" size="10" name="customerId" id="profileDownload-customerId" />
+  </form>
   <div *ngIf="renderCustomerRecordForm" class="form-container-div">
     <form class="form-container" style="max-width: 80%">
       <div *ngIf="customerDataAccess.formDataEditAccess"
             class="form-container-toggle-button">
+        <button type="submit"
+            class="btnSubmit"
+            style="width: 140px; height: 46px;"
+            (click)="downloadProfile()">            
+            <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download
+        </button>
         <label class="tab_container" (change)="editRecordForm = false;">
           <input type="radio" checked name="editFormChoice">
           <span class="tab_checkmark left">View</span>
@@ -27,15 +35,17 @@
         </tr>
         <tr>
           <td class="td-label"><label>Contact Number</label></td>
-          <td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
+          <td><label class="data">{{customerRecord.property['contactNumber']}}</label></td>
+          <!--<td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('contactNumber', $event, 'string')"></td>
+                     (change)="updateCustomerProperty('contactNumber', $event, 'string')"></td>-->
         </tr>
         <tr>
           <td class="td-label"><label>Email Id</label></td>
-          <td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
+          <td><label class="data">{{customerRecord.property['emailId']}}</label></td>
+          <!--<td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('emailId', $event, 'string')"></td>
+                     (change)="updateCustomerProperty('emailId', $event, 'string')"></td>-->
         </tr>        
         <tr>
           <td class="td-label"><label>Student Grades</label></td>

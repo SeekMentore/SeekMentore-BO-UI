@@ -1,15 +1,18 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { GridDataInterface, GridComponent } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { Column } from 'src/app/utils/grid/column';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { ActionButton } from 'src/app/utils/grid/action-button';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-enquiries',
@@ -42,14 +45,19 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedAllEnquiriesObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(public utilityService: AppUtilityService, public helperService: HelperService, private router: Router) { 
     this.pendingEnquiriesGridMetaData = null;
     this.completedEnquiriesGridMetaData = null;
     this.abortedEnquiriesGridMetaData = null;   
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {
@@ -103,10 +111,11 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -151,55 +160,13 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'grade',
         renderer: AdminCommonFunctions.studentGradesRenderer
       }, {
-        id: 'tutorName',
-        headerName: 'Tutor Name',
-        dataType: 'string',
-        mapping: 'tutorName'
-      }, {
-        id: 'tutorEmail',
-        headerName: 'Tutor Email',
-        dataType: 'string',
-        mapping: 'tutorEmail'
-      }, {
-        id: 'tutorContactNumber',
-        headerName: 'Tutor Contact Number',
-        dataType: 'string',
-        mapping: 'tutorContactNumber'
-      }, {
-        id: 'quotedClientRate',
-        headerName: 'Quoted Client Rate',
-        dataType: 'number',
-        mapping: 'quotedClientRate'
-      }, {
-        id: 'negotiatedRateWithClient',
-        headerName: 'Negotiated Rate With Client',
-        dataType: 'number',
-        mapping: 'negotiatedRateWithClient'
-      }, {
-        id: 'clientNegotiationRemarks',
-        headerName: 'Client Negotiation Remarks',
-        dataType: 'string',
-        mapping: 'clientNegotiationRemarks',
-        lengthyData: true
-      }, {
-        id: 'isMapped',
-        headerName: 'Is Mapped',
+        id: 'preferredTeachingType',
+        headerName: 'Preferred Teaching Type',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'isMapped',
-        renderer: GridCommonFunctions.yesNoRenderer
-      }, {
-        id: 'matchStatus',
-        headerName: 'Match Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-        mapping: 'matchStatus'
-      }, {
-        id: 'adminRemarks',
-        headerName: 'Admin Remarks',
-        dataType: 'string',
-        mapping: 'adminRemarks',
-        lengthyData: true
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'preferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
       }, {
         id: 'locationDetails',
         headerName: 'Location Details',
@@ -220,13 +187,56 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'additionalDetails',
         lengthyData: true
       }, {
-        id: 'preferredTeachingType',
-        headerName: 'Preferred Teaching Type',
+        id: 'matchStatus',
+        headerName: 'Match Status',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
-        mapping: 'preferredTeachingType',
-        multiList: true,
-        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+        filterOptions: CommonFilterOptions.matchStatusFilterOptions,
+        mapping: 'matchStatus',
+        renderer: AdminCommonFunctions.matchStatusRenderer
+      }, {
+        id: 'quotedClientRate',
+        headerName: 'Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'quotedClientRate'
+      }, {
+        id: 'negotiatedRateWithClient',
+        headerName: 'Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'negotiatedRateWithClient'
+      }, {
+        id: 'clientNegotiationRemarks',
+        headerName: 'Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'clientNegotiationRemarks',
+        lengthyData: true
+      }, {
+        id: 'adminRemarks',
+        headerName: 'Admin Remarks',
+        dataType: 'string',
+        mapping: 'adminRemarks',
+        lengthyData: true
+      }, {
+        id: 'isMapped',
+        headerName: 'Is Mapped',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isMapped',
+        renderer: GridCommonFunctions.yesNoRenderer
+      }, {
+        id: 'tutorName',
+        headerName: 'Tutor Name',
+        dataType: 'string',
+        mapping: 'tutorName'
+      }, {
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      }, {
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
       }],
       hasSelectionColumn: true,
       selectionColumn: {
@@ -294,19 +304,19 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     };
 
     this.toBeMappedEnquiriesGridMetaData = {
-      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList', [pending, aborted]),
+      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList', [pending, aborted], true),
       htmlDomElementId: 'to-be-mapped-enquiries-grid',
       hidden: false
     };
 
     this.completedEnquiriesGridMetaData = {
-      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', []),
+      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', [], true),
       htmlDomElementId: 'completed-enquiries-grid',
       hidden: false
     };
 
     this.abortedEnquiriesGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', [pending]),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', [pending], true),
       htmlDomElementId: 'aborted-enquiries-grid',
       hidden: false
     }; 

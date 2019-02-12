@@ -9,6 +9,10 @@ import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
 import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
 import {ActionButton} from 'src/app/utils/grid/action-button';
 import {LcpConstants} from 'src/app/utils/lcp-constants';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-query-submitted',
@@ -37,14 +41,19 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
 
   interimHoldSelectedQueryGridObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.nonContactedQueryGridMetaData = null;
     this.nonAnsweredQueryGridMetaData = null;
     this.answeredQueryGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {
@@ -81,13 +90,20 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
     }];
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, downloadURL: string, gridExtraParam: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
-        restURL: restURL
+        restURL: restURL,
+        download: {
+          url: downloadURL,
+          preDownload: (gridComponentObject: GridComponent) => {
+            gridComponentObject.addExtraParams('grid', gridExtraParam);
+          }
+        }
       },
       columns: [{
           id: 'queryRequestedDate',
@@ -111,7 +127,8 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
           headerName: 'Query Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.queryStatusFilterOptions,
-          mapping: 'queryStatus'
+          mapping: 'queryStatus',
+          renderer: AdminCommonFunctions.queryStatusRenderer
         },
         {
           id: 'emailId',
@@ -229,19 +246,19 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
     let putOnHoldButton = this.getCustomButton('contacted', 'Put on Hold', 'btnReject', 'hold', true, 'Put query on hold', 'Please provide your explanation for putting query on hold.');
 
     this.nonContactedQueryGridMetaData = {
-      grid: this.getGridObject('nonContactedQueryGrid', 'Fresh Queries', '/rest/support/nonContactedQueryList', [respondButton, putOnHoldButton]),
+      grid: this.getGridObject('nonContactedQueryGrid', 'Fresh Queries', '/rest/support/nonContactedQueryList', '/rest/support/downloadAdminReportSubmitQueryList', '/nonContactedQueryList', [respondButton, putOnHoldButton]),
       htmlDomElementId: 'non-contacted-query-grid',
       hidden: false
     };
 
     this.nonAnsweredQueryGridMetaData = {
-      grid: this.getGridObject('nonAnsweredQueryGrid', 'Put On Hold Queries', '/rest/support/nonAnsweredQueryList', [respondButton]),
+      grid: this.getGridObject('nonAnsweredQueryGrid', 'Put On Hold Queries', '/rest/support/nonAnsweredQueryList', '/rest/support/downloadAdminReportSubmitQueryList', '/nonAnsweredQueryList', [respondButton], true),
       htmlDomElementId: 'non-answered-query-grid',
       hidden: false
     };
 
     this.answeredQueryGridMetaData = {
-      grid: this.getGridObject('answeredQueryGrid', 'Responded Queries', '/rest/support/answeredQueryList', []),
+      grid: this.getGridObject('answeredQueryGrid', 'Responded Queries', '/rest/support/answeredQueryList', '/rest/support/downloadAdminReportSubmitQueryList', '/answeredQueryList', [], true),
       htmlDomElementId: 'answered-query-grid',
       hidden: false
     };

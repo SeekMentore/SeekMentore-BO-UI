@@ -3,17 +3,17 @@ import { AppUtilityService } from '../../utils/app-utility.service';
 import { HelperService } from '../../utils/helper.service';
 import { LcpConstants } from "../../utils/lcp-constants";
 import { MultiSelectInputData } from '../../utils/multi-select-input/multi-select-input.component';
+import { AlertDialogEvent } from '../alert-dialog/alert-dialog.component';
 import { ActionButton } from './action-button';
 import { Column } from './column';
 import { Grid } from './grid';
-import { GridCommonFunctions } from './grid-common-functions';
-import { GridRecord } from './grid-record';
-import { Sorter, SortingOrder } from './sorter';
-import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
-import { AlertDialogEvent } from '../alert-dialog/alert-dialog.component';
 import { ColumnExtraDataDisplayInputData } from './grid-column-extra-data/grid-column-extra-data.component';
-import { CommonUtilityFunctions } from '../common-utility-functions';
+import { GridCommonFunctions } from './grid-common-functions';
 import { GridConstants } from './grid-constants';
+import { GridRecord } from './grid-record';
+import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
+import { Sorter, SortingOrder } from './sorter';
+import { Filter } from './filter';
 
 @Component({
   selector: 'app-grid',
@@ -78,7 +78,10 @@ export class GridComponent implements OnInit, AfterViewInit {
         hasSelectionColumn ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.selectionColumn) ? this.gridMetaData.grid.selectionColumn : null) : null,
         hasActionColumn,
         hasActionColumn ? (GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.actionColumn) ? this.gridMetaData.grid.actionColumn : null) : null,
-        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.offline) ? this.gridMetaData.grid.offline : false,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.onlineOfflineToggle) ? this.gridMetaData.grid.onlineOfflineToggle : false,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.isCollapsable) ? this.gridMetaData.grid.isCollapsable : true,
+        GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.collapsed) ? this.gridMetaData.grid.collapsed : false
       );
     }
     this.hidden = this.gridMetaData.hidden;
@@ -174,6 +177,14 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
     };
     this.helperService.showAlertDialog(myListener);
+  }
+
+  public collapseGrid() {
+    this.grid.stateExpanded = false;
+  }
+
+  public expandGrid() {
+    this.grid.stateExpanded = true;
   }
 
   public downloadGridData() {
@@ -428,7 +439,6 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  /**REVIEW */
   public columnFilteredTextChanged(column: Column, element: HTMLInputElement) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
@@ -458,27 +468,51 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public toggleCaseSensitiveSearch(column: Column, caseSensitive: boolean) {
     column.filter.textCaseSensitiveSearch = caseSensitive;
-    // console.log("My Input", column);
   }
 
-  /**REVIEW */
-  public columnFilteredGreaterNumberChanged(column: Column, element: HTMLInputElement) {
+  public columnFilteredNumberChanged(column: Column, element: HTMLInputElement, field: string) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
-        const filter = column.filter;
-        const parsedValue = parseInt(element.value, 10);
-        if (isNaN(parsedValue)) {
-          /**Validation */
-          return;
+        const filter: Filter = column.filter;
+        const stringValue: string = element.value
+        if (GridCommonFunctions.checkStringAvailability(stringValue)) {
+          const numberValue: number = parseInt(stringValue);
+          if (isNaN(numberValue)) {
+            const myListener: AlertDialogEvent = {
+              isSuccess: false,
+              message: 'Please provide valid number in ' + field + ' filter for ' + column.headerName,
+              onButtonClicked: () => {
+              }
+            };
+            this.helperService.showAlertDialog(myListener);
+            return;
+          } else {
+            if (field === 'GT') {
+              filter.greaterThan = numberValue;
+            } else if (field === 'EQ') {
+              filter.equalTo = numberValue;
+            } else if (field === 'LT') {
+              filter.lessThan = numberValue;
+            } 
+          }          
+        } else {
+          if (field === 'GT') {
+            filter.greaterThan = null;
+          } else if (field === 'EQ') {
+            filter.equalTo = null;
+          } else if (field === 'LT') {
+            filter.lessThan = null;
+          } 
         }
-        if (element.value && element.value.toString().trim() !== '') {
-          filter.greaterThan = parsedValue;
-          column.isFiltered = true;
+        if (GridCommonFunctions.checkObjectAvailability(filter.greaterThan)
+            || GridCommonFunctions.checkObjectAvailability(filter.equalTo)
+            || GridCommonFunctions.checkObjectAvailability(filter.lessThan)) {
+              column.isFiltered = true;
         } else {
           column.isFiltered = false;
         }
         this.hideShowRemoveFilterTab(column);
-        return;
+        return;  
       }
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -498,148 +532,23 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  /**REVIEW */
-  public columnFilteredEqualNumberChanged(column: Column, element: HTMLInputElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const filter = column.filter;
-        const parsedValue = parseInt(element.value, 10);
-        if (isNaN(parsedValue)) {
-          /**Validation */
-          return;
-        }
-        if (element.value && element.value.toString().trim() !== '') {
-          filter.equalTo = parsedValue;
-          column.isFiltered = true;
-        } else {
-          column.isFiltered = false;
-        }
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  /**REVIEW */
-  public columnFilteredLowerNumberChanged(column: Column, element: HTMLInputElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const filter = column.filter;
-        const parsedValue = parseInt(element.value, 10);
-        if (isNaN(parsedValue)) {
-          /**Validation */
-          return;
-        }
-        if (element.value && element.value.toString().trim() !== '') {
-          filter.lessThan = parsedValue;
-          column.isFiltered = true;
-        } else {
-          column.isFiltered = false;
-        }
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  public columnFilteredBeforeDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
+  public columnFilteredDateChanged(column: Column, datePickerValue: any, label: HTMLElement, field: string) {
     if (this.grid.isFilterCapable) {
       if (column.filterable) {
         const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-        const filter = column.filter;
-        filter.beforeDate = date_value;
-        filter.beforeDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getUTCFullYear() % 100);
-        column.isFiltered = true;
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  public columnFilteredAfterDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-        const filter = column.filter;
-        filter.afterDate = date_value;
-        filter.afterDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getUTCFullYear() % 100);
-        column.isFiltered = true;
-        this.hideShowRemoveFilterTab(column);
-        return;
-      }
-      const myListener: AlertDialogEvent = {
-        isSuccess: false,
-        message: 'Column does not have Filter capability',
-        onButtonClicked: () => {
-        }
-      };
-      this.helperService.showAlertDialog(myListener);
-      return;
-    }
-    const myListener: AlertDialogEvent = {
-      isSuccess: false,
-      message: 'Grid does not have Filter capability',
-      onButtonClicked: () => {
-      }
-    };
-    this.helperService.showAlertDialog(myListener);
-  }
-
-  public columnFilteredOnDateChanged(column: Column, datePickerValue: any, label: HTMLElement) {
-    if (this.grid.isFilterCapable) {
-      if (column.filterable) {
-        const date_value = new Date(datePickerValue.year, datePickerValue.month - 1, datePickerValue.day);
-        const filter = column.filter;
-        filter.onDate = date_value;
-        filter.onDateMillis = date_value.getTime();
-        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getUTCFullYear() % 100);
+        const filter: Filter = column.filter;
+        const localTimezoneOffsetInMilliseconds: number = (new Date().getTimezoneOffset() * 60 * 1000);
+        if (field === 'After') {
+          filter.afterDate = date_value;
+          filter.afterDateMillis = date_value.getTime() - localTimezoneOffsetInMilliseconds;
+        } else if (field === 'On') {
+          filter.onDate = date_value;
+          filter.onDateMillis = date_value.getTime() - localTimezoneOffsetInMilliseconds;
+        } else if (field === 'Before') {
+          filter.beforeDate = date_value;
+          filter.beforeDateMillis = date_value.getTime() - localTimezoneOffsetInMilliseconds;
+        }        
+        label.innerHTML = date_value.getDate() + '/' + (date_value.getMonth() + 1) + '/' + (date_value.getFullYear() % 100);
         column.isFiltered = true;
         this.hideShowRemoveFilterTab(column);
         return;
@@ -839,10 +748,10 @@ export class GridComponent implements OnInit, AfterViewInit {
   public handleMulitSelectApply(data: MultiSelectInputData) {
     switch (data.operation) {
       case 'column_filter': {
-        let columnInstance = null;
+        let columnInstance: Column = null;
         const columnId = data.meta_data['columnId'];
         const selectedOptionsValue: string[] = [];
-        const sourceButton: HTMLElement = data.meta_data['sourceButton'];
+        //const sourceButton: HTMLElement = data.meta_data['sourceButton'];
         for (const column of this.grid.columns) {
           if (column.id === columnId) {
             columnInstance = column;
@@ -855,13 +764,13 @@ export class GridComponent implements OnInit, AfterViewInit {
               if (option['value'] === element['value']) {
                 option['isSelected'] = element['selected'];
                 if (option['isSelected']) {
-                  selectedOptionsValue.push(option['value']);
+                  selectedOptionsValue.push(option['label']);
                 }
               }
             }
           }
         }
-        sourceButton.title = selectedOptionsValue.join(', ');
+        //sourceButton.title = selectedOptionsValue.join(', ');
         this.addListFilterQuery(columnInstance);
         break;
       }
@@ -877,6 +786,14 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
     }
     this.closeMultiSelectInput();
+  }
+
+  public lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: any []) {
+    let columnFilterIconTitle: string = GridCommonFunctions.lookupMultiRendererForValue(multivalueSplittedList, lookupList, ', ');
+    if (GridCommonFunctions.checkStringAvailability(columnFilterIconTitle)) {
+      return columnFilterIconTitle;
+    }
+    return 'No filter selected';
   }
 
   /*

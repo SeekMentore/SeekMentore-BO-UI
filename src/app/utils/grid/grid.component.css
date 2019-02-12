@@ -379,3 +379,11 @@ i {
 .text-color-blue {  
   color: blue;
 }
+
+.collapse-expand-icon {
+  padding-left: 3px !important;
+  border-radius: 0% !important;
+  border: 1px solid black !important;
+  margin-right: 30px !important;
+  padding-top: 1px !important;
+}

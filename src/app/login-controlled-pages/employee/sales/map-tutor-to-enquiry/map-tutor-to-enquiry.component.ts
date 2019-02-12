@@ -10,6 +10,9 @@ import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { HelperService } from 'src/app/utils/helper.service';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-map-tutor-to-enquiry',
@@ -27,12 +30,17 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
   interimHoldSelectedEnquiryRecord: GridRecord = null;
   enquiryMappingDataAccess: EnquiryMappingDataAccess = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.toBeMappedEnquiriesGridMetaData = null;
-    this.setUpGridMetaData();
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {
@@ -91,20 +99,32 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         mapping: 'grade',
         renderer: AdminCommonFunctions.studentGradesRenderer
       }, {
-        id: 'tutorName',
-        headerName: 'Tutor Name',
-        dataType: 'string',
-        mapping: 'tutorName'
+        id: 'preferredTeachingType',
+        headerName: 'Preferred Teaching Type',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'preferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
       }, {
-        id: 'tutorEmail',
-        headerName: 'Tutor Email',
-        dataType: 'string',
-        mapping: 'tutorEmail'
+        id: 'locationDetails',
+        headerName: 'Location Details',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
+        mapping: 'locationDetails',
+        renderer: AdminCommonFunctions.locationsRenderer
       }, {
-        id: 'tutorContactNumber',
-        headerName: 'Tutor Contact Number',
+        id: 'addressDetails',
+        headerName: 'Address Details',
         dataType: 'string',
-        mapping: 'tutorContactNumber'
+        mapping: 'addressDetails',
+        lengthyData: true
+      }, {
+        id: 'additionalDetails',
+        headerName: 'Additional Details',
+        dataType: 'string',
+        mapping: 'additionalDetails',
+        lengthyData: true
       }, {
         id: 'quotedClientRate',
         headerName: 'Quoted Client Rate',
@@ -122,18 +142,12 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         mapping: 'clientNegotiationRemarks',
         lengthyData: true
       }, {
-        id: 'isMapped',
-        headerName: 'Is Mapped',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.yesNoFilterOptions,
-        mapping: 'isMapped',
-        renderer: GridCommonFunctions.yesNoRenderer
-      }, {
         id: 'matchStatus',
         headerName: 'Match Status',
         dataType: 'list',
         filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-        mapping: 'matchStatus'
+        mapping: 'matchStatus',
+        renderer: AdminCommonFunctions.matchStatusRenderer
       }, {
         id: 'adminRemarks',
         headerName: 'Admin Remarks',
@@ -141,31 +155,27 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         mapping: 'adminRemarks',
         lengthyData: true
       }, {
-        id: 'locationDetails',
-        headerName: 'Location Details',
-        dataType: 'string',
-        mapping: 'locationDetails',
-        lengthyData: true
-      }, {
-        id: 'addressDetails',
-        headerName: 'Address Details',
-        dataType: 'string',
-        mapping: 'addressDetails',
-        lengthyData: true
-      }, {
-        id: 'additionalDetails',
-        headerName: 'Additional Details',
-        dataType: 'string',
-        mapping: 'additionalDetails',
-        lengthyData: true
-      }, {
-        id: 'preferredTeachingType',
-        headerName: 'Preferred Teaching Type',
+        id: 'isMapped',
+        headerName: 'Is Mapped',
         dataType: 'list',
-        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
-        mapping: 'preferredTeachingType',
-        multiList: true,
-        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isMapped',
+        renderer: GridCommonFunctions.yesNoRenderer
+      }, {
+        id: 'tutorName',
+        headerName: 'Tutor Name',
+        dataType: 'string',
+        mapping: 'tutorName'
+      }, {
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      }, {
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
       }],
       hasSelectionColumn: true,
       selectionColumn: {

@@ -39,6 +39,28 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   interimHoldSelectedMappedTutorRecord: GridRecord = null;
   mappedTutorDataAccess: MappedTutorDataAccess = null;
 
+  studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
+  subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
+  locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
+  preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
+  matchStatusFilterOptions = CommonFilterOptions.matchStatusFilterOptions;
+  mappingStatusFilterOptions = CommonFilterOptions.mappingStatusFilterOptions;
+  yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
+
+  tutorEligibilityCriteria : {
+    matchSubject: boolean,
+    matchGrade: boolean,
+    matchTeachingType: boolean,
+    matchLocation: boolean
+  } = {
+    matchSubject : false,
+    matchGrade: false,
+    matchTeachingType: false,
+    matchLocation: false
+  };
+
+  searchTutorExtraParam : any = null;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.allMappingEligibleTutorsGridMetaData = null;
     this.allMappedTutorsGridMetaData = null;
@@ -73,7 +95,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         this.allMappedTutorsGridObject.refreshGridData();
       }
     }, 0);
-  }
+  }  
 
   public setUpGridMetaData() {
     this.allMappingEligibleTutorsGridMetaData = {
@@ -82,7 +104,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         title: 'Eligible Tutors',
         store: {
           isStatic: false,
-          restURL: '/rest/sales/allMappingEligibleTutorsList'
+          restURL: '/rest/sales/allMappingEligibleTutorsList',
+          preLoad: (gridComponentObject: GridComponent) => {
+            gridComponentObject.addExtraParams('searchTutorExtraParam', this.searchTutorExtraParam);
+          }
         },
         columns: [{
           id: 'name',
@@ -250,31 +275,15 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             }
           }        
         },{
+          id: 'tutorEmail',
+          headerName: 'Tutor Email',
+          dataType: 'string',
+          mapping: 'tutorEmail'
+        },{
           id: 'tutorContactNumber',
           headerName: 'Tutor Contact Number',
           dataType: 'string',
           mapping: 'tutorContactNumber'
-        },{
-          id: 'tutorEmail',
-          headerName: 'Tutor Email Id',
-          dataType: 'string',
-          mapping: 'tutorEmail'
-        },{
-          id: 'quotedTutorRate',
-          headerName: 'Quoted Tutor Rate',
-          dataType: 'number',
-          mapping: 'quotedTutorRate'
-        },{
-          id: 'negotiatedRateWithTutor',
-          headerName: 'Negotiated Rate With Tutor',
-          dataType: 'number',
-          mapping: 'negotiatedRateWithTutor'
-        },{
-          id: 'tutorNegotiationRemarks',
-          headerName: 'Tutor Negotiation Remarks',
-          dataType: 'string',
-          mapping: 'tutorNegotiationRemarks',
-          lengthyData: true
         },{
           id: 'isTutorContacted',
           headerName: 'Is Tutor Contacted',
@@ -301,7 +310,24 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           headerName: 'Mapping Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
-          mapping: 'mappingStatus'
+          mapping: 'mappingStatus',
+          renderer: AdminCommonFunctions.mappingStatusRenderer
+        },{
+          id: 'quotedTutorRate',
+          headerName: 'Quoted Tutor Rate',
+          dataType: 'number',
+          mapping: 'quotedTutorRate'
+        },{
+          id: 'negotiatedRateWithTutor',
+          headerName: 'Negotiated Rate With Tutor',
+          dataType: 'number',
+          mapping: 'negotiatedRateWithTutor'
+        },{
+          id: 'tutorNegotiationRemarks',
+          headerName: 'Tutor Negotiation Remarks',
+          dataType: 'string',
+          mapping: 'tutorNegotiationRemarks',
+          lengthyData: true
         }],
         hasSelectionColumn: true,
         selectionColumn: {
@@ -366,6 +392,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     };
   }
 
+  public selectUnselectEligibility(clause: string, element: HTMLInputElement) {
+    this.tutorEligibilityCriteria[clause] = element.checked;
+  }
+
   handleMappingRequest(context: any, response: any) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
@@ -381,7 +411,21 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   }
 
   searchEligibleMappingTutors() {
-    console.log('to be coded');
+    this.searchTutorExtraParam = this.tutorEligibilityCriteria;
+    this.allMappingEligibleTutorsGridObject.refreshGridData();
+  }
+
+  resetSearchEligibleMappingTutors() {
+    this.tutorEligibilityCriteria['matchSubject'] = false;
+    this.tutorEligibilityCriteria['matchGrade'] = false;
+    this.tutorEligibilityCriteria['matchTeachingType'] = false;
+    this.tutorEligibilityCriteria['matchLocation'] = false;
+    this.searchTutorExtraParam = null;
+    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('tutor-grid-eligibilty-criteria-checkbox');
+    for (let i = 0; i < elements.length; i++) {
+      (<HTMLInputElement>elements.item(i)).checked = false;
+    }
+    this.allMappingEligibleTutorsGridObject.refreshGridData();
   }
 
   handleDataAccessRequest(context: any, response: any) {

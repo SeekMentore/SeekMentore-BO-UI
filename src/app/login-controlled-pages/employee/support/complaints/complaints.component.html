@@ -3,12 +3,13 @@
     <app-grid #customerComplaintGrid id="customer-complaint-grid" [gridMetaData]="customerComplaintGridMetaData"></app-grid>
     <app-grid #tutorComplaintGrid id="tutor-complaint-grid" [gridMetaData]="tutorComplaintGridMetaData"></app-grid>
     <app-grid #employeeComplaintGrid id="employee-complaint-grid" [gridMetaData]="employeeComplaintGridMetaData"></app-grid>
+    <app-grid #holdComplaintGrid id="hold-complaint-grid" [gridMetaData]="holdComplaintGridMetaData"></app-grid>
     <app-grid #resolvedComplaintGrid id="resolved-complaint-grid" [gridMetaData]="resolvedComplaintGridMetaData"></app-grid>
   </div>
   <div id="complaint-data-page" *ngIf="showComplaintData">
     <button
       id="back-to-complaint-listing-button"
-      class="ok-button" (click)="toggleVisibilityComplaintGrid()">
+      class="back-to-listing-button ok-button" (click)="toggleVisibilityComplaintGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-complaint-data [complaintRecord]="selectedComplaintRecord" [complaintDataAccess]="complaintDataAccess"></app-complaint-data>

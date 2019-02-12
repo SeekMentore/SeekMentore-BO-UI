@@ -50,6 +50,10 @@ import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/s
 import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
 import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
 import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
+import { ChangePasswordComponent } from './login-controlled-pages/change-password/change-password.component';
+import { SubscriptionPackageDataComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-data.component';
+import { BreadCrumbComponent } from './login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ForgotPasswordTokenResetComponent } from './non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +99,11 @@ import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sale
     ScheduleDemoComponent,
     ScheduleDemoDataComponent,
     PromptDialogComponent,
-    DemoTrackerDataComponent
+    DemoTrackerDataComponent,
+    ChangePasswordComponent,
+    SubscriptionPackageDataComponent,
+    BreadCrumbComponent,
+    ForgotPasswordTokenResetComponent
   ],
   imports: [
     BrowserModule,

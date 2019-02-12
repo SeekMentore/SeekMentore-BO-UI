@@ -35,7 +35,7 @@ export class EnquiryDataComponent implements OnInit {
   superAccessAwarded = false;
   editRecordForm = false;
 
-  enquiryStatusFilterOptions = CommonFilterOptions.enquiryStatusFilterOptions;
+  enquiryStatusFilterOptions = CommonFilterOptions.publicApplicationStatusFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
@@ -143,5 +143,11 @@ export class EnquiryDataComponent implements OnInit {
     if (response['success']) {
       context.editRecordForm = false;
     }
+  }
+
+  downloadProfile() {
+    const enquiryId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-enquiryId');
+    enquiryId.value = this.enquiryRecord.getProperty('enquiryId');
+    this.utilityService.submitForm('profileDownloadForm', '/rest/support/downloadAdminFindTutorProfilePdf', 'POST')
   }
 }

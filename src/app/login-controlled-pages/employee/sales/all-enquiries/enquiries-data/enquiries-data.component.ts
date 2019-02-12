@@ -117,6 +117,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
       grid: {
         id: 'currentCustomerAllPendingEnquiriesGrid',
         title: 'Current Customer Pending Enquiries',
+        collapsed: true,
         store: {
           isStatic: false,
           restURL: '/rest/sales/currentCustomerAllPendingEnquiriesList'
@@ -135,24 +136,36 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           id: 'grade',
           headerName: 'Grade',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.complaintStatusFilterOptions,
+          filterOptions: CommonFilterOptions.studentGradesFilterOptions,
           mapping: 'grade',
           renderer: AdminCommonFunctions.studentGradesRenderer
         }, {
-          id: 'tutorName',
-          headerName: 'Tutor Name',
-          dataType: 'string',
-          mapping: 'tutorName'
+          id: 'preferredTeachingType',
+          headerName: 'Preferred Teaching Type',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+          mapping: 'preferredTeachingType',
+          multiList: true,
+          renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
         }, {
-          id: 'tutorEmail',
-          headerName: 'Tutor Email',
-          dataType: 'string',
-          mapping: 'tutorEmail'
+          id: 'locationDetails',
+          headerName: 'Location Details',
+          dataType: 'list',
+          filterOptions: CommonFilterOptions.locationsFilterOptions,
+          mapping: 'locationDetails',
+          renderer: AdminCommonFunctions.locationsRenderer
         }, {
-          id: 'tutorContactNumber',
-          headerName: 'Tutor Contact Number',
+          id: 'addressDetails',
+          headerName: 'Address Details',
           dataType: 'string',
-          mapping: 'tutorContactNumber'
+          mapping: 'addressDetails',
+          lengthyData: true
+        }, {
+          id: 'additionalDetails',
+          headerName: 'Additional Details',
+          dataType: 'string',
+          mapping: 'additionalDetails',
+          lengthyData: true
         }, {
           id: 'quotedClientRate',
           headerName: 'Quoted Client Rate',
@@ -170,18 +183,12 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           mapping: 'clientNegotiationRemarks',
           lengthyData: true
         }, {
-          id: 'isMapped',
-          headerName: 'Is Mapped',
-          dataType: 'list',
-          filterOptions: CommonFilterOptions.yesNoFilterOptions,
-          mapping: 'isMapped',
-          renderer: GridCommonFunctions.yesNoRenderer
-        }, {
           id: 'matchStatus',
           headerName: 'Match Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-          mapping: 'matchStatus'
+          mapping: 'matchStatus',
+          renderer: AdminCommonFunctions.matchStatusRenderer
         }, {
           id: 'adminRemarks',
           headerName: 'Admin Remarks',
@@ -189,31 +196,27 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           mapping: 'adminRemarks',
           lengthyData: true
         }, {
-          id: 'locationDetails',
-          headerName: 'Location Details',
-          dataType: 'string',
-          mapping: 'locationDetails',
-          lengthyData: true
-        }, {
-          id: 'addressDetails',
-          headerName: 'Address Details',
-          dataType: 'string',
-          mapping: 'addressDetails',
-          lengthyData: true
-        }, {
-          id: 'additionalDetails',
-          headerName: 'Additional Details',
-          dataType: 'string',
-          mapping: 'additionalDetails',
-          lengthyData: true
-        }, {
-          id: 'preferredTeachingType',
-          headerName: 'Preferred Teaching Type',
+          id: 'isMapped',
+          headerName: 'Is Mapped',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
-          mapping: 'preferredTeachingType',
-          multiList: true,
-          renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+          filterOptions: CommonFilterOptions.yesNoFilterOptions,
+          mapping: 'isMapped',
+          renderer: GridCommonFunctions.yesNoRenderer
+        }, {
+          id: 'tutorName',
+          headerName: 'Tutor Name',
+          dataType: 'string',
+          mapping: 'tutorName'
+        }, {
+          id: 'tutorEmail',
+          headerName: 'Tutor Email',
+          dataType: 'string',
+          mapping: 'tutorEmail'
+        }, {
+          id: 'tutorContactNumber',
+          headerName: 'Tutor Contact Number',
+          dataType: 'string',
+          mapping: 'tutorContactNumber'
         }]
       },
       htmlDomElementId: 'current-customer-all-pending-enquiries-grid',

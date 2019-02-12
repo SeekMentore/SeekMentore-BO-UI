@@ -10,6 +10,10 @@ import { ActionButton } from 'src/app/utils/grid/action-button';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Router } from '@angular/router';
+import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-demo-tracker',
@@ -34,6 +38,10 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   cancelledDemoGridObject: GridComponent;
   cancelledDemoGridMetaData: GridDataInterface;
 
+  @ViewChild('enquiryClosedDemoGrid')
+  enquiryClosedDemoGridObject: GridComponent;
+  enquiryClosedDemoGridMetaData: GridDataInterface;
+
   showDemoTrackerData = false;
   selectedDemoTrackerRecord: GridRecord = null;
   interimHoldSelectedDemoTrackerRecord: GridRecord = null;
@@ -42,15 +50,21 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   selectedRecordGridType: string = null;
   interimHoldSelectedDemoTrackerObject: GridComponent = null;
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.scheduledDemoGridMetaData = null;
     this.successfulDemoGridMetaData = null;
     this.failedDemoGridMetaData = null;
     this.cancelledDemoGridMetaData = null;
+    this.enquiryClosedDemoGridMetaData = null;
   }
 
   ngOnInit() {
     this.setUpGridMetaData();
+    const breadCrumb: BreadCrumbEvent = {
+      newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
+      resetCrumbList: true
+    };
+    this.helperService.setBreadCrumb(breadCrumb);
   }
 
   ngAfterViewInit() {
@@ -59,19 +73,22 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       this.successfulDemoGridObject.init();
       this.failedDemoGridObject.init();
       this.cancelledDemoGridObject.init();
+      this.enquiryClosedDemoGridObject.init();
     }, 0);
     setTimeout(() => {
       this.scheduledDemoGridObject.refreshGridData();
       this.successfulDemoGridObject.refreshGridData();
       this.failedDemoGridObject.refreshGridData();
       this.cancelledDemoGridObject.refreshGridData();
+      this.enquiryClosedDemoGridObject.refreshGridData();
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[]) {
+  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
+      collapsed: collapsed,
       store: {
         isStatic: false,
         restURL: restURL
@@ -92,10 +109,30 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
           }
         }
       }, {
+        id: 'customerEmail',
+        headerName: 'Customer Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      }, {
+        id: 'customerContactNumber',
+        headerName: 'Customer Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
+      }, {
         id: 'tutorName',
         headerName: 'Tutor Name',
         dataType: 'string',
         mapping: 'tutorName'
+      },{
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      },{
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
       }, {
         id: 'demoDateAndTime',
         headerName: 'Demo Date And Time',
@@ -103,18 +140,92 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         mapping: 'demoDateAndTimeMillis',
         renderer: GridCommonFunctions.renderDateFromMillisWithTime
       }, {
+        id: 'demoStatus',
+        headerName: 'Demo Status',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.demoStatusFilterOptions,
+        mapping: 'demoStatus',
+        renderer: AdminCommonFunctions.demoStatusRenderer
+      }, {
+        id: 'enquirySubject',
+        headerName: 'Enquiry Subject',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.subjectsFilterOptions,
+        mapping: 'enquirySubject',
+        renderer: AdminCommonFunctions.subjectsRenderer
+      }, {
+        id: 'enquiryGrade',
+        headerName: 'Enquiry Grade',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+        mapping: 'enquiryGrade',
+        renderer: AdminCommonFunctions.studentGradesRenderer
+      }, {
+        id: 'enquiryPreferredTeachingType',
+        headerName: 'Enquiry Preferred Teaching Type',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'enquiryPreferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+      }, {
+        id: 'enquiryLocation',
+        headerName: 'Enquiry Location',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
+        mapping: 'enquiryLocation',
+        renderer: AdminCommonFunctions.locationsRenderer
+      }, {
+        id: 'enquiryAddressDetails',
+        headerName: 'Enquiry Address Details',
+        dataType: 'string',
+        mapping: 'enquiryAddressDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryAdditionalDetails',
+        headerName: 'Enquiry Additional Details',
+        dataType: 'string',
+        mapping: 'enquiryAdditionalDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryQuotedClientRate',
+        headerName: 'Enquiry Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'enquiryQuotedClientRate'
+      }, {
+        id: 'enquiryNegotiatedRateWithClient',
+        headerName: 'Enquiry Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'enquiryNegotiatedRateWithClient'
+      }, {
+        id: 'enquiryClientNegotiationRemarks',
+        headerName: 'Enquiry Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'enquiryClientNegotiationRemarks',
+        lengthyData: true
+      },{
+        id: 'tutorMapperQuotedTutorRate',
+        headerName: 'Mapping Quoted Tutor Rate',
+        dataType: 'number',
+        mapping: 'tutorMapperQuotedTutorRate'
+      },{
+        id: 'tutorMapperNegotiatedRateWithTutor',
+        headerName: 'Mapping Negotiated Rate With Tutor',
+        dataType: 'number',
+        mapping: 'tutorMapperNegotiatedRateWithTutor'
+      },{
+        id: 'tutorMapperTutorNegotiationRemarks',
+        headerName: 'Mapping Tutor Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'tutorMapperTutorNegotiationRemarks',
+        lengthyData: true
+      }, {
         id: 'demoOccurred',
         headerName: 'Demo Occurred',
         dataType: 'list',
         filterOptions: CommonFilterOptions.yesNoFilterOptions,
         mapping: 'demoOccurred',
         renderer: GridCommonFunctions.yesNoRenderer
-      }, {
-        id: 'demoStatus',
-        headerName: 'Demo Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.demoStatusFilterOptions,
-        mapping: 'demoStatus'
       }, {
         id: 'clientSatisfiedFromTutor',
         headerName: 'Client Satisfied From Tutor',
@@ -294,20 +405,26 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     };
 
     this.successfulDemoGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', []),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', [], true),
       htmlDomElementId: 'successful-demo-grid',
       hidden: false
     }; 
 
     this.failedDemoGridMetaData = {
-      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', []),
+      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', [], true),
       htmlDomElementId: 'failed-demo-grid',
       hidden: false
     }; 
 
     this.cancelledDemoGridMetaData = {
-      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', []),
+      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', [], true),
       htmlDomElementId: 'cancelled-demo-grid',
+      hidden: false
+    }; 
+
+    this.enquiryClosedDemoGridMetaData = {
+      grid: this.getGridObject('enquiryClosedDemoGrid', 'Enquiry Closed Demo', '/rest/sales/enquiryClosedDemoList', [], true),
+      htmlDomElementId: 'enquiry-closed-grid',
       hidden: false
     }; 
   }
@@ -340,12 +457,14 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         this.successfulDemoGridObject.init();
         this.failedDemoGridObject.init();
         this.cancelledDemoGridObject.init();
+        this.enquiryClosedDemoGridObject.init();
       }, 100);   
       setTimeout(() => {
         this.scheduledDemoGridObject.refreshGridData();
         this.successfulDemoGridObject.refreshGridData();
         this.failedDemoGridObject.refreshGridData();
         this.cancelledDemoGridObject.refreshGridData();
+        this.enquiryClosedDemoGridObject.refreshGridData();
       }, 200);
     } else {
       this.showDemoTrackerData = true;

@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input, SimpleChange } from '@a
 import { GridCommonFunctions } from '../grid-common-functions';
 import { Column } from '../column';
 import { GridRecord } from '../grid-record';
+import { CommonUtilityFunctions } from '../../common-utility-functions';
 
 @Component({
   selector: 'app-grid-column-extra-data',
@@ -19,9 +20,13 @@ export class GridColumnExtraDataComponent implements OnInit {
   @Output()
   proceedWithEvent: EventEmitter<any> = new EventEmitter();
 
+  filteredListData: string[] = [];
+
   rowClasses : any = ['color-lightgray',''];
 
   listdata: string[] = [];
+
+  searchedValue: string = '';
 
   constructor() { }
 
@@ -36,10 +41,18 @@ export class GridColumnExtraDataComponent implements OnInit {
           this.columnExtraDataDisplayInput = changedProp.currentValue;          
           if (this.columnExtraDataDisplayInput.multiList) {
             this.listdata = this.columnExtraDataDisplayInput.dataText.split('; ');
+            this.filteredListData = this.listdata;
+          } else {
+            this.columnExtraDataDisplayInput.dataText = CommonUtilityFunctions.checkStringAvailability(this.columnExtraDataDisplayInput.dataText) ? this.columnExtraDataDisplayInput.dataText.replace(/\<br\>/g, '\n') : '';
           }
         }
       }
     }
+  }
+
+  public dataSearched(element: HTMLInputElement) {
+    this.searchedValue = element.value.trim();
+    this.filteredListData = CommonUtilityFunctions.searchItemsInStringListThatHasSearchedSubstring(this.listdata, element.value);
   }
 
   public proceedClicked() {

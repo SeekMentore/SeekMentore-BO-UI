@@ -4,6 +4,7 @@ import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
 import { ConfirmationDialogEvent } from './confirmation-dialog/confirmation-dialog.component';
 import { EmailInterface } from './email/email.component';
 import { PromptDialogInterface } from "./prompt-dialog/prompt-dialog.component";
+import { BreadCrumbEvent } from '../login-controlled-pages/bread-crumb/bread-crumb.component';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,8 @@ export class HelperService {
     this.titleSubject.next(title);
   }
 
-  public setBreadCrumb(breadCrumb: string) {
-    this.breadCrumbSubject.next(breadCrumb);
+  public setBreadCrumb(eventListener: BreadCrumbEvent) {
+    this.breadCrumbSubject.next(eventListener);
   }
 
   public showConfirmationDialog(eventListener: ConfirmationDialogEvent) {

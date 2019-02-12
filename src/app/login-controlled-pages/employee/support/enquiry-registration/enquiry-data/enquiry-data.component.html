@@ -1,7 +1,16 @@
 <div class="form-container-div">
+  <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
+    <input type="text" value="" size="10" name="enquiryId" id="profileDownload-enquiryId" />
+  </form>
   <form class="form-container" style="max-width: 80%">
     <div *ngIf="enquiryDataAccess.formDataEditAccess && !formEditMandatoryDisbaled"
           class="form-container-toggle-button">
+      <button type="submit"
+            class="btnSubmit"
+            style="width: 140px; height: 46px;"
+            (click)="downloadProfile()">            
+            <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download
+      </button>
       <label class="tab_container" (change)="editRecordForm = false;">
         <input type="radio" checked name="editFormChoice">
         <span class="tab_checkmark left">View</span>

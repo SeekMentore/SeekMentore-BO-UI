@@ -1,0 +1,13 @@
+<div id="bread-crumb-main-div" class="bread-crumb">
+  <span *ngFor="let crumb of crumbs; let i = index">
+      <span class="activated-bread-crumb" routerLink="{{crumb.url}}" *ngIf="crumb.isActivated">
+          {{crumb.label}}
+      </span>
+      <span *ngIf="!crumb.isActivated">
+          {{crumb.label}}
+      </span>
+      <span *ngIf="!crumb.isLast">
+          <i class="fas fa-chevron-right"></i>
+      </span>
+  </span>
+</div>

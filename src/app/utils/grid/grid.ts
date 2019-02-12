@@ -26,6 +26,10 @@ export class Grid {
     store: Store;
     filtered_records: GridRecord[] = [];
     offline: boolean;
+    showDownload: boolean = false;
+    showOfflineToggle: boolean = false;
+    stateExpanded: boolean = true;
+    isCollapsable: boolean = true;
 
     constructor(
         id: string,
@@ -40,13 +44,58 @@ export class Grid {
         selectionColumnMetadata: any = null,
         hasActionColumn: boolean = false,
         actionColumnMetadata: any = null,
-        offline: boolean = false
+        offline: boolean = false,
+        showOfflineToggle: boolean = false,
+        isCollapsable: boolean = true,
+        collapsed: boolean = false
     ) {       
       this.id = id;
       this.title = title;
       this.store = null;
       if (GridCommonFunctions.checkObjectAvailability(storeMetaData)) {
-          this.store = new Store(this.id + '-Store', storeMetaData.isStatic, storeMetaData.restURL, storeMetaData.downloadURL);
+          let downloadURL: string = null;
+          let downloadWithSorterRequired: boolean = false;
+          let downloadWithFilterRequired: boolean = false;
+          let precall_load: any = null;
+          let postcall_load: any = null;
+          let precall_download: any = null;
+          let postcall_download: any = null;
+          if (GridCommonFunctions.checkObjectAvailability(storeMetaData.preLoad)) {
+              precall_load = storeMetaData.preLoad;
+          }
+          if (GridCommonFunctions.checkObjectAvailability(storeMetaData.postLoad)) {
+              postcall_load = storeMetaData.postLoad;
+          }
+          if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download)) {
+            downloadURL = storeMetaData.download.url;
+            if (GridCommonFunctions.checkStringAvailability(downloadURL)) {
+                this.showDownload = true;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.withSorter)) {
+                downloadWithSorterRequired = storeMetaData.download.withSorter;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.withFilter)) {
+                downloadWithFilterRequired = storeMetaData.download.withFilter;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.preDownload)) {
+                precall_download = storeMetaData.download.preDownload;
+            }
+            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.postDownload)) {
+                postcall_download = storeMetaData.download.postDownload;
+            }
+          }
+          this.store = new Store(
+                            this.id + '-Store', 
+                            storeMetaData.isStatic, 
+                            storeMetaData.restURL, 
+                            downloadURL, 
+                            downloadWithSorterRequired, 
+                            downloadWithFilterRequired,
+                            precall_load,
+                            postcall_load,
+                            precall_download,
+                            postcall_download
+                        );
       }
       this.isSortingCapable = isSortingCapable;
       this.isFilterCapable = isFilterCapable;
@@ -113,6 +162,12 @@ export class Grid {
         }
       }
       this.offline = offline;
+      this.showOfflineToggle = showOfflineToggle;
+      this.isCollapsable = isCollapsable;
+      if (collapsed) {
+          this.isCollapsable = true;
+          this.stateExpanded = false;
+      }
     }
 
     public loadData(gridObject: GridComponent) {

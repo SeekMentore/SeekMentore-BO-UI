@@ -116,26 +116,11 @@ export class SubscriptionPackagesComponent implements OnInit {
         mapping: 'createdMillis',
         renderer: GridCommonFunctions.renderDateFromMillisWithTime
       },{
-        id: 'totalHours',
-        headerName: 'Total Hours',
-        dataType: 'number',
-        mapping: 'totalHours'
-      },{
         id: 'startDateMillis',
         headerName: 'Start Date',
         dataType: 'date',
         mapping: 'startDateMillis',
         renderer: GridCommonFunctions.renderDateFromMillis
-      },{
-        id: 'completedHours',
-        headerName: 'Completed Hours',
-        dataType: 'number',
-        mapping: 'completedHours'
-      },{
-        id: 'completedMinutes',
-        headerName: 'Completed Minutes',
-        dataType: 'number',
-        mapping: 'completedMinutes'
       },{
         id: 'endDateMillis',
         headerName: 'End Date',

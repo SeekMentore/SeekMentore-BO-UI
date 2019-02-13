@@ -7,6 +7,8 @@ import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
 import { SubscriptionPackageDataAccess } from '../subscription-packages.component';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-subscription-package-data',
@@ -32,6 +34,16 @@ export class SubscriptionPackageDataComponent implements OnInit {
   @Input()
   selectedRecordGridType: string = null;
 
+  subscriptionPackageUpdatedRecord = {};
+
+  loadSelectedSubscriptionPackage = true;
+  showCustomerDetails = false;
+  showEnquiryDetails = false;
+  showTutorDetails = false;
+  showTutorMapperDetails = false;
+  showDemoDetails = false;
+  showEmployeeActionButtons = false;
+
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
   superAccessAwarded = false;
@@ -47,11 +59,14 @@ export class SubscriptionPackageDataComponent implements OnInit {
   preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
   matchStatusFilterOptions = CommonFilterOptions.matchStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
+  happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
+  packageBillingTypeFilterOptions = CommonFilterOptions.packageBillingTypeFilterOptions;
 
-  selectedStudentGradeOption: any[] = [];
-  selectedSubjectOption: any[] = [];
-  selectedLocationOption: any[] = [];
-  selectedTeachingTypeOptions: any[] = [];
+  selectedPackageBillingTypeOptions: any[] = [];
+  selectedIsCustomerGrievedOptions: any[] = [];
+  selectedCustomerHappinessIndexOptions: any[] = [];
+  selectedIsTutorGrievedOptions: any[] = [];
+  selectedTutorHappinessIndexOptions: any[] = [];
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.selectedSubscriptionPackageAllCurrentAssignmentGridMetaData = null;
@@ -59,10 +74,11 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.subscriptionPackageRecord.getProperty('grade'));
-    this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.subscriptionPackageRecord.getProperty('subject'));
-    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.subscriptionPackageRecord.getProperty('locationDetails'));
-    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.subscriptionPackageRecord.getProperty('preferredTeachingType'));
+    this.selectedPackageBillingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.packageBillingTypeFilterOptions, this.subscriptionPackageRecord.getProperty('packageBillingType'));
+    this.selectedIsCustomerGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageRecord.getProperty('isCustomerGrieved'));
+    this.selectedCustomerHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageRecord.getProperty('customerHappinessIndex'));
+    this.selectedIsTutorGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageRecord.getProperty('isTutorGrieved'));
+    this.selectedTutorHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageRecord.getProperty('tutorHappinessIndex'));
     this.setUpGridMetaData();
     this.setDisabledStatus();
   }
@@ -78,6 +94,14 @@ export class SubscriptionPackageDataComponent implements OnInit {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
       this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.refreshGridData();
     }, 0);
+  }
+
+  getDateFromMillis(millis: number) {
+    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  }
+
+  getLookupRendererFromValue(value: any, lookupList: any []) {
+    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
   private setDisabledStatus() {
@@ -149,4 +173,42 @@ export class SubscriptionPackageDataComponent implements OnInit {
     };
   }
 
+  updateSubscriptionPackageProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord, deselected, isAllOPeration);
+  }
+
+  updateSubscriptionPackageRecord() {
+    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord.getProperty('subscriptionPackageId'));
+    this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageRecord, LcpRestUrls.subscription_package_update_record, 'POST',
+      data, 'multipart/form-data', true);
+  }
+
+  startSubscription() {
+
+  }
+
+  endSubscription() {
+    
+  }
+
+  createAssignment() {
+    
+  }
+
+  downloadContract() {
+    
+  }
+
+  onUpdateSubscriptionPackageRecord(context: any, data: any) {
+    const myListener: AlertDialogEvent = {
+      isSuccess: data['success'],
+      message: data['message'],
+      onButtonClicked: () => {
+      }
+    };
+    context.helperService.showAlertDialog(myListener);
+    if (data['success']) {
+      context.editRecordForm = false;
+    }
+  }
 }

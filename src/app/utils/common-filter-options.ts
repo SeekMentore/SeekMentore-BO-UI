@@ -1117,6 +1117,55 @@ export class CommonFilterOptions {
                                 label : 'Canceled'
                               }];
 
+  static happinessIndexFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Very Poor'
+                              },{
+                                value : '02',
+                                label : 'Fair Enough'
+                              },{
+                                value : '03',
+                                label : 'Good'
+                              },{
+                                value : '04',
+                                label : 'Very Good'
+                              },{
+                                value : '05',
+                                label : 'Superb'
+                              }];
+                            
+  static packageBillingTypeFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Per Minute'
+                              },{
+                                value : '02',
+                                label : 'Hourly'
+                              },{
+                                value : '03',
+                                label : 'Daily'
+                              },{
+                                value : '04',
+                                label : 'Half Weekly (MWF/TTS)'
+                              },{
+                                value : '05',
+                                label : 'Weekly (MTWTFS)'
+                              },{
+                                value : '06',
+                                label : 'Monthly (Sunday Off)'
+                              },{
+                                value : '07',
+                                label : 'Quaterly (3 Months)'
+                              },{
+                                value : '08',
+                                label : 'Half Yearly'
+                              },{
+                                value : '09',
+                                label : 'Annualy'
+                              },{
+                                value : '10',
+                                label : 'Fixed'
+                              }];
+
   static singleSelectOptionsConfiguration = {
     singleSelection: true,
     idField: 'value',

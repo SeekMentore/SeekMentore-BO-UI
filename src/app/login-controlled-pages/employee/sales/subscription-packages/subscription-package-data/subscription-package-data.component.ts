@@ -136,14 +136,14 @@ export class SubscriptionPackageDataComponent implements OnInit {
 
   public setUpGridMetaData() {
     this.selectedSubscriptionPackageAllCurrentAssignmentGridMetaData = {
-      grid: this.getPackageAssignmentGridObject('selectedSubscriptionPackageAllCurrentAssignmentGrid', 'Current Assignments', '/rest/sales/selectedSubscriptionPackageAllCurrentAssignmentList'),
+      grid: this.getPackageAssignmentGridObject('selectedSubscriptionPackageAllCurrentAssignmentGrid', 'Current Assignments', '/rest/sales/selectedSubscriptionPackageCurrentAssignmentList'),
       htmlDomElementId: 'selected-subscription-package-all-current-assignment-grid',
       hidden: false
     };
 
     this.selectedSubscriptionPackageAllHistoryAssignmentGridMetaData = {
       grid: this.getPackageAssignmentGridObject('selectedSubscriptionPackageAllHistoryAssignmentGrid', 'History Assignments', 
-                                                '/rest/sales/selectedSubscriptionPackageAllHistoryAssignmentList', true),
+                                                '/rest/sales/selectedSubscriptionPackageHistoryAssignmentList', true),
       htmlDomElementId: 'selected-subscription-package-all-history-assignment-grid',
       hidden: false
     };

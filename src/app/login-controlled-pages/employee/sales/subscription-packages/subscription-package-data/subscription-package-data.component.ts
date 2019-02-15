@@ -183,7 +183,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
       data, 'multipart/form-data', true);
   }
 
-  startSubscription() {
+  activateSubscription() {
 
   }
 

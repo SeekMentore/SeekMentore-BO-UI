@@ -51,5 +51,6 @@ export class LcpRestUrls {
   static demo_tracker_update_record = '/rest/sales/updateDemoRecord';
   static re_schedule_demo = '/rest/sales/reScheduleDemo';
   static subscription_package_data_access = '/rest/sales/subscriptionPackageCheckDataAccess';
-  static subscription_package_update_record = '/rest/sales/updateSubscriptionPackageRecord';  
+  static subscription_package_update_record = '/rest/sales/updateSubscriptionPackageRecord';
+  static take_action_on_subscription_package = '/rest/sales/takeActionOnSubscriptionPackage';  
 }

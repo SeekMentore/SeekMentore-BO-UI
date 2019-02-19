@@ -183,16 +183,33 @@ export class SubscriptionPackageDataComponent implements OnInit {
       data, 'multipart/form-data', true);
   }
 
-  activateSubscription() {
-
+  takeActionOnSubscriptionPackage(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.subscriptionPackageRecord.getProperty('subscriptionPackageId'),
+          button: actionText,
+          comments: message
+        };
+        this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageRecord,
+          LcpRestUrls.take_action_on_subscription_package, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
   }
 
-  endSubscription() {
-    
-  }
-
-  createAssignment() {
-    
+  handleTakeActionOnSubscriptionPackageRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
   }
 
   downloadContract() {

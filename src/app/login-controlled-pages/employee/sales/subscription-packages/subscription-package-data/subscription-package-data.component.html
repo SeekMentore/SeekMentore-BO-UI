@@ -456,21 +456,21 @@
                   <td>
                     <button type="submit"
                             class="btnSubmit"
-                            (click)="activateSubscription()">            
+                            (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for activating the subscription.', 'activateSubscription')">            
                             Activate Subscription
                     </button>
                   </td> 
                   <td>
                     <button type="submit"
                             class="btnReject"
-                            (click)="endSubscription()">            
+                            (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for ending the subscription.', 'endSubscription', true)">            
                             End Subscription
                     </button>
                   </td>              
                   <td>
                     <button type="submit"
                             class="btnReset"
-                            (click)="createAssignment()">            
+                            (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for creating assignment.', 'createAssignment')">            
                             Create Assignment
                     </button>
                   </td>

@@ -49,6 +49,8 @@ export class SubscriptionPackageDataComponent implements OnInit {
   superAccessAwarded = false;
   editRecordForm = false;
 
+  isContractReady = false;
+
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
@@ -109,6 +111,8 @@ export class SubscriptionPackageDataComponent implements OnInit {
       this.formEditMandatoryDisbaled = false;
       this.takeActionDisabled = false;
     }
+    this.isContractReady = (CommonUtilityFunctions.checkObjectAvailability(this.subscriptionPackageRecord.getProperty('startDateMillis')) 
+                              && this.subscriptionPackageRecord.getProperty('startDateMillis') > 0);
   }
 
   public getPackageAssignmentGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -213,7 +217,9 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   downloadContract() {
-    
+    const subscriptionPackageId: HTMLInputElement = <HTMLInputElement>document.getElementById('contractDownloadForm-subscriptionPackageId');
+    subscriptionPackageId.value = this.subscriptionPackageRecord.getProperty('subscriptionPackageId');
+    this.utilityService.submitForm('contractDownloadForm', '/rest/sales/downloadSubscriptionPackageContractPdf', 'POST')
   }
 
   onUpdateSubscriptionPackageRecord(context: any, data: any) {

@@ -17,6 +17,7 @@
         <button type="submit"
               class="btnSubmit"
               style="width: 210px; height: 46px;"
+              *ngIf="isContractReady"
               (click)="downloadContract()">            
               <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Contract
         </button>
@@ -312,8 +313,18 @@
           <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['createdMillis'])}}</label></td>        
         </tr>
         <tr>
-          <td class="td-label"><label>Started Date And Time</label></td>
+          <td class="td-label"><label>Activated Date And Time</label></td>
           <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['startDateMillis'])}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Activating Remarks</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateSubscriptionPackageProperty('activatingRemarks', $event, 'string')"
+                      >{{subscriptionPackageRecord.property['activatingRemarks']}}</textarea>
+          </td>
         </tr>
         <tr>
           <td class="td-label"><label>Package Billing Type</label></td>
@@ -327,14 +338,50 @@
           </td>      
         </tr>
         <tr>
-          <td class="td-label"><label>Finalized Rate</label></td>
-          <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRate']}}"
+          <td class="td-label"><label>Finalized Rate For Client</label></td>
+          <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForClient']}}"
                       [disabled]="!editRecordForm"
-                      (change)="updateSubscriptionPackageProperty('finalizedRate', $event, 'number')"></td>
+                      (change)="updateSubscriptionPackageProperty('finalizedRateForClient', $event, 'number')"></td>
         </tr>
         <tr>
-          <td class="td-label"><label>End Date And Time</label></td>
+          <td class="td-label"><label>Additional Details For Client</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateSubscriptionPackageProperty('additionalDetailsClient', $event, 'string')"
+                      >{{subscriptionPackageRecord.property['additionalDetailsClient']}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Finalized Rate For Tutor</label></td>
+          <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForTutor']}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateSubscriptionPackageProperty('finalizedRateForTutor', $event, 'number')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Additional Details For Tutor</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateSubscriptionPackageProperty('additionalDetailsTutor', $event, 'string')"
+                      >{{subscriptionPackageRecord.property['additionalDetailsTutor']}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Terminated Date And Time</label></td>
           <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['endDateMillis'])}}</label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Terminating Remarks</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateSubscriptionPackageProperty('terminatingRemarks', $event, 'string')"
+                      >{{subscriptionPackageRecord.property['terminatingRemarks']}}</textarea>
+          </td>
         </tr>
         <tr>
           <td class="td-label"><label>Is Customer Grieved</label></td>
@@ -464,7 +511,7 @@
                     <button type="submit"
                             class="btnReject"
                             (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for ending the subscription.', 'endSubscription', true)">            
-                            End Subscription
+                            Terminate Subscription
                     </button>
                   </td>              
                   <td>

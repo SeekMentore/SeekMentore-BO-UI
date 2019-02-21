@@ -70,10 +70,10 @@ export class SubscriptionPackagesComponent implements OnInit {
         restURL: restURL
       },
       columns: [{
-        id: 'customerName',
-        headerName: 'Customer Name',
+        id: 'subscriptionPackageSerialId',
+        headerName: 'Serial Id',
         dataType: 'string',
-        mapping: 'customerName',
+        mapping: 'subscriptionPackageSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           this.interimHoldSelectedSubscriptionPackageRecord = record;
           this.selectedRecordGridType = gridComponentObject.grid.id; 
@@ -84,6 +84,11 @@ export class SubscriptionPackagesComponent implements OnInit {
             this.toggleVisibilitySubscriptionPackagesGrid();
           }
         }
+      },{
+        id: 'customerName',
+        headerName: 'Customer Name',
+        dataType: 'string',
+        mapping: 'customerName'
       },{
         id: 'customerEmail',
         headerName: 'Customer Email',

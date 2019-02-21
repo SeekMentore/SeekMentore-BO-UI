@@ -88,9 +88,9 @@ export class SubscriptionPackageDataComponent implements OnInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.init();
-      this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageId', this.subscriptionPackageRecord.getProperty('subscriptionPackageId'));
+      this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
       this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.init();
-      this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageId', this.subscriptionPackageRecord.getProperty('subscriptionPackageId'));
+      this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
     }, 0);
     setTimeout(() => {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
@@ -111,8 +111,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
       this.formEditMandatoryDisbaled = false;
       this.takeActionDisabled = false;
     }
-    this.isContractReady = (CommonUtilityFunctions.checkObjectAvailability(this.subscriptionPackageRecord.getProperty('startDateMillis')) 
-                              && this.subscriptionPackageRecord.getProperty('startDateMillis') > 0);
+    this.isContractReady = CommonUtilityFunctions.checkStringAvailability(this.subscriptionPackageRecord.getProperty('contractSerialId'));
   }
 
   public getPackageAssignmentGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -125,6 +124,11 @@ export class SubscriptionPackageDataComponent implements OnInit {
         restURL: restURL
       },
       columns: [{
+        id: 'packageAssignmentSerialId',
+        headerName: 'Serial Id',
+        dataType: 'string',
+        mapping: 'packageAssignmentSerialId'
+      },{
         id: 'startDateMillis',
         headerName: 'Start Date',
         dataType: 'date',
@@ -182,7 +186,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   updateSubscriptionPackageRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord.getProperty('subscriptionPackageId'));
+    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageRecord, LcpRestUrls.subscription_package_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -194,7 +198,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
       placeholderText: placeholderText,
       onOk: (message) => {                  
         const data = {
-          allIdsList: this.subscriptionPackageRecord.getProperty('subscriptionPackageId'),
+          allIdsList: this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'),
           button: actionText,
           comments: message
         };
@@ -217,9 +221,18 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   downloadContract() {
-    const subscriptionPackageId: HTMLInputElement = <HTMLInputElement>document.getElementById('contractDownloadForm-subscriptionPackageId');
-    subscriptionPackageId.value = this.subscriptionPackageRecord.getProperty('subscriptionPackageId');
-    this.utilityService.submitForm('contractDownloadForm', '/rest/sales/downloadSubscriptionPackageContractPdf', 'POST')
+    if (this.isContractReady) {
+      const subscriptionPackageSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('contractDownloadForm-subscriptionPackageSerialId');
+      subscriptionPackageSerialId.value = this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId');
+      this.utilityService.submitForm('contractDownloadForm', '/rest/sales/downloadSubscriptionPackageContractPdf', 'POST');
+    } else {
+      this.helperService.showAlertDialog({
+        isSuccess: false,
+        message: 'Contract is still not initiated for this Subscription Package',
+        onButtonClicked: () => {
+        }
+      });
+    }
   }
 
   onUpdateSubscriptionPackageRecord(context: any, data: any) {

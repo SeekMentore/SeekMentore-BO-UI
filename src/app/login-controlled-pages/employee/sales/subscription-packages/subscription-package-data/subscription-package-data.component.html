@@ -9,7 +9,7 @@
   </app-grid>
   <div *ngIf="loadSelectedSubscriptionPackage" class="form-container-div">
     <form id="contractDownloadForm" target="ifrDownload" method="post" class="noscreen">
-      <input type="text" value="" size="10" name="subscriptionPackageId" id="contractDownloadForm-subscriptionPackageId" />
+      <input type="text" value="" size="10" name="subscriptionPackageSerialId" id="contractDownloadForm-subscriptionPackageSerialId" />
     </form>
     <form class="form-container" style="max-width: 80%">
       <div *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled"
@@ -307,6 +307,10 @@
         <tr>
           <td class="td-label"><label></label></td>
           <td><label class="data"></label></td>        
+        </tr>
+        <tr>
+          <td class="td-label"><label>Serial Id</label></td>
+          <td><label class="data">{{subscriptionPackageRecord.property['subscriptionPackageSerialId']}}</label></td>        
         </tr>
         <tr>
           <td class="td-label"><label>Created Date And Time</label></td>

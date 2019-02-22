@@ -1,6 +1,22 @@
 <!-- Toolbar -->
 <div class="toolbar">
   <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
+  <div class="server-info">
+    <table>
+      <tr>
+        <th>Server Name</th>
+        <td>Local</td>
+      </tr>
+      <tr>
+        <th>Database Name</th>
+        <td>Local DB</td>
+      </tr>
+      <tr>
+        <th>Linked File System</th>
+        <td>Dev File System</td>
+      </tr>
+    </table>
+  </div>
   <div class="toolbar_content">
     <span>{{title}}</span>
     <i *ngIf="accessOptions && accessOptions.emailformaccess" class="fas fa-envelope" (click)="showEmailDialog()"></i>

@@ -48,3 +48,10 @@
   margin-top: -10px;
 }
 
+.server-info {
+  color: black;
+  margin-left: 5%;
+  background-color: lightblue;
+  max-height: 50px;
+  padding-left: 25px;
+}

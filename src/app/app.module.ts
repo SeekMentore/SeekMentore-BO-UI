@@ -54,6 +54,7 @@ import { ChangePasswordComponent } from './login-controlled-pages/change-passwor
 import { SubscriptionPackageDataComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-data.component';
 import { BreadCrumbComponent } from './login-controlled-pages/bread-crumb/bread-crumb.component';
 import { ForgotPasswordTokenResetComponent } from './non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
+import { SubscriptionPackageAssignmentComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-assignment/subscription-package-assignment.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { ForgotPasswordTokenResetComponent } from './non-login-pages/forgot-pass
     ChangePasswordComponent,
     SubscriptionPackageDataComponent,
     BreadCrumbComponent,
-    ForgotPasswordTokenResetComponent
+    ForgotPasswordTokenResetComponent,
+    SubscriptionPackageAssignmentComponent
   ],
   imports: [
     BrowserModule,

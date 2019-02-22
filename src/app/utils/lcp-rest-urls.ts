@@ -52,5 +52,7 @@ export class LcpRestUrls {
   static re_schedule_demo = '/rest/sales/reScheduleDemo';
   static subscription_package_data_access = '/rest/sales/subscriptionPackageCheckDataAccess';
   static subscription_package_update_record = '/rest/sales/updateSubscriptionPackageRecord';
-  static take_action_on_subscription_package = '/rest/sales/takeActionOnSubscriptionPackage';  
+  static take_action_on_subscription_package = '/rest/sales/takeActionOnSubscriptionPackage'; 
+  static subscription_package_assignment_data_access = '/rest/sales/subscriptionPackageAssignmentCheckDataAccess'; 
+  static subscription_package_assignment_update_record = '/rest/sales/updatePackageAssignmentRecord';
 }

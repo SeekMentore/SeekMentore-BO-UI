@@ -9,6 +9,7 @@ import { HelperService } from 'src/app/utils/helper.service';
 import { SubscriptionPackageDataAccess } from '../subscription-packages.component';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { Column } from 'src/app/utils/grid/column';
 
 @Component({
   selector: 'app-subscription-package-data',
@@ -70,6 +71,12 @@ export class SubscriptionPackageDataComponent implements OnInit {
   selectedIsTutorGrievedOptions: any[] = [];
   selectedTutorHappinessIndexOptions: any[] = [];
 
+  interimHoldSelectedSubscriptionPackageAssignmentRecord: GridRecord = null;
+  selectedRecordAssignmentGridType: string = null;
+  subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;
+  selectedSubscriptionPackageAssignmentRecord: GridRecord = null;
+  showSubscriptionPackageAssignmentData = false;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.selectedSubscriptionPackageAllCurrentAssignmentGridMetaData = null;
     this.selectedSubscriptionPackageAllHistoryAssignmentGridMetaData = null;
@@ -114,6 +121,48 @@ export class SubscriptionPackageDataComponent implements OnInit {
     this.isContractReady = CommonUtilityFunctions.checkStringAvailability(this.subscriptionPackageRecord.getProperty('contractSerialId'));
   }
 
+  handleDataAccessRequest(context: any, response: any) {
+    if (response['success'] === false) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    } else {
+      context.subscriptionPackageAssignmentDataAccess = {
+        success: response.success,
+        message: response.message,
+        subscriptionPackageAssignmentDataModificationAccess: response.subscriptionPackageAssignmentDataModificationAccess
+      };
+      context.selectedSubscriptionPackageAssignmentRecord = context.interimHoldSelectedSubscriptionPackageAssignmentRecord;
+      context.toggleVisibilitySubscriptionPackageAssignmentGrid();
+    }
+  }
+
+  toggleVisibilitySubscriptionPackageAssignmentGrid() {
+    if (this.showSubscriptionPackageAssignmentData === true) {
+      this.showSubscriptionPackageAssignmentData = false;
+      this.selectedSubscriptionPackageAssignmentRecord = null;
+      const backToSubscriptionPackageListingButton: HTMLElement = document.getElementById('back-to-subscription-packages-listing-button'); 
+      backToSubscriptionPackageListingButton.classList.remove('noscreen');
+      setTimeout(() => {
+        this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.init();
+        this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+        this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.init();
+        this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+      }, 100);   
+      setTimeout(() => {
+        this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
+        this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.refreshGridData();
+      }, 200);
+    } else {
+      const backToSubscriptionPackageListingButton: HTMLElement = document.getElementById('back-to-subscription-packages-listing-button'); 
+      backToSubscriptionPackageListingButton.classList.add('noscreen');     
+      this.showSubscriptionPackageAssignmentData = true;
+    }
+  }
+
   public getPackageAssignmentGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,
@@ -127,7 +176,17 @@ export class SubscriptionPackageDataComponent implements OnInit {
         id: 'packageAssignmentSerialId',
         headerName: 'Serial Id',
         dataType: 'string',
-        mapping: 'packageAssignmentSerialId'
+        mapping: 'packageAssignmentSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          this.interimHoldSelectedSubscriptionPackageAssignmentRecord = record;
+          this.selectedRecordAssignmentGridType = gridComponentObject.grid.id; 
+          if (this.subscriptionPackageAssignmentDataAccess === null) {
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_package_assignment_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          } else {
+            this.selectedSubscriptionPackageAssignmentRecord = this.interimHoldSelectedSubscriptionPackageAssignmentRecord;            
+            this.toggleVisibilitySubscriptionPackageAssignmentGrid();
+          }
+        }
       },{
         id: 'startDateMillis',
         headerName: 'Start Date',
@@ -247,4 +306,10 @@ export class SubscriptionPackageDataComponent implements OnInit {
       context.editRecordForm = false;
     }
   }
+}
+
+export interface SubscriptionPackageAssignmentDataAccess {
+  success: boolean;
+  message: string;
+  subscriptionPackageAssignmentDataModificationAccess: boolean;
 }

@@ -1,0 +1,144 @@
+<div>
+  <div *ngIf="loadSelectedSubscriptionPackageAssignment" class="form-container-div">      
+      <form class="form-container" style="max-width: 80%">
+        <div *ngIf="subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess && !formEditMandatoryDisbaled"
+              class="form-container-toggle-button">
+          <label class="tab_container" (change)="editRecordForm = false;">
+            <input type="radio" checked name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="editRecordForm = true;">
+            <input type="radio" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
+        <table class="form-container-generic-table">
+          <tr>
+            <td class="td-label"><label>Assignment Id</label></td>
+            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['packageAssignmentSerialId']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Created Date And Time</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['createdMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Activated Date And Time</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['startDateMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Total Hours</label></td>
+            <td><input class="input_field" type="number" value="{{subscriptionPackageAssignmentRecord.property['totalHours']}}"
+                        [disabled]="!editRecordForm"
+                        (change)="updateSubscriptionPackageAssignmentProperty('totalHours', $event, 'number')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Completed Hours</label></td>
+            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['completedHours']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Completed Minutes</label></td>
+            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['completedMinutes']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Terminated Date And Time</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['endDateMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Is Customer Grieved</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Customer Grieved'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsCustomerGrievedOptions" name="selectedIsCustomerGrieved"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageAssignmentProperty('isCustomerGrieved', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageAssignmentProperty('isCustomerGrieved', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Customer Happiness Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Customer Happiness Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedCustomerHappinessIndexOptions" name="selectedCustomerHappinessIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageAssignmentProperty('customerHappinessIndex', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageAssignmentProperty('customerHappinessIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Customer Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageAssignmentProperty('customerRemarks', $event, 'string')"
+                        >{{subscriptionPackageAssignmentRecord.property['customerRemarks']}}</textarea>
+            </td>
+          </tr> 
+          <tr>
+            <td class="td-label"><label>Is Tutor Grieved</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Tutor Grieved'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsTutorGrievedOptions" name="selectedIsTutorGrieved"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageAssignmentProperty('isTutorGrieved', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageAssignmentProperty('isTutorGrieved', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Happiness Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Tutor Happiness Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedTutorHappinessIndexOptions" name="selectedTutorHappinessIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageAssignmentProperty('tutorHappinessIndex', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageAssignmentProperty('tutorHappinessIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageAssignmentProperty('tutorRemarks', $event, 'string')"
+                        >{{subscriptionPackageAssignmentRecord.property['tutorRemarks']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Admin Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageAssignmentProperty('adminRemarks', $event, 'string')"
+                        >{{subscriptionPackageAssignmentRecord.property['adminRemarks']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Action Date</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['actionDateMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Who Acted</label></td>
+            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['whoActedName']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Record Last Updated</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['recordLastUpdatedMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Updated By</label></td>
+            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['updatedByName']}}</label></td>        
+          </tr>
+        </table>
+        <button *ngIf="subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
+                class="ok-button form-container-update-button"
+                (click)="updateSubscriptionPackageAssignmentRecord()">
+          Update
+        </button>
+      </form>
+    </div>
+</div>

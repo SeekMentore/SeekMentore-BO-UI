@@ -1,544 +1,558 @@
 <div>
-  <app-grid #selectedSubscriptionPackageAllCurrentAssignmentGrid 
-            id="selected-subscription-package-all-current-assignment-grid" 
-            [gridMetaData]="selectedSubscriptionPackageAllCurrentAssignmentGridMetaData">
-  </app-grid>
-  <app-grid #selectedSubscriptionPackageAllHistoryAssignmentGrid 
-            id="selected-subscription-package-all-history-assignment-grid" 
-            [gridMetaData]="selectedSubscriptionPackageAllHistoryAssignmentGridMetaData">
-  </app-grid>
-  <div *ngIf="loadSelectedSubscriptionPackage" class="form-container-div">
-    <form id="contractDownloadForm" target="ifrDownload" method="post" class="noscreen">
-      <input type="text" value="" size="10" name="subscriptionPackageSerialId" id="contractDownloadForm-subscriptionPackageSerialId" />
-    </form>
-    <form class="form-container" style="max-width: 80%">
-      <div *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled"
-            class="form-container-toggle-button">
-        <button type="submit"
-              class="btnSubmit"
-              style="width: 210px; height: 46px;"
-              *ngIf="isContractReady"
-              (click)="downloadContract()">            
-              <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Contract
+  <div id="subscription-packages-data-page" *ngIf="!showSubscriptionPackageAssignmentData">
+    <app-grid #selectedSubscriptionPackageAllCurrentAssignmentGrid 
+              id="selected-subscription-package-all-current-assignment-grid" 
+              [gridMetaData]="selectedSubscriptionPackageAllCurrentAssignmentGridMetaData">
+    </app-grid>
+    <app-grid #selectedSubscriptionPackageAllHistoryAssignmentGrid 
+              id="selected-subscription-package-all-history-assignment-grid" 
+              [gridMetaData]="selectedSubscriptionPackageAllHistoryAssignmentGridMetaData">
+    </app-grid>
+    <div *ngIf="loadSelectedSubscriptionPackage" class="form-container-div">
+      <form id="contractDownloadForm" target="ifrDownload" method="post" class="noscreen">
+        <input type="text" value="" size="10" name="subscriptionPackageSerialId" id="contractDownloadForm-subscriptionPackageSerialId" />
+      </form>
+      <form class="form-container" style="max-width: 80%">
+        <div *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled"
+              class="form-container-toggle-button">
+          <button type="submit"
+                class="btnSubmit"
+                style="width: 210px; height: 46px;"
+                *ngIf="isContractReady"
+                (click)="downloadContract()">            
+                <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Contract
+          </button>
+          <label class="tab_container" (change)="editRecordForm = false;">
+            <input type="radio" checked name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="editRecordForm = true;">
+            <input type="radio" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
+        <table class="form-container-generic-table">
+          <tr style="background-color: aliceblue;" *ngIf="!showCustomerDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showCustomerDetails = true"></i>
+            </td>
+            <td>
+              Show Customer Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showCustomerDetails = false"></i>
+            </td>
+            <td>
+              Hide Customer Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
+            <td class="td-label"><label>Customer Name</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['customerName']}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
+            <td class="td-label"><label>Customer Email</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['customerEmail']}}</label></td>              
+          </tr> 
+          <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">            
+            <td class="td-label"><label>Customer Contact Number</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['customerContactNumber']}}</label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="!showEnquiryDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showEnquiryDetails = true"></i>
+            </td>
+            <td>
+              Show Enquiry Details
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showEnquiryDetails = false"></i>
+            </td>
+            <td>
+              Hide Enquiry Details
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Subject</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquirySubject'], subjectsFilterOptions)}}</label></td>        
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Grade</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryGrade'], studentGradesFilterOptions)}}</label></td>        
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Preferred Teaching Type</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryPreferredTeachingType'], preferredTeachingTypeFilterOptions)}}</label></td>                    
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Location</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryLocation'], locationsFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Enquiry Email</label></td>
+            <td>
+              <label class="data">{{subscriptionPackageRecord.property['enquiryEmail']}}</label>
+              <span *ngIf="subscriptionPackageRecord.property['enquiryEmail'] !== subscriptionPackageRecord.property['customerEmail']"> (Different From Customer) </span>
+              <span *ngIf="subscriptionPackageRecord.property['enquiryEmail'] === subscriptionPackageRecord.property['customerEmail']"> (Same As Customer) </span>
+            </td>              
+          </tr> 
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">            
+            <td class="td-label"><label>Enquiry Contact Number</label></td>
+            <td>
+              <label class="data">{{subscriptionPackageRecord.property['enquiryContactNumber']}}</label>
+              <span *ngIf="subscriptionPackageRecord.property['enquiryContactNumber'] !== subscriptionPackageRecord.property['customerContactNumber']"> (Different From Customer) </span>
+              <span *ngIf="subscriptionPackageRecord.property['enquiryContactNumber'] === subscriptionPackageRecord.property['customerContactNumber']"> (Same As Customer) </span>
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Address Details</label></td>
+            <td>
+              <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryAddressDetails']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Additional Details</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryAdditionalDetails']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Quoted Client Rate</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['enquiryQuotedClientRate']}}</label></td>            
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Negotiated Rate With Client</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['enquiryNegotiatedRateWithClient']}}</label></td></tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Client Negotiation Remarks</label></td>
+            <td>
+              <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryClientNegotiationRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="!showTutorDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showTutorDetails = true"></i>
+            </td>
+            <td>
+              Show Tutor Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showTutorDetails = false"></i>
+            </td>
+            <td>
+              Hide Tutor Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
+            <td class="td-label"><label>Tutor Name</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['tutorName']}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
+            <td class="td-label"><label>Tutor Email</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['tutorEmail']}}</label></td>              
+          </tr> 
+          <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">            
+            <td class="td-label"><label>Tutor Contact Number</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['tutorContactNumber']}}</label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="!showTutorMapperDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showTutorMapperDetails = true"></i>
+            </td>
+            <td>
+              Show Tutor Mapper Details
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showTutorMapperDetails = false"></i>
+            </td>
+            <td>
+              Hide Tutor Mapper Details
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
+            <td class="td-label"><label>Quoted Tutor Rate</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['tutorMapperQuotedTutorRate']}}</label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
+            <td class="td-label"><label>Negotiated Rate With Tutor</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['tutorMapperNegotiatedRateWithTutor']}}</label></td>              
+          </tr> 
+          <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">            
+            <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['tutorMapperTutorNegotiationRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="!showDemoDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showDemoDetails = true"></i>
+            </td>
+            <td>
+              Show Demo Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showDemoDetails = false"></i>
+            </td>
+            <td>
+              Hide Demo Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
+            <td class="td-label"><label>Client Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoClientRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
+            <td class="td-label"><label>Tutor Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoTutorRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Client Satisfied From Tutor</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoClientSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Tutor Satisfied With Client</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoTutorSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Admin Satisfied From Tutor</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoAdminSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Admin Satisfied With Client</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoAdminSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Need Price Negotiation With Client</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoNeedPriceNegotiationWithClient'], yesNoFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Negotiated Override Rate With Client</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['demoNegotiatedOverrideRateWithClient']}}</label></td>              
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
+            <td class="td-label"><label>Client Negotiation Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoClientNegotiationRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Need Price Negotiation With Tutor</label></td>
+            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoNeedPriceNegotiationWithTutor'], yesNoFilterOptions)}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
+            <td class="td-label"><label>Negotiated Override Rate With Tutor</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['demoNegotiatedOverrideRateWithTutor']}}</label></td>              
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
+            <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoTutorNegotiationRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
+            <td class="td-label"><label>Admin Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoAdminRemarks']}}</div>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
+            <td class="td-label"><label>Admin Finalizing Remarks</label></td>
+            <td>
+                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoAdminFinalizingRemarks']}}</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label></label></td>
+            <td><label class="data"></label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Serial Id</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['subscriptionPackageSerialId']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Created Date And Time</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['createdMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Activated Date And Time</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['startDateMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Activating Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('activatingRemarks', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['activatingRemarks']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Package Billing Type</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Package Billing Type'" [data]="packageBillingTypeFilterOptions"
+                                        [(ngModel)] = "selectedPackageBillingTypeOptions" name="selectedPackageBillingType"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageProperty('packageBillingType', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageProperty('packageBillingType', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Finalized Rate For Client</label></td>
+            <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForClient']}}"
+                        [disabled]="!editRecordForm"
+                        (change)="updateSubscriptionPackageProperty('finalizedRateForClient', $event, 'number')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Additional Details For Client</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('additionalDetailsClient', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['additionalDetailsClient']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Finalized Rate For Tutor</label></td>
+            <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForTutor']}}"
+                        [disabled]="!editRecordForm"
+                        (change)="updateSubscriptionPackageProperty('finalizedRateForTutor', $event, 'number')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Additional Details For Tutor</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('additionalDetailsTutor', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['additionalDetailsTutor']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Terminated Date And Time</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['endDateMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Terminating Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('terminatingRemarks', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['terminatingRemarks']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Is Customer Grieved</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Customer Grieved'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsCustomerGrievedOptions" name="selectedIsCustomerGrieved"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageProperty('isCustomerGrieved', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageProperty('isCustomerGrieved', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Customer Happiness Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Customer Happiness Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedCustomerHappinessIndexOptions" name="selectedCustomerHappinessIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageProperty('customerHappinessIndex', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageProperty('customerHappinessIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Customer Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('customerRemarks', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['customerRemarks']}}</textarea>
+            </td>
+          </tr> 
+          <tr>
+            <td class="td-label"><label>Is Tutor Grieved</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Tutor Grieved'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsTutorGrievedOptions" name="selectedIsTutorGrieved"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageProperty('isTutorGrieved', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageProperty('isTutorGrieved', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Happiness Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Tutor Happiness Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedTutorHappinessIndexOptions" name="selectedTutorHappinessIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateSubscriptionPackageProperty('tutorHappinessIndex', $event, 'list')"
+                                        (onDeSelect)="updateSubscriptionPackageProperty('tutorHappinessIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('tutorRemarks', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['tutorRemarks']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Admin Remarks</label></td>
+            <td>
+                <textarea 
+                        class="textarea_field"
+                        [disabled]="!editRecordForm" 
+                        (change)="updateSubscriptionPackageProperty('adminRemarks', $event, 'string')"
+                        >{{subscriptionPackageRecord.property['adminRemarks']}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Action Date</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['actionDateMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Who Acted</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['whoActedName']}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Record Last Updated</label></td>
+            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['recordLastUpdatedMillis'])}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Updated By</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.property['updatedByName']}}</label></td>        
+          </tr>
+          <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-expander"
+                    class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showEmployeeActionButtons = true"></i>
+            </td>
+            <td>
+              Show Action Buttons
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
+            <td colspan="2">          
+              <table width="100%">
+                  <tr>
+                    <td class="td-label">
+                        <i
+                            id="employee-actions-details-collapser"
+                            class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                            (click)="showEmployeeActionButtons = false"></i>
+                    </td>
+                    <td colspan="3">
+                      Hide Action Buttons
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <button type="submit"
+                              class="btnSubmit"
+                              (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for activating the subscription.', 'activateSubscription')">            
+                              Activate Subscription
+                      </button>
+                    </td> 
+                    <td>
+                      <button type="submit"
+                              class="btnReject"
+                              (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for ending the subscription.', 'endSubscription', true)">            
+                              Terminate Subscription
+                      </button>
+                    </td>              
+                    <td>
+                      <button type="submit"
+                              class="btnReset"
+                              (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for creating assignment.', 'createAssignment')">            
+                              Create Assignment
+                      </button>
+                    </td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"></td>
+                  </tr>                         
+              </table>
+            </td>
+          </tr>
+        </table>
+        <button *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
+                class="ok-button form-container-update-button"
+                (click)="updateSubscriptionPackageRecord()">
+          Update
         </button>
-        <label class="tab_container" (change)="editRecordForm = false;">
-          <input type="radio" checked name="editFormChoice">
-          <span class="tab_checkmark left">View</span>
-        </label>
-        <label class="tab_container" (change)="editRecordForm = true;">
-          <input type="radio" name="editFormChoice">
-          <span class="tab_checkmark right">Edit</span>
-        </label>
-      </div>
-      <table class="form-container-generic-table">
-        <tr style="background-color: aliceblue;" *ngIf="!showCustomerDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-expander"
-                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showCustomerDetails = true"></i>
-          </td>
-          <td>
-            Show Customer Details
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-collapser"
-                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showCustomerDetails = false"></i>
-          </td>
-          <td>
-            Hide Customer Details
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
-          <td class="td-label"><label>Customer Name</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['customerName']}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
-          <td class="td-label"><label>Customer Email</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['customerEmail']}}</label></td>              
-        </tr> 
-        <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">            
-          <td class="td-label"><label>Customer Contact Number</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['customerContactNumber']}}</label></td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="!showEnquiryDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-expander"
-                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showEnquiryDetails = true"></i>
-          </td>
-          <td>
-            Show Enquiry Details
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-collapser"
-                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showEnquiryDetails = false"></i>
-          </td>
-          <td>
-            Hide Enquiry Details
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Subject</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquirySubject'], subjectsFilterOptions)}}</label></td>        
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Grade</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryGrade'], studentGradesFilterOptions)}}</label></td>        
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Preferred Teaching Type</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryPreferredTeachingType'], preferredTeachingTypeFilterOptions)}}</label></td>                    
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Location</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryLocation'], locationsFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Enquiry Email</label></td>
-          <td>
-            <label class="data">{{subscriptionPackageRecord.property['enquiryEmail']}}</label>
-            <span *ngIf="subscriptionPackageRecord.property['enquiryEmail'] !== subscriptionPackageRecord.property['customerEmail']"> (Different From Customer) </span>
-            <span *ngIf="subscriptionPackageRecord.property['enquiryEmail'] === subscriptionPackageRecord.property['customerEmail']"> (Same As Customer) </span>
-          </td>              
-        </tr> 
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">            
-          <td class="td-label"><label>Enquiry Contact Number</label></td>
-          <td>
-            <label class="data">{{subscriptionPackageRecord.property['enquiryContactNumber']}}</label>
-            <span *ngIf="subscriptionPackageRecord.property['enquiryContactNumber'] !== subscriptionPackageRecord.property['customerContactNumber']"> (Different From Customer) </span>
-            <span *ngIf="subscriptionPackageRecord.property['enquiryContactNumber'] === subscriptionPackageRecord.property['customerContactNumber']"> (Same As Customer) </span>
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Address Details</label></td>
-          <td>
-            <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryAddressDetails']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Additional Details</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryAdditionalDetails']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Quoted Client Rate</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['enquiryQuotedClientRate']}}</label></td>            
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Negotiated Rate With Client</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['enquiryNegotiatedRateWithClient']}}</label></td></tr>
-        <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-          <td class="td-label"><label>Client Negotiation Remarks</label></td>
-          <td>
-            <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryClientNegotiationRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="!showTutorDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-expander"
-                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showTutorDetails = true"></i>
-          </td>
-          <td>
-            Show Tutor Details
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-collapser"
-                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showTutorDetails = false"></i>
-          </td>
-          <td>
-            Hide Tutor Details
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
-          <td class="td-label"><label>Tutor Name</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['tutorName']}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
-          <td class="td-label"><label>Tutor Email</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['tutorEmail']}}</label></td>              
-        </tr> 
-        <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">            
-          <td class="td-label"><label>Tutor Contact Number</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['tutorContactNumber']}}</label></td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="!showTutorMapperDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-expander"
-                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showTutorMapperDetails = true"></i>
-          </td>
-          <td>
-            Show Tutor Mapper Details
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-collapser"
-                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showTutorMapperDetails = false"></i>
-          </td>
-          <td>
-            Hide Tutor Mapper Details
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
-          <td class="td-label"><label>Quoted Tutor Rate</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['tutorMapperQuotedTutorRate']}}</label></td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
-          <td class="td-label"><label>Negotiated Rate With Tutor</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['tutorMapperNegotiatedRateWithTutor']}}</label></td>              
-        </tr> 
-        <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">            
-          <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['tutorMapperTutorNegotiationRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="!showDemoDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-expander"
-                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showDemoDetails = true"></i>
-          </td>
-          <td>
-            Show Demo Details
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-collapser"
-                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showDemoDetails = false"></i>
-          </td>
-          <td>
-            Hide Demo Details
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
-          <td class="td-label"><label>Client Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['demoClientRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
-          <td class="td-label"><label>Tutor Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['demoTutorRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Client Satisfied From Tutor</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoClientSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Tutor Satisfied With Client</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoTutorSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Admin Satisfied From Tutor</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoAdminSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Admin Satisfied With Client</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoAdminSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Need Price Negotiation With Client</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoNeedPriceNegotiationWithClient'], yesNoFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Negotiated Override Rate With Client</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['demoNegotiatedOverrideRateWithClient']}}</label></td>              
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
-          <td class="td-label"><label>Client Negotiation Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['demoClientNegotiationRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Need Price Negotiation With Tutor</label></td>
-          <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoNeedPriceNegotiationWithTutor'], yesNoFilterOptions)}}</label></td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
-          <td class="td-label"><label>Negotiated Override Rate With Tutor</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['demoNegotiatedOverrideRateWithTutor']}}</label></td>              
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
-          <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['demoTutorNegotiationRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
-          <td class="td-label"><label>Admin Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['demoAdminRemarks']}}</div>
-          </td>
-        </tr>
-        <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
-          <td class="td-label"><label>Admin Finalizing Remarks</label></td>
-          <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['demoAdminFinalizingRemarks']}}</div>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label></label></td>
-          <td><label class="data"></label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Serial Id</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['subscriptionPackageSerialId']}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Created Date And Time</label></td>
-          <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['createdMillis'])}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Activated Date And Time</label></td>
-          <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['startDateMillis'])}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Activating Remarks</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('activatingRemarks', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['activatingRemarks']}}</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Package Billing Type</label></td>
-          <td>
-            <ng-multiselect-dropdown [placeholder]="'Package Billing Type'" [data]="packageBillingTypeFilterOptions"
-                                      [(ngModel)] = "selectedPackageBillingTypeOptions" name="selectedPackageBillingType"
-                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                      (onSelect)="updateSubscriptionPackageProperty('packageBillingType', $event, 'list')"
-                                      (onDeSelect)="updateSubscriptionPackageProperty('packageBillingType', $event, 'list', true)">
-            </ng-multiselect-dropdown>
-          </td>      
-        </tr>
-        <tr>
-          <td class="td-label"><label>Finalized Rate For Client</label></td>
-          <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForClient']}}"
-                      [disabled]="!editRecordForm"
-                      (change)="updateSubscriptionPackageProperty('finalizedRateForClient', $event, 'number')"></td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Additional Details For Client</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('additionalDetailsClient', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['additionalDetailsClient']}}</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Finalized Rate For Tutor</label></td>
-          <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForTutor']}}"
-                      [disabled]="!editRecordForm"
-                      (change)="updateSubscriptionPackageProperty('finalizedRateForTutor', $event, 'number')"></td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Additional Details For Tutor</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('additionalDetailsTutor', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['additionalDetailsTutor']}}</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Terminated Date And Time</label></td>
-          <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['endDateMillis'])}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Terminating Remarks</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('terminatingRemarks', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['terminatingRemarks']}}</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Is Customer Grieved</label></td>
-          <td>
-            <ng-multiselect-dropdown [placeholder]="'Is Customer Grieved'" [data]="yesNoFilterOptions"
-                                      [(ngModel)] = "selectedIsCustomerGrievedOptions" name="selectedIsCustomerGrieved"
-                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                      (onSelect)="updateSubscriptionPackageProperty('isCustomerGrieved', $event, 'list')"
-                                      (onDeSelect)="updateSubscriptionPackageProperty('isCustomerGrieved', $event, 'list', true)">
-            </ng-multiselect-dropdown>
-          </td>      
-        </tr>
-        <tr>
-          <td class="td-label"><label>Customer Happiness Index</label></td>
-          <td>
-            <ng-multiselect-dropdown [placeholder]="'Customer Happiness Index'" [data]="happinessIndexFilterOptions"
-                                      [(ngModel)] = "selectedCustomerHappinessIndexOptions" name="selectedCustomerHappinessIndex"
-                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                      (onSelect)="updateSubscriptionPackageProperty('customerHappinessIndex', $event, 'list')"
-                                      (onDeSelect)="updateSubscriptionPackageProperty('customerHappinessIndex', $event, 'list', true)">
-            </ng-multiselect-dropdown>
-          </td>      
-        </tr>
-        <tr>
-          <td class="td-label"><label>Customer Remarks</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('customerRemarks', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['customerRemarks']}}</textarea>
-          </td>
-        </tr> 
-        <tr>
-          <td class="td-label"><label>Is Tutor Grieved</label></td>
-          <td>
-            <ng-multiselect-dropdown [placeholder]="'Is Tutor Grieved'" [data]="yesNoFilterOptions"
-                                      [(ngModel)] = "selectedIsTutorGrievedOptions" name="selectedIsTutorGrieved"
-                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                      (onSelect)="updateSubscriptionPackageProperty('isTutorGrieved', $event, 'list')"
-                                      (onDeSelect)="updateSubscriptionPackageProperty('isTutorGrieved', $event, 'list', true)">
-            </ng-multiselect-dropdown>
-          </td>      
-        </tr>
-        <tr>
-          <td class="td-label"><label>Tutor Happiness Index</label></td>
-          <td>
-            <ng-multiselect-dropdown [placeholder]="'Tutor Happiness Index'" [data]="happinessIndexFilterOptions"
-                                      [(ngModel)] = "selectedTutorHappinessIndexOptions" name="selectedTutorHappinessIndex"
-                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                      (onSelect)="updateSubscriptionPackageProperty('tutorHappinessIndex', $event, 'list')"
-                                      (onDeSelect)="updateSubscriptionPackageProperty('tutorHappinessIndex', $event, 'list', true)">
-            </ng-multiselect-dropdown>
-          </td>      
-        </tr>
-        <tr>
-          <td class="td-label"><label>Tutor Remarks</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('tutorRemarks', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['tutorRemarks']}}</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Admin Remarks</label></td>
-          <td>
-              <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateSubscriptionPackageProperty('adminRemarks', $event, 'string')"
-                      >{{subscriptionPackageRecord.property['adminRemarks']}}</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-label"><label>Action Date</label></td>
-          <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['actionDateMillis'])}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Who Acted</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['whoActedName']}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Record Last Updated</label></td>
-          <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['recordLastUpdatedMillis'])}}</label></td>        
-        </tr>
-        <tr>
-          <td class="td-label"><label>Updated By</label></td>
-          <td><label class="data">{{subscriptionPackageRecord.property['updatedByName']}}</label></td>        
-        </tr>
-        <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
-          <td class="td-label">
-              <i
-                  id="employee-actions-details-expander"
-                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                  (click)="showEmployeeActionButtons = true"></i>
-          </td>
-          <td>
-            Show Action Buttons
-          </td>
-        </tr>
-        <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
-          <td colspan="2">          
-            <table width="100%">
-                <tr>
-                  <td class="td-label">
-                      <i
-                          id="employee-actions-details-collapser"
-                          class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                          (click)="showEmployeeActionButtons = false"></i>
-                  </td>
-                  <td colspan="3">
-                    Hide Action Buttons
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>
-                    <button type="submit"
-                            class="btnSubmit"
-                            (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for activating the subscription.', 'activateSubscription')">            
-                            Activate Subscription
-                    </button>
-                  </td> 
-                  <td>
-                    <button type="submit"
-                            class="btnReject"
-                            (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for ending the subscription.', 'endSubscription', true)">            
-                            Terminate Subscription
-                    </button>
-                  </td>              
-                  <td>
-                    <button type="submit"
-                            class="btnReset"
-                            (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for creating assignment.', 'createAssignment')">            
-                            Create Assignment
-                    </button>
-                  </td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td colspan="4"></td>
-                </tr>                         
-            </table>
-          </td>
-        </tr>
-      </table>
-      <button *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
-              class="ok-button form-container-update-button"
-              (click)="updateSubscriptionPackageRecord()">
-        Update
-      </button>
-    </form>
+      </form>
+    </div>
+  </div>
+  <div id="subscription-packages-assignment-data-page" *ngIf="showSubscriptionPackageAssignmentData">
+    <button
+        id="back-to-subscription-packages-data-button"
+        class="back-to-listing-button ok-button" (click)="toggleVisibilitySubscriptionPackageAssignmentGrid()">
+        <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-subscription-package-assignment 
+                    [subscriptionPackageAssignmentRecord]="selectedSubscriptionPackageAssignmentRecord" 
+                    [subscriptionPackageAssignmentDataAccess]="subscriptionPackageAssignmentDataAccess"
+                    [selectedRecordGridType]="selectedRecordAssignmentGridType">
+    </app-subscription-package-assignment>
   </div>
 </div>

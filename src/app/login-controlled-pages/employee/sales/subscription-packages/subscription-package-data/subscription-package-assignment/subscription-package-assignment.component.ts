@@ -1,14 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { SubscriptionPackageDataAccess } from '../../subscription-packages.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { SubscriptionPackageAssignmentDataAccess } from '../subscription-package-data.component';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { SubscriptionPackageAssignmentDataAccess } from '../subscription-package-data.component';
 
 @Component({
   selector: 'app-subscription-package-assignment',
@@ -101,5 +100,34 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     if (data['success']) {
       context.editRecordForm = false;
     }
+  }
+
+  takeActionOnSubscriptionPackageAssignment(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => {                  
+        const data = {
+          allIdsList: this.subscriptionPackageAssignmentRecord.getProperty('packageAssignmentSerialId'),
+          button: actionText,
+          comments: message
+        };
+        this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
+          LcpRestUrls.take_action_on_subscription_package, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
+  }
+
+  handleTakeActionOnSubscriptionPackageAssignmentRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
   }
 }

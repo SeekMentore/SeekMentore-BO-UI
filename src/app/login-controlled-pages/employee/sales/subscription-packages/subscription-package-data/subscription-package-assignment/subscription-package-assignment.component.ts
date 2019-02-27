@@ -114,7 +114,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
           comments: message
         };
         this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
-          LcpRestUrls.take_action_on_subscription_package, 'POST', this.utilityService.urlEncodeData(data),
+          LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
           'application/x-www-form-urlencoded');
       },
       onCancel: () => {

@@ -1,0 +1,20 @@
+<div>
+  <div id="assignment-list-page" *ngIf="!showAssignmentAttendanceData">
+    <app-grid #newAssignmentGrid id="new-assignment-grid" [gridMetaData]="newAssignmentGridMetaData"></app-grid>
+    <app-grid #startedAssignmentGrid id="started-assignment-grid" [gridMetaData]="startedAssignmentGridMetaData"></app-grid>
+    <app-grid #hoursCompletedAssignmentGrid id="hours-completed-assignment-grid" [gridMetaData]="hoursCompletedAssignmentGridMetaData"></app-grid>
+    <app-grid #reviewedAssignmentGrid id="reviewed-assignment-grid" [gridMetaData]="reviewedAssignmentGridMetaData"></app-grid>
+  </div>
+  <div id="assignment-mark-attendance-page" *ngIf="showAssignmentAttendanceData">
+    <button
+      id="back-to-assignment-listing-button"
+      class="back-to-listing-button ok-button" (click)="toggleVisibilityAssignmentsGrid()">
+      <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
+    </button>
+    <app-mark-assignment-attendance 
+                  [selectedAssignmentRecord]="selectedAssignmentRecord" 
+                  [assignmentAttendanceMarkingAccess]="assignmentAttendanceMarkingAccess"
+                  [selectedRecordGridType]="selectedRecordGridType">
+    </app-mark-assignment-attendance>
+  </div>
+</div>

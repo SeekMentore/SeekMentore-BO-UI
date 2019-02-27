@@ -23,6 +23,7 @@ import { ControlPanelComponent } from 'src/app/login-controlled-pages/employee/s
 import { ScheduleDemoComponent } from 'src/app/login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
 import { ChangePasswordComponent } from '../login-controlled-pages/change-password/change-password.component';
 import { ForgotPasswordTokenResetComponent } from '../non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
+import { AssignmentAttendanceComponent } from '../login-controlled-pages/employee/sales/assignment-attendance/assignment-attendance.component';
 
 const routes: Routes = [
   {
@@ -53,7 +54,8 @@ const routes: Routes = [
               {path: 'maptutortoenquiry', component: MapTutorToEnquiryComponent, canActivate: [RoutingGuardService]},
               {path: 'scheduledemo', component: ScheduleDemoComponent, canActivate: [RoutingGuardService]},
               {path: 'demotracker', component: DemoTrackerComponent, canActivate: [RoutingGuardService]},
-              {path: 'subscriptionpackages', component: SubscriptionPackagesComponent, canActivate: [RoutingGuardService]}
+              {path: 'subscriptionpackages', component: SubscriptionPackagesComponent, canActivate: [RoutingGuardService]},
+              {path: 'assignmentattendance', component: AssignmentAttendanceComponent, canActivate: [RoutingGuardService]}
             ]
           },
           {

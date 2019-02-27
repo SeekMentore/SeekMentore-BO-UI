@@ -55,6 +55,8 @@ import { SubscriptionPackageDataComponent } from './login-controlled-pages/emplo
 import { BreadCrumbComponent } from './login-controlled-pages/bread-crumb/bread-crumb.component';
 import { ForgotPasswordTokenResetComponent } from './non-login-pages/forgot-password-token-reset/forgot-password-token-reset.component';
 import { SubscriptionPackageAssignmentComponent } from './login-controlled-pages/employee/sales/subscription-packages/subscription-package-data/subscription-package-assignment/subscription-package-assignment.component';
+import { AssignmentAttendanceComponent } from './login-controlled-pages/employee/sales/assignment-attendance/assignment-attendance.component';
+import { MarkAssignmentAttendanceComponent } from './login-controlled-pages/employee/sales/assignment-attendance/mark-assignment-attendance/mark-assignment-attendance.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +107,9 @@ import { SubscriptionPackageAssignmentComponent } from './login-controlled-pages
     SubscriptionPackageDataComponent,
     BreadCrumbComponent,
     ForgotPasswordTokenResetComponent,
-    SubscriptionPackageAssignmentComponent
+    SubscriptionPackageAssignmentComponent,
+    AssignmentAttendanceComponent,
+    MarkAssignmentAttendanceComponent
   ],
   imports: [
     BrowserModule,

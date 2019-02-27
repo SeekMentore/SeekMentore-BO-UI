@@ -83,28 +83,28 @@ export class ApplicationBreadCrumbConfig {
                                         }, {
                                           splitPath: 'allenquiries',
                                           showLabel: true,
-                                          label: 'Enquiries',
+                                          label: 'Enquiry Manager',
                                           isLast: true,
                                           isActivated: true,
                                           url: '/user/employee/sales/allenquiries'
                                         }, {
                                           splitPath: 'maptutortoenquiry',
                                           showLabel: true,
-                                          label: 'Map Tutor To Enquiry',
+                                          label: 'Tutor Mapping',
                                           isLast: true,
                                           isActivated: true,
                                           url: '/user/employee/sales/maptutortoenquiry'
                                         }, {
                                           splitPath: 'scheduledemo',
                                           showLabel: true,
-                                          label: 'Schedule Demo',
+                                          label: 'Demo Scheduler',
                                           isLast: true,
                                           isActivated: true,
                                           url: '/user/employee/sales/scheduledemo'
                                         }, {
                                           splitPath: 'demotracker',
                                           showLabel: true,
-                                          label: 'Demo Tracker',
+                                          label: 'Demo Manager',
                                           isLast: true,
                                           isActivated: true,
                                           url: '/user/employee/sales/demotracker'
@@ -115,6 +115,13 @@ export class ApplicationBreadCrumbConfig {
                                           isLast: true,
                                           isActivated: true,
                                           url: '/user/employee/sales/subscriptionpackages'
+                                        }, {
+                                          splitPath: 'assignmentattendance',
+                                          showLabel: true,
+                                          label: 'Assignment Attendance',
+                                          isLast: true,
+                                          isActivated: true,
+                                          url: '/user/employee/sales/assignmentattendance'
                                         }, {
                                           splitPath: 'support',
                                           showLabel: true,

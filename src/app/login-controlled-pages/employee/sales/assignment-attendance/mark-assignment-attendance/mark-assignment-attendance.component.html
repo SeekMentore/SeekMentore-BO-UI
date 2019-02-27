@@ -1,0 +1,58 @@
+<div>
+  <div class="form-container-div">
+      <form class="form-container" style="max-width: 80%" *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled">
+          <div *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled"
+                class="form-container-toggle-button">
+            <label class="tab_container" (change)="editAttendanceMarkForm = false;">
+              <input type="radio" checked name="editFormChoice">
+              <span class="tab_checkmark left">View</span>
+            </label>
+            <label class="tab_container" (change)="editAttendanceMarkForm = true;">
+              <input type="radio" name="editFormChoice">
+              <span class="tab_checkmark right">Edit</span>
+            </label>
+          </div>
+        <table class="form-container-generic-table">
+          <tr>
+            <td class="td-label"><label>Entry Date</label></td>
+            <td><input class="input_field" type="date" value=""
+                        [disabled]="!editAttendanceMarkForm"
+                        (change)="updateAssignmentAttendanceProperty('demoDateMillis', $event, 'millis')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Entry Time</label></td>
+            <td><input class="input_field" type="time" value=""
+                        [disabled]="!editAttendanceMarkForm"
+                        (change)="updateAssignmentAttendanceProperty('demoTimeMillis', $event, 'millis')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Exit Date</label></td>
+            <td><input class="input_field" type="date" value=""
+                        [disabled]="!editAttendanceMarkForm"
+                        (change)="updateAssignmentAttendanceProperty('demoDateMillis', $event, 'millis')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Exit Time</label></td>
+            <td><input class="input_field" type="time" value=""
+                        [disabled]="!editAttendanceMarkForm"
+                        (change)="updateAssignmentAttendanceProperty('demoTimeMillis', $event, 'millis')"></td>
+          </tr>
+          <tr>
+            <td class="td-label"><label>Re-Scheduling Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editAttendanceMarkForm" 
+                      (change)="updateDemoTrackerProperty('reschedulingRemarks', $event, 'string')"
+                ></textarea>
+            </td>        
+          </tr>
+        </table>
+        <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled && editAttendanceMarkForm" type="submit"
+              class="ok-button form-container-update-button"
+              (click)="reScheduleDemo()">
+          Re-Schedule Demo
+        </button>
+      </form>
+  </div>
+</div>

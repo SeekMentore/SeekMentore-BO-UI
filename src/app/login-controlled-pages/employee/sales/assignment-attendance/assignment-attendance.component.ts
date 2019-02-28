@@ -182,7 +182,7 @@ export class AssignmentAttendanceComponent implements OnInit {
 
   public setUpGridMetaData() {
     this.newAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('newAssignmentGrid', 'New Assignments', '/rest/sales/newAssignmentList'),
+      grid: this.getAssignmentGridObject('newAssignmentGrid', 'New Assignments', '/rest/sales/newAssignmentList', true),
       htmlDomElementId: 'new-assignment-grid',
       hidden: false
     };
@@ -194,13 +194,13 @@ export class AssignmentAttendanceComponent implements OnInit {
     };
 
     this.hoursCompletedAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('hoursCompletedAssignmentGrid', 'Hours Completed Assignments', '/rest/sales/hoursCompletedAssignmentList'),
+      grid: this.getAssignmentGridObject('hoursCompletedAssignmentGrid', 'Hours Completed Assignments', '/rest/sales/hoursCompletedAssignmentList', true),
       htmlDomElementId: 'hours-completed-assignment-grid',
       hidden: false
     };
 
     this.reviewedAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('reviewedAssignmentGrid', 'Reviewed Assignments', '/rest/sales/reviewedAssignmentList'),
+      grid: this.getAssignmentGridObject('reviewedAssignmentGrid', 'Reviewed Assignments', '/rest/sales/reviewedAssignmentList', true),
       htmlDomElementId: 'reviewed-assignment-grid',
       hidden: false
     };

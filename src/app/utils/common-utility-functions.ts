@@ -22,6 +22,13 @@ export class CommonUtilityFunctions {
     return false;
   }
 
+  public static checkNonNegativeNumberAvailability(object: number) {
+    if (CommonUtilityFunctions.checkObjectAvailability(object)) {
+      return object >= 0;
+    }    
+    return false;
+  }
+
   public static getDateForDateInputParam(completeDateSignatureInUTC: Date) {
     const dateParam = new Date(completeDateSignatureInUTC);
     let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
@@ -229,4 +236,86 @@ export class CommonUtilityFunctions {
     }
     return searchedStringItemList;
   }
+
+  public static calculateRemainingHoursMinutesSecondsFromTotalAndCompletedHoursMinutesSeconds(
+    totalHours: number,
+    totalMinutes: number,
+    totalSeconds: number,
+    completedHours: number,
+    completedMinutes: number,
+    completedSeconds: number
+  ) {
+    if (!CommonUtilityFunctions.checkObjectAvailability(totalHours) || totalHours < 1) {
+      totalHours = 0;
+    }
+    if (!CommonUtilityFunctions.checkObjectAvailability(totalMinutes) || totalMinutes < 1) {
+      totalMinutes = 0;
+    }
+    if (!CommonUtilityFunctions.checkObjectAvailability(totalSeconds) || totalSeconds < 1) {
+      totalSeconds = 0;
+    }
+    if (!CommonUtilityFunctions.checkObjectAvailability(completedHours) || completedHours < 1) {
+      completedHours = 0;
+    }
+    if (!CommonUtilityFunctions.checkObjectAvailability(completedMinutes) || completedMinutes < 1) {
+      completedMinutes = 0;
+    }
+    if (!CommonUtilityFunctions.checkObjectAvailability(completedSeconds) || completedSeconds < 1) {
+      completedSeconds = 0;
+    }
+    let calculateTotalDurationInSeconds: number = (totalHours * 60 * 60) + (totalMinutes * 60) + totalSeconds;
+    let calculateCompletedDurationInSeconds: number = (completedHours * 60 * 60) + (completedMinutes * 60) + completedSeconds;
+    return CommonUtilityFunctions.calculateGapInTime(calculateTotalDurationInSeconds, calculateCompletedDurationInSeconds);
+  }
+
+  public static calculateIntervalHoursMinutesSecondsFromStartMillisecondsAndEndMilliseconds(
+    startMillis: number,
+    endMillis: number
+  ) {
+    if (!CommonUtilityFunctions.checkObjectAvailability(startMillis) || startMillis < 1) {
+      startMillis = 0;
+    }
+    if (!CommonUtilityFunctions.checkObjectAvailability(endMillis) || endMillis < 1) {
+      endMillis = 0;
+    }
+    let calculateTotalDurationInSeconds: number = Math.ceil(endMillis / 1000);
+    let calculateCompletedDurationInSeconds: number = Math.ceil(startMillis / 1000);
+    return CommonUtilityFunctions.calculateGapInTime(calculateTotalDurationInSeconds, calculateCompletedDurationInSeconds);
+  }
+
+  private static calculateGapInTime(totalDurationInSeconds: number, completedDurationInSeconds: number) {
+    let remainingTime: {
+      remainingHours: number,
+      remainingMinutes: number,
+      remainingSeconds: number,
+      overdueHours: number,
+      overdueMinutes: number,
+      overdueSeconds: number,
+      isOverdue: boolean
+    } = {
+      remainingHours: 0,
+      remainingMinutes: 0,
+      remainingSeconds: 0,
+      overdueHours: 0,
+      overdueMinutes: 0,
+      overdueSeconds: 0,
+      isOverdue: (completedDurationInSeconds > totalDurationInSeconds)
+    };
+    let calculateGapDurationInSeconds: number = remainingTime.isOverdue 
+                            ? (completedDurationInSeconds - totalDurationInSeconds)
+                            : (totalDurationInSeconds - completedDurationInSeconds);
+    let gapInHours: number = Math.floor(calculateGapDurationInSeconds / 3600);
+    let gapInMinutes: number = Math.floor((calculateGapDurationInSeconds - (gapInHours * 3600)) / 60);
+    let gapInSeconds: number = calculateGapDurationInSeconds - ((gapInHours * 3600) + (gapInMinutes * 60));
+    if (remainingTime.isOverdue) {
+      remainingTime.overdueHours = gapInHours;
+      remainingTime.overdueMinutes = gapInMinutes;
+      remainingTime.overdueSeconds = gapInSeconds;
+    } else {
+      remainingTime.remainingHours = gapInHours;
+      remainingTime.remainingMinutes = gapInMinutes;
+      remainingTime.remainingSeconds = gapInSeconds;
+    }
+    return remainingTime;
+  }  
 }

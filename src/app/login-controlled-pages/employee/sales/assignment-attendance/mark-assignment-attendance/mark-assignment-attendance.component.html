@@ -3,55 +3,251 @@
       <form class="form-container" style="max-width: 80%" *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled">
           <div *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled"
                 class="form-container-toggle-button">
-            <label class="tab_container" (change)="editAttendanceMarkForm = false;">
+            <label class="tab_container" (change)="editRecordForm = false;">
               <input type="radio" checked name="editFormChoice">
               <span class="tab_checkmark left">View</span>
             </label>
-            <label class="tab_container" (change)="editAttendanceMarkForm = true;">
+            <label class="tab_container" (change)="editRecordForm = true;">
               <input type="radio" name="editFormChoice">
               <span class="tab_checkmark right">Edit</span>
             </label>
           </div>
         <table class="form-container-generic-table">
           <tr>
-            <td class="td-label"><label>Entry Date</label></td>
-            <td><input class="input_field" type="date" value=""
-                        [disabled]="!editAttendanceMarkForm"
-                        (change)="updateAssignmentAttendanceProperty('demoDateMillis', $event, 'millis')"></td>
+            <td colspan="2">
+              <table class="form-container-generic-table">
+                <tr>
+                  <td class="td-label"><label>Assignment Serial Id</label></td>
+                  <td colspan="3"><label class="data">{{packageAssignmentRecord.property['packageAssignmentSerialId']}}</label></td>                        
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Total Hours</label></td>
+                  <td colspan="3"><label class="data">{{packageAssignmentRecord.property['totalHours']}}</label></td>                        
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Completed Hours</label></td>
+                  <td><label class="data">{{packageAssignmentRecord.property['completedHours']}}</label></td> 
+                  <td class="td-label"><label>Completed Minutes</label></td>
+                  <td><label class="data">{{packageAssignmentRecord.property['completedMinutes']}}</label></td>             
+                </tr>
+                <tr>            
+                  <td class="td-label"><label>Remaining Hours</label></td>
+                  <td><label class="data">{{remainingHours}}</label></td>
+                  <td class="td-label"><label>Remaining Minutes</label></td>
+                  <td><label class="data">{{remainingMinutes}}</label></td>
+                </tr>
+              </table>
+            </td>
           </tr>
           <tr>
-            <td class="td-label"><label>Entry Time</label></td>
-            <td><input class="input_field" type="time" value=""
-                        [disabled]="!editAttendanceMarkForm"
-                        (change)="updateAssignmentAttendanceProperty('demoTimeMillis', $event, 'millis')"></td>
-          </tr>
+            <td colspan="2">
+              <table class="form-container-generic-table">                
+                <tr>
+                  <td class="td-label"><label>Entry Date</label></td>
+                  <td><input class="input_field" type="date" value="" id="entryDateMillis"
+                            [disabled]="!editRecordForm"
+                            (change)="updateAssignmentAttendanceProperty('entryDateMillis', $event, 'millis')"></td> 
+                  <td class="td-label"><label>Entry Time</label></td>
+                  <td><input class="input_field" type="time" value="" id="entryTimeMillis"
+                            [disabled]="!editRecordForm"
+                            (change)="updateAssignmentAttendanceProperty('entryTimeMillis', $event, 'millis')"></td>             
+                </tr>
+                <tr>            
+                  <td class="td-label"><label>Exit Date</label></td>
+                  <td><input class="input_field" type="date" value="" id="exitDateMillis"
+                            [disabled]="!editRecordForm"
+                            (change)="updateAssignmentAttendanceProperty('exitDateMillis', $event, 'millis')"></td>
+                  <td class="td-label"><label>Exit Time</label></td>
+                  <td><input class="input_field" type="time" value="" id="exitTimeMillis"
+                            [disabled]="!editRecordForm"
+                            (change)="updateAssignmentAttendanceProperty('exitTimeMillis', $event, 'millis')"></td>
+                </tr>
+                <tr *ngIf="isOverdue">            
+                  <td class="td-label"></td>
+                  <td colspan="3"><label class="error">Entry Date & Time should not be more than Exit Date & Time</label></td>
+                </tr>
+                <tr>            
+                  <td class="td-label"><label>Duration Hours</label></td>
+                  <td><label class="data">{{durationHours}}</label></td>
+                  <td class="td-label"><label>Duration Minutes</label></td>
+                  <td><label class="data">{{durationMinutes}}</label></td>
+                </tr>
+              </table>
+            </td>
+          </tr>          
           <tr>
-            <td class="td-label"><label>Exit Date</label></td>
-            <td><input class="input_field" type="date" value=""
-                        [disabled]="!editAttendanceMarkForm"
-                        (change)="updateAssignmentAttendanceProperty('demoDateMillis', $event, 'millis')"></td>
-          </tr>
-          <tr>
-            <td class="td-label"><label>Exit Time</label></td>
-            <td><input class="input_field" type="time" value=""
-                        [disabled]="!editAttendanceMarkForm"
-                        (change)="updateAssignmentAttendanceProperty('demoTimeMillis', $event, 'millis')"></td>
-          </tr>
-          <tr>
-            <td class="td-label"><label>Re-Scheduling Remarks</label></td>
+            <td class="td-label"><label>Topics Taught</label></td>
             <td>
               <textarea 
                       class="textarea_field"
-                      [disabled]="!editAttendanceMarkForm" 
-                      (change)="updateDemoTrackerProperty('reschedulingRemarks', $event, 'string')"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateAssignmentAttendanceProperty('topicsTaught', $event, 'string')"
+                ></textarea>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Is Classwork Provided</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Classwork Provided'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsClassworkProvidedOptions" name="selectedIsClassworkProvided"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateAssignmentAttendanceProperty('isClassworkProvided', $event, 'list')"
+                                        (onDeSelect)="updateAssignmentAttendanceProperty('isClassworkProvided', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Is Homework Provided</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Homework Provided'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsHomeworkProvidedOptions" name="selectedIsHomeworkProvided"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateAssignmentAttendanceProperty('isHomeworkProvided', $event, 'list')"
+                                        (onDeSelect)="updateAssignmentAttendanceProperty('isHomeworkProvided', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Is Test Provided</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Test Provided'" [data]="yesNoFilterOptions"
+                                        [(ngModel)] = "selectedIsTestProvidedOptions" name="selectedIsTestProvided"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateAssignmentAttendanceProperty('isTestProvided', $event, 'list')"
+                                        (onDeSelect)="updateAssignmentAttendanceProperty('isTestProvided', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateAssignmentAttendanceProperty('tutorRemarks', $event, 'string')"
+                ></textarea>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Punctuality Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Tutor Punctuality Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedTutorPunctualityIndexOptions" name="selectedTutorPunctualityIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateAssignmentAttendanceProperty('tutorPunctualityIndex', $event, 'list')"
+                                        (onDeSelect)="updateAssignmentAttendanceProperty('tutorPunctualityIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Punctuality Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateAssignmentAttendanceProperty('punctualityRemarks', $event, 'string')"
+                ></textarea>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Expertise Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Tutor Expertise Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedTutorExpertiseIndexOptions" name="selectedTutorExpertiseIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateAssignmentAttendanceProperty('tutorExpertiseIndex', $event, 'list')"
+                                        (onDeSelect)="updateAssignmentAttendanceProperty('tutorExpertiseIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Expertise Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateAssignmentAttendanceProperty('expertiseRemarks', $event, 'string')"
+                ></textarea>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Tutor Knowledge Index</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Tutor Knowledge Index'" [data]="happinessIndexFilterOptions"
+                                        [(ngModel)] = "selectedTutorKnowledgeIndexOptions" name="selectedTutorKnowledgeIndex"
+                                        [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                        (onSelect)="updateAssignmentAttendanceProperty('tutorKnowledgeIndex', $event, 'list')"
+                                        (onDeSelect)="updateAssignmentAttendanceProperty('tutorKnowledgeIndex', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>      
+          </tr>
+          <tr>
+            <td class="td-label"><label>Knowledge Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateAssignmentAttendanceProperty('knowledgeRemarks', $event, 'string')"
+                ></textarea>
+            </td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Student Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateAssignmentAttendanceProperty('studentRemarks', $event, 'string')"
                 ></textarea>
             </td>        
           </tr>
         </table>
-        <button *ngIf="demoTrackerModifyAccess.demoTrackerFormAccess && !formEditMandatoryDisbaled && editAttendanceMarkForm" type="submit"
+        <div class="attachments" *ngIf="editRecordForm">
+          <!--Classwork Document-->
+          <div class="file_chooser_container">
+            <span>Attach Classwork:</span>
+            <label for="classwork_file" class="choose_file_container">
+              <input name="id_proof" type="file" accept="file/*" id="classwork_file" [disabled]="!editRecordForm"
+                      (change)="attachFile($event,'classwork')">
+              <span class="button-primary"> Click to Upload </span>
+              <span *ngIf="classwork">{{classwork.name}}</span>
+            </label>
+          </div>
+          <!--Homework Document-->
+          <div class="file_chooser_container">
+            <span>Attach Homework:</span>
+            <label for="homework_file" class="choose_file_container">
+              <input name="id_proof" type="file" accept="file/*" id="homework_file" [disabled]="!editRecordForm"
+                      (change)="attachFile($event,'homework')">
+              <span class="button-primary"> Click to Upload </span>
+              <span *ngIf="homework">{{homework.name}}</span>
+            </label>
+          </div>
+          <!--Test Document-->
+          <div class="file_chooser_container">
+            <span>Attach Test:</span>
+            <label for="test_file" class="choose_file_container">
+              <input name="id_proof" type="file" accept="file/*" id="test_file" [disabled]="!editRecordForm"
+                      (change)="attachFile($event,'test')">
+              <span class="button-primary"> Click to Upload </span>
+              <span *ngIf="test">{{test.name}}</span>
+            </label>
+          </div>
+          <!--Other Document-->
+          <div class="file_chooser_container">
+            <span>Attach Other Doc:</span>
+            <label for="other_file" class="choose_file_container">
+              <input name="id_proof" type="file" accept="file/*" id="other_file" [disabled]="!editRecordForm"
+                      (change)="attachFile($event,'other')">
+              <span class="button-primary"> Click to Upload </span>
+              <span *ngIf="other">{{other.name}}</span>
+            </label>
+          </div>
+        </div>
+        <button *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
               class="ok-button form-container-update-button"
-              (click)="reScheduleDemo()">
-          Re-Schedule Demo
+              (click)="insertAssignmentAttendanceRecord()">
+          Insert Attendance
         </button>
       </form>
   </div>

@@ -380,9 +380,9 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           id: 'documentType',
           headerName: 'Document Type',
           dataType: 'list',
-          filterOptions: CommonFilterOptions.documentTypeFilterOptions,
+          filterOptions: CommonFilterOptions.tutorDocumentTypeFilterOptions,
           mapping: 'documentType',
-          renderer: AdminCommonFunctions.documentTypeRenderer,
+          renderer: AdminCommonFunctions.tutorDocumentTypeRenderer,
           clickEvent: (record: GridRecord, column: Column) => {
             const documentIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentId');
             documentIdElement.value = record.getProperty('documentId');

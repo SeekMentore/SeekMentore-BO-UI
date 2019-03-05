@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { AssignmentAttendanceMarkingAccess } from '../assignment-attendance.component';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
@@ -8,6 +8,9 @@ import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { Column } from 'src/app/utils/grid/column';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 
 @Component({
   selector: 'app-mark-assignment-attendance',
@@ -24,6 +27,10 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   @Input()
   selectedRecordGridType: string = null;
+
+  @ViewChild('assignmentAttendanceGrid')
+  assignmentAttendanceGridObject: GridComponent;
+  assignmentAttendanceGridMetaData: GridDataInterface;
 
   assignmentAttendanceUpdatedRecord = {};
 
@@ -55,11 +62,23 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   other: any = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {    
+    this.assignmentAttendanceGridMetaData = null;
   }
 
   ngOnInit() {
+    this.setUpGridMetaData();
     this.calculateRemainingDuration();
     this.setDisabledStatus();
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.assignmentAttendanceGridObject.init();
+      this.assignmentAttendanceGridObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentRecord.getProperty('packageAssignmentSerialId'));
+    }, 0);
+    setTimeout(() => {
+      this.assignmentAttendanceGridObject.refreshGridData();
+    }, 0);
   }
 
   private setDisabledStatus() {
@@ -103,6 +122,145 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     if (type === 'other') {
       this.other = null;
     }
+  }
+
+  public getAssignmentAttendanceGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
+    let grid = {
+      id: id,
+      title: title,
+      collapsed: collapsed,
+      store: {
+        isStatic: false,
+        restURL: restURL,
+        download: {
+          url: '/rest/sales/downloadAttendanceSheet',
+          preDownload: (gridComponentObject: GridComponent) => {
+            gridComponentObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentRecord.getProperty('packageAssignmentSerialId'));
+          }
+        }
+      },
+      columns: [{
+        id: 'entryDateTimeMillis',
+        headerName: 'Entry Date & Time',
+        dataType: 'date',
+        mapping: 'entryDateTimeMillis',
+        renderer: GridCommonFunctions.renderDateFromMillisWithTime
+      },{
+        id: 'exitDateTimeMillis',
+        headerName: 'Exit Date & Time',
+        dataType: 'date',
+        mapping: 'exitDateTimeMillis',
+        renderer: GridCommonFunctions.renderDateFromMillisWithTime
+      },{
+        id: 'durationHours',
+        headerName: 'Duration Hours',
+        dataType: 'number',
+        mapping: 'durationHours'
+      },{
+        id: 'durationMinutes',
+        headerName: 'Duration Minutes',
+        dataType: 'number',
+        mapping: 'durationMinutes'
+      },{
+        id: 'topicsTaught',
+        headerName: 'Topics Taught',
+        dataType: 'string',
+        mapping: 'topicsTaught',
+        lengthyData: true
+      },{
+        id: 'isClassworkProvided',
+        headerName: 'Classwork Provided',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isClassworkProvided',
+        renderer: GridCommonFunctions.yesNoRenderer
+      },{
+        id: 'isHomeworkProvided',
+        headerName: 'Homework Provided',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isHomeworkProvided',
+        renderer: GridCommonFunctions.yesNoRenderer
+      },{
+        id: 'isTestProvided',
+        headerName: 'Test Provided',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isTestProvided',
+        renderer: GridCommonFunctions.yesNoRenderer
+      },{
+        id: 'tutorRemarks',
+        headerName: 'Tutor Remarks',
+        dataType: 'string',
+        mapping: 'tutorRemarks',
+        lengthyData: true
+      },{
+        id: 'tutorPunctualityIndex',
+        headerName: 'Tutor Punctuality Index',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.happinessIndexFilterOptions,
+        mapping: 'tutorPunctualityIndex',
+        renderer: AdminCommonFunctions.happinessIndexRenderer
+      },{
+        id: 'punctualityRemarks',
+        headerName: 'Punctuality Remarks',
+        dataType: 'string',
+        mapping: 'punctualityRemarks',
+        lengthyData: true
+      },{
+        id: 'tutorExpertiseIndex',
+        headerName: 'Tutor Expertise Index',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.happinessIndexFilterOptions,
+        mapping: 'tutorExpertiseIndex',
+        renderer: AdminCommonFunctions.happinessIndexRenderer
+      },{
+        id: 'expertiseRemarks',
+        headerName: 'Expertise Remarks',
+        dataType: 'string',
+        mapping: 'expertiseRemarks',
+        lengthyData: true
+      },{
+        id: 'tutorKnowledgeIndex',
+        headerName: 'Tutor Knowledge Index',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.happinessIndexFilterOptions,
+        mapping: 'tutorKnowledgeIndex',
+        renderer: AdminCommonFunctions.happinessIndexRenderer
+      },{
+        id: 'knowledgeRemarks',
+        headerName: 'Knowledge Remarks',
+        dataType: 'string',
+        mapping: 'knowledgeRemarks',
+        lengthyData: true
+      },{
+        id: 'studentRemarks',
+        headerName: 'Student Remarks',
+        dataType: 'string',
+        mapping: 'studentRemarks',
+        lengthyData: true
+      },{
+        id: 'recordLastUpdatedMillis',
+        headerName: 'Record Last Updated',
+        dataType: 'date',
+        mapping: 'recordLastUpdatedMillis',
+        renderer: GridCommonFunctions.renderDateFromMillisWithTime
+      },{
+        id: 'updatedBy',
+        headerName: 'Updated By',
+        dataType: 'string',
+        mapping: 'updatedByName'
+      }]
+    };
+    return grid;    
+  }
+
+  public setUpGridMetaData() {
+    this.assignmentAttendanceGridMetaData = {
+      grid: this.getAssignmentAttendanceGridObject('assignmentAttendanceGrid', 'Attendance', '/rest/sales/assignmentAttendanceList'),
+      htmlDomElementId: 'assignment-attendance-grid',
+      hidden: false
+    };
   }
 
   private calculateRemainingDuration() {
@@ -183,9 +341,9 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   insertAssignmentAttendanceRecord() {
     if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
+      CommonUtilityFunctions.updateRecordProperty('durationHours', this.durationHours.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('durationMinutes', this.durationMinutes.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentRecord.getProperty('packageAssignmentSerialId'));
-      data.append('durationHours', this.durationHours.toString());
-      data.append('durationMinutes', this.durationMinutes.toString());
       if (this.classwork) {
         data.append('inputFileClasswork', this.classwork);
       }

@@ -1008,7 +1008,7 @@ export class CommonFilterOptions {
                                 label : 'Tutoring at your place'
                               }];
 
-  static documentTypeFilterOptions: any [] = [{
+  static tutorDocumentTypeFilterOptions: any [] = [{
                                 value : '01',
                                 label : 'PAN Card'
                               },{
@@ -1164,6 +1164,25 @@ export class CommonFilterOptions {
                               },{
                                 value : '10',
                                 label : 'Fixed'
+                              }];
+
+    static contractTypeFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Customer Subscription Package'
+                              }];
+
+    static assignmentAttendanceDocumentTypeFilterOptions: any [] = [{
+                                value : '01',
+                                label : 'Classwork'
+                              },{
+                                value : '02',
+                                label : 'Homework'
+                              },{
+                                value : '03',
+                                label : 'Test'
+                              },{
+                                value : '04',
+                                label : 'Other'
                               }];
 
   static singleSelectOptionsConfiguration = {

@@ -1,4 +1,5 @@
 <div>
+  <app-grid #assignmentAttendanceGrid id="assignment-attendance-grid" [gridMetaData]="assignmentAttendanceGridMetaData"></app-grid>
   <div class="form-container-div">
       <form class="form-container" style="max-width: 80%" *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled">
           <div *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled"

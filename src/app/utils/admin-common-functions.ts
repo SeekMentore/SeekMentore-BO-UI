@@ -96,12 +96,12 @@ export class AdminCommonFunctions {
         return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.userFilterOptions, ';'); 
     }
 
-    public static documentTypeRenderer(record: GridRecord, column: Column) {
-        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.documentTypeFilterOptions); 
+    public static tutorDocumentTypeRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.tutorDocumentTypeFilterOptions); 
     }
 
-    public static documentTypeMultiRenderer(record: GridRecord, column: Column) {
-        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.documentTypeFilterOptions, ';'); 
+    public static tutorDocumentTypeMultiRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupMultiRenderer(record, column, CommonFilterOptions.tutorDocumentTypeFilterOptions, ';'); 
     }
 
     public static queryStatusRenderer(record: GridRecord, column: Column) {
@@ -122,5 +122,13 @@ export class AdminCommonFunctions {
 
     public static demoStatusRenderer(record: GridRecord, column: Column) {
         return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.demoStatusFilterOptions); 
+    }
+
+    public static assignmentAttendanceDocumentTypeRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.assignmentAttendanceDocumentTypeFilterOptions); 
+    }
+
+    public static happinessIndexRenderer(record: GridRecord, column: Column) {
+        return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.happinessIndexFilterOptions); 
     }
 }

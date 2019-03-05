@@ -174,7 +174,16 @@ export class CommonUtilityFunctions {
           updatedData[key] = 'NULLIFIED';
         }
         break;
-      }      
+      }
+      case 'direct_value' : {
+        let value = event;
+        if (CommonUtilityFunctions.checkStringAvailability(value.toString())) {
+          updatedData[key] = value.toString();
+        } else {
+          updatedData[key] = 'NULLIFIED';
+        }
+        break;
+      }   
       default : {
         let value = event.target.value;
         if (CommonUtilityFunctions.checkStringAvailability(value.toString())) {

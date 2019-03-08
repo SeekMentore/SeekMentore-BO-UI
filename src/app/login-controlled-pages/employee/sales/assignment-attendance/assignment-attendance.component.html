@@ -1,5 +1,8 @@
 <div>
   <div id="assignment-list-page" *ngIf="!showAssignmentAttendanceData">
+    <form id="attendanceTrackerDownloadForm" target="ifrDownload" method="post" class="noscreen">
+      <input type="text" value="" size="10" name="packageAssignmentSerialId" id="downloadAttendanceTracker-packageAssignmentSerialId" />
+    </form>
     <app-grid #newAssignmentGrid id="new-assignment-grid" [gridMetaData]="newAssignmentGridMetaData"></app-grid>
     <app-grid #startedAssignmentGrid id="started-assignment-grid" [gridMetaData]="startedAssignmentGridMetaData"></app-grid>
     <app-grid #hoursCompletedAssignmentGrid id="hours-completed-assignment-grid" [gridMetaData]="hoursCompletedAssignmentGridMetaData"></app-grid>

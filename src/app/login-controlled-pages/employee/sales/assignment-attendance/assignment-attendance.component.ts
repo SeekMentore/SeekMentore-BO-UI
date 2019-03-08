@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
 import { Column } from 'src/app/utils/grid/column';
@@ -11,6 +10,8 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { ActionButton } from 'src/app/utils/grid/action-button';
 
 @Component({
   selector: 'app-assignment-attendance',
@@ -74,7 +75,7 @@ export class AssignmentAttendanceComponent implements OnInit {
     }, 0);
   }
 
-  public getAssignmentGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
+  public getAssignmentGridObject(id: string, title: string, restURL: string, hasActionColumn: boolean = false, actionColumn: any = null, collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
@@ -175,32 +176,48 @@ export class AssignmentAttendanceComponent implements OnInit {
         dataType: 'date',
         mapping: 'createdMillis',
         renderer: GridCommonFunctions.renderDateFromMillisWithTime
-      }]
+      }],
+      hasActionColumn : hasActionColumn,
+      actionColumn : actionColumn
     };
     return grid;    
   }
 
   public setUpGridMetaData() {
+    let hasActionColumn: any = true;
+    let actionColumn: any = {
+      label: 'Download Attendance Tracker',
+      buttons: [{
+        id: 'downloadAttendanceTracker',
+        label: 'Download',
+        btnclass: 'btnSubmit',
+        clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
+          const packageAssignmentSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('downloadAttendanceTracker-packageAssignmentSerialId');
+          packageAssignmentSerialId.value = record.getProperty('packageAssignmentSerialId');
+          this.utilityService.submitForm('attendanceTrackerDownloadForm', '/rest/sales/downloadAttendanceTrackerSheet', 'POST');          
+        }
+      }]
+    };
     this.newAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('newAssignmentGrid', 'New Assignments', '/rest/sales/newAssignmentList', true),
+      grid: this.getAssignmentGridObject('newAssignmentGrid', 'New Assignments', '/rest/sales/newAssignmentList', false, null, true),
       htmlDomElementId: 'new-assignment-grid',
       hidden: false
     };
 
     this.startedAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('startedAssignmentGrid', 'Started Assignments', '/rest/sales/startedAssignmentList'),
+      grid: this.getAssignmentGridObject('startedAssignmentGrid', 'Started Assignments', '/rest/sales/startedAssignmentList', true, actionColumn, false),
       htmlDomElementId: 'started-assignment-grid',
       hidden: false
     };
 
     this.hoursCompletedAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('hoursCompletedAssignmentGrid', 'Hours Completed Assignments', '/rest/sales/hoursCompletedAssignmentList', true),
+      grid: this.getAssignmentGridObject('hoursCompletedAssignmentGrid', 'Hours Completed Assignments', '/rest/sales/hoursCompletedAssignmentList', true, actionColumn, true),
       htmlDomElementId: 'hours-completed-assignment-grid',
       hidden: false
     };
 
     this.reviewedAssignmentGridMetaData = {
-      grid: this.getAssignmentGridObject('reviewedAssignmentGrid', 'Reviewed Assignments', '/rest/sales/reviewedAssignmentList', true),
+      grid: this.getAssignmentGridObject('reviewedAssignmentGrid', 'Reviewed Assignments', '/rest/sales/reviewedAssignmentList', true, actionColumn, true),
       htmlDomElementId: 'reviewed-assignment-grid',
       hidden: false
     };

@@ -131,13 +131,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       collapsed: collapsed,
       store: {
         isStatic: false,
-        restURL: restURL,
-        download: {
-          url: '/rest/sales/downloadAttendanceSheet',
-          preDownload: (gridComponentObject: GridComponent) => {
-            gridComponentObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentRecord.getProperty('packageAssignmentSerialId'));
-          }
-        }
+        restURL: restURL
       },
       columns: [{
         id: 'entryDateTimeMillis',

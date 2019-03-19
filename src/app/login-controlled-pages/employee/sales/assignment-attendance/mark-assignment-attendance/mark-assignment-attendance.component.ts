@@ -42,33 +42,90 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
-
+  
+  // Modal Properties
+  packageAssignmentSerialId_Modal: any;
+  totalHours_Modal: any;
+  completedHours_Modal: any;
+  completedMinutes_Modal: any;
+  entryDateTimeMillis_Modal: any;
+  entryDateMillis_Modal: any;
+  entryTimeMillis_Modal: any;
+  exitDateMillis_Modal: any;
+  exitDateMillis_Modal: any;
+  exitTimeMillis_Modal: any;
+  topicsTaught_Modal: any;
+  tutorRemarks_Modal: any;
+  punctualityRemarks_Modal: any;
+  expertiseRemarks_Modal: any;
+  knowledgeRemarks_Modal: any;
+  studentRemarks_Modal: any;
   selectedIsClassworkProvidedOptions: any[] = [];
   selectedIsHomeworkProvidedOptions: any[] = [];
   selectedIsTestProvidedOptions: any[] = [];
   selectedTutorPunctualityIndexOptions: any[] = [];
   selectedTutorExpertiseIndexOptions: any[] = [];
   selectedTutorKnowledgeIndexOptions: any[] = [];
-
   remainingHours: number = null;
   remainingMinutes: number = null;
   isOverdue: boolean = false;
   durationHours: number = null;
   durationMinutes: number = null;
-  // Documents to be attached
   classwork: any = null;
   homework: any = null;
   test: any = null;
   other: any = null;
+
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {    
     this.assignmentAttendanceGridMetaData = null;
   }
 
   ngOnInit() {
-    this.setUpGridMetaData();
-    this.calculateRemainingDuration();
+    this.setUpGridMetaData();    
     this.setDisabledStatus();
+    this.setUpDataModal(this.packageAssignmentRecord);
+  }
+
+  private setUpDataModal(packageAssignmentRecord: GridRecord, assignmentAttendanceRecord: GridRecord = null) {
+    this.packageAssignmentSerialId_Modal = packageAssignmentRecord.getProperty('packageAssignmentSerialId');
+    this.totalHours_Modal = packageAssignmentRecord.getProperty('totalHours');
+    this.completedHours_Modal = packageAssignmentRecord.getProperty('completedHours');
+    this.completedMinutes_Modal = packageAssignmentRecord.getProperty('completedMinutes');
+    let remainingTime: {
+      remainingHours: number,
+      remainingMinutes: number
+    } = CommonUtilityFunctions.calculateRemainingHoursMinutesSecondsFromTotalAndCompletedHoursMinutesSeconds(
+      packageAssignmentRecord.getProperty('totalHours'), 0, 0,
+      packageAssignmentRecord.getProperty('completedHours'),
+      packageAssignmentRecord.getProperty('completedMinutes'), 0
+    );
+    this.remainingHours = remainingTime.remainingHours;
+    this.remainingMinutes = remainingTime.remainingMinutes;
+    if (CommonUtilityFunctions.checkObjectAvailability(assignmentAttendanceRecord)) {
+      this.entryDateMillis_Modal = assignmentAttendanceRecord.getProperty('entryDateMillis');
+      this.entryDateMillis_Modal = assignmentAttendanceRecord.getProperty('entryDateMillis');
+      this.entryTimeMillis_Modal = assignmentAttendanceRecord.getProperty('entryTimeMillis');
+      this.exitDateMillis_Modal = assignmentAttendanceRecord.getProperty('exitDateMillis');
+      this.exitDateMillis_Modal = assignmentAttendanceRecord.getProperty('exitDateMillis');
+      this.exitTimeMillis_Modal = assignmentAttendanceRecord.getProperty('exitTimeMillis');
+      this.topicsTaught_Modal = assignmentAttendanceRecord.getProperty('topicsTaught');
+      this.selectedIsClassworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isClassworkProvided'));
+      this.selectedIsHomeworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isHomeworkProvided'));
+      this.selectedIsTestProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isTestProvided'));
+      this.tutorRemarks_Modal = assignmentAttendanceRecord.getProperty('tutorRemarks');
+      this.selectedTutorPunctualityIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorPunctualityIndex'));
+      this.punctualityRemarks_Modal = assignmentAttendanceRecord.getProperty('punctualityRemarks');
+      this.selectedTutorExpertiseIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorExpertiseIndex'));
+      this.expertiseRemarks_Modal = assignmentAttendanceRecord.getProperty('expertiseRemarks');
+      this.selectedTutorKnowledgeIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorKnowledgeIndex'));
+      this.knowledgeRemarks_Modal = assignmentAttendanceRecord.getProperty('knowledgeRemarks');
+      this.studentRemarks_Modal = assignmentAttendanceRecord.getProperty('studentRemarks');
+    }
+  }
+
+  getDateForDateMillisParam(value: any) {
+    return CommonUtilityFunctions.getDateForDateMillisParam(value);
   }
 
   ngAfterViewInit() {
@@ -255,19 +312,6 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       htmlDomElementId: 'assignment-attendance-grid',
       hidden: false
     };
-  }
-
-  private calculateRemainingDuration() {
-    let remainingTime: {
-      remainingHours: number,
-      remainingMinutes: number
-    } = CommonUtilityFunctions.calculateRemainingHoursMinutesSecondsFromTotalAndCompletedHoursMinutesSeconds(
-      this.packageAssignmentRecord.getProperty('totalHours'), 0, 0,
-      this.packageAssignmentRecord.getProperty('completedHours'),
-      this.packageAssignmentRecord.getProperty('completedMinutes'), 0
-    );
-    this.remainingHours = remainingTime.remainingHours;
-    this.remainingMinutes = remainingTime.remainingMinutes;
   }
 
   private updateClassDuration() {

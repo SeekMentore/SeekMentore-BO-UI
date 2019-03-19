@@ -36,6 +36,13 @@ export class CommonUtilityFunctions {
     return dateParam.getFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
+  public static getDateForDateMillisParam(completeDateSignatureInUTC: number) {
+    const dateParam = new Date(completeDateSignatureInUTC);
+    let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
+    let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
+    return dateParam.getFullYear() + '-' + monthValue + '-' + dateValue;    
+  }
+
   public static formatDateYYYYMMDD(completeDateSignatureInUTC: Date) {
     let dateValue = completeDateSignatureInUTC.getDate() > 9 ? completeDateSignatureInUTC.getDate() : ('0' + completeDateSignatureInUTC.getDate());
     let monthValue = (completeDateSignatureInUTC.getMonth() + 1) > 9 ? (completeDateSignatureInUTC.getMonth() + 1) : ('0' + (completeDateSignatureInUTC.getMonth() + 1));

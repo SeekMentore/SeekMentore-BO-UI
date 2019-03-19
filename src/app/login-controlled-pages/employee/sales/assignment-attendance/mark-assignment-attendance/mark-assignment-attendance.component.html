@@ -19,17 +19,17 @@
               <table class="form-container-generic-table">
                 <tr>
                   <td class="td-label"><label>Assignment Serial Id</label></td>
-                  <td colspan="3"><label class="data">{{packageAssignmentRecord.property['packageAssignmentSerialId']}}</label></td>                        
+                  <td colspan="3"><label class="data">{{packageAssignmentSerialId_Modal}}</label></td>                        
                 </tr>
                 <tr>
                   <td class="td-label"><label>Total Hours</label></td>
-                  <td colspan="3"><label class="data">{{packageAssignmentRecord.property['totalHours']}}</label></td>                        
+                  <td colspan="3"><label class="data">{{totalHours_Modal}}</label></td>                        
                 </tr>
                 <tr>
                   <td class="td-label"><label>Completed Hours</label></td>
-                  <td><label class="data">{{packageAssignmentRecord.property['completedHours']}}</label></td> 
+                  <td><label class="data">{{completedHours_Modal}}</label></td> 
                   <td class="td-label"><label>Completed Minutes</label></td>
-                  <td><label class="data">{{packageAssignmentRecord.property['completedMinutes']}}</label></td>             
+                  <td><label class="data">{{completedMinutes_Modal}}</label></td>             
                 </tr>
                 <tr>            
                   <td class="td-label"><label>Remaining Hours</label></td>
@@ -45,7 +45,7 @@
               <table class="form-container-generic-table">                
                 <tr>
                   <td class="td-label"><label>Entry Date</label></td>
-                  <td><input class="input_field" type="date" value="" id="entryDateMillis"
+                  <td><input class="input_field" type="date" value="{{getDateForDateMillisParam(tutorRecord.property['dateOfBirth'])}}" id="entryDateMillis"
                             [disabled]="!editRecordForm"
                             (change)="updateAssignmentAttendanceProperty('entryDateMillis', $event, 'millis')"></td> 
                   <td class="td-label"><label>Entry Time</label></td>
@@ -83,7 +83,7 @@
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('topicsTaught', $event, 'string')"
-                ></textarea>
+                >{{topicsTaught_Modal}}</textarea>
             </td>        
           </tr>
           <tr>
@@ -126,7 +126,7 @@
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('tutorRemarks', $event, 'string')"
-                ></textarea>
+                >{{tutorRemarks_Modal}}</textarea>
             </td>        
           </tr>
           <tr>
@@ -147,7 +147,7 @@
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('punctualityRemarks', $event, 'string')"
-                ></textarea>
+                >{{punctualityRemarks_Modal}}</textarea>
             </td>        
           </tr>
           <tr>
@@ -168,7 +168,7 @@
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('expertiseRemarks', $event, 'string')"
-                ></textarea>
+                >{{expertiseRemarks_Modal}}</textarea>
             </td>        
           </tr>
           <tr>
@@ -189,7 +189,7 @@
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('knowledgeRemarks', $event, 'string')"
-                ></textarea>
+                >{{knowledgeRemarks_Modal}}</textarea>
             </td>        
           </tr>
           <tr>
@@ -199,7 +199,7 @@
                       class="textarea_field"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('studentRemarks', $event, 'string')"
-                ></textarea>
+                >{{studentRemarks_Modal}}</textarea>
             </td>        
           </tr>
         </table>

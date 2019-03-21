@@ -1,5 +1,6 @@
 import { CkeditorConfig } from "./ckeditor-config";
 import { GridRecord } from "./grid/grid-record";
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 declare var CKEDITOR: any;
 
@@ -36,11 +37,18 @@ export class CommonUtilityFunctions {
     return dateParam.getFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
-  public static getDateForDateMillisParam(completeDateSignatureInUTC: number) {
-    const dateParam = new Date(completeDateSignatureInUTC);
+  public static getDateForDateMillisParam(millis: number) {
+    const dateParam = new Date(millis);
     let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
     let monthValue = (dateParam.getMonth() + 1) > 9 ? (dateParam.getMonth() + 1) : ('0' + (dateParam.getMonth() + 1));
     return dateParam.getFullYear() + '-' + monthValue + '-' + dateValue;    
+  }
+
+  public static getTimeForDateMillisParam(millis: number) {
+    const dateParam = new Date(millis);
+    let hoursValue = dateParam.getHours() > 9 ? dateParam.getHours() : ('0' + dateParam.getHours());
+    let minutesValue = dateParam.getMinutes() > 9 ? dateParam.getMinutes() : ('0' + dateParam.getMinutes());
+    return hoursValue + ':' + minutesValue;    
   }
 
   public static formatDateYYYYMMDD(completeDateSignatureInUTC: Date) {
@@ -333,5 +341,41 @@ export class CommonUtilityFunctions {
       remainingTime.remainingSeconds = gapInSeconds;
     }
     return remainingTime;
-  }  
+  }
+
+  public static extractGridRecordObject(response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any      
+    } = {
+      record: null,
+      isError: false,
+      errorMessage: null,
+      responseMessage: null,
+      additionalProperties: {}
+    };
+    
+    if (response['success']) {
+      if (CommonUtilityFunctions.checkObjectAvailability(response['recordObject'])) {
+        gridRecordObject.record = new GridRecord('CustomObject-M-UI0', response['recordObject']);
+        for (const propertyName in response) {
+          if (propertyName !== 'success' && propertyName !== 'recordObject' && propertyName !== 'message') {
+            gridRecordObject.additionalProperties[propertyName] = response[propertyName];
+          }
+        }
+      } else {        
+        gridRecordObject.isError = true;
+        gridRecordObject.errorMessage = 'No object found';
+      }
+    } else {
+      gridRecordObject.isError = true;
+      gridRecordObject.errorMessage = response['message'];
+    }
+    gridRecordObject.responseMessage = response['message'];
+
+    return gridRecordObject;
+  }
 }

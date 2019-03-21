@@ -58,4 +58,6 @@ export class LcpRestUrls {
   static take_action_on_subscription_package_assignment = '/rest/sales/takeActionOnSubscriptionPackageAssignment'; 
   static assignment_attendance_marking_access = '/rest/sales/assignmentAttendanceMarkingAccess'; 
   static insert_assignment_attendance = '/rest/sales/insertAssignmentAttendance';
+  static update_assignment_attendance = '/rest/sales/updateAssignmentAttendance';
+  static get_package_assignment_record = '/rest/sales/getPackageAssignmentRecord';
 }

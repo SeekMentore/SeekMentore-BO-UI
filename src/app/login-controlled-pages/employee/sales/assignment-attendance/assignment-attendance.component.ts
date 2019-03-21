@@ -37,8 +37,8 @@ export class AssignmentAttendanceComponent implements OnInit {
   reviewedAssignmentGridMetaData: GridDataInterface;
 
   showAssignmentAttendanceData = false;
-  selectedAssignmentRecord: GridRecord = null;
-  interimHoldSelectedAssignmentRecord: GridRecord = null;
+  selectedAssignmentRecordSerialId: string = null;
+  interimHoldSelectedAssignmentRecordSerialId: string = null;
   assignmentAttendanceMarkingAccess: AssignmentAttendanceMarkingAccess = null;
   selectedRecordGridType: string = null;
 
@@ -90,12 +90,12 @@ export class AssignmentAttendanceComponent implements OnInit {
         dataType: 'string',
         mapping: 'packageAssignmentSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedAssignmentRecord = record;
+          this.interimHoldSelectedAssignmentRecordSerialId = record.getProperty('packageAssignmentSerialId');
           this.selectedRecordGridType = gridComponentObject.grid.id; 
           if (this.assignmentAttendanceMarkingAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.assignment_attendance_marking_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedAssignmentRecord = this.interimHoldSelectedAssignmentRecord;            
+            this.selectedAssignmentRecordSerialId = this.interimHoldSelectedAssignmentRecordSerialId;            
             this.toggleVisibilityAssignmentsGrid();
           }
         }
@@ -184,7 +184,6 @@ export class AssignmentAttendanceComponent implements OnInit {
   }
 
   public setUpGridMetaData() {
-    let hasActionColumn: any = true;
     let actionColumn: any = {
       label: 'Download Attendance Tracker',
       buttons: [{
@@ -237,7 +236,7 @@ export class AssignmentAttendanceComponent implements OnInit {
         message: response.message,
         assignmentAttendanceMarkingAccess: response.assignmentAttendanceMarkingAccess
       };
-      context.selectedAssignmentRecord = context.interimHoldSelectedAssignmentRecord;
+      context.selectedAssignmentRecordSerialId = context.interimHoldSelectedAssignmentRecordSerialId;
       context.toggleVisibilityAssignmentsGrid();
     }
   }
@@ -245,7 +244,7 @@ export class AssignmentAttendanceComponent implements OnInit {
   toggleVisibilityAssignmentsGrid() {
     if (this.showAssignmentAttendanceData === true) {
       this.showAssignmentAttendanceData = false;
-      this.selectedAssignmentRecord = null;
+      this.selectedAssignmentRecordSerialId = null;
       setTimeout(() => {
         this.newAssignmentGridObject.init();
         this.startedAssignmentGridObject.init();

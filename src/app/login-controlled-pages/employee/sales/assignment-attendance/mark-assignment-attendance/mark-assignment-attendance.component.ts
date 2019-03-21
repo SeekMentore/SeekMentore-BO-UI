@@ -1,16 +1,16 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AssignmentAttendanceMarkingAccess } from '../assignment-attendance.component';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { Column } from 'src/app/utils/grid/column';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AssignmentAttendanceMarkingAccess } from '../assignment-attendance.component';
 
 @Component({
   selector: 'app-mark-assignment-attendance',
@@ -20,17 +20,17 @@ import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 export class MarkAssignmentAttendanceComponent implements OnInit {
 
   @Input()
-  packageAssignmentRecord: GridRecord = null;
+  packageAssignmentSerialId: string = null;
 
   @Input()
-  assignmentAttendanceMarkingAccess: AssignmentAttendanceMarkingAccess = null;
-
-  @Input()
-  selectedRecordGridType: string = null;
+  assignmentAttendanceMarkingAccess: AssignmentAttendanceMarkingAccess = null;  
 
   @ViewChild('assignmentAttendanceGrid')
   assignmentAttendanceGridObject: GridComponent;
   assignmentAttendanceGridMetaData: GridDataInterface;
+
+  selectedPackageAssignmentRecord: GridRecord;
+  selectedAssignmentAttendanceRecord: GridRecord;
 
   assignmentAttendanceUpdatedRecord = {};
 
@@ -42,18 +42,23 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
+
+  isFormDirty: boolean = false;
   
   // Modal Properties
+  isInsertion: boolean;
+  isTimeUpdated: boolean;
   packageAssignmentSerialId_Modal: any;
+  assignmentAttendanceSerialId_Modal: any;
   totalHours_Modal: any;
   completedHours_Modal: any;
   completedMinutes_Modal: any;
   entryDateTimeMillis_Modal: any;
-  entryDateMillis_Modal: any;
-  entryTimeMillis_Modal: any;
-  exitDateMillis_Modal: any;
-  exitDateMillis_Modal: any;
-  exitTimeMillis_Modal: any;
+  entryDate_Modal: any;
+  entryTime_Modal: any;
+  exitDateTimeMillis_Modal: any;
+  exitDate_Modal: any;
+  exitTime_Modal: any;
   topicsTaught_Modal: any;
   tutorRemarks_Modal: any;
   punctualityRemarks_Modal: any;
@@ -76,18 +81,55 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   test: any = null;
   other: any = null;
 
-
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {    
     this.assignmentAttendanceGridMetaData = null;
   }
 
   ngOnInit() {
-    this.setUpGridMetaData();    
-    this.setDisabledStatus();
-    this.setUpDataModal(this.packageAssignmentRecord);
+    this.setUpGridMetaData();   
+    this.getPackageAssignmentGridRecord(this.packageAssignmentSerialId);  
   }
 
-  private setUpDataModal(packageAssignmentRecord: GridRecord, assignmentAttendanceRecord: GridRecord = null) {
+  private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
+    const data = {
+      parentId: packageAssignmentSerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+  
+  onGetPackageAssignmentGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['formEditMandatoryDisbaled'];
+      context.setUpDataModal(gridRecordObject.record, null, true);
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
+    }
+  }
+
+  feedAttendance() {
+    this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
+  }
+
+  private setUpDataModal(packageAssignmentRecord: GridRecord, assignmentAttendanceRecord: GridRecord = null, isInsertion: boolean = false) {
+    this.editRecordForm = true;
+    this.selectedPackageAssignmentRecord = packageAssignmentRecord;
+    this.selectedAssignmentAttendanceRecord = assignmentAttendanceRecord;
+    this.isTimeUpdated = false;
+    this.isInsertion = isInsertion;
     this.packageAssignmentSerialId_Modal = packageAssignmentRecord.getProperty('packageAssignmentSerialId');
     this.totalHours_Modal = packageAssignmentRecord.getProperty('totalHours');
     this.completedHours_Modal = packageAssignmentRecord.getProperty('completedHours');
@@ -103,12 +145,15 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     this.remainingHours = remainingTime.remainingHours;
     this.remainingMinutes = remainingTime.remainingMinutes;
     if (CommonUtilityFunctions.checkObjectAvailability(assignmentAttendanceRecord)) {
-      this.entryDateMillis_Modal = assignmentAttendanceRecord.getProperty('entryDateMillis');
-      this.entryDateMillis_Modal = assignmentAttendanceRecord.getProperty('entryDateMillis');
-      this.entryTimeMillis_Modal = assignmentAttendanceRecord.getProperty('entryTimeMillis');
-      this.exitDateMillis_Modal = assignmentAttendanceRecord.getProperty('exitDateMillis');
-      this.exitDateMillis_Modal = assignmentAttendanceRecord.getProperty('exitDateMillis');
-      this.exitTimeMillis_Modal = assignmentAttendanceRecord.getProperty('exitTimeMillis');
+      this.assignmentAttendanceSerialId_Modal = assignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId');
+      this.entryDateTimeMillis_Modal = assignmentAttendanceRecord.getProperty('entryDateTimeMillis');
+      this.entryDate_Modal = this.getDateForDateMillisParam(this.entryDateTimeMillis_Modal);
+      this.entryTime_Modal = this.getTimeForDateMillisParam(this.entryDateTimeMillis_Modal);
+      this.exitDateTimeMillis_Modal = assignmentAttendanceRecord.getProperty('exitDateTimeMillis');
+      this.exitDate_Modal = this.getDateForDateMillisParam(this.exitDateTimeMillis_Modal);
+      this.exitTime_Modal = this.getTimeForDateMillisParam(this.exitDateTimeMillis_Modal);
+      this.durationHours = assignmentAttendanceRecord.getProperty('durationHours');
+      this.durationMinutes = assignmentAttendanceRecord.getProperty('durationMinutes');
       this.topicsTaught_Modal = assignmentAttendanceRecord.getProperty('topicsTaught');
       this.selectedIsClassworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isClassworkProvided'));
       this.selectedIsHomeworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isHomeworkProvided'));
@@ -121,27 +166,51 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       this.selectedTutorKnowledgeIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorKnowledgeIndex'));
       this.knowledgeRemarks_Modal = assignmentAttendanceRecord.getProperty('knowledgeRemarks');
       this.studentRemarks_Modal = assignmentAttendanceRecord.getProperty('studentRemarks');
+    } else {      
+      this.assignmentAttendanceSerialId_Modal = '';
+      this.entryDateTimeMillis_Modal = '';
+      this.entryDate_Modal = this.getDateForDateMillisParam(new Date().getTime());
+      this.entryTime_Modal = this.getTimeForDateMillisParam(new Date().getTime());
+      this.exitDateTimeMillis_Modal = '';
+      this.exitDate_Modal = this.getDateForDateMillisParam(new Date().getTime());
+      this.exitTime_Modal = this.getTimeForDateMillisParam(new Date().getTime() + (1 * 60 * 60 * 1000));
+      this.durationHours = 1;
+      this.durationMinutes = 0;
+      this.topicsTaught_Modal = '';
+      this.selectedIsClassworkProvidedOptions = null;
+      this.selectedIsHomeworkProvidedOptions = null;
+      this.selectedIsTestProvidedOptions = null;
+      this.tutorRemarks_Modal = '';
+      this.selectedTutorPunctualityIndexOptions = null;
+      this.punctualityRemarks_Modal = '';
+      this.selectedTutorExpertiseIndexOptions = null;
+      this.expertiseRemarks_Modal = '';
+      this.selectedTutorKnowledgeIndexOptions = null;
+      this.knowledgeRemarks_Modal = '';
+      this.studentRemarks_Modal = '';
+      this.isOverdue = false;
     }
+    setTimeout(() => {
+      this.editRecordForm = false;
+    }, 500);    
   }
 
   getDateForDateMillisParam(value: any) {
     return CommonUtilityFunctions.getDateForDateMillisParam(value);
   }
 
+  getTimeForDateMillisParam(value: any) {
+    return CommonUtilityFunctions.getTimeForDateMillisParam(value);
+  }
+
   ngAfterViewInit() {
     setTimeout(() => {
       this.assignmentAttendanceGridObject.init();
-      this.assignmentAttendanceGridObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentRecord.getProperty('packageAssignmentSerialId'));
+      this.assignmentAttendanceGridObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentSerialId);
     }, 0);
     setTimeout(() => {
       this.assignmentAttendanceGridObject.refreshGridData();
     }, 0);
-  }
-
-  private setDisabledStatus() {
-    if (this.selectedRecordGridType === 'startedAssignmentGrid') {
-      this.formEditMandatoryDisbaled = false;
-    }
   }
 
   attachFile(event: any, type: any) {
@@ -191,6 +260,32 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         restURL: restURL
       },
       columns: [{
+        id: 'assignmentAttendanceSerialId',
+        headerName: 'Attendance Id',
+        dataType: 'string',
+        mapping: 'assignmentAttendanceSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          if (!this.isFormDirty) {
+            this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
+          } else {
+            this.helperService.showConfirmationDialog({
+              message: 'You have unsaved changes on the form do you still want to continue.',
+              onOk: () => {
+                this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
+              },
+              onCancel: () => {
+                const myListener: AlertDialogEvent = {
+                  isSuccess: false,
+                  message: 'Action Aborted',
+                  onButtonClicked: () => {
+                  }
+                };
+                this.helperService.showAlertDialog(myListener);
+              }
+            });
+          }
+        }
+      },{
         id: 'entryDateTimeMillis',
         headerName: 'Entry Date & Time',
         dataType: 'date',
@@ -315,22 +410,22 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   }
 
   private updateClassDuration() {
-    const entryDateMillis: HTMLInputElement = <HTMLInputElement>document.getElementById('entryDateMillis');
-    const entryTimeMillis: HTMLInputElement = <HTMLInputElement>document.getElementById('entryTimeMillis');
-    const exitDateMillis: HTMLInputElement = <HTMLInputElement>document.getElementById('exitDateMillis');
-    const exitTimeMillis: HTMLInputElement = <HTMLInputElement>document.getElementById('exitTimeMillis');
+    const entryDate: HTMLInputElement = <HTMLInputElement>document.getElementById('entryDate');
+    const entryTime: HTMLInputElement = <HTMLInputElement>document.getElementById('entryTime');
+    const exitDate: HTMLInputElement = <HTMLInputElement>document.getElementById('exitDate');
+    const exitTime: HTMLInputElement = <HTMLInputElement>document.getElementById('exitTime');
     let startMillis: number = 0;
     let endMillis: number = 0;
-    if (CommonUtilityFunctions.checkObjectAvailability(entryDateMillis) && CommonUtilityFunctions.checkObjectAvailability(entryTimeMillis)) {
-      let entryDateMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(entryDateMillis.valueAsNumber) ? entryDateMillis.valueAsNumber : 0;
-      let entryTimeMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(entryTimeMillis.valueAsNumber) ? entryTimeMillis.valueAsNumber : 0;
+    if (CommonUtilityFunctions.checkObjectAvailability(entryDate) && CommonUtilityFunctions.checkObjectAvailability(entryTime)) {
+      let entryDateMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(entryDate.valueAsNumber) ? entryDate.valueAsNumber : 0;
+      let entryTimeMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(entryTime.valueAsNumber) ? entryTime.valueAsNumber : 0;
       if (entryDateMillisValueAsNumber > 0 && entryTimeMillisValueAsNumber > 0) {
         startMillis = entryDateMillisValueAsNumber + entryTimeMillisValueAsNumber;
       }
     }
-    if (CommonUtilityFunctions.checkObjectAvailability(exitDateMillis) && CommonUtilityFunctions.checkObjectAvailability(exitTimeMillis)) {
-      let exitDateMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(exitDateMillis.valueAsNumber) ? exitDateMillis.valueAsNumber : 0;
-      let exitTimeMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(exitTimeMillis.valueAsNumber) ? exitTimeMillis.valueAsNumber : 0;
+    if (CommonUtilityFunctions.checkObjectAvailability(exitDate) && CommonUtilityFunctions.checkObjectAvailability(exitTime)) {
+      let exitDateMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(exitDate.valueAsNumber) ? exitDate.valueAsNumber : 0;
+      let exitTimeMillisValueAsNumber: number = CommonUtilityFunctions.checkNonNegativeNumberAvailability(exitTime.valueAsNumber) ? exitTime.valueAsNumber : 0;
       if (exitDateMillisValueAsNumber > 0 && exitTimeMillisValueAsNumber > 0) {
         endMillis = exitDateMillisValueAsNumber + exitTimeMillisValueAsNumber;
       }
@@ -345,6 +440,9 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       if (!this.isOverdue) {
         this.durationHours = intervalTime.remainingHours;
         this.durationMinutes = intervalTime.remainingMinutes;
+        if (!this.isInsertion) {
+          this.isTimeUpdated = true;
+        }
       } else {
         this.durationHours = null;
         this.durationMinutes = null;
@@ -365,7 +463,8 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   }
 
   updateAssignmentAttendanceProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.assignmentAttendanceUpdatedRecord, this.packageAssignmentRecord, deselected, isAllOPeration);
+    this.isFormDirty = true;
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.assignmentAttendanceUpdatedRecord, this.selectedAssignmentAttendanceRecord, deselected, isAllOPeration);
     switch (key) {
       case 'entryDateMillis' :
       case 'entryTimeMillis' : 
@@ -379,9 +478,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   insertAssignmentAttendanceRecord() {
     if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
-      CommonUtilityFunctions.updateRecordProperty('durationHours', this.durationHours.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      CommonUtilityFunctions.updateRecordProperty('durationMinutes', this.durationMinutes.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentRecord.getProperty('packageAssignmentSerialId'));
+      const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
       if (this.classwork) {
         data.append('inputFileClasswork', this.classwork);
       }
@@ -394,7 +491,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       if (this.test) {
         data.append('inputFileOther', this.other);
       }
-      this.utilityService.makerequest(this, this.onInsertAssignmentAttendanceRecord, LcpRestUrls.insert_assignment_attendance, 'POST',
+      this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.insert_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
       const myListener: AlertDialogEvent = {
@@ -407,16 +504,60 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }
   }
 
-  onInsertAssignmentAttendanceRecord(context: any, data: any) {
+  updateAssignmentAttendanceRecord() {
+    if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
+      CommonUtilityFunctions.updateRecordProperty('packageAssignmentSerialId', this.packageAssignmentSerialId_Modal.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('oldEntryDateTimeMillis', this.entryDateTimeMillis_Modal.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('oldExitDateTimeMillis', this.exitDateTimeMillis_Modal.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      if (this.isTimeUpdated) {
+        const entryDate: HTMLInputElement = <HTMLInputElement>document.getElementById('entryDate');
+        const entryTime: HTMLInputElement = <HTMLInputElement>document.getElementById('entryTime');
+        const exitDate: HTMLInputElement = <HTMLInputElement>document.getElementById('exitDate');
+        const exitTime: HTMLInputElement = <HTMLInputElement>document.getElementById('exitTime');
+        CommonUtilityFunctions.updateRecordProperty('entryDateMillis', entryDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      }
+      const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
+      if (this.classwork) {
+        data.append('inputFileClasswork', this.classwork);
+      }
+      if (this.homework) {
+        data.append('inputFileHomework', this.homework);
+      }
+      if (this.test) {
+        data.append('inputFileTest', this.test);
+      }
+      if (this.test) {
+        data.append('inputFileOther', this.other);
+      }
+      this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.update_assignment_attendance, 'POST',
+        data, 'multipart/form-data', true);
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'Please select a valid Class Duration before Updating Attendance',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);      
+    }
+  }
+
+  onInsertOrUpdateAssignmentAttendanceRecord(context: any, response: any) {
     const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
     };
     context.helperService.showAlertDialog(myListener);
-    if (data['success']) {
+    if (response['success']) {
       context.editRecordForm = false;
+      context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
+      context.assignmentAttendanceGridObject.refreshGridData();
+      context.isFormDirty = false;
     }
   }
 }

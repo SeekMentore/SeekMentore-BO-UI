@@ -14,6 +14,7 @@ import { GridRecord } from './grid-record';
 import { RecordDisplayInputData } from './grid-record-pop-up/grid-record-pop-up.component';
 import { Sorter, SortingOrder } from './sorter';
 import { Filter } from './filter';
+import { CommonUtilityFunctions } from '../common-utility-functions';
 
 @Component({
   selector: 'app-grid',
@@ -1036,8 +1037,9 @@ export class GridComponent implements OnInit, AfterViewInit {
           }
         }
         if (element.type === 'list') {
-          console.log(element.listValue, cellValue);
-          console.log(element.listValue.indexOf(cellValue));
+          CommonUtilityFunctions.logOnConsole(element.listValue);
+          CommonUtilityFunctions.logOnConsole(cellValue);
+          CommonUtilityFunctions.logOnConsole(element.listValue.indexOf(cellValue));
           if (!(element.listValue.indexOf(cellValue) >= 0)) {
             rowMatchesQuery = false;
           }

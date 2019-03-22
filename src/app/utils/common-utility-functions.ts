@@ -1,6 +1,6 @@
 import { CkeditorConfig } from "./ckeditor-config";
+import { EnvironmentConstants } from "./environment-constants";
 import { GridRecord } from "./grid/grid-record";
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 declare var CKEDITOR: any;
 
@@ -377,5 +377,40 @@ export class CommonUtilityFunctions {
     gridRecordObject.responseMessage = response['message'];
 
     return gridRecordObject;
+  }
+
+  public static setHTMLInputElementValue(elementId: string, elementValue: string) {
+    const element: HTMLInputElement = <HTMLInputElement>document.getElementById(elementId);
+    if (CommonUtilityFunctions.checkObjectAvailability(element)) {
+      element.value = elementValue;
+    } else {
+      CommonUtilityFunctions.logOnConsole('Element with HTML ID - ' + elementId + ' does not exists, hence cannot set value = ' + elementValue, true);
+    }
+  }
+
+  public static logOnConsole(messageOrObject: any, isError: boolean = false, event: Event = null) {
+    if (EnvironmentConstants.IS_LOGGING_ENABLED) {
+      if (isError) {
+        if (EnvironmentConstants.IS_ERROR_LOGGING_ENABLED) {
+          if (CommonUtilityFunctions.checkObjectAvailability(event)) {
+            console.error(messageOrObject, event);
+          } else {
+            console.error(messageOrObject);
+          }
+        }
+      } else {
+        if (EnvironmentConstants.IS_DEBUG_LOGGING_ENABLED) {
+          if (CommonUtilityFunctions.checkObjectAvailability(event)) {
+            console.log(messageOrObject, event);
+          } else {
+            console.log(messageOrObject);
+          }
+        }
+      }
+    }
+  }
+
+  public static decodeTrueFalseFromYN(yesNoResponse: string, nonCaseSensitive: boolean = false) {
+    return (CommonUtilityFunctions.checkStringAvailability(yesNoResponse) && ('Y' === yesNoResponse || (nonCaseSensitive && 'y' === yesNoResponse)));      
   }
 }

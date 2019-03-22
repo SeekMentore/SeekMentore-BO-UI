@@ -282,7 +282,7 @@ export class EmailComponent implements OnInit, OnChanges {
   }
 
   searchTemplate(query) {
-    console.log(query, event);
+    CommonUtilityFunctions.logOnConsole(query, false, event);
     this.filteredTemplateArray = [];
     for (const element of this.emailTemplatesArray) {
       if (element.label.toLowerCase().includes(query.toLowerCase())) {

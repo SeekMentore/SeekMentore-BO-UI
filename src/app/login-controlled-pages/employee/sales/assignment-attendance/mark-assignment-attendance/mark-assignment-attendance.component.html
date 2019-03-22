@@ -1,6 +1,10 @@
 <div>
   <app-grid #assignmentAttendanceGrid id="assignment-attendance-grid" [gridMetaData]="assignmentAttendanceGridMetaData"></app-grid>
   <div class="form-container-div">
+      <form id="attendanceDocumentDownloadForm" target="ifrDownload" method="post" class="noscreen">
+        <input type="text" value="" size="10" name="assignmentAttendanceSerialId" id="downloadAttendanceDocument-assignmentAttendanceSerialId" />
+        <input type="text" value="" size="10" name="documentType" id="downloadAttendanceDocument-documentType" />
+      </form>
       <form class="form-container" style="max-width: 80%" *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled">
           <div *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled"
                 class="form-container-toggle-button">
@@ -93,6 +97,7 @@
             <td>
               <textarea 
                       class="textarea_field"
+                      id="topicsTaught"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('topicsTaught', $event, 'string')"
                 >{{topicsTaught_Modal}}</textarea>
@@ -136,6 +141,7 @@
             <td>
               <textarea 
                       class="textarea_field"
+                      id="tutorRemarks"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('tutorRemarks', $event, 'string')"
                 >{{tutorRemarks_Modal}}</textarea>
@@ -157,6 +163,7 @@
             <td>
               <textarea 
                       class="textarea_field"
+                      id="punctualityRemarks"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('punctualityRemarks', $event, 'string')"
                 >{{punctualityRemarks_Modal}}</textarea>
@@ -178,6 +185,7 @@
             <td>
               <textarea 
                       class="textarea_field"
+                      id="expertiseRemarks"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('expertiseRemarks', $event, 'string')"
                 >{{expertiseRemarks_Modal}}</textarea>
@@ -199,6 +207,7 @@
             <td>
               <textarea 
                       class="textarea_field"
+                      id="knowledgeRemarks"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('knowledgeRemarks', $event, 'string')"
                 >{{knowledgeRemarks_Modal}}</textarea>
@@ -209,52 +218,105 @@
             <td>
               <textarea 
                       class="textarea_field"
+                      id="studentRemarks"
                       [disabled]="!editRecordForm" 
                       (change)="updateAssignmentAttendanceProperty('studentRemarks', $event, 'string')"
                 >{{studentRemarks_Modal}}</textarea>
             </td>        
           </tr>
         </table>
-        <div class="attachments" *ngIf="editRecordForm">
+        <div class="attachments" *ngIf="!isInsertion || (isInsertion && editRecordForm)">
           <!--Classwork Document-->
           <div class="file_chooser_container">
-            <span>Attach Classwork:</span>
-            <label for="classwork_file" class="choose_file_container">
-              <input name="id_proof" type="file" accept="file/*" id="classwork_file" [disabled]="!editRecordForm"
-                      (change)="attachFile($event,'classwork')">
-              <span class="button-primary"> Click to Upload </span>
-              <span *ngIf="classwork">{{classwork.name}}</span>
-            </label>
+            <div *ngIf="!classworkFileExists && editRecordForm">
+              <span>Attach Classwork:</span>
+              <label *ngIf="!classworkFile" for="classwork_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="classwork_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'classwork')">
+                <span class="button-primary"> Click to Upload </span>              
+              </label>
+              <div *ngIf="classworkFile" class="attachment_layout">
+                <span title="{{classworkFile.name.split('/').pop()}}" style="cursor: default">{{classworkFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('classwork')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="classworkFileExists">
+              <div style="margin-left: 20%;">Classwork File:</div>
+              <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('classwork')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('classwork')">Download</button>
+            </div>
+            <div *ngIf="!classworkFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Classwork File</div>
+            </div>
           </div>
           <!--Homework Document-->
           <div class="file_chooser_container">
-            <span>Attach Homework:</span>
-            <label for="homework_file" class="choose_file_container">
-              <input name="id_proof" type="file" accept="file/*" id="homework_file" [disabled]="!editRecordForm"
-                      (change)="attachFile($event,'homework')">
-              <span class="button-primary"> Click to Upload </span>
-              <span *ngIf="homework">{{homework.name}}</span>
-            </label>
+            <div *ngIf="!homeworkFileExists && editRecordForm">
+              <span>Attach Homework:</span>
+              <label *ngIf="!homeworkFile" for="homework_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="homework_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'homework')">
+                <span class="button-primary"> Click to Upload </span>
+              </label>
+              <div *ngIf="homeworkFile" class="attachment_layout">
+                <span title="{{homeworkFile.name.split('/').pop()}}" style="cursor: default">{{homeworkFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('homework')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="homeworkFileExists">
+              <div style="margin-left: 20%;">Homework File:</div>
+              <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('homework')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('homework')">Download</button>
+            </div>
+            <div *ngIf="!homeworkFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Homework File</div>
+            </div>
           </div>
           <!--Test Document-->
           <div class="file_chooser_container">
-            <span>Attach Test:</span>
-            <label for="test_file" class="choose_file_container">
-              <input name="id_proof" type="file" accept="file/*" id="test_file" [disabled]="!editRecordForm"
-                      (change)="attachFile($event,'test')">
-              <span class="button-primary"> Click to Upload </span>
-              <span *ngIf="test">{{test.name}}</span>
-            </label>
+            <div *ngIf="!testFileExists && editRecordForm">
+              <span>Attach Test:</span>
+              <label *ngIf="!testFile" for="test_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="test_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'test')">
+                <span class="button-primary"> Click to Upload </span>
+              </label>
+              <div *ngIf="testFile" class="attachment_layout">
+                <span title="{{testFile.name.split('/').pop()}}" style="cursor: default">{{testFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('test')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="testFileExists">
+              <div style="margin-left: 20%;">Test File:</div>
+              <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('test')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('test')">Download</button>
+            </div>
+            <div *ngIf="!testFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Test File</div>
+            </div>
           </div>
           <!--Other Document-->
           <div class="file_chooser_container">
-            <span>Attach Other Doc:</span>
-            <label for="other_file" class="choose_file_container">
-              <input name="id_proof" type="file" accept="file/*" id="other_file" [disabled]="!editRecordForm"
-                      (change)="attachFile($event,'other')">
-              <span class="button-primary"> Click to Upload </span>
-              <span *ngIf="other">{{other.name}}</span>
-            </label>
+            <div *ngIf="!otherFileExists && editRecordForm">
+              <span>Attach Other Doc:</span>
+              <label *ngIf="!otherFile" for="other_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="other_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'other')">
+                <span class="button-primary"> Click to Upload </span>
+              </label>
+              <div *ngIf="otherFile" class="attachment_layout">
+                <span title="{{otherFile.name.split('/').pop()}}" style="cursor: default">{{otherFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('other')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="otherFileExists">
+              <div style="margin-left: 20%;">Other File:</div>
+              <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('other')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('other')">Download</button>
+            </div>
+            <div *ngIf="!otherFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Other File</div>
+            </div>
           </div>
         </div>
         <button *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled && editRecordForm && isInsertion" type="submit"

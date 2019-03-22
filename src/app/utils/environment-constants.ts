@@ -7,6 +7,9 @@ export class EnvironmentConstants {
   //static PUBLIC_PAGES_URL = 'http://www.seekmentore.com';
   //static APPLICATION_NAME = 'SeekMentore – Back Office';
   //static IMAGE_SERVER = 'http://imageserver.seekmentore.com';
+  //static IS_LOGGING_ENABLED: boolean = false;
+  //static IS_DEBUG_LOGGING_ENABLED: boolean = false;
+  //static IS_ERROR_LOGGING_ENABLED: boolean = false;
   /**
    * PROD Settings
    */
@@ -19,6 +22,9 @@ export class EnvironmentConstants {
   //static PUBLIC_PAGES_URL = 'http://dev.seekmentore.com';
   //static APPLICATION_NAME = 'SeekMentore (Dev) – Back Office';
   //static IMAGE_SERVER = 'http://imageserver.seekmentore.com';
+  //static IS_LOGGING_ENABLED: boolean = true;
+  //static IS_DEBUG_LOGGING_ENABLED: boolean = true;
+  //static IS_ERROR_LOGGING_ENABLED: boolean = true;
   /**
    * DEV Settings
    */
@@ -31,6 +37,9 @@ export class EnvironmentConstants {
   static PUBLIC_PAGES_URL = 'http://localhost:8080/seekmentorepublicpages';
   static APPLICATION_NAME = 'SeekMentore (Local) – Back Office';
   static IMAGE_SERVER = 'http://imageserver.seekmentore.com';
+  static IS_LOGGING_ENABLED: boolean = true;
+  static IS_DEBUG_LOGGING_ENABLED: boolean = true;
+  static IS_ERROR_LOGGING_ENABLED: boolean = true;
   /**
    * LOCAL Settings
    */ 

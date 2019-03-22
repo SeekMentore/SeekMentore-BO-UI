@@ -32,8 +32,6 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   selectedPackageAssignmentRecord: GridRecord;
   selectedAssignmentAttendanceRecord: GridRecord;
 
-  assignmentAttendanceUpdatedRecord = {};
-
   formEditMandatoryDisbaled = true;
   editRecordForm = false;
 
@@ -46,6 +44,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   isFormDirty: boolean = false;
   
   // Modal Properties
+  assignmentAttendanceUpdatedRecord = {};
   isInsertion: boolean;
   isTimeUpdated: boolean;
   packageAssignmentSerialId_Modal: any;
@@ -76,10 +75,15 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   isOverdue: boolean = false;
   durationHours: number = null;
   durationMinutes: number = null;
-  classwork: any = null;
-  homework: any = null;
-  test: any = null;
-  other: any = null;
+  totalFiles: number = 0;
+  classworkFile: any = null;
+  classworkFileExists: boolean = false;
+  homeworkFile: any = null;
+  homeworkFileExists: boolean = false;
+  testFile: any = null;
+  testFileExists: boolean = false;
+  otherFile: any = null;
+  otherFileExists: boolean = false;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {    
     this.assignmentAttendanceGridMetaData = null;
@@ -95,6 +99,14 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       parentId: packageAssignmentSerialId
     };    
     this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  private getAssignmentAttendanceUploadedDocumentCountAndExistence(assignmentAttendanceSerialId: string) {
+    const data = {
+      assignmentAttendanceSerialId: assignmentAttendanceSerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetAssignmentAttendanceUploadedDocumentCountAndExistence, LcpRestUrls.get_assignment_attendance_uploaded_document_count_and_existence, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
   }
   
@@ -120,8 +132,49 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }
   }
 
+  onGetAssignmentAttendanceUploadedDocumentCountAndExistence(context: any, response: any) {
+    CommonUtilityFunctions.logOnConsole(response);
+    if (response['success']) {
+      let assignmentAttendanceUploadedDocumentCountAndExistenceObject = response['recordObject'];
+      if (CommonUtilityFunctions.checkObjectAvailability(assignmentAttendanceUploadedDocumentCountAndExistenceObject)) {
+        context.totalFiles = assignmentAttendanceUploadedDocumentCountAndExistenceObject['TOTAL_FILES'];
+        context.classworkFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(assignmentAttendanceUploadedDocumentCountAndExistenceObject['CLASSWORK_FILE_EXIST']);
+        context.homeworkFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(assignmentAttendanceUploadedDocumentCountAndExistenceObject['HOMEWORK_FILE_EXIST']);
+        context.testFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(assignmentAttendanceUploadedDocumentCountAndExistenceObject['TEST_FILE_EXIST']);
+        context.otherFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(assignmentAttendanceUploadedDocumentCountAndExistenceObject['OTHER_FILE_EXIST']);
+      }
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
+    }
+  }
+
   feedAttendance() {
-    this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
+    if (!this.isFormDirty) {
+      this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changes on the form do you still want to continue.',
+        onOk: () => {
+          this.isFormDirty = false;
+          this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
+        },
+        onCancel: () => {
+          const myListener: AlertDialogEvent = {
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          };
+          this.helperService.showAlertDialog(myListener);
+        }
+      });
+    }
   }
 
   private setUpDataModal(packageAssignmentRecord: GridRecord, assignmentAttendanceRecord: GridRecord = null, isInsertion: boolean = false) {
@@ -130,6 +183,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     this.selectedAssignmentAttendanceRecord = assignmentAttendanceRecord;
     this.isTimeUpdated = false;
     this.isInsertion = isInsertion;
+    this.assignmentAttendanceUpdatedRecord = {};
     this.packageAssignmentSerialId_Modal = packageAssignmentRecord.getProperty('packageAssignmentSerialId');
     this.totalHours_Modal = packageAssignmentRecord.getProperty('totalHours');
     this.completedHours_Modal = packageAssignmentRecord.getProperty('completedHours');
@@ -166,6 +220,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       this.selectedTutorKnowledgeIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorKnowledgeIndex'));
       this.knowledgeRemarks_Modal = assignmentAttendanceRecord.getProperty('knowledgeRemarks');
       this.studentRemarks_Modal = assignmentAttendanceRecord.getProperty('studentRemarks');
+      CommonUtilityFunctions.setHTMLInputElementValue('topicsTaught', this.topicsTaught_Modal);
+      CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.tutorRemarks_Modal);
+      CommonUtilityFunctions.setHTMLInputElementValue('punctualityRemarks', this.punctualityRemarks_Modal);
+      CommonUtilityFunctions.setHTMLInputElementValue('expertiseRemarks', this.expertiseRemarks_Modal);
+      CommonUtilityFunctions.setHTMLInputElementValue('knowledgeRemarks', this.knowledgeRemarks_Modal);
+      CommonUtilityFunctions.setHTMLInputElementValue('studentRemarks', this.studentRemarks_Modal);
     } else {      
       this.assignmentAttendanceSerialId_Modal = '';
       this.entryDateTimeMillis_Modal = '';
@@ -189,6 +249,17 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       this.knowledgeRemarks_Modal = '';
       this.studentRemarks_Modal = '';
       this.isOverdue = false;
+      this.totalFiles = 0;
+      this.classworkFileExists = false;
+      this.homeworkFileExists = false;
+      this.testFileExists = false;
+      this.otherFileExists = false;
+      CommonUtilityFunctions.setHTMLInputElementValue('topicsTaught', '');
+      CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', '');
+      CommonUtilityFunctions.setHTMLInputElementValue('punctualityRemarks', '');
+      CommonUtilityFunctions.setHTMLInputElementValue('expertiseRemarks', '');
+      CommonUtilityFunctions.setHTMLInputElementValue('knowledgeRemarks', '');
+      CommonUtilityFunctions.setHTMLInputElementValue('studentRemarks', '');
     }
     setTimeout(() => {
       this.editRecordForm = false;
@@ -215,39 +286,104 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   attachFile(event: any, type: any) {
     if (type === 'classwork') {
-      this.classwork = event.target.files[0];
+      this.classworkFile = event.target.files[0];
     }
     if (type === 'homework') {
-      this.homework = event.target.files[0];
+      this.homeworkFile = event.target.files[0];
     }
     if (type === 'test') {
-      this.test = event.target.files[0];
+      this.testFile = event.target.files[0];
     }
     if (type === 'other') {
-      this.other = event.target.files[0];
+      this.otherFile = event.target.files[0];
     }
   }
 
   detachAllFiles() {
-    this.classwork = null;
-    this.homework = null;
-    this.test = null;    
-    this.other = null;   
+    this.classworkFile = null;
+    this.homeworkFile = null;
+    this.testFile = null;    
+    this.otherFile = null;   
   }
 
   detachFile(type: any) {
     if (type === 'classwork') {
-      this.classwork = null;
+      this.classworkFile = null;
     }
     if (type === 'homework') {
-      this.homework = null;
+      this.homeworkFile = null;
     }
     if (type === 'test') {
-      this.test = null;
+      this.testFile = null;
     }
     if (type === 'other') {
-      this.other = null;
+      this.otherFile = null;
     }
+  }
+
+  removeAssignmentAttendanceDocumentUploadedFile(type: any) {
+    this.helperService.showConfirmationDialog({
+      message: 'Are you sure you want to remove the "' + type + '" file for Attendance Record ' + this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'),
+      onOk: () => {
+        const data = {
+          assignmentAttendanceSerialId: this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'),
+          documentType: type
+        };    
+        this.utilityService.makerequest(this, this.onRemoveAssignmentAttendanceDocumentUploadedFile, LcpRestUrls.remove_assignment_attendance_document_file, 
+                                        'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+        const myListener: AlertDialogEvent = {
+          isSuccess: false,
+          message: 'File not removed',
+          onButtonClicked: () => {
+          }
+        };
+        this.helperService.showAlertDialog(myListener);
+      }
+    });
+  }
+
+  onRemoveAssignmentAttendanceDocumentUploadedFile(context: any, response: any) {
+    CommonUtilityFunctions.logOnConsole(response);
+    if (response['success']) {
+      let removedDocumentType = response['removedDocumentType'];
+      if (CommonUtilityFunctions.checkObjectAvailability(removedDocumentType)) {
+        if (removedDocumentType === 'classwork') {
+          context.classworkFileExists = false;
+        }
+        if (removedDocumentType === 'homework') {
+          context.homeworkFileExists = false;
+        }
+        if (removedDocumentType === 'test') {
+          context.testFileExists = false;
+        }
+        if (removedDocumentType === 'other') {
+          context.otherFileExists = false;
+        }
+        const myListener: AlertDialogEvent = {
+          isSuccess: true,
+          message: 'Successfully removed document',
+          onButtonClicked: () => {
+          }
+        };
+        context.helperService.showAlertDialog(myListener);
+      }
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
+    }
+  }
+
+  downloadAssignmentAttendanceDocumentFile(type: any) {
+    CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'));
+    CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-documentType', type);
+    this.utilityService.submitForm('attendanceDocumentDownloadForm', '/rest/sales/downloadAssignmentAttendanceDocumentFile', 'POST');
   }
 
   public getAssignmentAttendanceGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -266,11 +402,13 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         mapping: 'assignmentAttendanceSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           if (!this.isFormDirty) {
+            this.getAssignmentAttendanceUploadedDocumentCountAndExistence(record.getProperty('assignmentAttendanceSerialId'));
             this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
           } else {
             this.helperService.showConfirmationDialog({
               message: 'You have unsaved changes on the form do you still want to continue.',
               onOk: () => {
+                this.isFormDirty = false;
                 this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
               },
               onCancel: () => {
@@ -479,17 +617,17 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   insertAssignmentAttendanceRecord() {
     if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
       const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
-      if (this.classwork) {
-        data.append('inputFileClasswork', this.classwork);
+      if (this.classworkFile) {
+        data.append('inputFileClasswork', this.classworkFile);
       }
-      if (this.homework) {
-        data.append('inputFileHomework', this.homework);
+      if (this.homeworkFile) {
+        data.append('inputFileHomework', this.homeworkFile);
       }
-      if (this.test) {
-        data.append('inputFileTest', this.test);
+      if (this.testFile) {
+        data.append('inputFileTest', this.testFile);
       }
-      if (this.test) {
-        data.append('inputFileOther', this.other);
+      if (this.otherFile) {
+        data.append('inputFileOther', this.otherFile);
       }
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.insert_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
@@ -520,17 +658,17 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       }
       const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
-      if (this.classwork) {
-        data.append('inputFileClasswork', this.classwork);
+      if (this.classworkFile) {
+        data.append('inputFileClasswork', this.classworkFile);
       }
-      if (this.homework) {
-        data.append('inputFileHomework', this.homework);
+      if (this.homeworkFile) {
+        data.append('inputFileHomework', this.homeworkFile);
       }
-      if (this.test) {
-        data.append('inputFileTest', this.test);
+      if (this.testFile) {
+        data.append('inputFileTest', this.testFile);
       }
-      if (this.test) {
-        data.append('inputFileOther', this.other);
+      if (this.otherFile) {
+        data.append('inputFileOther', this.otherFile);
       }
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.update_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);

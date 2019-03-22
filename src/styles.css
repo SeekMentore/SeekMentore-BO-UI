@@ -676,3 +676,46 @@ div.form-container-div {
   margin-left: 20px;
   margin-top: 2%;
 }
+
+.attachment_layout {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--colorPrimary);
+  color: whitesmoke;
+  border-radius: 4px;
+  margin: 2px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.attachment_layout span {
+  padding: 4px 8px;
+  font-size: medium;
+}
+
+.inline-btnReject {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  align-content: center;
+  background-color: #e70000 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.inline-btnSubmit {
+  padding: 2px 6px;
+  margin: 0 2px !important;
+  border-radius: 3px;
+  color: white !important;
+  align-content: center;
+  background-color: #20A843 !important;
+  border: none;
+  outline: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+}

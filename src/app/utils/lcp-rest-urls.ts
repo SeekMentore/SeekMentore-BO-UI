@@ -60,4 +60,6 @@ export class LcpRestUrls {
   static insert_assignment_attendance = '/rest/sales/insertAssignmentAttendance';
   static update_assignment_attendance = '/rest/sales/updateAssignmentAttendance';
   static get_package_assignment_record = '/rest/sales/getPackageAssignmentRecord';
+  static get_assignment_attendance_uploaded_document_count_and_existence = '/rest/sales/getAssignmentAttendanceUploadedDocumentCountAndExistence';
+  static remove_assignment_attendance_document_file = '/rest/sales/removeAssignmentAttendanceDocumentFile';
 }

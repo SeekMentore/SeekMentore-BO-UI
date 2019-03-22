@@ -2,16 +2,42 @@
 <div class="toolbar">
   <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
   <div class="server-info">
-    <table>
-      <tr>
-        <th>Server Name</th>
-        <td>{{serverName}}</td>
-      </tr>
-      <tr>
-        <th>Database Name</th>
-        <td>{{dbName}}</td>
-      </tr>      
-    </table>
+    <table style="width: 100%; background-color: lightblue; margin-left: auto; margin-right: auto;" border="1" cellpadding="2">
+        <tbody>
+          <tr>
+            <th>&nbsp;Server Name</th>
+            <td>
+              &nbsp;{{serverName}}
+              <i *ngIf="!showCompleteServerInfo" class="fas fa-chevron-down" (click)="showCompleteServerInfo = true"></i>
+              <i *ngIf="showCompleteServerInfo" class="fas fa-chevron-up" (click)="showCompleteServerInfo = false"></i>
+            </td>
+          </tr>
+          <tr>
+            <th>&nbsp;Database Name</th>
+            <td>&nbsp;{{dbName}}</td>
+          </tr>
+          <tr *ngIf="showCompleteServerInfo">
+            <th>&nbsp;File System</th>
+            <td>&nbsp;{{fileSystemLinked}}</td>
+          </tr>
+          <tr *ngIf="showCompleteServerInfo">
+            <th>&nbsp;Support EmailId</th>
+            <td>&nbsp;{{supportEmail}}</td>
+          </tr>
+          <tr *ngIf="showCompleteServerInfo">
+            <th>&nbsp;Email Active</th>
+            <td>&nbsp;{{isEmailSendingActive}}</td>
+          </tr>
+          <tr *ngIf="showCompleteServerInfo">
+            <th>&nbsp;Diverted EmailId</th>
+            <td>&nbsp;{{divertedEmailId}}</td>
+          </tr>
+          <tr *ngIf="showCompleteServerInfo">
+            <th>&nbsp;Deployed Version</th>
+            <td>&nbsp;{{lastDeployedVersionAndDate}}</td>
+          </tr>
+        </tbody>
+      </table>
   </div>
   <div class="toolbar_content">
     <span>{{title}}</span>

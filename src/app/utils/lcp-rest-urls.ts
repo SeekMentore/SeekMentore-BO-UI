@@ -1,5 +1,6 @@
 export class LcpRestUrls {
   static basic_info_url = '/rest/commons/getLoginBasicInfo';
+  static server_info_url = '/rest/commons/getServerInfo';
   static email_templates_url = '/rest/commons/getEmailTemplates';
   static email_template_data_url = '/rest/commons/loadEmailTemplate';
   static logout_url = '/rest/login/logout';

@@ -28,6 +28,15 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   emailData: EmailInterface;
   userType: string = ''; 
 
+  // Modal properties for Server Config values
+  serverName: string = null;
+  dbName: string = null;
+  fileSystemLinked: string = null;
+  supportEmail: string = null;
+  isEmailSendingActive: string = null;
+  divertedEmailId: string = null;
+  lastDeployedVersionAndDate: string = null;
+
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
               public router: Router) {
@@ -36,7 +45,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.idleTime = 0;
     this.setActivityTimer();
     this.emailData = null; 
-    this.parseMenu();   
+    this.parseMenu(); 
+    this.getServerConfiguration();  
   }
 
   ngOnInit(): void {
@@ -53,30 +63,65 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
   }
 
+  public getServerConfiguration() {
+    const formData = new URLSearchParams();
+    this.utilityService.makerequest(this, this.onSuccessServerInfo, LcpRestUrls.server_info_url, 'POST', formData.toString(), 'application/x-www-form-urlencoded');
+  }
+
+  onSuccessServerInfo(context: any, response: any) {
+    if (response['success']) {
+      context.serverName = response['serverName'];
+      context.dbName = response['dbName'];
+      context.fileSystemLinked = response['fileSystemLinked'];
+      context.supportEmail = response['supportEmail'];
+      context.isEmailSendingActive = response['isEmailSendingActive'];
+      context.divertedEmailId = response['divertedEmailId'];
+      context.lastDeployedVersionAndDate = response['lastDeployedVersionAndDate'];
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
+    }
+  }
+
   public parseMenu() {
     const formData = new URLSearchParams();
     this.utilityService.makerequest(this, this.onSuccessBasicInfo, LcpRestUrls.basic_info_url, 'POST', formData.toString(), 'application/x-www-form-urlencoded');
   }
 
   onSuccessBasicInfo(context: any, response: any) {
-    context.username = response['username'];
-    context.helperService.setTitle('Welcome ' + context.username);
-    context.menu = response['menu'];
-    context.accessOptions = response['accessoptions'];
-    context.userMenu.push(
-      {name: 'Personalize', url: '', functioncall: true},
-      {name: 'Profile', url: '', functioncall: true},
-      {name: 'Complaint Box', url: '', functioncall: true},
-      {name: 'Help & Support', url: '', functioncall: true}
-    );
-
-    context.settingMenu.push({name: 'Change Password', url: '/user/changepassword', functioncall: false});
-    if (context.accessOptions.impersonationaccess) {
-      context.settingMenu.push({name: 'Impersonate', url: '', functioncall: true});
+    if (response['success']) {
+      context.username = response['username'];
+      context.helperService.setTitle('Welcome ' + context.username);
+      context.menu = response['menu'];
+      context.accessOptions = response['accessoptions'];
+      context.userMenu.push(
+        {name: 'Personalize', url: '', functioncall: true},
+        {name: 'Profile', url: '', functioncall: true},
+        {name: 'Complaint Box', url: '', functioncall: true},
+        {name: 'Help & Support', url: '', functioncall: true}
+      );
+  
+      context.settingMenu.push({name: 'Change Password', url: '/user/changepassword', functioncall: false});
+      if (context.accessOptions.impersonationaccess) {
+        context.settingMenu.push({name: 'Impersonate', url: '', functioncall: true});
+      }
+      context.settingMenu.push(
+        {name: 'User Settings', url: '', functioncall: true},
+        {name: 'Sign Out', url: '', functioncall: true});
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
     }
-    context.settingMenu.push(
-      {name: 'User Settings', url: '', functioncall: true},
-      {name: 'Sign Out', url: '', functioncall: true});
   }
 
   public functionCallMenuItem(itemName: string) {

@@ -169,6 +169,7 @@ body {
   padding: 20px;
   border: 1px solid var(--divider);
   border-top: 4px solid var(--colorPrimary);
+  position: relative;
 }
 
 .form-container h1 {
@@ -718,4 +719,29 @@ div.form-container-div {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: all 0.3s;
+}
+
+.form-mask {
+  background-color: rgba(0,0,0,0.4);
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.form-loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  margin: -75px 0 0 -75px;
+  border: 10px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 10px solid #3498db;
+  width: 150px;
+  height: 150px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
 }

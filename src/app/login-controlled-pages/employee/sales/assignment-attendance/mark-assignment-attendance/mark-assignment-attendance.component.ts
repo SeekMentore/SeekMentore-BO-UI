@@ -42,6 +42,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
 
   isFormDirty: boolean = false;
+  assignmentAttendanceFormMaskLoaderHidden: boolean = true;
   
   // Modal Properties
   assignmentAttendanceUpdatedRecord = {};
@@ -95,6 +96,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   }
 
   private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
+    this.showFormLoaderMask();
     const data = {
       parentId: packageAssignmentSerialId
     };    
@@ -102,7 +104,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
   }
 
-  private getAssignmentAttendanceUploadedDocumentCountAndExistence(assignmentAttendanceSerialId: string) {
+  private getAssignmentAttendanceUploadedDocumentCountAndExistence(assignmentAttendanceSerialId: string) {    
     const data = {
       assignmentAttendanceSerialId: assignmentAttendanceSerialId
     };    
@@ -156,12 +158,14 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   feedAttendance() {
     if (!this.isFormDirty) {
+      this.showFormLoaderMask();
       this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
     } else {
       this.helperService.showConfirmationDialog({
         message: 'You have unsaved changes on the form do you still want to continue.',
         onOk: () => {
           this.isFormDirty = false;
+          this.showFormLoaderMask();
           this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
         },
         onCancel: () => {
@@ -263,6 +267,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }
     setTimeout(() => {
       this.editRecordForm = false;
+      this.hideFormLoaderMask();
     }, 500);    
   }
 
@@ -328,7 +333,8 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         const data = {
           assignmentAttendanceSerialId: this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'),
           documentType: type
-        };    
+        };
+        this.showFormLoaderMask();    
         this.utilityService.makerequest(this, this.onRemoveAssignmentAttendanceDocumentUploadedFile, LcpRestUrls.remove_assignment_attendance_document_file, 
                                         'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
       },
@@ -378,12 +384,25 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       };
       context.helperService.showAlertDialog(myListener);
     }
+    context.hideFormLoaderMask();
   }
 
   downloadAssignmentAttendanceDocumentFile(type: any) {
+    this.showFormLoaderMask();
     CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'));
     CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-documentType', type);
     this.utilityService.submitForm('attendanceDocumentDownloadForm', '/rest/sales/downloadAssignmentAttendanceDocumentFile', 'POST');
+    setTimeout(() => {
+      this.hideFormLoaderMask();
+    }, 5000);
+  }
+
+  private showFormLoaderMask() {
+    this.assignmentAttendanceFormMaskLoaderHidden = false;
+  }
+
+  private hideFormLoaderMask() {
+    this.assignmentAttendanceFormMaskLoaderHidden = true;
   }
 
   public getAssignmentAttendanceGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -400,8 +419,9 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         headerName: 'Attendance Id',
         dataType: 'string',
         mapping: 'assignmentAttendanceSerialId',
-        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {          
           if (!this.isFormDirty) {
+            this.showFormLoaderMask();
             this.getAssignmentAttendanceUploadedDocumentCountAndExistence(record.getProperty('assignmentAttendanceSerialId'));
             this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
           } else {
@@ -409,6 +429,8 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
               message: 'You have unsaved changes on the form do you still want to continue.',
               onOk: () => {
                 this.isFormDirty = false;
+                this.showFormLoaderMask();
+                this.getAssignmentAttendanceUploadedDocumentCountAndExistence(record.getProperty('assignmentAttendanceSerialId'));
                 this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
               },
               onCancel: () => {
@@ -629,6 +651,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       if (this.otherFile) {
         data.append('inputFileOther', this.otherFile);
       }
+      this.showFormLoaderMask();
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.insert_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
@@ -670,6 +693,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       if (this.otherFile) {
         data.append('inputFileOther', this.otherFile);
       }
+      this.showFormLoaderMask();
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.update_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
@@ -696,6 +720,8 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
       context.assignmentAttendanceGridObject.refreshGridData();
       context.isFormDirty = false;
+    } else {
+      context.hideFormLoaderMask();
     }
   }
 }

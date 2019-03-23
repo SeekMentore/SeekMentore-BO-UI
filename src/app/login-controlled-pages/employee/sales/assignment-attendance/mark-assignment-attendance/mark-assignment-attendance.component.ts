@@ -11,6 +11,7 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AssignmentAttendanceMarkingAccess } from '../assignment-attendance.component';
+import { AppConstants } from 'src/app/utils/app-constants';
 
 @Component({
   selector: 'app-mark-assignment-attendance',
@@ -265,6 +266,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       CommonUtilityFunctions.setHTMLInputElementValue('knowledgeRemarks', '');
       CommonUtilityFunctions.setHTMLInputElementValue('studentRemarks', '');
     }
+    this.detachAllFiles();
     setTimeout(() => {
       this.editRecordForm = false;
       this.hideFormLoaderMask();
@@ -638,6 +640,15 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   insertAssignmentAttendanceRecord() {
     if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
+      CommonUtilityFunctions.updateRecordProperty(null, null, 'predefined_value', this.assignmentAttendanceUpdatedRecord, null, null, null, AppConstants.VARIABLE_LOCAL_TZ_OFFSET_MS);
+      const entryDate: HTMLInputElement = <HTMLInputElement>document.getElementById('entryDate');
+      const entryTime: HTMLInputElement = <HTMLInputElement>document.getElementById('entryTime');
+      const exitDate: HTMLInputElement = <HTMLInputElement>document.getElementById('exitDate');
+      const exitTime: HTMLInputElement = <HTMLInputElement>document.getElementById('exitTime');
+      CommonUtilityFunctions.updateRecordProperty('entryDateMillis', entryDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);

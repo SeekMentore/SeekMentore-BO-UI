@@ -1,6 +1,7 @@
 import { CkeditorConfig } from "./ckeditor-config";
 import { EnvironmentConstants } from "./environment-constants";
 import { GridRecord } from "./grid/grid-record";
+import { AppConstants } from "./app-constants";
 
 declare var CKEDITOR: any;
 
@@ -121,7 +122,8 @@ export class CommonUtilityFunctions {
               updatedData: any, 
               record: GridRecord,
               deselected: boolean,
-              isAllOPeration: boolean
+              isAllOPeration: boolean,
+              predefinedValueProperty: string = null
   ) {
     switch (data_type) {
       case 'multilist' : {
@@ -196,6 +198,17 @@ export class CommonUtilityFunctions {
           updatedData[key] = value.toString();
         } else {
           updatedData[key] = 'NULLIFIED';
+        }
+        break;
+      }
+      case 'predefined_value' : {
+        if (CommonUtilityFunctions.checkStringAvailability(predefinedValueProperty)) {
+          switch (predefinedValueProperty) {
+            case AppConstants.VARIABLE_LOCAL_TZ_OFFSET_MS : {
+              updatedData['localTimezoneOffsetInMilliseconds'] = (new Date().getTimezoneOffset() * 60 * 1000).toString();
+              break;
+            }
+          }
         }
         break;
       }   

@@ -36,6 +36,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   isEmailSendingActive: string = null;
   divertedEmailId: string = null;
   lastDeployedVersionAndDate: string = null;
+  hasAccessToServerInfo: boolean = false;
+  showCompleteServerInfo: boolean = false;
 
   constructor(private helperService: HelperService,
               private utilityService: AppUtilityService,
@@ -61,6 +63,12 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+  }
+
+  private computeHasAccessToServerInfo() {
+    if (this.accessOptions.techteamaccess) {
+      this.hasAccessToServerInfo = true;
+    }
   }
 
   public getServerConfiguration() {
@@ -114,6 +122,8 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       context.settingMenu.push(
         {name: 'User Settings', url: '', functioncall: true},
         {name: 'Sign Out', url: '', functioncall: true});
+
+      context.computeHasAccessToServerInfo();
     } else {
       const myListener: AlertDialogEvent = {
         isSuccess: false,
@@ -200,4 +210,5 @@ interface MenuItem {
 interface AccessOptions {
   impersonationaccess: boolean;
   emailformaccess: boolean;
+  techteamaccess: boolean;
 }

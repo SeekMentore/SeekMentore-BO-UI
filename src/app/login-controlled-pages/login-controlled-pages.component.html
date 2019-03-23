@@ -1,7 +1,7 @@
 <!-- Toolbar -->
 <div class="toolbar">
   <a href="{{staticPageURl}}" target="_blank"><img src="{{logoURL}}"></a>
-  <div class="server-info">
+  <div *ngIf="hasAccessToServerInfo" class="server-info">
     <table style="width: 100%; background-color: lightblue; margin-left: auto; margin-right: auto;" border="1" cellpadding="2">
         <tbody>
           <tr>

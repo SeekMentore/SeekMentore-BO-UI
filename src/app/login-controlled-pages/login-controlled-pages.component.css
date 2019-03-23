@@ -55,3 +55,12 @@
   padding-left: 25px;
   width: 30%;
 }
+
+.sever-info-expand-collapse {
+  margin-left: 80%;
+  background-color: aliceblue;
+  width: 20px;
+  height: 16px;
+  padding-left: 3px;
+  border-radius: 15px;
+}

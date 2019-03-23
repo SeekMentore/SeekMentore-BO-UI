@@ -75,6 +75,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       context.fileSystemLinked = response['fileSystemLinked'];
       context.supportEmail = response['supportEmail'];
       context.isEmailSendingActive = response['isEmailSendingActive'];
+      context.isEmailSendingActive = context.isEmailSendingActive.toString().toUpperCase();
       context.divertedEmailId = response['divertedEmailId'];
       context.lastDeployedVersionAndDate = response['lastDeployedVersionAndDate'];
     } else {

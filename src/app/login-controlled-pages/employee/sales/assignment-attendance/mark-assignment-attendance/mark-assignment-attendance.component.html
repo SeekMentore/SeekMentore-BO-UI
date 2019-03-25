@@ -225,10 +225,12 @@
               </td>        
             </tr>
           </table>
+          <div *ngIf="totalFiles > 0">
+              <button class="ok-button" (click)="downloadAssignmentAttendanceAllDocuments()">
+                  <i class="fa fa-floppy-o" style="padding-right: 15px;"></i>Download All
+              </button>
+          </div>
           <div class="attachments" *ngIf="!isInsertion || (isInsertion && editRecordForm)">
-            <div *ngIf="totalFiles > 0">
-                <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceAllDocuments()">Download All</button>
-            </div>
             <!--Classwork Document-->
             <div class="file_chooser_container">
               <div *ngIf="!classworkFileExists && editRecordForm">

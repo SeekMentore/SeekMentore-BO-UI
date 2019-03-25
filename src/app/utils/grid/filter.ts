@@ -39,6 +39,7 @@ export class Filter {
     if (this.clubbedFilterMapping) {
       this.clubbedFilterProperties = clubbedFilterProperties;
     }
+    this.textCaseSensitiveSearch = false;
   }
 
   nullifyFilterProperties() {
@@ -48,7 +49,7 @@ export class Filter {
       this.greaterThan = null;
     } else if (this.type === 'string') {
       this.stringValue = null;
-      this.textCaseSensitiveSearch = true;
+      this.textCaseSensitiveSearch = false;
     } else if (this.type === 'date') {
       this.beforeDate = null;
       this.onDate = null;

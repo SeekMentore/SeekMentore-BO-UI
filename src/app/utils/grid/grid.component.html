@@ -1,17 +1,18 @@
-<div id="{{'uigrid-collapsed-form'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.isCollapsable && !grid.stateExpanded">
+<!--COLLAPSED GRID-->
+<div id="{{'uigrid-collapsed-form-'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.isCollapsable && !grid.stateExpanded">
   <!--Title Bar-->
-  <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
-      <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'}}" class="uigrid-row">
-          <div id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'}}" class="uigrid-cell fill"
+  <div id="{{'uigrid-collapsed-form-'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
+      <div id="{{'uigrid-collapsed-form-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'}}" class="uigrid-row">
+          <div id="{{'uigrid-collapsed-form-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'}}" class="uigrid-cell fill"
                 style="justify-content: center; align-items: center">
              <i
-              id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-expandCollapseGrid'}}"
+              id="{{'uigrid-collapsed-form-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-expandCollapseGrid'}}"
               class="fas fa-plus uigrid-order-icon-button collapse-expand-icon" style="padding: 2px"
               (click)="expandGrid()" *ngIf="!grid.stateExpanded"></i>
-            <span id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
+            <span id="{{'uigrid-collapsed-form-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
                   class="span-title">{{grid.title}}</span>
             <button
-              id="{{'uigrid-collapsed-form'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
+              id="{{'uigrid-collapsed-form-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
               class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
               <i class="fa fa-download" style="color: white;"></i>Download Data
             </button>
@@ -19,6 +20,7 @@
       </div>
   </div>
 </div>
+<!--EXPANDED GRID-->
 <div id="{{'uigrid-expanded-form'+grid.id}}" class="uigrid" *ngIf="!hidden && grid.stateExpanded">
   <!--Title Bar-->
   <div id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'}}" class="uigrid-title-toolbar">
@@ -31,6 +33,37 @@
           (click)="collapseGrid()" *ngIf="grid.isCollapsable && grid.stateExpanded"></i>
         <span id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-title'}}"
               class="span-title">{{grid.title}}</span>
+        <span 
+            *ngIf="grid.showDownload"
+            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-ws-wos'}}" 
+            style="display: flex">
+          <label
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-ws'}}"
+              class="tab_container" (change)="toggleStatePreservedDownload(true)">
+            <input
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-input-radio-ws'}}"
+              type="radio"
+              name="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-input-radio-name-ws-wos'}}"
+              [checked]="grid.downloadWithStatePreserved"
+            />
+            <span
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-span-text-ws'}}"
+              class="tab_checkmark left">WS</span>
+          </label>
+          <label
+            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-wos'}}"
+            class="tab_container" (change)="toggleStatePreservedDownload(false)">
+            <input
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-input-radio-wos'}}"
+              type="radio"
+              name="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-input-radio-name-ws-wos'}}"
+              [checked]="!grid.downloadWithStatePreserved"
+            />
+            <span
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-label-span-text-wos'}}"
+              class="tab_checkmark right">WOS</span>
+          </label>
+        </span>
         <button
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-button-downloadGridData'}}"
           class="uigrid-green-button" (click)="downloadGridData()" *ngIf="grid.showDownload">
@@ -44,29 +77,37 @@
                 *ngIf="grid.isFilterCapable" class="uigrid-blue-button" (click)="resetFilter()">
           Reset Filter
         </button>
-        <label
-          id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE'}}"
-          class="tab_container" (change)="toggleRemoteLoad('ONLINE')" *ngIf="grid.showOfflineToggle">
-          <input
-            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE-radio-onlineOfflineBtn'}}"
-            type="radio"
-            name="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-radio-onlineOfflineBtn'}}"
-            checked>
-          <span
-            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE-span-Online'}}"
-            class="tab_checkmark left">Online</span>
-        </label>
-        <label
-          id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE'}}"
-          class="tab_container" (change)="toggleRemoteLoad('OFFLINE')" *ngIf="grid.showOfflineToggle">
-          <input
-            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-radio-onlineOfflineBtn'}}"
-            type="radio"
-            name="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-radio-onlineOfflineBtn'}}">
-          <span
-            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-span-Offline'}}"
-            class="tab_checkmark right">Offline</span>
-        </label>
+        <span 
+            *ngIf="grid.showOfflineToggle"
+            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-span-online-offline'}}" 
+            style="display: flex">
+          <label
+            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE'}}"
+            class="tab_container" (change)="toggleRemoteLoad(false)">
+            <input
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE-radio-onlineOfflineBtn'}}"
+              type="radio"
+              name="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-radio-onlineOfflineBtn'}}"
+              [checked]="!grid.offline"
+            />
+            <span
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-ONLINE-span-Online'}}"
+              class="tab_checkmark left">Online</span>
+          </label>
+          <label
+            id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE'}}"
+            class="tab_container" (change)="toggleRemoteLoad(true)">
+            <input
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-radio-onlineOfflineBtn'}}"
+              type="radio"
+              name="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-radio-onlineOfflineBtn'}}"
+              [checked]="grid.offline"
+            />
+            <span
+              id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-label-toggleRemoteLoad-OFFLINE-span-Offline'}}"
+              class="tab_checkmark right">Offline</span>
+          </label>
+        </span>
         <i
           id="{{'uigrid-'+grid.id+'-uigrid-title-toolbar'+'-uigrid-row'+'-uigrid-cell'+'-i-showColumnHideComponentPopup'}}"
           class="fas fa-cogs uigrid-order-icon-button" style="padding: 2px"
@@ -202,7 +243,6 @@
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-i-search'}}"
                   class="fas fa-search"></i>
               </span>
-
               <span style="flex: 1 1 auto">
                 <input style="width: 100%"
                        id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-input-search'}}"
@@ -210,17 +250,16 @@
                        class="{{grid.id + '-grid-input'}} {{grid.id + '-grid-column-input-'+ column.id}}"
                        (input)="columnFilteredTextChanged(column, $event.target)"/>
               </span>
-
-
               <span style="display: flex">
-
                 <label
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS'}}"
-                  class="tab_container" (change)="toggleCaseSensitiveSearch(column,true)">
+                  class="tab_container" (change)="toggleCaseSensitiveSearch(column, true)">
                 <input
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}"
                   type="radio"
-                  name="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}">
+                  name="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}"
+                  [checked]="column.filter.textCaseSensitiveSearch"
+                />
                 <span
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-CS-span-CS'}}"
                   class="tab_checkmark left">CS</span>
@@ -232,16 +271,13 @@
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-NcsBtn'}}"
                   type="radio"
                   name="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-radio-CsBtn'}}"
-                  checked>
+                  [checked]="!column.filter.textCaseSensitiveSearch"
+                />
                 <span
                   id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-string'+'-label-toggleRemoteLoad-NCS-span-CS'}}"
                   class="tab_checkmark right">NCS</span>
               </label>
-
               </span>
-
-
-
             </div>
             <div
               id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-filter-bar'+'-uigrid-cell-column-'+column.id+'-div-filterable'+'-div-dataType-number'}}"
@@ -424,7 +460,6 @@
       </div>
     </div>
   </div>
-
   <!--Selection Model Button Bar-->
   <div id="{{'uigrid-'+grid.id+'-uigrid-selection-model-button-toolbar'}}" class="uigrid-row uigrid-selection-model-button-toolbar" *ngIf="grid.hasSelectionColumn && grid.selectionColumn.totalButtons > 0">
       <div id="{{'uigrid-'+grid.id+'-uigrid-selection-model-button-toolbar'+'-uigrid-cell'}}" class="uigrid-cell fill">
@@ -441,11 +476,12 @@
           </span>
       </div>
   </div>
-
+  <!--Grid Mask-->
   <div class="grid-mask" id="{{'uigrid-'+grid.id+'mask-loader'}}" hidden>
     <div class="loader"></div>
   </div>
 </div>
+<!--GRID POPUPS-->
 <!--Multi Select Popup Dialog-->
 <div id="{{'multi-select-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
   <div id="{{'multi-select-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
@@ -462,7 +498,10 @@
 <!--Column Extra Data Display Popup Dialog-->
 <div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
   <div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
-    <app-grid-column-extra-data [columnExtraDataDisplayInput]="column_extra_data_display_input" (proceedWithEvent)="handleProceedWithEventOnColumnExtraDataPopUpDismiss($event)" (close)="dismissColumnExtraDataDisplayPopUp()" style="width: 100%"></app-grid-column-extra-data>
+    <app-grid-column-extra-data 
+                [columnExtraDataDisplayInput]="column_extra_data_display_input" 
+                (proceedWithEvent)="handleProceedWithEventOnColumnExtraDataPopUpDismiss($event)" 
+                (close)="dismissColumnExtraDataDisplayPopUp()" style="width: 100%"></app-grid-column-extra-data>
   </div>
 </div>
 

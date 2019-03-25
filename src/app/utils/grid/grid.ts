@@ -25,6 +25,7 @@ export class Grid {
     columns: Column[];
     store: Store;
     filtered_records: GridRecord[] = [];
+    downloadWithStatePreserved: boolean;
     offline: boolean;
     showDownload: boolean = false;
     showOfflineToggle: boolean = false;
@@ -54,8 +55,6 @@ export class Grid {
       this.store = null;
       if (GridCommonFunctions.checkObjectAvailability(storeMetaData)) {
           let downloadURL: string = null;
-          let downloadWithSorterRequired: boolean = false;
-          let downloadWithFilterRequired: boolean = false;
           let precall_load: any = null;
           let postcall_load: any = null;
           let precall_download: any = null;
@@ -71,12 +70,6 @@ export class Grid {
             if (GridCommonFunctions.checkStringAvailability(downloadURL)) {
                 this.showDownload = true;
             }
-            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.withSorter)) {
-                downloadWithSorterRequired = storeMetaData.download.withSorter;
-            }
-            if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.withFilter)) {
-                downloadWithFilterRequired = storeMetaData.download.withFilter;
-            }
             if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.preDownload)) {
                 precall_download = storeMetaData.download.preDownload;
             }
@@ -89,8 +82,6 @@ export class Grid {
                             storeMetaData.isStatic, 
                             storeMetaData.restURL, 
                             downloadURL, 
-                            downloadWithSorterRequired, 
-                            downloadWithFilterRequired,
                             precall_load,
                             postcall_load,
                             precall_download,
@@ -168,6 +159,7 @@ export class Grid {
           this.isCollapsable = true;
           this.stateExpanded = false;
       }
+      this.downloadWithStatePreserved = false;
     }
 
     public loadData(gridObject: GridComponent) {

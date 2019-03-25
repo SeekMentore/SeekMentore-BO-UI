@@ -83,7 +83,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.onlineOfflineToggle) ? this.gridMetaData.grid.onlineOfflineToggle : false,
         GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.isCollapsable) ? this.gridMetaData.grid.isCollapsable : true,
         GridCommonFunctions.checkObjectAvailability(this.gridMetaData.grid.collapsed) ? this.gridMetaData.grid.collapsed : false
-      );
+      );      
     }
     this.hidden = this.gridMetaData.hidden;
     this.idForModalPopUp = this.grid.id;
@@ -261,12 +261,12 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.helperService.showAlertDialog(myListener);
   }
 
-  public toggleRemoteLoad(event: any) {
-    if (event === 'ONLINE') {
-      this.grid.offline = false;
-    } else {
-      this.grid.offline = true;
-    }
+  public toggleStatePreservedDownload(statePreserved: boolean) {
+    this.grid.downloadWithStatePreserved = statePreserved;
+  }
+
+  public toggleRemoteLoad(offline: boolean) {
+    this.grid.offline = offline;
   }
 
   public sortToggle(sorter: Sorter, sortOrder: SortingOrder) {

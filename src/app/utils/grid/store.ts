@@ -15,8 +15,6 @@ export class Store {
   restData: Object[]; // list of Objects that should be fetched in REST call
   totalRecords: number = -1;
   extraParams: Object;
-  downloadWithSorterRequired: boolean = false;
-  downloadWithFilterRequired: boolean = false;
   private precall_load: any;
   private postcall_load: any;
   private precall_download: any;
@@ -27,8 +25,6 @@ export class Store {
       isStatic: boolean = true, 
       restURL: string = null, 
       downloadURL: string = null, 
-      downloadWithSorterRequired: boolean = false,
-      downloadWithFilterRequired: boolean = false,
       precall_load: any = null,
       postcall_load: any = null,
       precall_download: any = null,
@@ -37,8 +33,6 @@ export class Store {
     this.id = id;
     this.restURL = restURL;
     this.downloadURL = downloadURL;
-    this.downloadWithSorterRequired = downloadWithSorterRequired;
-    this.downloadWithFilterRequired = downloadWithFilterRequired;
     this.precall_load = precall_load;
     this.postcall_load = postcall_load;
     this.precall_download = precall_download;
@@ -143,8 +137,8 @@ export class Store {
         start.value = '1';
         limit.value = '-1'; // No pagination while download
         otherParams.value = JSON.stringify(this.extraParams);
-        sorters.value = (this.downloadWithSorterRequired && grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null;
-        filters.value = (this.downloadWithFilterRequired && grid.isFilterCapable) ? JSON.stringify(grid.filters) : null;
+        sorters.value = (grid.stateExpanded && grid.downloadWithStatePreserved && grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null;
+        filters.value = (grid.stateExpanded && grid.downloadWithStatePreserved && grid.isFilterCapable) ? JSON.stringify(grid.filters) : null;
         gridComponentObject.utility_service.submitForm('gridDownloadForm', this.downloadURL, 'POST');
         if (GridCommonFunctions.checkObjectAvailability(this.postcall_download)) {
           this.postcall_download(gridComponentObject);

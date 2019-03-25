@@ -414,6 +414,25 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }, 5000);
   }
 
+  downloadAssignmentAttendanceAllDocuments() {
+    if (this.totalFiles > 0) {
+      this.showFormLoaderMask();
+      CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'));
+      this.utilityService.submitForm('attendanceDocumentDownloadForm', '/rest/sales/downloadAssignmentAttendanceAllDocuments', 'POST');
+      setTimeout(() => {
+        this.hideFormLoaderMask();
+      }, (this.totalFiles * 5000));
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: 'No files are present for this Attendance Record',
+        onButtonClicked: () => {
+        }
+      };
+      this.helperService.showAlertDialog(myListener);
+    }
+  }
+
   private showFormLoaderMask() {
     this.assignmentAttendanceFormMaskLoaderHidden = false;
   }

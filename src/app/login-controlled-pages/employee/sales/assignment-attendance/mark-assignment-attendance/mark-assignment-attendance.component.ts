@@ -44,6 +44,11 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   isFormDirty: boolean = false;
   assignmentAttendanceFormMaskLoaderHidden: boolean = true;
+  showForm: boolean = false;
+  showEditControlSection: boolean = false;
+  documentRemovalAccess: boolean = false;
+  showInsertButton: boolean = false;
+  showUpdateButton: boolean = false;
   
   // Modal Properties
   assignmentAttendanceUpdatedRecord = {};
@@ -103,6 +108,15 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     };    
     this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  private setSectionShowParams() {
+    this.showForm = this.assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess 
+                      && (!this.formEditMandatoryDisbaled || (this.formEditMandatoryDisbaled && CommonUtilityFunctions.checkObjectAvailability(this.selectedAssignmentAttendanceRecord)));
+    this.showEditControlSection = this.assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !this.formEditMandatoryDisbaled;
+    this.documentRemovalAccess = !this.formEditMandatoryDisbaled;
+    this.showInsertButton = this.showEditControlSection && this.editRecordForm && this.isInsertion; 
+    this.showUpdateButton = this.showEditControlSection && this.editRecordForm && !this.isInsertion; 
   }
 
   private getAssignmentAttendanceUploadedDocumentCountAndExistence(assignmentAttendanceSerialId: string) {    
@@ -269,6 +283,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     this.detachAllFiles();
     setTimeout(() => {
       this.editRecordForm = false;
+      this.setSectionShowParams();
       this.hideFormLoaderMask();
     }, 500);    
   }

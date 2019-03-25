@@ -5,8 +5,8 @@
         <input type="text" value="" size="10" name="assignmentAttendanceSerialId" id="downloadAttendanceDocument-assignmentAttendanceSerialId" />
         <input type="text" value="" size="10" name="documentType" id="downloadAttendanceDocument-documentType" />
       </form>
-      <form class="form-container" style="max-width: 80%" *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled">
-          <div *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled"
+      <form class="form-container" style="max-width: 80%" *ngIf="showForm">
+          <div *ngIf="showEditControlSection"
                 class="form-container-toggle-button">
             <button type="submit"
               *ngIf="!isInsertion"
@@ -242,7 +242,7 @@
               </div>
               <div *ngIf="classworkFileExists">
                 <div style="margin-left: 20%;">Classwork File:</div>
-                <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('classwork')">Remove</button>
+                <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('classwork')">Remove</button>
                 <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('classwork')">Download</button>
               </div>
               <div *ngIf="!classworkFileExists && !editRecordForm">
@@ -265,7 +265,7 @@
               </div>
               <div *ngIf="homeworkFileExists">
                 <div style="margin-left: 20%;">Homework File:</div>
-                <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('homework')">Remove</button>
+                <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('homework')">Remove</button>
                 <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('homework')">Download</button>
               </div>
               <div *ngIf="!homeworkFileExists && !editRecordForm">
@@ -288,7 +288,7 @@
               </div>
               <div *ngIf="testFileExists">
                 <div style="margin-left: 20%;">Test File:</div>
-                <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('test')">Remove</button>
+                <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('test')">Remove</button>
                 <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('test')">Download</button>
               </div>
               <div *ngIf="!testFileExists && !editRecordForm">
@@ -311,7 +311,7 @@
               </div>
               <div *ngIf="otherFileExists">
                 <div style="margin-left: 20%;">Other File:</div>
-                <button class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('other')">Remove</button>
+                <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeAssignmentAttendanceDocumentUploadedFile('other')">Remove</button>
                 <button class="inline-btnSubmit" (click)="downloadAssignmentAttendanceDocumentFile('other')">Download</button>
               </div>
               <div *ngIf="!otherFileExists && !editRecordForm">
@@ -319,12 +319,12 @@
               </div>
             </div>
           </div>
-          <button *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled && editRecordForm && isInsertion" type="submit"
+          <button *ngIf="showInsertButton" type="submit"
                 class="ok-button form-container-update-button"
                 (click)="insertAssignmentAttendanceRecord()">
             Insert Attendance
           </button>
-          <button *ngIf="assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !formEditMandatoryDisbaled && editRecordForm && !isInsertion" type="submit"
+          <button *ngIf="showUpdateButton" type="submit"
                 class="ok-button form-container-update-button"
                 (click)="updateAssignmentAttendanceRecord()">
             Update Attendance

@@ -95,7 +95,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   updateEnquiryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enquiriesRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enquiriesRecord.property, deselected, isAllOPeration);
   }
 
   ngAfterViewInit() {

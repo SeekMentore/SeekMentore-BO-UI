@@ -74,6 +74,9 @@ export class CommonUtilityFunctions {
   }
 
   static getSelectedFilterItems(allowedOptions: { value: any, label: any }[], selectedValues: string) {
+    if (!CommonUtilityFunctions.checkStringAvailability(selectedValues)) {
+      selectedValues = '';
+    }
     const selectedValuesArray = selectedValues.split(';');
     const selectedOptionsArray: any[] = [];
     for (const value of selectedValuesArray) {
@@ -120,7 +123,7 @@ export class CommonUtilityFunctions {
               event: any, 
               data_type: string, 
               updatedData: any, 
-              record: GridRecord,
+              record: Object,
               deselected: boolean,
               isAllOPeration: boolean,
               predefinedValueProperty: string = null
@@ -142,7 +145,7 @@ export class CommonUtilityFunctions {
         } else {
           let previous_selected_value = updatedData[key];
           if (!CommonUtilityFunctions.checkStringAvailability(previous_selected_value)) {
-            previous_selected_value = record.getProperty(key);
+            previous_selected_value = record[key];
           }
           if ('NULLIFIED' === previous_selected_value) {
             previous_selected_value = null;
@@ -395,6 +398,9 @@ export class CommonUtilityFunctions {
   public static setHTMLInputElementValue(elementId: string, elementValue: string) {
     const element: HTMLInputElement = <HTMLInputElement>document.getElementById(elementId);
     if (CommonUtilityFunctions.checkObjectAvailability(element)) {
+      if (!CommonUtilityFunctions.checkStringAvailability(elementValue)) {
+        elementValue = '';
+      }
       element.value = elementValue;
     } else {
       CommonUtilityFunctions.logOnConsole('Element with HTML ID - ' + elementId + ' does not exists, hence cannot set value = ' + elementValue, true);

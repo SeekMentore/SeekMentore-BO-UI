@@ -8,6 +8,7 @@ import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { SubscriptionPackageAssignmentDataAccess } from '../subscription-package-data.component';
+import { PackageAssignment } from 'src/app/model/package-assignment';
 
 @Component({
   selector: 'app-subscription-package-assignment',
@@ -17,21 +18,15 @@ import { SubscriptionPackageAssignmentDataAccess } from '../subscription-package
 export class SubscriptionPackageAssignmentComponent implements OnInit {
 
   @Input()
-  subscriptionPackageAssignmentRecord: GridRecord = null;
+  packageAssignmentSerialId: string = null;
 
   @Input()
-  subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;
-
-  @Input()
-  selectedRecordGridType: string = null;
+  subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;  
 
   subscriptionPackageAssignmentUpdatedRecord = {};
 
-  loadSelectedSubscriptionPackageAssignment = true;
-
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
-  superAccessAwarded = false;
   editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
@@ -46,80 +41,191 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
   packageBillingTypeFilterOptions = CommonFilterOptions.packageBillingTypeFilterOptions;
 
+  isFormDirty: boolean = false;
+  packageAssignmentFormMaskLoaderHidden: boolean = true;
+  showForm: boolean = false;
+  showEditControlSection: boolean = false;
+  showUpdateButton: boolean = false;  
+  canStartAssignment: boolean = false;
+  canReviewCompleteAssignment: boolean = false;
+
+  // Modal properties
+  packageAssignmentRecord: PackageAssignment;
+  packageAssignmentCreatedDisplayTime: string;
+  packageAssignmentStartDateDisplayTime: string;
+  packageAssignmentEndDateDisplayTime: string;
+  packageAssignmentActionDateDisplayTime: string;
+  packageAssignmentRecordLastUpdatedDateDisplayTime: string;
   selectedPackageBillingTypeOptions: any[] = [];
   selectedIsCustomerGrievedOptions: any[] = [];
   selectedCustomerHappinessIndexOptions: any[] = [];
   selectedIsTutorGrievedOptions: any[] = [];
   selectedTutorHappinessIndexOptions: any[] = [];
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+    this.packageAssignmentRecord = new PackageAssignment();
   }
 
   ngOnInit() {
-    this.selectedPackageBillingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.packageBillingTypeFilterOptions, this.subscriptionPackageAssignmentRecord.getProperty('packageBillingType'));
-    this.selectedIsCustomerGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageAssignmentRecord.getProperty('isCustomerGrieved'));
-    this.selectedCustomerHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageAssignmentRecord.getProperty('customerHappinessIndex'));
-    this.selectedIsTutorGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageAssignmentRecord.getProperty('isTutorGrieved'));
-    this.selectedTutorHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageAssignmentRecord.getProperty('tutorHappinessIndex'));
-    this.setDisabledStatus();
+    this.getPackageAssignmentGridRecord(this.packageAssignmentSerialId);    
   }
 
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  private showFormLoaderMask() {
+    this.packageAssignmentFormMaskLoaderHidden = false;
   }
 
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
+  private hideFormLoaderMask() {
+    this.packageAssignmentFormMaskLoaderHidden = true;
   }
 
-  private setDisabledStatus() {
-    if (this.selectedRecordGridType === 'selectedSubscriptionPackageAllCurrentAssignmentGrid') {
-      this.formEditMandatoryDisbaled = false;
-      this.takeActionDisabled = false;
+  private setSectionShowParams() {
+    this.showForm = this.subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess;
+    this.showEditControlSection = this.subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess && !this.formEditMandatoryDisbaled;
+    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canStartAssignment && !this.canReviewCompleteAssignment; 
+  }
+
+  public setFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+  
+  private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
+    this.showFormLoaderMask();
+    const data = {
+      parentId: packageAssignmentSerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  onGetPackageAssignmentGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['packageAssignmentFormEditMandatoryDisbaled'];
+      context.canStartAssignment = gridRecordObject.additionalProperties['packageAssignmentCanStartAssignment'];
+      context.canReviewCompleteAssignment = gridRecordObject.additionalProperties['packageAssignmentCanReviewCompleteAssignment'];
+      context.setUpDataModal(gridRecordObject.record, null, true);
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
     }
+  }
+  
+  private setUpDataModal(packageAssignmentGridRecord: GridRecord) {
+    this.packageAssignmentRecord.setValuesFromGridRecord(packageAssignmentGridRecord);
+    this.packageAssignmentCreatedDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.createdMillis);
+    this.packageAssignmentStartDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.startDateMillis);
+    this.packageAssignmentEndDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.endDateMillis);
+    this.packageAssignmentActionDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.actionDateMillis);
+    this.packageAssignmentRecordLastUpdatedDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.recordLastUpdatedMillis);
+    this.selectedIsCustomerGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.packageAssignmentRecord.isCustomerGrieved);
+    this.selectedCustomerHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.packageAssignmentRecord.customerHappinessIndex);
+    this.selectedIsTutorGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.packageAssignmentRecord.isTutorGrieved);
+    this.selectedTutorHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.packageAssignmentRecord.tutorHappinessIndex);
+    CommonUtilityFunctions.setHTMLInputElementValue('customerRemarks', this.packageAssignmentRecord.customerRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.packageAssignmentRecord.tutorRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('adminRemarks', this.packageAssignmentRecord.adminRemarks);
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.setSectionShowParams();
+      this.hideFormLoaderMask();
+    }, 500);
   }
 
   updateSubscriptionPackageAssignmentProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageAssignmentUpdatedRecord, this.subscriptionPackageAssignmentRecord, deselected, isAllOPeration);
+    this.isFormDirty = true;
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord, deselected, isAllOPeration);
   }
 
   updateSubscriptionPackageAssignmentRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageAssignmentUpdatedRecord, this.subscriptionPackageAssignmentRecord.getProperty('packageAssignmentSerialId'));
+    this.showFormLoaderMask();
+    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord.packageAssignmentSerialId);
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageAssignmentRecord, LcpRestUrls.subscription_package_assignment_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
-  onUpdateSubscriptionPackageAssignmentRecord(context: any, data: any) {
-    const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
+  onUpdateSubscriptionPackageAssignmentRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
-    if (data['success']) {
+    });
+    if (response['success']) {
       context.editRecordForm = false;
+      context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
+    } else {
+      context.hideFormLoaderMask();
     }
   }
 
   takeActionOnSubscriptionPackageAssignment(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
-    this.helperService.showPromptDialog({
-      required: commentsRequired,
-      titleText: titleText,
-      placeholderText: placeholderText,
-      onOk: (message) => {                  
-        const data = {
-          allIdsList: this.subscriptionPackageAssignmentRecord.getProperty('packageAssignmentSerialId'),
-          button: actionText,
-          comments: message
-        };
-        this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
-          LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
-          'application/x-www-form-urlencoded');
-      },
-      onCancel: () => {
-      }
-    });
+    if (!this.isFormDirty) {      
+      this.helperService.showPromptDialog({
+        required: commentsRequired,
+        titleText: titleText,
+        placeholderText: placeholderText,
+        onOk: (message) => {                  
+          this.showFormLoaderMask();        
+          const data = {
+            allIdsList: this.packageAssignmentRecord.packageAssignmentSerialId,
+            button: actionText,
+            comments: message
+          };
+          this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
+            LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
+            'application/x-www-form-urlencoded');
+        },
+        onCancel: () => {
+        }
+      });
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changes on the form do you still want to continue.',
+        onOk: () => {
+          this.helperService.showPromptDialog({
+            required: commentsRequired,
+            titleText: titleText,
+            placeholderText: placeholderText,
+            onOk: (message) => { 
+              this.showFormLoaderMask();
+              this.isFormDirty = false;                  
+              const data = {
+                allIdsList: this.packageAssignmentRecord.packageAssignmentSerialId,
+                button: actionText,
+                comments: message
+              };                     
+              this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
+                LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded');
+            },
+            onCancel: () => {
+            }
+          });
+        },
+        onCancel: () => {
+          const myListener: AlertDialogEvent = {
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          };
+          this.helperService.showAlertDialog(myListener);
+        }
+      });
+    }    
   }
 
   handleTakeActionOnSubscriptionPackageAssignmentRecord(context: any, response: any) {
@@ -129,5 +235,10 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
       onButtonClicked: () => {
       }
     });
+    if (response['success']) {
+      context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
+    } else {
+      context.hideFormLoaderMask();
+    }
   }
 }

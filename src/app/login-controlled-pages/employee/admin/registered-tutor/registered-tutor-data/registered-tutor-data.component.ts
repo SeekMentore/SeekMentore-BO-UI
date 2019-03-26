@@ -760,7 +760,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
 
   updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorUpdatedData, this.tutorRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorUpdatedData, this.tutorRecord.property, deselected, isAllOPeration);
   }
   
   updateTutorRecord() {

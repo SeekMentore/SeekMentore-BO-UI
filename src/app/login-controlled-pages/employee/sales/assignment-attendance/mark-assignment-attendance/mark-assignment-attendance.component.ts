@@ -71,6 +71,10 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   expertiseRemarks_Modal: any;
   knowledgeRemarks_Modal: any;
   studentRemarks_Modal: any;
+  recordLastUpdated_Modal: any;
+  updatedBy_Modal: any;
+  updatedByName_Modal: any;
+  updatedByUserType_Modal: any;
   selectedIsClassworkProvidedOptions: any[] = [];
   selectedIsHomeworkProvidedOptions: any[] = [];
   selectedIsTestProvidedOptions: any[] = [];
@@ -136,7 +140,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       additionalProperties: any     
     } = CommonUtilityFunctions.extractGridRecordObject(response);
     if (!gridRecordObject.isError) {
-      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['formEditMandatoryDisbaled'];
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['assignmentMarkAndUpdateAttendanceFormEditDisbaled'];
       context.setUpDataModal(gridRecordObject.record, null, true);
     } else {
       const myListener: AlertDialogEvent = {
@@ -239,6 +243,10 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       this.selectedTutorKnowledgeIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorKnowledgeIndex'));
       this.knowledgeRemarks_Modal = assignmentAttendanceRecord.getProperty('knowledgeRemarks');
       this.studentRemarks_Modal = assignmentAttendanceRecord.getProperty('studentRemarks');
+      this.recordLastUpdated_Modal = this.getDateFromMillis(assignmentAttendanceRecord.getProperty('recordLastUpdatedMillis'));
+      this.updatedBy_Modal = assignmentAttendanceRecord.getProperty('updatedBy');
+      this.updatedByName_Modal = assignmentAttendanceRecord.getProperty('updatedByName');
+      this.updatedByUserType_Modal = assignmentAttendanceRecord.getProperty('updatedByUserType');
       CommonUtilityFunctions.setHTMLInputElementValue('topicsTaught', this.topicsTaught_Modal);
       CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.tutorRemarks_Modal);
       CommonUtilityFunctions.setHTMLInputElementValue('punctualityRemarks', this.punctualityRemarks_Modal);
@@ -288,6 +296,11 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }, 500);    
   }
 
+  public setFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
   getDateForDateMillisParam(value: any) {
     return CommonUtilityFunctions.getDateForDateMillisParam(value);
   }
@@ -319,6 +332,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     if (type === 'other') {
       this.otherFile = event.target.files[0];
     }
+    this.isFormDirty = true;
   }
 
   detachAllFiles() {
@@ -660,7 +674,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   updateAssignmentAttendanceProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     this.isFormDirty = true;
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.assignmentAttendanceUpdatedRecord, this.selectedAssignmentAttendanceRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.assignmentAttendanceUpdatedRecord, this.selectedAssignmentAttendanceRecord.property, deselected, isAllOPeration);
     switch (key) {
       case 'entryDateMillis' :
       case 'entryTimeMillis' : 

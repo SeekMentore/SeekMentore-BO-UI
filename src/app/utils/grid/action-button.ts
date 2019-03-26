@@ -5,6 +5,7 @@ export class ActionButton {
   id: string;
   label: string;
   btnclass: string = 'btnSubmit';
+  isDisabled: boolean = false;
   eventHandler: EventHandler;
 
   constructor(
@@ -20,5 +21,13 @@ export class ActionButton {
     if (GridCommonFunctions.checkObjectAvailability(clickEvent)) {
       this.eventHandler = new EventHandler(this.id + '-eventHandler', clickEvent);
     }
+  }
+
+  public disable() {
+    this.isDisabled = true;
+  }
+
+  public enable() {
+    this.isDisabled = false;
   }
 }

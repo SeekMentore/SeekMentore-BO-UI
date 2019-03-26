@@ -56,7 +56,7 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   updateComplaintProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.complaintUpdatedRecord, this.complaintRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.complaintUpdatedRecord, this.complaintRecord.property, deselected, isAllOPeration);
   }
 
   updateComplaintRecord() {

@@ -71,10 +71,9 @@ export class SubscriptionPackageDataComponent implements OnInit {
   selectedIsTutorGrievedOptions: any[] = [];
   selectedTutorHappinessIndexOptions: any[] = [];
 
-  interimHoldSelectedSubscriptionPackageAssignmentRecord: GridRecord = null;
-  selectedRecordAssignmentGridType: string = null;
+  selectedAssignmentRecordSerialId: string = null;
+  interimHoldSelectedAssignmentRecordSerialId: string = null;
   subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;
-  selectedSubscriptionPackageAssignmentRecord: GridRecord = null;
   showSubscriptionPackageAssignmentData = false;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
@@ -135,7 +134,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
         message: response.message,
         subscriptionPackageAssignmentDataModificationAccess: response.subscriptionPackageAssignmentDataModificationAccess
       };
-      context.selectedSubscriptionPackageAssignmentRecord = context.interimHoldSelectedSubscriptionPackageAssignmentRecord;
+      context.selectedAssignmentRecordSerialId = context.interimHoldSelectedAssignmentRecordSerialId;
       context.toggleVisibilitySubscriptionPackageAssignmentGrid();
     }
   }
@@ -143,7 +142,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
   toggleVisibilitySubscriptionPackageAssignmentGrid() {
     if (this.showSubscriptionPackageAssignmentData === true) {
       this.showSubscriptionPackageAssignmentData = false;
-      this.selectedSubscriptionPackageAssignmentRecord = null;
+      this.selectedAssignmentRecordSerialId = null;
       const backToSubscriptionPackageListingButton: HTMLElement = document.getElementById('back-to-subscription-packages-listing-button'); 
       backToSubscriptionPackageListingButton.classList.remove('noscreen');
       setTimeout(() => {
@@ -178,12 +177,11 @@ export class SubscriptionPackageDataComponent implements OnInit {
         dataType: 'string',
         mapping: 'packageAssignmentSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedSubscriptionPackageAssignmentRecord = record;
-          this.selectedRecordAssignmentGridType = gridComponentObject.grid.id; 
+          this.interimHoldSelectedAssignmentRecordSerialId = record.getProperty('packageAssignmentSerialId');
           if (this.subscriptionPackageAssignmentDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_package_assignment_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedSubscriptionPackageAssignmentRecord = this.interimHoldSelectedSubscriptionPackageAssignmentRecord;            
+            this.selectedAssignmentRecordSerialId = this.interimHoldSelectedAssignmentRecordSerialId;            
             this.toggleVisibilitySubscriptionPackageAssignmentGrid();
           }
         }
@@ -241,7 +239,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   updateSubscriptionPackageProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord.property, deselected, isAllOPeration);
   }
 
   updateSubscriptionPackageRecord() {

@@ -191,9 +191,13 @@ export class AssignmentAttendanceComponent implements OnInit {
         label: 'Download',
         btnclass: 'btnSubmit',
         clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
+          button.disable();
           const packageAssignmentSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('downloadAttendanceTracker-packageAssignmentSerialId');
           packageAssignmentSerialId.value = record.getProperty('packageAssignmentSerialId');
-          this.utilityService.submitForm('attendanceTrackerDownloadForm', '/rest/sales/downloadAttendanceTrackerSheet', 'POST');          
+          this.utilityService.submitForm('attendanceTrackerDownloadForm', '/rest/sales/downloadAttendanceTrackerSheet', 'POST');
+          setTimeout(() => {
+            button.enable();
+          }, 5000);        
         }
       }]
     };

@@ -89,7 +89,7 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   updateMappedTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.mappedTutorUpdatedRecord, this.mappedTutorRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.mappedTutorUpdatedRecord, this.mappedTutorRecord.property, deselected, isAllOPeration);
   }  
 
   updateMappedTutorRecord() {

@@ -403,7 +403,10 @@
           *ngFor="let button of grid.actionColumn.buttons">
           <button
             id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-button-'+button.id}}"
-            class="{{button.btnclass}}" (click)="actionColumnActionButtonClicked(record, button)">
+            class="{{button.btnclass}}" 
+            (click)="actionColumnActionButtonClicked(record, button)"
+            [disabled]="button.isDisabled"
+          >
             {{button.label}}
           </button>
         </span>
@@ -470,7 +473,10 @@
             *ngFor="let button of grid.selectionColumn.buttons">
               <button
                 id="{{'uigrid-'+grid.id+'-uigrid-selection-model-button-toolbar'+'-uigrid-cell'+'-span-button-'+button.id+'-button-'+button.id}}"
-                class="{{button.btnclass}}" (click)="selectionColumnActionButtonClicked(button)">
+                class="{{button.btnclass}}" 
+                (click)="selectionColumnActionButtonClicked(button)"
+                [disabled]="button.isDisabled"
+              >
                 {{button.label}}
               </button>
           </span>

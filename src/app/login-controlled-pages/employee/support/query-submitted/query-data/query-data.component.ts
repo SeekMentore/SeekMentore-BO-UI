@@ -67,7 +67,7 @@ export class QueryDataComponent implements OnInit {
   }
 
   updateQueryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.queryUpdatedRecord, this.queryRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.queryUpdatedRecord, this.queryRecord.property, deselected, isAllOPeration);
   }
 
   updateQueryRecord() {

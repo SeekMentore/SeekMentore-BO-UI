@@ -335,7 +335,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   updateCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord.property, deselected, isAllOPeration);
   }
 
   updateCustomerRecord() {

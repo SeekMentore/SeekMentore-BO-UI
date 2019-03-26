@@ -105,4 +105,12 @@ export class GridCommonFunctions {
     }
     return selectedPropertyList;
   }
+
+  public static setGridRecordPropertiesInCustomObject(record: GridRecord, customObject: any) {
+    if (GridCommonFunctions.checkObjectAvailability(record) && GridCommonFunctions.checkObjectAvailability(customObject)) {
+      for (const customProperty in record.property) {
+        customObject[customProperty] = record.getProperty(customProperty);
+      }
+    }
+  }
 }

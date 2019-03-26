@@ -92,7 +92,7 @@ export class DemoTrackerDataComponent implements OnInit {
   }
 
   updateDemoTrackerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.demoTrackerUpdatedRecord, this.demoTrackerRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.demoTrackerUpdatedRecord, this.demoTrackerRecord.property, deselected, isAllOPeration);
   }
 
   updateDemoTrackerRecord() {

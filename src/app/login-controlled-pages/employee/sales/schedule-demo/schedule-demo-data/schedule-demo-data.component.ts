@@ -443,7 +443,7 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
   }
 
   updateScheduleDemoMappedTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.scheduleDemoMappedTutorUpdatedRecord, this.mappedTutorRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.scheduleDemoMappedTutorUpdatedRecord, this.mappedTutorRecord.property, deselected, isAllOPeration);
   }
 
   updateScheduleDemoMappedTutorRecord() {

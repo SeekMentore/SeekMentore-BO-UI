@@ -1,47 +1,47 @@
 <div>
-  <div *ngIf="loadSelectedSubscriptionPackageAssignment" class="form-container-div">      
-      <form class="form-container" style="max-width: 80%">
-        <div *ngIf="subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess && !formEditMandatoryDisbaled"
+  <div class="form-container-div">      
+      <form class="form-container" *ngIf="showForm" style="max-width: 80%">
+        <div *ngIf="showEditControlSection"
               class="form-container-toggle-button">
-          <label class="tab_container" (change)="editRecordForm = false;">
-            <input type="radio" checked name="editFormChoice">
+          <label class="tab_container" (change)="setFormEditStatus(false)">
+            <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
             <span class="tab_checkmark left">View</span>
           </label>
-          <label class="tab_container" (change)="editRecordForm = true;">
-            <input type="radio" name="editFormChoice">
+          <label class="tab_container" (change)="setFormEditStatus(true)">
+            <input type="radio" [checked]="editRecordForm" name="editFormChoice">
             <span class="tab_checkmark right">Edit</span>
           </label>
         </div>
         <table class="form-container-generic-table">
           <tr>
             <td class="td-label"><label>Assignment Id</label></td>
-            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['packageAssignmentSerialId']}}</label></td>        
+            <td><label class="data">{{packageAssignmentRecord.packageAssignmentSerialId}}</label></td>      
           </tr>
           <tr>
             <td class="td-label"><label>Created Date And Time</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['createdMillis'])}}</label></td>        
+            <td><label class="data">{{packageAssignmentCreatedDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Activated Date And Time</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['startDateMillis'])}}</label></td>        
+            <td><label class="data">{{packageAssignmentStartDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Total Hours</label></td>
-            <td><input class="input_field" type="number" value="{{subscriptionPackageAssignmentRecord.property['totalHours']}}"
+            <td><input class="input_field" type="number" value="{{packageAssignmentRecord.totalHours}}"
                         [disabled]="!editRecordForm"
                         (change)="updateSubscriptionPackageAssignmentProperty('totalHours', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Completed Hours</label></td>
-            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['completedHours']}}</label></td>        
+            <td><label class="data">{{packageAssignmentRecord.completedHours}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Completed Minutes</label></td>
-            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['completedMinutes']}}</label></td>        
+            <td><label class="data">{{packageAssignmentRecord.completedMinutes}}</label></td> 
           </tr>
           <tr>
             <td class="td-label"><label>Terminated Date And Time</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['endDateMillis'])}}</label></td>        
+            <td><label class="data">{{packageAssignmentEndDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Is Customer Grieved</label></td>
@@ -70,9 +70,10 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="customerRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageAssignmentProperty('customerRemarks', $event, 'string')"
-                        >{{subscriptionPackageAssignmentRecord.property['customerRemarks']}}</textarea>
+                        >{{packageAssignmentRecord.customerRemarks}}</textarea>
             </td>
           </tr> 
           <tr>
@@ -102,9 +103,10 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="tutorRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageAssignmentProperty('tutorRemarks', $event, 'string')"
-                        >{{subscriptionPackageAssignmentRecord.property['tutorRemarks']}}</textarea>
+                        >{{packageAssignmentRecord.tutorRemarks}}</textarea>
             </td>
           </tr>
           <tr>
@@ -112,26 +114,27 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="adminRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageAssignmentProperty('adminRemarks', $event, 'string')"
-                        >{{subscriptionPackageAssignmentRecord.property['adminRemarks']}}</textarea>
+                        >{{packageAssignmentRecord.adminRemarks}}</textarea>
             </td>
           </tr>
           <tr>
             <td class="td-label"><label>Action Date</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['actionDateMillis'])}}</label></td>        
+            <td><label class="data">{{packageAssignmentActionDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Who Acted</label></td>
-            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['whoActedName']}}</label></td>        
+            <td><label class="data">{{packageAssignmentRecord.whoActedName}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Record Last Updated</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageAssignmentRecord.property['recordLastUpdatedMillis'])}}</label></td>        
+            <td><label class="data">{{packageAssignmentRecordLastUpdatedDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Updated By</label></td>
-            <td><label class="data">{{subscriptionPackageAssignmentRecord.property['updatedByName']}}</label></td>        
+            <td><label class="data">{{packageAssignmentRecord.updatedByName}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
             <td class="td-label">
@@ -163,14 +166,16 @@
                     <td>
                       <button type="submit"
                               class="btnSubmit"
-                              (click)="takeActionOnSubscriptionPackageAssignment('Enter comments for action', 'Please provide your comments for starting the assignment.', 'startAssignment')">            
+                              *ngIf="canStartAssignment"
+                              (click)="takeActionOnSubscriptionPackageAssignment('Enter comments for action', 'Please provide your comments for starting the assignment.', 'startAssignment', true)">            
                               Start Assignment
                       </button>
                     </td>
                     <td>
                       <button type="submit"
                               class="btnReset"
-                              (click)="takeActionOnSubscriptionPackageAssignment('Enter comments for action', 'Please provide your comments for review completing the assignment.', 'endAssignment')">            
+                              *ngIf="canReviewCompleteAssignment"
+                              (click)="takeActionOnSubscriptionPackageAssignment('Enter comments for action', 'Please provide your comments for review completing the assignment.', 'endAssignment', true)">            
                               Review Complete Assignment
                       </button>
                     </td>
@@ -182,11 +187,14 @@
             </td>
           </tr>
         </table>
-        <button *ngIf="subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
+        <button *ngIf="showUpdateButton" type="submit"
                 class="ok-button form-container-update-button"
                 (click)="updateSubscriptionPackageAssignmentRecord()">
-          Update
+          Update Package Assignment
         </button>
+        <div class="form-mask" id="package-assignment-form-mask-loader" [hidden]="packageAssignmentFormMaskLoaderHidden">
+          <div class="form-loader"></div>
+        </div>
       </form>
     </div>
 </div>

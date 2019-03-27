@@ -1,15 +1,16 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { Column } from 'src/app/utils/grid/column';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { SubscriptionPackageDataAccess } from '../subscription-packages.component';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
-import { Column } from 'src/app/utils/grid/column';
+import { SubscriptionPackageDataAccess } from '../subscription-packages.component';
+import { SubscriptionPackage } from 'src/app/model/subscription-package';
 
 @Component({
   selector: 'app-subscription-package-data',
@@ -27,17 +28,13 @@ export class SubscriptionPackageDataComponent implements OnInit {
   selectedSubscriptionPackageAllHistoryAssignmentGridMetaData: GridDataInterface;
 
   @Input()
-  subscriptionPackageRecord: GridRecord = null;
+  subscriptionPackageSerialId: string = null;
 
   @Input()
   subscriptionPackageDataAccess: SubscriptionPackageDataAccess = null;
 
-  @Input()
-  selectedRecordGridType: string = null;
-
   subscriptionPackageUpdatedRecord = {};
 
-  loadSelectedSubscriptionPackage = true;
   showCustomerDetails = false;
   showEnquiryDetails = false;
   showTutorDetails = false;
@@ -47,13 +44,11 @@ export class SubscriptionPackageDataComponent implements OnInit {
 
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
-  superAccessAwarded = false;
   editRecordForm = false;
 
   isContractReady = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
-
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
@@ -65,12 +60,40 @@ export class SubscriptionPackageDataComponent implements OnInit {
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
   packageBillingTypeFilterOptions = CommonFilterOptions.packageBillingTypeFilterOptions;
 
+  isFormDirty: boolean = false;
+  subscriptionPackageFormMaskLoaderHidden: boolean = true;
+  showForm: boolean = false;
+  showEditControlSection: boolean = false;
+  showUpdateButton: boolean = false;  
+  canActivateSubscription: boolean = false;
+  canTerminateSubscription: boolean = false;
+  canCreateAssignment: boolean = false;
+  takeActionActionText: string;
+
+  // Modal Variables
+  subscriptionPackageRecord: SubscriptionPackage;
+  subscriptionPackageCreatedDisplayTime: string;
+  subscriptionPackageStartDateDisplayTime: string;
+  subscriptionPackageEndDateDisplayTime: string;
+  subscriptionPackageActionDateDisplayTime: string;
+  subscriptionPackageRecordLastUpdatedDateDisplayTime: string;
+  enquirySubjectLookupRendererFromValue: string;
+  enquiryGradeLookupRendererFromValue: string;
+  enquiryPreferredTeachingTypeLookupRendererFromValue: string;
+  enquiryLocationLookupRendererFromValue: string;
+  demoClientSatisfiedFromTutorLookupRendererFromValue: string;
+  demoTutorSatisfiedWithClientLookupRendererFromValue: string;
+  demoAdminSatisfiedFromTutorLookupRendererFromValue: string;
+  demoAdminSatisfiedWithClientLookupRendererFromValue: string;
+  demoNeedPriceNegotiationWithClientLookupRendererFromValue: string;
+  demoNeedPriceNegotiationWithTutorLookupRendererFromValue: string;
   selectedPackageBillingTypeOptions: any[] = [];
   selectedIsCustomerGrievedOptions: any[] = [];
   selectedCustomerHappinessIndexOptions: any[] = [];
   selectedIsTutorGrievedOptions: any[] = [];
   selectedTutorHappinessIndexOptions: any[] = [];
 
+  // Package Assignment Form Control Variables
   selectedAssignmentRecordSerialId: string = null;
   interimHoldSelectedAssignmentRecordSerialId: string = null;
   subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;
@@ -79,24 +102,20 @@ export class SubscriptionPackageDataComponent implements OnInit {
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.selectedSubscriptionPackageAllCurrentAssignmentGridMetaData = null;
     this.selectedSubscriptionPackageAllHistoryAssignmentGridMetaData = null;
+    this.subscriptionPackageRecord = new SubscriptionPackage();
   }
 
   ngOnInit() {
-    this.selectedPackageBillingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.packageBillingTypeFilterOptions, this.subscriptionPackageRecord.getProperty('packageBillingType'));
-    this.selectedIsCustomerGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageRecord.getProperty('isCustomerGrieved'));
-    this.selectedCustomerHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageRecord.getProperty('customerHappinessIndex'));
-    this.selectedIsTutorGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageRecord.getProperty('isTutorGrieved'));
-    this.selectedTutorHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageRecord.getProperty('tutorHappinessIndex'));
     this.setUpGridMetaData();
-    this.setDisabledStatus();
+    this.getSubscriptionPackageGridRecord(this.subscriptionPackageSerialId);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.init();
-      this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+      this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageSerialId);
       this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.init();
-      this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+      this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageSerialId);
     }, 0);
     setTimeout(() => {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
@@ -104,21 +123,96 @@ export class SubscriptionPackageDataComponent implements OnInit {
     }, 0);
   }
 
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  private showFormLoaderMask() {
+    this.subscriptionPackageFormMaskLoaderHidden = false;
   }
 
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
+  private hideFormLoaderMask() {
+    this.subscriptionPackageFormMaskLoaderHidden = true;
   }
 
-  private setDisabledStatus() {
-    if (this.selectedRecordGridType === 'currentPackagesGrid') {
-      this.formEditMandatoryDisbaled = false;
-      this.takeActionDisabled = false;
+  private setSectionShowParams() {
+    this.showForm = this.subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess;
+    this.showEditControlSection = this.subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !this.formEditMandatoryDisbaled;
+    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canActivateSubscription && !this.canTerminateSubscription && !this.canCreateAssignment;
+    this.isContractReady = CommonUtilityFunctions.checkStringAvailability(this.subscriptionPackageRecord.contractSerialId);
+  }
+
+  public setFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+  
+  private getSubscriptionPackageGridRecord(subscriptionPackageSerialId: string) {
+    this.showFormLoaderMask();
+    const data = {
+      parentId: subscriptionPackageSerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetSubscriptionPackageGridRecord, LcpRestUrls.get_subscription_package_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  onGetSubscriptionPackageGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['subscriptionPackageFormEditMandatoryDisbaled'];
+      context.canActivateSubscription = gridRecordObject.additionalProperties['subscriptionPackageCanActivateSubscription'];
+      context.canTerminateSubscription = gridRecordObject.additionalProperties['subscriptionPackageCanTerminateSubscription'];
+      context.canCreateAssignment = gridRecordObject.additionalProperties['subscriptionPackageCanCreateAssignment'];
+      context.setUpDataModal(gridRecordObject.record, null, true);
+    } else {
+      const myListener: AlertDialogEvent = {
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      };
+      context.helperService.showAlertDialog(myListener);
     }
-    this.isContractReady = CommonUtilityFunctions.checkStringAvailability(this.subscriptionPackageRecord.getProperty('contractSerialId'));
   }
+
+  private setUpDataModal(subscriptionPackageGridRecord: GridRecord) {
+    this.subscriptionPackageRecord.setValuesFromGridRecord(subscriptionPackageGridRecord);
+    this.subscriptionPackageCreatedDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.createdMillis);
+    this.subscriptionPackageStartDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.startDateMillis);
+    this.subscriptionPackageEndDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.endDateMillis);
+    this.subscriptionPackageActionDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.actionDateMillis);
+    this.subscriptionPackageRecordLastUpdatedDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.recordLastUpdatedMillis);
+    this.enquirySubjectLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.enquirySubject, this.subjectsFilterOptions);
+    this.enquiryGradeLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.enquiryGrade, this.studentGradesFilterOptions);
+    this.enquiryPreferredTeachingTypeLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.enquiryPreferredTeachingType, this.preferredTeachingTypeFilterOptions);
+    this.enquiryLocationLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.enquiryLocation, this.locationsFilterOptions);
+    this.demoClientSatisfiedFromTutorLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.demoClientSatisfiedFromTutor, this.yesNoFilterOptions);
+    this.demoTutorSatisfiedWithClientLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.demoTutorSatisfiedWithClient, this.yesNoFilterOptions);
+    this.demoAdminSatisfiedFromTutorLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.demoAdminSatisfiedFromTutor, this.yesNoFilterOptions);
+    this.demoAdminSatisfiedWithClientLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.demoAdminSatisfiedWithClient, this.yesNoFilterOptions);
+    this.demoNeedPriceNegotiationWithClientLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.demoNeedPriceNegotiationWithClient, this.yesNoFilterOptions);
+    this.demoNeedPriceNegotiationWithTutorLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.subscriptionPackageRecord.demoNeedPriceNegotiationWithTutor, this.yesNoFilterOptions);
+    this.selectedPackageBillingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.packageBillingTypeFilterOptions, this.subscriptionPackageRecord.packageBillingType);
+    this.selectedIsCustomerGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageRecord.isCustomerGrieved);
+    this.selectedCustomerHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageRecord.customerHappinessIndex);
+    this.selectedIsTutorGrievedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.subscriptionPackageRecord.isTutorGrieved);
+    this.selectedTutorHappinessIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.subscriptionPackageRecord.tutorHappinessIndex);
+    CommonUtilityFunctions.setHTMLInputElementValue('activatingRemarks', this.subscriptionPackageRecord.activatingRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('additionalDetailsClient', this.subscriptionPackageRecord.additionalDetailsClient);
+    CommonUtilityFunctions.setHTMLInputElementValue('additionalDetailsTutor', this.subscriptionPackageRecord.additionalDetailsTutor);
+    CommonUtilityFunctions.setHTMLInputElementValue('terminatingRemarks', this.subscriptionPackageRecord.terminatingRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('customerRemarks', this.subscriptionPackageRecord.customerRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.subscriptionPackageRecord.tutorRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('adminRemarks', this.subscriptionPackageRecord.adminRemarks);
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.setSectionShowParams();
+      this.hideFormLoaderMask();
+    }, 500);
+  }  
 
   handleDataAccessRequest(context: any, response: any) {
     if (response['success'] === false) {
@@ -147,18 +241,30 @@ export class SubscriptionPackageDataComponent implements OnInit {
       backToSubscriptionPackageListingButton.classList.remove('noscreen');
       setTimeout(() => {
         this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.init();
-        this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+        this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageSerialId);
         this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.init();
-        this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+        this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageSerialId);
       }, 100);   
       setTimeout(() => {
         this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
         this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.refreshGridData();
       }, 200);
+      this.getSubscriptionPackageGridRecord(this.subscriptionPackageSerialId);
     } else {
       const backToSubscriptionPackageListingButton: HTMLElement = document.getElementById('back-to-subscription-packages-listing-button'); 
       backToSubscriptionPackageListingButton.classList.add('noscreen');     
       this.showSubscriptionPackageAssignmentData = true;
+    }
+  }
+
+  private naviagteToPackageAssignmentFormAction(record: GridRecord, column: Column, gridComponentObject: GridComponent) {
+    this.isFormDirty = false;
+    this.interimHoldSelectedAssignmentRecordSerialId = record.getProperty('packageAssignmentSerialId');
+    if (this.subscriptionPackageAssignmentDataAccess === null) {
+      this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_package_assignment_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+    } else {
+      this.selectedAssignmentRecordSerialId = this.interimHoldSelectedAssignmentRecordSerialId;            
+      this.toggleVisibilitySubscriptionPackageAssignmentGrid();
     }
   }
 
@@ -177,12 +283,24 @@ export class SubscriptionPackageDataComponent implements OnInit {
         dataType: 'string',
         mapping: 'packageAssignmentSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedAssignmentRecordSerialId = record.getProperty('packageAssignmentSerialId');
-          if (this.subscriptionPackageAssignmentDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_package_assignment_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          if (!this.isFormDirty) {      
+            this.naviagteToPackageAssignmentFormAction(record, column, gridComponentObject);
           } else {
-            this.selectedAssignmentRecordSerialId = this.interimHoldSelectedAssignmentRecordSerialId;            
-            this.toggleVisibilitySubscriptionPackageAssignmentGrid();
+            this.helperService.showConfirmationDialog({
+              message: 'You have unsaved changes on the form do you still want to continue.',
+              onOk: () => {
+                this.naviagteToPackageAssignmentFormAction(record, column, gridComponentObject);
+              },
+              onCancel: () => {
+                const myListener: AlertDialogEvent = {
+                  isSuccess: false,
+                  message: 'Action Aborted',
+                  onButtonClicked: () => {
+                  }
+                };
+                this.helperService.showAlertDialog(myListener);
+              }
+            });
           }
         }
       },{
@@ -239,23 +357,67 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   updateSubscriptionPackageProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord.property, deselected, isAllOPeration);
+    this.isFormDirty = true;
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord, deselected, isAllOPeration);
   }
 
   updateSubscriptionPackageRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'));
+    this.showFormLoaderMask();
+    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageSerialId);
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageRecord, LcpRestUrls.subscription_package_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
+  onUpdateSubscriptionPackageRecord(context: any, response: any) {
+    const myListener: AlertDialogEvent = {
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    };
+    context.helperService.showAlertDialog(myListener);
+    if (response['success']) {
+      context.editRecordForm = false;
+      context.isFormDirty = false;
+      context.getSubscriptionPackageGridRecord(context.subscriptionPackageSerialId);
+    } else {
+      context.hideFormLoaderMask();
+    }
+  }
+
   takeActionOnSubscriptionPackage(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    if (!this.isFormDirty) {      
+      this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changes on the form do you still want to continue.',
+        onOk: () => {
+          this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
+        },
+        onCancel: () => {
+          const myListener: AlertDialogEvent = {
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          };
+          this.helperService.showAlertDialog(myListener);
+        }
+      });
+    }
+  }
+
+  private takeActionPrompt(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
     this.helperService.showPromptDialog({
       required: commentsRequired,
       titleText: titleText,
       placeholderText: placeholderText,
-      onOk: (message) => {                  
+      onOk: (message) => {
+        this.showFormLoaderMask();
+        this.isFormDirty = false;  
+        this.takeActionActionText = actionText;             
         const data = {
-          allIdsList: this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId'),
+          allIdsList: this.subscriptionPackageSerialId,
           button: actionText,
           comments: message
         };
@@ -275,13 +437,25 @@ export class SubscriptionPackageDataComponent implements OnInit {
       onButtonClicked: () => {
       }
     });
+    if (response['success']) {
+      context.getSubscriptionPackageGridRecord(context.subscriptionPackageSerialId);
+      if (context.takeActionActionText === 'createAssignment') {
+        context.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
+      }
+    } else {
+      context.hideFormLoaderMask();
+    }
   }
 
   downloadContract() {
     if (this.isContractReady) {
+      this.showFormLoaderMask();
       const subscriptionPackageSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('contractDownloadForm-subscriptionPackageSerialId');
-      subscriptionPackageSerialId.value = this.subscriptionPackageRecord.getProperty('subscriptionPackageSerialId');
+      subscriptionPackageSerialId.value = this.subscriptionPackageSerialId;
       this.utilityService.submitForm('contractDownloadForm', '/rest/sales/downloadSubscriptionPackageContractPdf', 'POST');
+      setTimeout(() => {
+        this.hideFormLoaderMask();
+      }, 5000);
     } else {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -289,19 +463,6 @@ export class SubscriptionPackageDataComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
-    }
-  }
-
-  onUpdateSubscriptionPackageRecord(context: any, data: any) {
-    const myListener: AlertDialogEvent = {
-      isSuccess: data['success'],
-      message: data['message'],
-      onButtonClicked: () => {
-      }
-    };
-    context.helperService.showAlertDialog(myListener);
-    if (data['success']) {
-      context.editRecordForm = false;
     }
   }
 }

@@ -28,10 +28,9 @@ export class SubscriptionPackagesComponent implements OnInit {
   historySubscriptionPackagesGridMetaData: GridDataInterface;
 
   showSubscriptionPackagesData = false;
-  selectedSubscriptionPackageRecord: GridRecord = null;
-  interimHoldSelectedSubscriptionPackageRecord: GridRecord = null;
+  selectedSubscriptionPackageSerialId: string = null;
+  interimHoldSelectedSubscriptionPackageSerialId: string = null;
   subscriptionPackageDataAccess: SubscriptionPackageDataAccess = null;
-  selectedRecordGridType: string = null;
 
   interimHoldSelectedSubscriptionPackageGridObject: GridComponent = null;
 
@@ -75,12 +74,11 @@ export class SubscriptionPackagesComponent implements OnInit {
         dataType: 'string',
         mapping: 'subscriptionPackageSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedSubscriptionPackageRecord = record;
-          this.selectedRecordGridType = gridComponentObject.grid.id; 
+          this.interimHoldSelectedSubscriptionPackageSerialId = record.getProperty('subscriptionPackageSerialId');
           if (this.subscriptionPackageDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_package_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedSubscriptionPackageRecord = this.interimHoldSelectedSubscriptionPackageRecord;            
+            this.selectedSubscriptionPackageSerialId = this.interimHoldSelectedSubscriptionPackageSerialId;            
             this.toggleVisibilitySubscriptionPackagesGrid();
           }
         }
@@ -326,7 +324,7 @@ export class SubscriptionPackagesComponent implements OnInit {
         message: response.message,
         subscriptionPackageDataModificationAccess: response.subscriptionPackageDataModificationAccess
       };
-      context.selectedSubscriptionPackageRecord = context.interimHoldSelectedSubscriptionPackageRecord;
+      context.selectedSubscriptionPackageSerialId = context.interimHoldSelectedSubscriptionPackageSerialId;
       context.toggleVisibilitySubscriptionPackagesGrid();
     }
   }
@@ -334,7 +332,7 @@ export class SubscriptionPackagesComponent implements OnInit {
   toggleVisibilitySubscriptionPackagesGrid() {
     if (this.showSubscriptionPackagesData === true) {
       this.showSubscriptionPackagesData = false;
-      this.selectedSubscriptionPackageRecord = null;
+      this.selectedSubscriptionPackageSerialId = null;
       setTimeout(() => {
         this.currentSubscriptionPackagesGridObject.init();
         this.historySubscriptionPackagesGridObject.init();

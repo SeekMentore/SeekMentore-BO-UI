@@ -8,12 +8,12 @@
               id="selected-subscription-package-all-history-assignment-grid" 
               [gridMetaData]="selectedSubscriptionPackageAllHistoryAssignmentGridMetaData">
     </app-grid>
-    <div *ngIf="loadSelectedSubscriptionPackage" class="form-container-div">
+    <div class="form-container-div">
       <form id="contractDownloadForm" target="ifrDownload" method="post" class="noscreen">
         <input type="text" value="" size="10" name="subscriptionPackageSerialId" id="contractDownloadForm-subscriptionPackageSerialId" />
       </form>
-      <form class="form-container" style="max-width: 80%">
-        <div *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled"
+      <form *ngIf="showForm" class="form-container" style="max-width: 80%">
+        <div *ngIf="showEditControlSection || isContractReady"
               class="form-container-toggle-button">
           <button type="submit"
                 class="btnSubmit"
@@ -22,12 +22,12 @@
                 (click)="downloadContract()">            
                 <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Contract
           </button>
-          <label class="tab_container" (change)="editRecordForm = false;">
-            <input type="radio" checked name="editFormChoice">
+          <label *ngIf="showEditControlSection" class="tab_container" (change)="setFormEditStatus(false)">
+            <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
             <span class="tab_checkmark left">View</span>
           </label>
-          <label class="tab_container" (change)="editRecordForm = true;">
-            <input type="radio" name="editFormChoice">
+          <label *ngIf="showEditControlSection" class="tab_container" (change)="setFormEditStatus(true)">
+            <input type="radio" [checked]="editRecordForm" name="editFormChoice">
             <span class="tab_checkmark right">Edit</span>
           </label>
         </div>
@@ -56,15 +56,15 @@
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Name</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['customerName']}}</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.customerName}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Email</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['customerEmail']}}</label></td>              
+            <td><label class="data">{{subscriptionPackageRecord.customerEmail}}</label></td>              
           </tr> 
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">            
             <td class="td-label"><label>Customer Contact Number</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['customerContactNumber']}}</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.customerContactNumber}}</label></td>
           </tr>
           <tr style="background-color: beige;" *ngIf="!showEnquiryDetails">
             <td class="td-label">
@@ -90,59 +90,59 @@
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Subject</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquirySubject'], subjectsFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquirySubjectLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Grade</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryGrade'], studentGradesFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquiryGradeLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Preferred Teaching Type</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryPreferredTeachingType'], preferredTeachingTypeFilterOptions)}}</label></td>                    
+            <td><label class="data">{{enquiryPreferredTeachingTypeLookupRendererFromValue}}</label></td>                    
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Location</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['enquiryLocation'], locationsFilterOptions)}}</label></td>
+            <td><label class="data">{{enquiryLocationLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Enquiry Email</label></td>
             <td>
-              <label class="data">{{subscriptionPackageRecord.property['enquiryEmail']}}</label>
-              <span *ngIf="subscriptionPackageRecord.property['enquiryEmail'] !== subscriptionPackageRecord.property['customerEmail']"> (Different From Customer) </span>
-              <span *ngIf="subscriptionPackageRecord.property['enquiryEmail'] === subscriptionPackageRecord.property['customerEmail']"> (Same As Customer) </span>
+              <label class="data">{{subscriptionPackageRecord.enquiryEmail}}</label>
+              <span *ngIf="!subscriptionPackageRecord.isEnquiryEmailSameAsCustomerEmail"> (Different From Customer) </span>
+              <span *ngIf="subscriptionPackageRecord.isEnquiryEmailSameAsCustomerEmail"> (Same As Customer) </span>
             </td>              
           </tr> 
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">            
             <td class="td-label"><label>Enquiry Contact Number</label></td>
             <td>
-              <label class="data">{{subscriptionPackageRecord.property['enquiryContactNumber']}}</label>
-              <span *ngIf="subscriptionPackageRecord.property['enquiryContactNumber'] !== subscriptionPackageRecord.property['customerContactNumber']"> (Different From Customer) </span>
-              <span *ngIf="subscriptionPackageRecord.property['enquiryContactNumber'] === subscriptionPackageRecord.property['customerContactNumber']"> (Same As Customer) </span>
+              <label class="data">{{subscriptionPackageRecord.enquiryContactNumber}}</label>
+              <span *ngIf="!subscriptionPackageRecord.isEnquiryContactNumberSameAsCustomerContactNumber"> (Different From Customer) </span>
+              <span *ngIf="subscriptionPackageRecord.isEnquiryContactNumberSameAsCustomerContactNumber"> (Same As Customer) </span>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Address Details</label></td>
             <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryAddressDetails']}}</div>
+              <div class="form-remakrs">{{subscriptionPackageRecord.enquiryAddressDetails}}</div>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Additional Details</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryAdditionalDetails']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.enquiryAdditionalDetails}}</div>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Quoted Client Rate</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['enquiryQuotedClientRate']}}</label></td>            
+            <td><label class="data">{{subscriptionPackageRecord.enquiryQuotedClientRate}}</label></td>            
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Negotiated Rate With Client</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['enquiryNegotiatedRateWithClient']}}</label></td></tr>
+            <td><label class="data">{{subscriptionPackageRecord.enquiryNegotiatedRateWithClient}}</label></td></tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Client Negotiation Remarks</label></td>
             <td>
-              <div class="form-remakrs">{{subscriptionPackageRecord.property['enquiryClientNegotiationRemarks']}}</div>
+              <div class="form-remakrs">{{subscriptionPackageRecord.enquiryClientNegotiationRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="!showTutorDetails">
@@ -169,15 +169,15 @@
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
             <td class="td-label"><label>Tutor Name</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['tutorName']}}</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.tutorName}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">
             <td class="td-label"><label>Tutor Email</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['tutorEmail']}}</label></td>              
+            <td><label class="data">{{subscriptionPackageRecord.tutorEmail}}</label></td>              
           </tr> 
           <tr style="background-color: aliceblue;" *ngIf="showTutorDetails">            
             <td class="td-label"><label>Tutor Contact Number</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['tutorContactNumber']}}</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.tutorContactNumber}}</label></td>
           </tr>
           <tr style="background-color: beige;" *ngIf="!showTutorMapperDetails">
             <td class="td-label">
@@ -203,16 +203,16 @@
           </tr>
           <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
             <td class="td-label"><label>Quoted Tutor Rate</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['tutorMapperQuotedTutorRate']}}</label></td>
+            <td><label class="data">{{subscriptionPackageRecord.tutorMapperQuotedTutorRate}}</label></td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">
             <td class="td-label"><label>Negotiated Rate With Tutor</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['tutorMapperNegotiatedRateWithTutor']}}</label></td>              
+            <td><label class="data">{{subscriptionPackageRecord.tutorMapperNegotiatedRateWithTutor}}</label></td>              
           </tr> 
           <tr style="background-color: beige;" *ngIf="showTutorMapperDetails">            
             <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['tutorMapperTutorNegotiationRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.tutorMapperTutorNegotiationRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="!showDemoDetails">
@@ -240,69 +240,69 @@
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
             <td class="td-label"><label>Client Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoClientRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.demoClientRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
             <td class="td-label"><label>Tutor Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoTutorRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.demoTutorRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Client Satisfied From Tutor</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoClientSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>
+            <td><label class="data">{{demoClientSatisfiedFromTutorLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Tutor Satisfied With Client</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoTutorSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>
+            <td><label class="data">{{demoTutorSatisfiedWithClientLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Admin Satisfied From Tutor</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoAdminSatisfiedFromTutor'], yesNoFilterOptions)}}</label></td>
+            <td><label class="data">{{demoAdminSatisfiedFromTutorLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Admin Satisfied With Client</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoAdminSatisfiedWithClient'], yesNoFilterOptions)}}</label></td>
+            <td><label class="data">{{demoAdminSatisfiedWithClientLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Need Price Negotiation With Client</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoNeedPriceNegotiationWithClient'], yesNoFilterOptions)}}</label></td>
+            <td><label class="data">{{demoNeedPriceNegotiationWithClientLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Negotiated Override Rate With Client</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['demoNegotiatedOverrideRateWithClient']}}</label></td>              
+            <td><label class="data">{{subscriptionPackageRecord.demoNegotiatedOverrideRateWithClient}}</label></td>              
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
             <td class="td-label"><label>Client Negotiation Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoClientNegotiationRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.demoClientNegotiationRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Need Price Negotiation With Tutor</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(subscriptionPackageRecord.property['demoNeedPriceNegotiationWithTutor'], yesNoFilterOptions)}}</label></td>
+            <td><label class="data">{{demoNeedPriceNegotiationWithTutorLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">
             <td class="td-label"><label>Negotiated Override Rate With Tutor</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['demoNegotiatedOverrideRateWithTutor']}}</label></td>              
+            <td><label class="data">{{subscriptionPackageRecord.demoNegotiatedOverrideRateWithTutor}}</label></td>              
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
             <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoTutorNegotiationRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.demoTutorNegotiationRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
             <td class="td-label"><label>Admin Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoAdminRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.demoAdminRemarks}}</div>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showDemoDetails">            
             <td class="td-label"><label>Admin Finalizing Remarks</label></td>
             <td>
-                <div class="form-remakrs">{{subscriptionPackageRecord.property['demoAdminFinalizingRemarks']}}</div>
+                <div class="form-remakrs">{{subscriptionPackageRecord.demoAdminFinalizingRemarks}}</div>
             </td>
           </tr>
           <tr>
@@ -311,24 +311,25 @@
           </tr>
           <tr>
             <td class="td-label"><label>Serial Id</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['subscriptionPackageSerialId']}}</label></td>        
+            <td><label class="data">{{subscriptionPackageRecord.subscriptionPackageSerialId}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Created Date And Time</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['createdMillis'])}}</label></td>        
+            <td><label class="data">{{subscriptionPackageCreatedDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Activated Date And Time</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['startDateMillis'])}}</label></td>        
+            <td><label class="data">{{subscriptionPackageStartDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Activating Remarks</label></td>
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="activatingRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('activatingRemarks', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['activatingRemarks']}}</textarea>
+                        >{{subscriptionPackageRecord.activatingRemarks}}</textarea>
             </td>
           </tr>
           <tr>
@@ -344,7 +345,7 @@
           </tr>
           <tr>
             <td class="td-label"><label>Finalized Rate For Client</label></td>
-            <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForClient']}}"
+            <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.finalizedRateForClient}}"
                         [disabled]="!editRecordForm"
                         (change)="updateSubscriptionPackageProperty('finalizedRateForClient', $event, 'number')"></td>
           </tr>
@@ -353,14 +354,15 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="additionalDetailsClient"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('additionalDetailsClient', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['additionalDetailsClient']}}</textarea>
+                        >{{subscriptionPackageRecord.additionalDetailsClient}}</textarea>
             </td>
           </tr>
           <tr>
             <td class="td-label"><label>Finalized Rate For Tutor</label></td>
-            <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.property['finalizedRateForTutor']}}"
+            <td><input class="input_field" type="number" value="{{subscriptionPackageRecord.finalizedRateForTutor}}"
                         [disabled]="!editRecordForm"
                         (change)="updateSubscriptionPackageProperty('finalizedRateForTutor', $event, 'number')"></td>
           </tr>
@@ -369,23 +371,25 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="additionalDetailsTutor"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('additionalDetailsTutor', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['additionalDetailsTutor']}}</textarea>
+                        >{{subscriptionPackageRecord.additionalDetailsTutor}}</textarea>
             </td>
           </tr>
           <tr>
             <td class="td-label"><label>Terminated Date And Time</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['endDateMillis'])}}</label></td>        
+            <td><label class="data">{{subscriptionPackageEndDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Terminating Remarks</label></td>
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="terminatingRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('terminatingRemarks', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['terminatingRemarks']}}</textarea>
+                        >{{subscriptionPackageRecord.terminatingRemarks}}</textarea>
             </td>
           </tr>
           <tr>
@@ -415,9 +419,10 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="customerRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('customerRemarks', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['customerRemarks']}}</textarea>
+                        >{{subscriptionPackageRecord.customerRemarks}}</textarea>
             </td>
           </tr> 
           <tr>
@@ -447,9 +452,10 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="tutorRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('tutorRemarks', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['tutorRemarks']}}</textarea>
+                        >{{subscriptionPackageRecord.tutorRemarks}}</textarea>
             </td>
           </tr>
           <tr>
@@ -457,26 +463,27 @@
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="adminRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateSubscriptionPackageProperty('adminRemarks', $event, 'string')"
-                        >{{subscriptionPackageRecord.property['adminRemarks']}}</textarea>
+                        >{{subscriptionPackageRecord.adminRemarks}}</textarea>
             </td>
           </tr>
           <tr>
             <td class="td-label"><label>Action Date</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['actionDateMillis'])}}</label></td>        
+            <td><label class="data">{{subscriptionPackageActionDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Who Acted</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['whoActedName']}}</label></td>        
+            <td><label class="data">{{subscriptionPackageRecord.whoActedName}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Record Last Updated</label></td>
-            <td><label class="data">{{getDateFromMillis(subscriptionPackageRecord.property['recordLastUpdatedMillis'])}}</label></td>        
+            <td><label class="data">{{subscriptionPackageRecordLastUpdatedDateDisplayTime}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Updated By</label></td>
-            <td><label class="data">{{subscriptionPackageRecord.property['updatedByName']}}</label></td>        
+            <td><label class="data">{{subscriptionPackageRecord.updatedByName}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
             <td class="td-label">
@@ -508,6 +515,7 @@
                     <td>
                       <button type="submit"
                               class="btnSubmit"
+                              *ngIf="canActivateSubscription"
                               (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for activating the subscription.', 'activateSubscription')">            
                               Activate Subscription
                       </button>
@@ -515,6 +523,7 @@
                     <td>
                       <button type="submit"
                               class="btnReject"
+                              *ngIf="canTerminateSubscription"
                               (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for ending the subscription.', 'endSubscription', true)">            
                               Terminate Subscription
                       </button>
@@ -522,6 +531,7 @@
                     <td>
                       <button type="submit"
                               class="btnReset"
+                              *ngIf="canCreateAssignment"
                               (click)="takeActionOnSubscriptionPackage('Enter comments for action', 'Please provide your comments for creating assignment.', 'createAssignment')">            
                               Create Assignment
                       </button>
@@ -535,11 +545,14 @@
             </td>
           </tr>
         </table>
-        <button *ngIf="subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
+        <button *ngIf="showUpdateButton" type="submit"
                 class="ok-button form-container-update-button"
                 (click)="updateSubscriptionPackageRecord()">
-          Update
+          Update Subscription Package
         </button>
+        <div class="form-mask" id="subscription-package-form-mask-loader" [hidden]="subscriptionPackageFormMaskLoaderHidden">
+          <div class="form-loader"></div>
+        </div>
       </form>
     </div>
   </div>

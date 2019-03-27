@@ -1,6 +1,5 @@
-import { GridRecord } from "../utils/grid/grid-record";
-import { Grid } from "../utils/grid/grid";
 import { GridCommonFunctions } from "../utils/grid/grid-common-functions";
+import { GridRecord } from "../utils/grid/grid-record";
 
 export class PackageAssignment {
   packageAssignmentSerialId: string;

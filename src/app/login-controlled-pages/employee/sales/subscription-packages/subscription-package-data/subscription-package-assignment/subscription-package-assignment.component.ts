@@ -165,6 +165,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
+      context.isFormDirty = false;
       context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
     } else {
       context.hideFormLoaderMask();
@@ -173,47 +174,12 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
 
   takeActionOnSubscriptionPackageAssignment(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
     if (!this.isFormDirty) {      
-      this.helperService.showPromptDialog({
-        required: commentsRequired,
-        titleText: titleText,
-        placeholderText: placeholderText,
-        onOk: (message) => {                  
-          this.showFormLoaderMask();        
-          const data = {
-            allIdsList: this.packageAssignmentRecord.packageAssignmentSerialId,
-            button: actionText,
-            comments: message
-          };
-          this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
-            LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
-            'application/x-www-form-urlencoded');
-        },
-        onCancel: () => {
-        }
-      });
+      this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
     } else {
       this.helperService.showConfirmationDialog({
         message: 'You have unsaved changes on the form do you still want to continue.',
         onOk: () => {
-          this.helperService.showPromptDialog({
-            required: commentsRequired,
-            titleText: titleText,
-            placeholderText: placeholderText,
-            onOk: (message) => { 
-              this.showFormLoaderMask();
-              this.isFormDirty = false;                  
-              const data = {
-                allIdsList: this.packageAssignmentRecord.packageAssignmentSerialId,
-                button: actionText,
-                comments: message
-              };                     
-              this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
-                LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            },
-            onCancel: () => {
-            }
-          });
+          this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
           const myListener: AlertDialogEvent = {
@@ -226,6 +192,28 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
         }
       });
     }    
+  }
+
+  private takeActionPrompt(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    this.helperService.showPromptDialog({
+      required: commentsRequired,
+      titleText: titleText,
+      placeholderText: placeholderText,
+      onOk: (message) => { 
+        this.showFormLoaderMask();
+        this.isFormDirty = false;                  
+        const data = {
+          allIdsList: this.packageAssignmentRecord.packageAssignmentSerialId,
+          button: actionText,
+          comments: message
+        };                     
+        this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
+          LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
+          'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+      }
+    });
   }
 
   handleTakeActionOnSubscriptionPackageAssignmentRecord(context: any, response: any) {

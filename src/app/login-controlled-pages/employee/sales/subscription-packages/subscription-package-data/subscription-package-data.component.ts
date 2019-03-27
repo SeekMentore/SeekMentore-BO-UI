@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { SubscriptionPackage } from 'src/app/model/subscription-package';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
@@ -10,7 +10,6 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { SubscriptionPackageDataAccess } from '../subscription-packages.component';
-import { SubscriptionPackage } from 'src/app/model/subscription-package';
 
 @Component({
   selector: 'app-subscription-package-data',
@@ -167,19 +166,19 @@ export class SubscriptionPackageDataComponent implements OnInit {
       context.canTerminateSubscription = gridRecordObject.additionalProperties['subscriptionPackageCanTerminateSubscription'];
       context.canCreateAssignment = gridRecordObject.additionalProperties['subscriptionPackageCanCreateAssignment'];
       context.setUpDataModal(gridRecordObject.record, null, true);
-    } else {
-      const myListener: AlertDialogEvent = {
+    } else {      
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: gridRecordObject.errorMessage,
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
   private setUpDataModal(subscriptionPackageGridRecord: GridRecord) {
     this.subscriptionPackageRecord.setValuesFromGridRecord(subscriptionPackageGridRecord);
+    this.subscriptionPackageSerialId = this.subscriptionPackageRecord.subscriptionPackageSerialId;
     this.subscriptionPackageCreatedDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.createdMillis);
     this.subscriptionPackageStartDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.startDateMillis);
     this.subscriptionPackageEndDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.subscriptionPackageRecord.endDateMillis);
@@ -292,13 +291,12 @@ export class SubscriptionPackageDataComponent implements OnInit {
                 this.naviagteToPackageAssignmentFormAction(record, column, gridComponentObject);
               },
               onCancel: () => {
-                const myListener: AlertDialogEvent = {
+                this.helperService.showAlertDialog({
                   isSuccess: false,
                   message: 'Action Aborted',
                   onButtonClicked: () => {
                   }
-                };
-                this.helperService.showAlertDialog(myListener);
+                });
               }
             });
           }
@@ -363,19 +361,18 @@ export class SubscriptionPackageDataComponent implements OnInit {
 
   updateSubscriptionPackageRecord() {
     this.showFormLoaderMask();
-    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageSerialId);
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageRecord, LcpRestUrls.subscription_package_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
   onUpdateSubscriptionPackageRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
       context.isFormDirty = false;
@@ -395,13 +392,12 @@ export class SubscriptionPackageDataComponent implements OnInit {
           this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
-          const myListener: AlertDialogEvent = {
+          this.helperService.showAlertDialog({
             isSuccess: false,
             message: 'Action Aborted',
             onButtonClicked: () => {
             }
-          };
-          this.helperService.showAlertDialog(myListener);
+          });
         }
       });
     }

@@ -94,7 +94,7 @@ export class SubscriptionDataComponent implements OnInit {
   }
 
   updateSubscriptionRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('tentativeSubscriptionId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.updatedSubscriptionRecord, this.subscriptionRecord.getProperty('tentativeSubscriptionId'));
     this.utilityService.makerequest(this, this.onUpdateSubscriptionRecord, LcpRestUrls.subscription_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

@@ -339,7 +339,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   updateCustomerRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.customerUpdatedData, this.customerRecord.getProperty('customerId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.customerUpdatedData, this.customerRecord.getProperty('customerId'));
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

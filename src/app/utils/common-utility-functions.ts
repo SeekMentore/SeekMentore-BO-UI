@@ -242,8 +242,8 @@ export class CommonUtilityFunctions {
   public static makeRichEditorWithDefaultConfiguration(editorId: string) {
     CKEDITOR.replace(editorId, CkeditorConfig.defaultConfiguration);
   }
-
-  public static encodedGridFormData(updatedValues: any, parentId: any) {
+  
+  public static encodeFormDataToUpdatedJSONWithParentId(updatedValues: any, parentId: any) {
     const formData = new FormData();
     formData.append('completeUpdatedRecord', JSON.stringify(updatedValues));
     formData.append('parentId', parentId);

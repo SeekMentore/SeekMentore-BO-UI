@@ -1,14 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { PackageAssignment } from 'src/app/model/package-assignment';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { SubscriptionPackageAssignmentDataAccess } from '../subscription-package-data.component';
-import { PackageAssignment } from 'src/app/model/package-assignment';
 
 @Component({
   selector: 'app-subscription-package-assignment',
@@ -113,18 +111,18 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
       context.canReviewCompleteAssignment = gridRecordObject.additionalProperties['packageAssignmentCanReviewCompleteAssignment'];
       context.setUpDataModal(gridRecordObject.record, null, true);
     } else {
-      const myListener: AlertDialogEvent = {
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: gridRecordObject.errorMessage,
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
   }
   
   private setUpDataModal(packageAssignmentGridRecord: GridRecord) {
     this.packageAssignmentRecord.setValuesFromGridRecord(packageAssignmentGridRecord);
+    this.packageAssignmentSerialId = this.packageAssignmentRecord.packageAssignmentSerialId;
     this.packageAssignmentCreatedDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.createdMillis);
     this.packageAssignmentStartDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.startDateMillis);
     this.packageAssignmentEndDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.packageAssignmentRecord.endDateMillis);
@@ -151,7 +149,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
 
   updateSubscriptionPackageAssignmentRecord() {
     this.showFormLoaderMask();
-    const data = CommonUtilityFunctions.encodedGridFormData(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord.packageAssignmentSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord.packageAssignmentSerialId);
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageAssignmentRecord, LcpRestUrls.subscription_package_assignment_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -182,13 +180,12 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
           this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
-          const myListener: AlertDialogEvent = {
+          this.helperService.showAlertDialog({
             isSuccess: false,
             message: 'Action Aborted',
             onButtonClicked: () => {
             }
-          };
-          this.helperService.showAlertDialog(myListener);
+          });
         }
       });
     }    

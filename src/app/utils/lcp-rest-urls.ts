@@ -49,7 +49,7 @@ export class LcpRestUrls {
   static schedule_demo = '/rest/sales/scheduleDemo';
   static demo_tracker_modify_data_access = '/rest/sales/demoTrackerModifyCheckDataAccess';
   static take_action_on_demo = '/rest/sales/takeActionOnDemo';
-  static demo_tracker_update_record = '/rest/sales/updateDemoRecord';
+  static demo_update_record = '/rest/sales/updateDemoRecord';
   static re_schedule_demo = '/rest/sales/reScheduleDemo';
   static subscription_package_data_access = '/rest/sales/subscriptionPackageCheckDataAccess';
   static subscription_package_update_record = '/rest/sales/updateSubscriptionPackageRecord';
@@ -64,4 +64,5 @@ export class LcpRestUrls {
   static get_assignment_attendance_uploaded_document_count_and_existence = '/rest/sales/getAssignmentAttendanceUploadedDocumentCountAndExistence';
   static remove_assignment_attendance_document_file = '/rest/sales/removeAssignmentAttendanceDocumentFile';
   static get_subscription_package_record = '/rest/sales/getSubscriptionPackageRecord';
+  static get_demo_record = '/rest/sales/getDemoRecord';
 }

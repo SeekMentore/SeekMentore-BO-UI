@@ -697,7 +697,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
+      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);
       }
@@ -739,7 +739,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
         CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       }
-      const data = CommonUtilityFunctions.encodedGridFormData(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
+      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);
       }

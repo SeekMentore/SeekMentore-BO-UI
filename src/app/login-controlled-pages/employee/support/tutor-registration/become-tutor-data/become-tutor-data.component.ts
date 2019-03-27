@@ -113,7 +113,7 @@ export class BecomeTutorDataComponent implements OnInit {
   }
 
   updateTutorRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.updatedTutorRecord, this.tutorRecord.getProperty('tentativeTutorId'));
     this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.become_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

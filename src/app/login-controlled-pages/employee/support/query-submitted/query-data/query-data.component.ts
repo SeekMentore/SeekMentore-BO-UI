@@ -71,7 +71,7 @@ export class QueryDataComponent implements OnInit {
   }
 
   updateQueryRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.queryUpdatedRecord, this.queryRecord.getProperty('queryId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.queryUpdatedRecord, this.queryRecord.getProperty('queryId'));
     this.utilityService.makerequest(this, this.onUpdateQueryRecord, LcpRestUrls.submitted_query_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

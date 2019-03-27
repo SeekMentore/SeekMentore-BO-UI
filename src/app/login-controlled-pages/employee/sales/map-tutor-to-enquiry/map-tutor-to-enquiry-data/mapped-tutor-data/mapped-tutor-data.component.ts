@@ -93,7 +93,7 @@ export class MappedTutorDataComponent implements OnInit {
   }  
 
   updateMappedTutorRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.mappedTutorUpdatedRecord, this.mappedTutorRecord.getProperty('tutorMapperId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.mappedTutorUpdatedRecord, this.mappedTutorRecord.getProperty('tutorMapperId'));
     this.utilityService.makerequest(this, this.onUpdateMappedTutorRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

@@ -1,13 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { DemoTrackerModifyAccess } from '../demo-tracker.component';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { Component, Input, OnInit } from '@angular/core';
+import { Demo } from 'src/app/model/demo';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { DemoModifyAccess } from '../demo-tracker.component';
 
 @Component({
   selector: 'app-demo-tracker-data',
@@ -17,15 +16,13 @@ import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.compon
 export class DemoTrackerDataComponent implements OnInit {
 
   @Input()
-  demoTrackerRecord: GridRecord = null;
+  demoSerialId: string = null;
 
   @Input()
-  demoTrackerModifyAccess: DemoTrackerModifyAccess = null;
+  demoModifyAccess: DemoModifyAccess;
 
-  @Input()
-  selectedRecordGridType: string = null;
-
-  demoTrackerUpdatedRecord = {};
+  demoUpdatedRecord = {};
+  rescheduleUpdatedRecord = {};
 
   showCustomerDetails = false;
   showEnquiryDetails = false;
@@ -36,12 +33,11 @@ export class DemoTrackerDataComponent implements OnInit {
 
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
-  superAccessAwarded = false;
   editRecordForm = false;
+  rescheduleMandatoryDisbaled = true;
   editReScheduleRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
-
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
@@ -53,6 +49,21 @@ export class DemoTrackerDataComponent implements OnInit {
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   demoStatusFilterOptions = CommonFilterOptions.demoStatusFilterOptions;
 
+  isFormDirty: boolean = false;
+  demoFormMaskLoaderHidden: boolean = true;
+  showForm: boolean = false;
+  showEditControlSection: boolean = false;
+  showUpdateButton: boolean = false;  
+  canCancelDemo: boolean = false;
+  takeActionActionText: string;
+  isRescheduleFormDirty: boolean = false;
+  demoRescheduleFormMaskLoaderHidden: boolean = true;
+  showRescheduleForm: boolean = false;
+  showRescheduleEditControlSection: boolean = false;
+  showRescheduleButton: boolean = false; 
+
+  // Modal Variables
+  demoRecord: Demo;
   selectedDemoOccurredOption: any[] = [];
   selectedClientSatisfiedFromTutorOption: any[] = [];
   selectedTutorSatisfiedWithClientOption: any[] = [];
@@ -62,61 +73,305 @@ export class DemoTrackerDataComponent implements OnInit {
   selectedNeedPriceNegotiationWithClientOption: any[] = [];
   selectedNeedPriceNegotiationWithTutorOption: any[] = [];
 
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { }
-
-  ngOnInit() {
-    this.selectedDemoOccurredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('demoOccurred'));
-    this.selectedClientSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('clientSatisfiedFromTutor'));
-    this.selectedTutorSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('tutorSatisfiedWithClient'));
-    this.selectedAdminSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('adminSatisfiedFromTutor'));
-    this.selectedAdminSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('adminSatisfiedWithClient'));
-    this.selectedIsDemoSuccessOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('isDemoSuccess'));
-    this.selectedNeedPriceNegotiationWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('needPriceNegotiationWithClient'));
-    this.selectedNeedPriceNegotiationWithTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoTrackerRecord.getProperty('needPriceNegotiationWithTutor'));
-    this.setDisabledStatus();
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
+    this.demoRecord = new Demo();
   }
 
-  private setDisabledStatus() {
-    if (this.selectedRecordGridType === 'scheduledDemoGrid' || this.selectedRecordGridType === 'reScheduledDemoGrid') {
-      this.formEditMandatoryDisbaled = false;
-      this.takeActionDisabled = false;
+  ngOnInit() {
+    this.getDemoGridRecord(this.demoSerialId);
+  }
+
+  private showFormLoaderMask() {
+    this.demoFormMaskLoaderHidden = false;
+  }
+
+  private hideFormLoaderMask() {
+    this.demoFormMaskLoaderHidden = true;
+  }
+
+  private showRescheduleFormLoaderMask() {
+    this.demoRescheduleFormMaskLoaderHidden = false;
+  }
+
+  private hideRescheduleFormLoaderMask() {
+    this.demoRescheduleFormMaskLoaderHidden = true;
+  }
+
+  private setSectionShowParams() {
+    this.showForm = this.demoModifyAccess.demoUpdateFormAccess;
+    this.showEditControlSection = this.demoModifyAccess.demoUpdateFormAccess && !this.formEditMandatoryDisbaled;
+    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canCancelDemo;
+    this.showRescheduleForm = this.demoModifyAccess.demoRescheduleFormAccess;
+    this.showRescheduleEditControlSection = this.demoModifyAccess.demoRescheduleFormAccess && !this.rescheduleMandatoryDisbaled;
+    this.showRescheduleButton = this.showRescheduleEditControlSection && this.editReScheduleRecordForm;
+  }
+
+  public setFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
+  public setRescheduleFormStatus(isEditable: boolean) {
+    this.editReScheduleRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+  
+  private getDemoGridRecord(demoSerialId: string) {
+    this.showFormLoaderMask();
+    this.showRescheduleFormLoaderMask();
+    const data = {
+      parentId: demoSerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetDemoGridRecord, LcpRestUrls.get_demo_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  onGetDemoGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['demoFormEditMandatoryDisbaled'];
+      context.rescheduleMandatoryDisbaled = gridRecordObject.additionalProperties['demoRescheduleMandatoryDisbaled'];
+      context.canCancelDemo = gridRecordObject.additionalProperties['demoCanCancelDemo'];
+      context.setUpDataModal(gridRecordObject.record, null, true);
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      });
     }
   }
 
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  private setUpDataModal(demoGridRecord: GridRecord) {
+    this.demoRecord.setValuesFromGridRecord(demoGridRecord);
+    this.demoSerialId = this.demoRecord.demoSerialId;
+    this.selectedDemoOccurredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.demoOccurred);
+    this.selectedClientSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.clientSatisfiedFromTutor);
+    this.selectedTutorSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.tutorSatisfiedWithClient);
+    this.selectedAdminSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.adminSatisfiedFromTutor);
+    this.selectedAdminSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.adminSatisfiedWithClient);
+    this.selectedIsDemoSuccessOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.isDemoSuccess);
+    this.selectedNeedPriceNegotiationWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.needPriceNegotiationWithClient);
+    this.selectedNeedPriceNegotiationWithTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.needPriceNegotiationWithTutor);
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.editReScheduleRecordForm = false;
+      this.setSectionShowParams();
+      this.hideFormLoaderMask();
+      this.hideRescheduleFormLoaderMask();
+    }, 500);
   }
 
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
+  private updateProperty(key: string, event: any, data_type: string, updatedRecord: any, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, updatedRecord, this.demoRecord, deselected, isAllOPeration);
   }
 
-  updateDemoTrackerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.demoTrackerUpdatedRecord, this.demoTrackerRecord.property, deselected, isAllOPeration);
+  updateDemoProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    if (!this.isRescheduleFormDirty) {
+      this.isFormDirty = true;      
+      this.updateProperty(key, event, data_type, this.demoUpdatedRecord, deselected, isAllOPeration);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the reschedule form do you still want to continue.',
+        onOk: () => {
+          this.isRescheduleFormDirty = false;
+          this.isFormDirty = true;      
+          this.updateProperty(key, event, data_type, this.demoUpdatedRecord, deselected, isAllOPeration);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  } 
+
+  updateDemoRecord() {
+    if (!this.isRescheduleFormDirty) {
+      this.update();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the reschedule form do you still want to continue.',
+        onOk: () => {
+          this.isRescheduleFormDirty = false;
+          this.update();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
   }
 
-  updateDemoTrackerRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.demoTrackerUpdatedRecord, this.demoTrackerRecord.getProperty('demoTrackerId'));
-    this.utilityService.makerequest(this, this.onUpdateDemoTrackerRecord, LcpRestUrls.demo_tracker_update_record, 'POST',
+  private update() {
+    this.showFormLoaderMask();
+    this.showRescheduleFormLoaderMask();
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.demoUpdatedRecord, this.demoRecord.demoSerialId);
+    this.utilityService.makerequest(this, this.onUpdateDemoRecord, LcpRestUrls.demo_update_record, 'POST',
       data, 'multipart/form-data', true);
+  }
+
+  onUpdateDemoRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+    if (response['success']) {
+      context.editRecordForm = false;
+      context.isFormDirty = false;
+      context.getDemoGridRecord(context.demoSerialId);
+    } else {
+      context.hideFormLoaderMask();
+      context.hideRescheduleFormLoaderMask();
+    }
+  }
+
+  updateReScheduleProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    if (!this.isFormDirty) {
+      this.isRescheduleFormDirty = true;      
+      this.updateProperty(key, event, data_type, this.rescheduleUpdatedRecord, deselected, isAllOPeration);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        onOk: () => {
+          this.isFormDirty = false;
+          this.isRescheduleFormDirty = true;      
+          this.updateProperty(key, event, data_type, this.rescheduleUpdatedRecord, deselected, isAllOPeration);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
   }
 
   reScheduleDemo() {
-    this.demoTrackerUpdatedRecord['tutorMapperId'] = this.demoTrackerRecord.getProperty('tutorMapperId').toString();
-    this.demoTrackerUpdatedRecord['reScheduleCount'] = this.demoTrackerRecord.getProperty('reScheduleCount').toString();
-    const data = CommonUtilityFunctions.encodedGridFormData(this.demoTrackerUpdatedRecord, this.demoTrackerRecord.getProperty('demoTrackerId'));
-    this.utilityService.makerequest(this, this.onUpdateDemoTrackerRecord, LcpRestUrls.re_schedule_demo, 'POST',
+    if (!this.isFormDirty) {
+      this.reschedule();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        onOk: () => {
+          this.isFormDirty = false;
+          this.reschedule();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  private reschedule() {
+    this.showFormLoaderMask();
+    this.showRescheduleFormLoaderMask();
+    CommonUtilityFunctions.updateRecordProperty('tutorMapperSerialId', this.demoRecord.tutorMapperSerialId, 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
+    CommonUtilityFunctions.updateRecordProperty('reScheduleCount', this.demoRecord.reScheduleCount, 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.demoUpdatedRecord, this.demoRecord.demoSerialId);
+    this.utilityService.makerequest(this, this.onRescheduleDemoRecord, LcpRestUrls.re_schedule_demo, 'POST',
       data, 'multipart/form-data', true);
   }
 
+  onRescheduleDemoRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+    if (response['success']) {
+      context.editReScheduleRecordForm = false;
+      context.isRescheduleFormDirty = false;
+      context.getDemoGridRecord(response['newRescheduledDemoSerialId']);
+    } else {
+      context.hideFormLoaderMask();
+      context.hideRescheduleFormLoaderMask();
+    }
+  }
+
+  private getConfirmationMessageForFormsDirty() {
+    let message: string = '';
+    if (this.isFormDirty || this.isRescheduleFormDirty) {
+      if (this.isFormDirty) {
+        message += 'You have unsaved changes on the Update form.'
+      }
+      if (CommonUtilityFunctions.checkStringAvailability(message)) {
+        message += '\n';
+      }
+      if (this.isRescheduleFormDirty) {
+        message += 'You have unsaved changes on the Reschedule form.'
+      }
+      if (CommonUtilityFunctions.checkStringAvailability(message)) {
+        message += '\n';
+        message += 'Do you still want to continue';
+      }
+    }
+    return message;
+  }
+
   takeActionOnDemoRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    if (!this.isFormDirty || !this.isRescheduleFormDirty) {      
+      this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  private takeActionPrompt(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
     this.helperService.showPromptDialog({
       required: commentsRequired,
       titleText: titleText,
       placeholderText: placeholderText,
-      onOk: (message) => {                  
+      onOk: (message) => {
+        this.showFormLoaderMask();
+        this.showRescheduleFormLoaderMask();
+        this.isFormDirty = false;  
+        this.isRescheduleFormDirty = false;
+        this.takeActionActionText = actionText;                  
         const data = {
-          allIdsList: this.demoTrackerRecord.getProperty('demoTrackerId'),
+          allIdsList: this.demoRecord.demoSerialId,
           button: actionText,
           comments: message
         };
@@ -133,22 +388,15 @@ export class DemoTrackerDataComponent implements OnInit {
   handleTakeActionOnDemoRecord(context: any, response: any) {
     context.helperService.showAlertDialog({
       isSuccess: response['success'],
-      message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
+      message: response['message'],
       onButtonClicked: () => {
       }
     });
-  }
-
-  onUpdateDemoTrackerRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
-      isSuccess: response['success'],
-      message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
-      onButtonClicked: () => {
-      }
-    };
-    context.helperService.showAlertDialog(myListener);
     if (response['success']) {
-      context.editRecordForm = false;
+      context.getDemoGridRecord(context.demoSerialId);
+    } else {
+      context.hideFormLoaderMask();
+      context.hideRescheduleFormLoaderMask();
     }
-  }
+  }  
 }

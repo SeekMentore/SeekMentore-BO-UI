@@ -39,8 +39,8 @@ export class SubscriptionPackage {
 	demoNeedPriceNegotiationWithTutor: string;
 	demoTutorNegotiationRemarks: string;
 	demoAdminRemarks: string;
-	demoNegotiatedOverrideRateWithClient;
-	demoNegotiatedOverrideRateWithTutor;
+	demoNegotiatedOverrideRateWithClient: number;
+	demoNegotiatedOverrideRateWithTutor: number;
 	demoAdminFinalizingRemarks: string;
 	createdMillis: number;
 	startDateMillis: number;
@@ -77,7 +77,6 @@ export class SubscriptionPackage {
     this.tutorSerialId = record.getProperty('tutorId');
 	this.enquirySerialId = record.getProperty('enquiryId');
 	this.tutorMapperSerialId = record.getProperty('tutorMapperId');
-	this.demoSerialId = record.getProperty('demoId');
 	this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
 	this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
   }

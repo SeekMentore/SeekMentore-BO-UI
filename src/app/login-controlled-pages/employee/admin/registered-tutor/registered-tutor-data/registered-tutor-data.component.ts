@@ -764,7 +764,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
   
   updateTutorRecord() {
-    const data = CommonUtilityFunctions.encodedGridFormData(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
     if (this.panCard) {
       data.append('inputFilePANCard', this.panCard);
     }

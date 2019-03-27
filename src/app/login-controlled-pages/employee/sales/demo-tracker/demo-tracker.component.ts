@@ -45,7 +45,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   showDemoTrackerData = false;
   selectedDemoTrackerRecord: GridRecord = null;
   interimHoldSelectedDemoTrackerRecord: GridRecord = null;
-  demoTrackerModifyAccess: DemoTrackerModifyAccess = null;
+  demoModifyAccess: DemoModifyAccess = null;
 
   selectedRecordGridType: string = null;
   interimHoldSelectedDemoTrackerObject: GridComponent = null;
@@ -94,20 +94,25 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         restURL: restURL
       },
       columns: [{
-        id: 'customerName',
-        headerName: 'Customer Name',
+        id: 'demoSerialId',
+        headerName: 'Serial Id',
         dataType: 'string',
-        mapping: 'customerName',
+        mapping: 'demoSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
           this.interimHoldSelectedDemoTrackerRecord = record;
           this.selectedRecordGridType = gridComponentObject.grid.id; 
-          if (this.demoTrackerModifyAccess === null) {
+          if (this.demoModifyAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_tracker_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
             this.selectedDemoTrackerRecord = this.interimHoldSelectedDemoTrackerRecord;            
             this.toggleVisibilityDemoTrackerGrid();
           }
         }
+      },{
+        id: 'customerName',
+        headerName: 'Customer Name',
+        dataType: 'string',
+        mapping: 'customerName'
       }, {
         id: 'customerEmail',
         headerName: 'Customer Email',
@@ -438,10 +443,11 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.demoTrackerModifyAccess = {
+      context.demoModifyAccess = {
         success: response.success,
         message: response.message,
-        demoTrackerFormAccess: response.demoTrackerFormAccess
+        demoUpdateFormAccess: response.demoUpdateFormAccess,
+        demoRescheduleFormAccess: response.demoRescheduleFormAccess
       };
       context.selectedDemoTrackerRecord = context.interimHoldSelectedDemoTrackerRecord;
       context.toggleVisibilityDemoTrackerGrid();
@@ -472,8 +478,9 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   }
 }
 
-export interface DemoTrackerModifyAccess {
+export interface DemoModifyAccess {
   success: boolean;
   message: string;
-  demoTrackerFormAccess: boolean;
+  demoUpdateFormAccess: boolean;
+  demoRescheduleFormAccess: boolean;
 }

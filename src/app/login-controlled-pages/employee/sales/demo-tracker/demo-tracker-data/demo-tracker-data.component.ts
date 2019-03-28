@@ -7,6 +7,8 @@ import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { DemoModifyAccess } from '../demo-tracker.component';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { AppConstants } from 'src/app/utils/app-constants';
 
 @Component({
   selector: 'app-demo-tracker-data',
@@ -53,25 +55,33 @@ export class DemoTrackerDataComponent implements OnInit {
   demoFormMaskLoaderHidden: boolean = true;
   showForm: boolean = false;
   showEditControlSection: boolean = false;
-  showUpdateButton: boolean = false;  
+  showUpdateButton: boolean = false; 
+  canSuccessFailDemo: boolean = false; 
   canCancelDemo: boolean = false;
   takeActionActionText: string;
   isRescheduleFormDirty: boolean = false;
   demoRescheduleFormMaskLoaderHidden: boolean = true;
   showRescheduleForm: boolean = false;
-  showRescheduleEditControlSection: boolean = false;
   showRescheduleButton: boolean = false; 
 
   // Modal Variables
   demoRecord: Demo;
+  demoScheduledDateAndTimeDisplay: string;
+  adminActionDateAndTimeDisplay: string;
+  enquirySubjectLookupRendererFromValue: string;
+  enquiryGradeLookupRendererFromValue: string;
+  enquiryPreferredTeachingTypeLookupRendererFromValue: string;
+  enquiryLocationLookupRendererFromValue: string;
+  demoStatusLookupRendererFromValue: string;
   selectedDemoOccurredOption: any[] = [];
   selectedClientSatisfiedFromTutorOption: any[] = [];
   selectedTutorSatisfiedWithClientOption: any[] = [];
   selectedAdminSatisfiedFromTutorOption: any[] = [];
   selectedAdminSatisfiedWithClientOption: any[] = [];
-  selectedIsDemoSuccessOption: any[] = [];
   selectedNeedPriceNegotiationWithClientOption: any[] = [];
   selectedNeedPriceNegotiationWithTutorOption: any[] = [];
+  reScheduleNewDateModal: string;
+  reScheduleNewTimeModal: string;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.demoRecord = new Demo();
@@ -101,10 +111,9 @@ export class DemoTrackerDataComponent implements OnInit {
     this.showForm = this.demoModifyAccess.demoUpdateFormAccess;
     this.showEditControlSection = this.demoModifyAccess.demoUpdateFormAccess && !this.formEditMandatoryDisbaled;
     this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
-    this.takeActionDisabled = !this.canCancelDemo;
-    this.showRescheduleForm = this.demoModifyAccess.demoRescheduleFormAccess;
-    this.showRescheduleEditControlSection = this.demoModifyAccess.demoRescheduleFormAccess && !this.rescheduleMandatoryDisbaled;
-    this.showRescheduleButton = this.showRescheduleEditControlSection && this.editReScheduleRecordForm;
+    this.takeActionDisabled = !this.canCancelDemo && !this.canSuccessFailDemo;
+    this.showRescheduleForm = this.demoModifyAccess.demoRescheduleFormAccess && !this.rescheduleMandatoryDisbaled;
+    this.showRescheduleButton = this.showRescheduleForm && this.editReScheduleRecordForm;
   }
 
   public setFormEditStatus(isEditable: boolean) {
@@ -138,6 +147,7 @@ export class DemoTrackerDataComponent implements OnInit {
     if (!gridRecordObject.isError) {
       context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['demoFormEditMandatoryDisbaled'];
       context.rescheduleMandatoryDisbaled = gridRecordObject.additionalProperties['demoRescheduleMandatoryDisbaled'];
+      context.canSuccessFailDemo = gridRecordObject.additionalProperties['demoCanSuccessFailDemo'];
       context.canCancelDemo = gridRecordObject.additionalProperties['demoCanCancelDemo'];
       context.setUpDataModal(gridRecordObject.record, null, true);
     } else {
@@ -153,14 +163,28 @@ export class DemoTrackerDataComponent implements OnInit {
   private setUpDataModal(demoGridRecord: GridRecord) {
     this.demoRecord.setValuesFromGridRecord(demoGridRecord);
     this.demoSerialId = this.demoRecord.demoSerialId;
+    this.demoScheduledDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.demoRecord.demoDateAndTimeMillis);
+    this.adminActionDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.demoRecord.adminActionDateMillis);
+    this.enquirySubjectLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.demoRecord.enquirySubject, this.subjectsFilterOptions);
+    this.enquiryGradeLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.demoRecord.enquiryGrade, this.studentGradesFilterOptions);
+    this.enquiryPreferredTeachingTypeLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.demoRecord.enquiryPreferredTeachingType, this.preferredTeachingTypeFilterOptions);
+    this.enquiryLocationLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.demoRecord.enquiryLocation, this.locationsFilterOptions);
+    this.demoStatusLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.demoRecord.demoStatus, this.demoStatusFilterOptions);
     this.selectedDemoOccurredOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.demoOccurred);
     this.selectedClientSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.clientSatisfiedFromTutor);
     this.selectedTutorSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.tutorSatisfiedWithClient);
     this.selectedAdminSatisfiedFromTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.adminSatisfiedFromTutor);
     this.selectedAdminSatisfiedWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.adminSatisfiedWithClient);
-    this.selectedIsDemoSuccessOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.isDemoSuccess);
     this.selectedNeedPriceNegotiationWithClientOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.needPriceNegotiationWithClient);
     this.selectedNeedPriceNegotiationWithTutorOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.demoRecord.needPriceNegotiationWithTutor);
+    CommonUtilityFunctions.setHTMLInputElementValue('clientRemarks', this.demoRecord.clientRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.demoRecord.tutorRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('clientNegotiationRemarks', this.demoRecord.clientNegotiationRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorNegotiationRemarks', this.demoRecord.tutorNegotiationRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('adminRemarks', this.demoRecord.adminRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('reschedulingRemarks', this.demoRecord.reschedulingRemarks);
+    this.reScheduleNewDateModal = CommonUtilityFunctions.getDateForDateMillisParam(new Date().getTime());
+    this.reScheduleNewTimeModal = CommonUtilityFunctions.getTimeForDateMillisParam(new Date().getTime());
     setTimeout(() => {
       this.editRecordForm = false;
       this.editReScheduleRecordForm = false;
@@ -294,9 +318,14 @@ export class DemoTrackerDataComponent implements OnInit {
   private reschedule() {
     this.showFormLoaderMask();
     this.showRescheduleFormLoaderMask();
-    CommonUtilityFunctions.updateRecordProperty('tutorMapperSerialId', this.demoRecord.tutorMapperSerialId, 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
-    CommonUtilityFunctions.updateRecordProperty('reScheduleCount', this.demoRecord.reScheduleCount, 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.demoUpdatedRecord, this.demoRecord.demoSerialId);
+    const newDemoDate: HTMLInputElement = <HTMLInputElement>document.getElementById('newDemoDate');
+    const newDemoTime: HTMLInputElement = <HTMLInputElement>document.getElementById('newDemoTime');
+    if (CommonUtilityFunctions.checkObjectAvailability(newDemoDate) && CommonUtilityFunctions.checkObjectAvailability(newDemoTime)) {
+      CommonUtilityFunctions.updateRecordProperty(null, null, 'predefined_value', this.rescheduleUpdatedRecord, null, null, null, AppConstants.VARIABLE_LOCAL_TZ_OFFSET_MS);
+      CommonUtilityFunctions.updateRecordProperty('demoDateMillis', newDemoDate.valueAsNumber.toString(), 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('demoTimeMillis', newDemoTime.valueAsNumber.toString(), 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
+    }
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.rescheduleUpdatedRecord, this.demoRecord.demoSerialId);
     this.utilityService.makerequest(this, this.onRescheduleDemoRecord, LcpRestUrls.re_schedule_demo, 'POST',
       data, 'multipart/form-data', true);
   }

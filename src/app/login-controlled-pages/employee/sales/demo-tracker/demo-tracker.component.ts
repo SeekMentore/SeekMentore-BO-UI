@@ -43,12 +43,9 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   enquiryClosedDemoGridMetaData: GridDataInterface;
 
   showDemoTrackerData = false;
-  selectedDemoTrackerRecord: GridRecord = null;
-  interimHoldSelectedDemoTrackerRecord: GridRecord = null;
+  selectedDemoSerialId: string = null;
+  interimHoldSelectedDemoSerialId: string = null;
   demoModifyAccess: DemoModifyAccess = null;
-
-  selectedRecordGridType: string = null;
-  interimHoldSelectedDemoTrackerObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.scheduledDemoGridMetaData = null;
@@ -99,12 +96,11 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         dataType: 'string',
         mapping: 'demoSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
-          this.interimHoldSelectedDemoTrackerRecord = record;
-          this.selectedRecordGridType = gridComponentObject.grid.id; 
+          this.interimHoldSelectedDemoSerialId = record.getProperty('demoSerialId');
           if (this.demoModifyAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_tracker_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedDemoTrackerRecord = this.interimHoldSelectedDemoTrackerRecord;            
+            this.selectedDemoSerialId = this.interimHoldSelectedDemoSerialId;            
             this.toggleVisibilityDemoTrackerGrid();
           }
         }
@@ -333,7 +329,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         mapping: 'reschedulingRemarks',
         lengthyData: true
       }],
-      hasSelectionColumn: true,
+      hasSelectionColumn: customSelectionButtons.length > 0,
       selectionColumn: {
         buttons: customSelectionButtons
       }
@@ -355,9 +351,8 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       label: label,
       btnclass: btnclass,
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedDemoTrackerObject = gridComponentObject;
-        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'demoTrackerId');
-        if (enquiryIdsList.length === 0) {
+        const demoSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'demoSerialId');
+        if (demoSerialIdsList.length === 0) {
           this.helperService.showAlertDialog({
             isSuccess: false,
             message: LcpConstants.grid_generic_no_record_selected_error,
@@ -371,7 +366,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
             placeholderText: placeholderText,
             onOk: (message) => {                  
               const data = {
-                allIdsList: enquiryIdsList.join(';'),
+                allIdsList: demoSerialIdsList.join(';'),
                 button: actionText,
                 comments: message
               };
@@ -404,7 +399,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     let cancelDemo = this.getCustomButton('cancel', 'Cancel Demo', 'btnReject', 'cancel', true, 'Enter comments for Cancelling Demo', 'Please provide your comments for Cancelling Demo.');
 
     this.scheduledDemoGridMetaData = {
-      grid: this.getGridObject('scheduledDemoGrid', 'Scheduled Demo', '/rest/sales/scheduledDemoList', [cancelDemo]),
+      grid: this.getGridObject('scheduledDemoGrid', 'Scheduled Demo', '/rest/sales/scheduledDemoList', []),
       htmlDomElementId: 'scheduled-demo-grid',
       hidden: false
     };
@@ -449,7 +444,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         demoUpdateFormAccess: response.demoUpdateFormAccess,
         demoRescheduleFormAccess: response.demoRescheduleFormAccess
       };
-      context.selectedDemoTrackerRecord = context.interimHoldSelectedDemoTrackerRecord;
+      context.selectedDemoSerialId = context.interimHoldSelectedDemoSerialId;
       context.toggleVisibilityDemoTrackerGrid();
     }
   }
@@ -457,7 +452,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
   toggleVisibilityDemoTrackerGrid() {
     if (this.showDemoTrackerData === true) {
       this.showDemoTrackerData = false;
-      this.selectedDemoTrackerRecord = null;
+      this.selectedDemoSerialId = null;
       setTimeout(() => {
         this.scheduledDemoGridObject.init();
         this.successfulDemoGridObject.init();

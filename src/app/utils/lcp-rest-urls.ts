@@ -47,7 +47,7 @@ export class LcpRestUrls {
   static mapped_tutor_update_record = '/rest/sales/updateTutorMapperRecord';
   static mapped_tutor_schedule_demo_access = '/rest/sales/mappedTutorCheckScheduleDemoAccess';
   static schedule_demo = '/rest/sales/scheduleDemo';
-  static demo_tracker_modify_data_access = '/rest/sales/demoTrackerModifyCheckDataAccess';
+  static demo_modify_data_access = '/rest/sales/demoModifyCheckDataAccess';
   static take_action_on_demo = '/rest/sales/takeActionOnDemo';
   static demo_update_record = '/rest/sales/updateDemoRecord';
   static re_schedule_demo = '/rest/sales/reScheduleDemo';

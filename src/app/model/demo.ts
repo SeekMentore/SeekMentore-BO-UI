@@ -1,5 +1,6 @@
 import { GridCommonFunctions } from "../utils/grid/grid-common-functions";
 import { GridRecord } from "../utils/grid/grid-record";
+import { CommonUtilityFunctions } from "../utils/common-utility-functions";
 
 export class Demo {
 	demoSerialId: string;
@@ -48,15 +49,17 @@ export class Demo {
 	adminFinalizingRemarks: string;
 	reschedulingRemarks: string;
 	reScheduleCount: number;
+	rescheduledFromDemoSerialId: string;
 	entryDateMillis: number;
 	isSubscriptionCreated: string;
-	subscriptionCreatedMillis;
+	subscriptionCreatedMillis: number;
 	isEnquiryClosed: string;
 	enquiryClosedMillis: number;
 	enquiryEmail: string;
 	enquiryContactNumber: string;
 	isEnquiryEmailSameAsCustomerEmail: boolean;
 	isEnquiryContactNumberSameAsCustomerContactNumber: boolean;
+	isRescheduled: boolean;
 
   constructor() {}
   
@@ -64,9 +67,10 @@ export class Demo {
     GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
     this.customerSerialId = record.getProperty('customerId');
     this.tutorSerialId = record.getProperty('tutorId');
-	this.enquirySerialId = record.getProperty('enquiryId');
-	this.tutorMapperSerialId = record.getProperty('tutorMapperId');
-	this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
-	this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
+		this.enquirySerialId = record.getProperty('enquiryId');
+		this.tutorMapperSerialId = record.getProperty('tutorMapperId');
+		this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
+		this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
+		this.isRescheduled = CommonUtilityFunctions.checkNonNegativeNonZeroNumberAvailability(this.reScheduleCount);
   }
 }

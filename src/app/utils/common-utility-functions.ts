@@ -31,6 +31,13 @@ export class CommonUtilityFunctions {
     return false;
   }
 
+  public static checkNonNegativeNonZeroNumberAvailability(object: number) {
+    if (CommonUtilityFunctions.checkObjectAvailability(object)) {
+      return object > 0;
+    }    
+    return false;
+  }
+
   public static getDateForDateInputParam(completeDateSignatureInUTC: Date) {
     const dateParam = new Date(completeDateSignatureInUTC);
     let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());

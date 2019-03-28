@@ -71,7 +71,7 @@ export class AppUtilityService {
     }, error2 => {
       const myListener: AlertDialogEvent = {
         isSuccess: false,
-        message: 'Communication failure!! Something went wrong',
+        message: 'Communication failure!! Something went wrong' +'\n' + 'Please refresh the page, if the issue persists raise a complaint with our Support Team',
         onButtonClicked: () => {
         }
       };

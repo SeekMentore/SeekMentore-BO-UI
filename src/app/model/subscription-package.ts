@@ -72,12 +72,11 @@ export class SubscriptionPackage {
   constructor() {}
   
   setValuesFromGridRecord(record: GridRecord) {
-    GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
-    this.customerSerialId = record.getProperty('customerId');
-    this.tutorSerialId = record.getProperty('tutorId');
-		this.enquirySerialId = record.getProperty('enquiryId');
-		this.tutorMapperSerialId = record.getProperty('tutorMapperId');
-		this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
-		this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
+	GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
+	this.customerSerialId = record.getProperty('customerId');
+	this.tutorSerialId = record.getProperty('tutorId');
+	this.enquirySerialId = record.getProperty('enquiryId');
+	this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
+	this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
   }
 }

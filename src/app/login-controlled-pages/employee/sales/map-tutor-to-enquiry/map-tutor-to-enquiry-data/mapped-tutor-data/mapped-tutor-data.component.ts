@@ -8,6 +8,8 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { HelperService } from 'src/app/utils/helper.service';
+import { TutorMapper } from 'src/app/model/tutor-mapper';
+import { Enquiry } from 'src/app/model/enquiry';
 
 @Component({
   selector: 'app-mapped-tutor-data',
@@ -17,10 +19,10 @@ import { HelperService } from 'src/app/utils/helper.service';
 export class MappedTutorDataComponent implements OnInit {
 
   @Input()
-  enquiryRecord: GridRecord = null;
+  enquirySerialId: string = null;
 
   @Input()
-  mappedTutorRecord: GridRecord = null;
+  mappedTutorSerialId: string = null;
 
   @Input()
   mappedTutorDataAccess: MappedTutorDataAccess = null;
@@ -36,11 +38,9 @@ export class MappedTutorDataComponent implements OnInit {
 
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
-  superAccessAwarded = false;
   editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
-
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
@@ -51,49 +51,58 @@ export class MappedTutorDataComponent implements OnInit {
   mappingStatusFilterOptions = CommonFilterOptions.mappingStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   
+  isFormDirty: boolean = false;
+  tutorMapperFormMaskLoaderHidden: boolean = true;
+  showForm: boolean = false;
+  showEditControlSection: boolean = false;
+  showUpdateButton: boolean = false; 
+  canUnmapTutor: boolean = false; 
+  canMakeDemoReady: boolean = false;
+  canMakePending: boolean = false;
+  takeActionActionText: string;
+
+  // Modal Variables
+  enquiryRecord: Enquiry;
+  mappedTutorRecord: TutorMapper;
   selectedIsTutorAgreedOption: any[] = [];
   selectedIsTutorRejectionValidOption: any[] = [];
   selectedIsClientAgreedOption: any[] = [];
   selectedIsClientRejectionValidOption: any[] = [];
 
-  selectedRecordMappingStatus: string = null;
-
-  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {     
+  constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+    this.enquiryRecord = new Enquiry();
+    this.mappedTutorRecord = new TutorMapper();    
   }
 
   ngOnInit() {
-    this.selectedIsTutorAgreedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.getProperty('isTutorAgreed'));
-    this.selectedIsTutorRejectionValidOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.getProperty('isTutorRejectionValid'));
-    this.selectedIsClientAgreedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.getProperty('isClientAgreed'));
-    this.selectedIsClientRejectionValidOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.getProperty('isClientRejectionValid'));
-    this.selectedRecordMappingStatus = GridCommonFunctions.lookupRendererForValue(this.mappedTutorRecord.getProperty('mappingStatus'), this.mappingStatusFilterOptions);
-    this.setDisabledStatus();
+    this.selectedIsTutorAgreedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.isTutorAgreed);
+    this.selectedIsTutorRejectionValidOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.isTutorRejectionValid);
+    this.selectedIsClientAgreedOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.isClientAgreed);
+    this.selectedIsClientRejectionValidOption = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.mappedTutorRecord.isClientRejectionValid);
   }
 
-  private setDisabledStatus() {
-    if (this.selectedRecordMappingStatus === 'Pending') {
-      this.formEditMandatoryDisbaled = false;
-      this.takeActionDisabled = false;
-    }
-    if (this.selectedRecordMappingStatus === 'Demo Ready') {
-      this.takeActionDisabled = false;
-    }
+  private showFormLoaderMask() {
+    this.tutorMapperFormMaskLoaderHidden = false;
   }
 
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
+  private hideFormLoaderMask() {
+    this.tutorMapperFormMaskLoaderHidden = true;
   }
 
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
+  private setSectionShowParams() {
+    this.showForm = this.mappedTutorDataAccess.mappedEnquiryFormAccess;
+    this.showEditControlSection = this.mappedTutorDataAccess.mappedEnquiryFormAccess && !this.formEditMandatoryDisbaled;
+    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canUnmapTutor && !this.canMakeDemoReady && !this.canMakePending;
   }
 
   updateMappedTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.mappedTutorUpdatedRecord, this.mappedTutorRecord.property, deselected, isAllOPeration);
+    this.isFormDirty = true;
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.mappedTutorUpdatedRecord, this.mappedTutorRecord, deselected, isAllOPeration);
   }  
 
   updateMappedTutorRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.mappedTutorUpdatedRecord, this.mappedTutorRecord.getProperty('tutorMapperId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.mappedTutorUpdatedRecord, this.mappedTutorRecord.tutorMapperSerialId);
     this.utilityService.makerequest(this, this.onUpdateMappedTutorRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -103,7 +112,7 @@ export class MappedTutorDataComponent implements OnInit {
       message: 'Please confirm if you want to un-map this tutor from the Enquiry',
       onOk: () => {
         const data = {
-          allIdsList: this.mappedTutorRecord.getProperty('tutorMapperId')
+          allIdsList: this.mappedTutorRecord.tutorMapperSerialId
         };
         this.utilityService.makerequest(this, this.handleTakeActionOnMappedTutorRecord,
           LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
@@ -121,7 +130,7 @@ export class MappedTutorDataComponent implements OnInit {
       placeholderText: placeholderText,
       onOk: (message) => {                  
         const data = {
-          allIdsList: this.mappedTutorRecord.getProperty('tutorMapperId'),
+          allIdsList: this.mappedTutorRecord.tutorMapperSerialId,
           button: actionText,
           comments: message
         };

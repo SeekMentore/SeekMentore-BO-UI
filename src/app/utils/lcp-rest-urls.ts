@@ -43,7 +43,7 @@ export class LcpRestUrls {
   static map_tutor_to_enquiry_map_registered_tutors = '/rest/sales/mapRegisteredTutors';
   static map_tutor_to_enquiry_unmap_registered_tutors = '/rest/sales/unmapRegisteredTutors';
   static take_action_on_mapped_tutor = '/rest/sales/takeActionOnMappedTutor';
-  static mapped_tutor_enquiry_data_access = '/rest/sales/mappedTutorCheckDataAccess';
+  static tutor_mapper_data_access = '/rest/sales/tutorMapperCheckDataAccess';
   static mapped_tutor_update_record = '/rest/sales/updateTutorMapperRecord';
   static mapped_tutor_schedule_demo_access = '/rest/sales/mappedTutorCheckScheduleDemoAccess';
   static schedule_demo = '/rest/sales/scheduleDemo';
@@ -65,4 +65,5 @@ export class LcpRestUrls {
   static remove_assignment_attendance_document_file = '/rest/sales/removeAssignmentAttendanceDocumentFile';
   static get_subscription_package_record = '/rest/sales/getSubscriptionPackageRecord';
   static get_demo_record = '/rest/sales/getDemoRecord';
+  static get_tutor_mapper_record = '/rest/sales/getTutorMapperRecord';
 }

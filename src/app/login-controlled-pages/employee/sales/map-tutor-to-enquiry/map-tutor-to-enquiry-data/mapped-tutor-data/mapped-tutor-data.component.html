@@ -1,14 +1,17 @@
 <div>
-  <div class="form-container-div">
-    <form class="form-container" style="max-width: 80%">
-      <div *ngIf="mappedTutorDataAccess.mappedEnquiryFormAccess  && !formEditMandatoryDisbaled"
+  <div *ngIf="showMessage" class="form-container-div successMessage">
+    {{textMessage}}
+  </div>
+  <div *ngIf="showForm" class="form-container-div">
+    <form *ngIf="showForm" class="form-container" style="max-width: 80%">
+      <div *ngIf="showEditControlSection"
             class="form-container-toggle-button">
-        <label class="tab_container" (change)="editRecordForm = false;">
-          <input type="radio" checked name="editFormChoice">
+        <label class="tab_container" (change)="setFormEditStatus(false)">
+          <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
           <span class="tab_checkmark left">View</span>
         </label>
-        <label class="tab_container" (change)="editRecordForm = true;">
-          <input type="radio" name="editFormChoice">
+        <label class="tab_container" (change)="setFormEditStatus(true)">
+          <input type="radio" [checked]="editRecordForm" name="editFormChoice">
           <span class="tab_checkmark right">Edit</span>
         </label>
       </div>
@@ -37,15 +40,15 @@
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Name</label></td>
-            <td><label class="data">{{enquiryRecord.property['customerName']}}</label></td>        
+            <td><label class="data">{{tutorMapperRecord.customerName}}</label></td>        
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Email</label></td>
-            <td><label class="data">{{enquiryRecord.property['customerEmail']}}</label></td>        
+            <td><label class="data">{{tutorMapperRecord.customerEmail}}</label></td>        
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Contact Number</label></td>
-            <td><label class="data">{{enquiryRecord.property['customerContactNumber']}}</label></td>        
+            <td><label class="data">{{tutorMapperRecord.customerContactNumber}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="!showEnquiryDetails">
             <td class="td-label">
@@ -71,47 +74,43 @@
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Subject</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['subject'], subjectsFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquirySubjectLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Grade</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['grade'], studentGradesFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquiryGradeLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Preferred Teaching Type</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['preferredTeachingType'], preferredTeachingTypeFilterOptions)}}</label></td>                    
-          </tr>
-          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
-            <td class="td-label"><label>Match Status</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['matchStatus'], matchStatusFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquiryPreferredTeachingTypeLookupRendererFromValue}}</label></td>                    
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Location</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['locationDetails'], locationsFilterOptions)}}</label></td>
+            <td><label class="data">{{enquiryLocationLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Address Details</label></td>
             <td>
-              <div class="form-remakrs">{{enquiryRecord.property['addressDetails']}}</div>
+              <div class="form-remakrs">{{tutorMapperRecord.enquiryAddressDetails}}</div>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Additional Details</label></td>
             <td>
-                <div class="form-remakrs">{{enquiryRecord.property['additionalDetails']}}</div>
+                <div class="form-remakrs">{{tutorMapperRecord.enquiryAdditionalDetails}}</div>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Quoted Client Rate</label></td>
-            <td><label class="data">{{enquiryRecord.property['quotedClientRate']}}</label></td>            
+            <td><label class="data">{{tutorMapperRecord.enquiryQuotedClientRate}}</label></td>            
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Negotiated Rate With Client</label></td>
-            <td><label class="data">{{enquiryRecord.property['negotiatedRateWithClient']}}</label></td></tr>
+            <td><label class="data">{{tutorMapperRecord.enquiryNegotiatedRateWithClient}}</label></td></tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Client Negotiation Remarks</label></td>
             <td>
-              <div class="form-remakrs">{{enquiryRecord.property['clientNegotiationRemarks']}}</div>
+              <div class="form-remakrs">{{tutorMapperRecord.enquiryClientNegotiationRemarks}}</div>
             </td>
           </tr>          
           <tr>
@@ -120,40 +119,47 @@
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Name</label></td>
-            <td><label class="data">{{mappedTutorRecord.property['tutorName']}}</label></td>        
+            <td><label class="data">{{tutorMapperRecord.tutorName}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Email</label></td>
-            <td><label class="data">{{mappedTutorRecord.property['tutorEmail']}}</label></td>        
+            <td><label class="data">{{tutorMapperRecord.tutorEmail}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Contact Number</label></td>
-            <td><label class="data">{{mappedTutorRecord.property['tutorContactNumber']}}</label></td>        
+            <td><label class="data">{{tutorMapperRecord.tutorContactNumber}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Mapping Status</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(mappedTutorRecord.property['mappingStatus'], mappingStatusFilterOptions)}}</label></td>        
+            <td><label class="data">{{tutorMapperStatusLookupRendererFromValue}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Quoted Tutor Rate</label></td>
-            <td><input class="input_field" type="number" value="{{mappedTutorRecord.property['quotedTutorRate']}}"
+            <td><input class="input_field" 
+                        type="number" 
+                        value="{{tutorMapperRecord.quotedTutorRate}}"
+                        id ="quotedTutorRate"
                         [disabled]="!editRecordForm"
-                        (change)="updateMappedTutorProperty('quotedTutorRate', $event, 'number')"></td>
+                        (change)="updateTutorMapperProperty('quotedTutorRate', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Negotiated Rate With Tutor</label></td>
-            <td><input class="input_field" type="number" value="{{mappedTutorRecord.property['negotiatedRateWithTutor']}}"
+            <td><input class="input_field" 
+                        type="number" 
+                        value="{{tutorMapperRecord.negotiatedRateWithTutor}}"
+                        id="negotiatedRateWithTutor"
                         [disabled]="!editRecordForm"
-                        (change)="updateMappedTutorProperty('negotiatedRateWithTutor', $event, 'number')"></td>
+                        (change)="updateTutorMapperProperty('negotiatedRateWithTutor', $event, 'number')"></td>
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Negotiation Remarks</label></td>
             <td>
                 <textarea 
                         class="textarea_field"
+                        id="tutorNegotiationRemarks"
                         [disabled]="!editRecordForm" 
-                        (change)="updateMappedTutorProperty('tutorNegotiationRemarks', $event, 'string')"
-                        >{{mappedTutorRecord.property['tutorNegotiationRemarks']}}</textarea>
+                        (change)="updateTutorMapperProperty('tutorNegotiationRemarks', $event, 'string')"
+                        >{{tutorMapperRecord.tutorNegotiationRemarks}}</textarea>
             </td>
           </tr>          
           <tr style="background-color: aliceblue;" *ngIf="!showTutorContactedDetails">
@@ -168,80 +174,77 @@
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
-            <td colspan="2">          
-              <table class="form-container-generic-table">
-                <tr>
-                  <td class="td-label">
-                      <i
-                          id="employee-actions-details-collapser"
-                          class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                          (click)="showTutorContactedDetails = false"></i>
-                  </td>
-                  <td colspan="5">
-                    Hide Tutor Contacted Details
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Is Tutor Contacted</label></td>
-                  <td><label class="data">{{getLookupRendererFromValue(mappedTutorRecord.property['isTutorContacted'], yesNoFilterOptions)}}</label></td>              
-                  <td class="td-label"><label></label></td>
-                  <td></td>             
-                  <td class="td-label"><label>Tutor Contacted Date</label></td>
-                  <td><label class="data">{{getDateFromMillis(mappedTutorRecord.property['tutorContactedDateMillis'])}}</label></td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Is Tutor Agreed</label></td>
-                  <td colspan="5">
-                    <ng-multiselect-dropdown [placeholder]="'Is Tutor Agreed'" [data]="yesNoFilterOptions"
-                                             [(ngModel)] = "selectedIsTutorAgreedOption" name="selectedIsTutorAgreed"
-                                             [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                             (onSelect)="updateMappedTutorProperty('isTutorAgreed', $event, 'list')"
-                                             (onDeSelect)="updateMappedTutorProperty('isTutorAgreed', $event, 'list', true)">
-                    </ng-multiselect-dropdown>
-                  </td>              
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Is Tutor Rejection Valid</label></td>
-                  <td colspan="5">
-                    <ng-multiselect-dropdown [placeholder]="'Is Tutor Rejection Valid'" [data]="yesNoFilterOptions"
-                                             [(ngModel)] = "selectedIsTutorRejectionValidOption" name="selectedIsTutorRejectionValid"
-                                             [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                             (onSelect)="updateMappedTutorProperty('isTutorRejectionValid', $event, 'list')"
-                                             (onDeSelect)="updateMappedTutorProperty('isTutorRejectionValid', $event, 'list', true)">
-                    </ng-multiselect-dropdown>
-                  </td>              
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Tutor Response</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('tutorResponse', $event, 'string')"
-                            >{{mappedTutorRecord.property['tutorResponse']}}</textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Admin Tutor Rejection Validity Response</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('adminTutorRejectionValidityResponse', $event, 'string')"
-                            >{{mappedTutorRecord.property['adminTutorRejectionValidityResponse']}}</textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Admin Remarks For Tutor</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('adminRemarksForTutor', $event, 'string')"
-                            >{{mappedTutorRecord.property['adminRemarksForTutor']}}</textarea>
-                  </td>
-                </tr>
-              </table>
+            <td class="td-label">
+              <i
+                id="employee-actions-details-collapser"
+                class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showTutorContactedDetails = false"></i>
+            </td>
+            <td>
+              Hide Tutor Contacted Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Is Tutor Contacted</label></td>
+            <td><label class="data">{{tutorMapperIsTutorContactedLookupRendererFromValue}}</label></td>          
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Tutor Contacted Date</label></td>
+            <td><label class="data">{{tutorContactedDateAndTimeDisplay}}</label></td>          
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Is Tutor Agreed</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Tutor Agreed'" [data]="yesNoFilterOptions"
+                                       [(ngModel)] = "selectedIsTutorAgreedOption" name="selectedIsTutorAgreed"
+                                       [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                       (onSelect)="updateTutorMapperProperty('isTutorAgreed', $event, 'list')"
+                                       (onDeSelect)="updateTutorMapperProperty('isTutorAgreed', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>          
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Is Tutor Rejection Valid</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Tutor Rejection Valid'" [data]="yesNoFilterOptions"
+                                       [(ngModel)] = "selectedIsTutorRejectionValidOption" name="selectedIsTutorRejectionValid"
+                                       [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                       (onSelect)="updateTutorMapperProperty('isTutorRejectionValid', $event, 'list')"
+                                       (onDeSelect)="updateTutorMapperProperty('isTutorRejectionValid', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>          
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Tutor Response</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="tutorResponse"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('tutorResponse', $event, 'string')"
+                      >{{tutorMapperRecord.tutorResponse}}</textarea>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Admin Tutor Rejection Validity Response</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="adminTutorRejectionValidityResponse"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('adminTutorRejectionValidityResponse', $event, 'string')"
+                      >{{tutorMapperRecord.adminTutorRejectionValidityResponse}}</textarea>
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showTutorContactedDetails">
+            <td class="td-label"><label>Admin Remarks For Tutor</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="adminRemarksForTutor"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('adminRemarksForTutor', $event, 'string')"
+                      >{{tutorMapperRecord.adminRemarksForTutor}}</textarea>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="!showClientContactedDetails">
@@ -256,80 +259,77 @@
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
-            <td colspan="2">          
-              <table class="form-container-generic-table">
-                <tr>
-                  <td class="td-label">
-                      <i
-                          id="employee-actions-details-collapser"
-                          class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                          (click)="showClientContactedDetails = false"></i>
-                  </td>
-                  <td colspan="5">
-                    Hide Client Contacted Details
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Is Client Contacted</label></td>
-                  <td><label class="data">{{getLookupRendererFromValue(mappedTutorRecord.property['isClientContacted'], yesNoFilterOptions)}}</label></td>              
-                  <td class="td-label"><label></label></td>
-                  <td><label class="data"></label></td>              
-                  <td class="td-label"><label>Client Contacted Date</label></td>
-                  <td><label class="data">{{getDateFromMillis(mappedTutorRecord.property['clientContactedDateMillis'])}}</label></td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Is Client Agreed</label></td>
-                  <td colspan="5">
-                    <ng-multiselect-dropdown [placeholder]="'Is Client Agreed'" [data]="yesNoFilterOptions"
-                                             [(ngModel)] = "selectedIsClientAgreedOption" name="selectedIsClientAgreed"
-                                             [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                             (onSelect)="updateMappedTutorProperty('isClientAgreed', $event, 'list')"
-                                             (onDeSelect)="updateMappedTutorProperty('isClientAgreed', $event, 'list', true)">
-                    </ng-multiselect-dropdown>
-                  </td>              
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Is Client Rejection Valid</label></td>
-                  <td colspan="5">
-                    <ng-multiselect-dropdown [placeholder]="'Is Client Rejection Valid'" [data]="yesNoFilterOptions"
-                                             [(ngModel)] = "selectedIsClientRejectionValidOption" name="selectedIsClientRejectionValid"
-                                             [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                             (onSelect)="updateMappedTutorProperty('isClientRejectionValid', $event, 'list')"
-                                             (onDeSelect)="updateMappedTutorProperty('isClientRejectionValid', $event, 'list', true)">
-                    </ng-multiselect-dropdown>
-                  </td>              
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Client Response</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('clientResponse', $event, 'string')"
-                            >{{mappedTutorRecord.property['clientResponse']}}</textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Admin Client Rejection Validity Response</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('adminClientRejectionValidityResponse', $event, 'string')"
-                            >{{mappedTutorRecord.property['adminClientRejectionValidityResponse']}}</textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Admin Remarks For Client</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('adminRemarksForClient', $event, 'string')"
-                            >{{mappedTutorRecord.property['adminRemarksForClient']}}</textarea>
-                  </td>
-                </tr>
-              </table>
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showClientContactedDetails = false"></i>
+            </td>
+            <td>
+              Hide Client Contacted Details
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Is Client Contacted</label></td>
+            <td><label class="data">{{tutorMapperIsClientContactedLookupRendererFromValue}}</label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Client Contacted Date</label></td>
+            <td><label class="data">{{clientContactedDateAndTimeDisplay}}</label></td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Is Client Agreed</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Client Agreed'" [data]="yesNoFilterOptions"
+                                       [(ngModel)] = "selectedIsClientAgreedOption" name="selectedIsClientAgreed"
+                                       [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                       (onSelect)="updateTutorMapperProperty('isClientAgreed', $event, 'list')"
+                                       (onDeSelect)="updateTutorMapperProperty('isClientAgreed', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>              
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Is Client Rejection Valid</label></td>
+            <td>
+              <ng-multiselect-dropdown [placeholder]="'Is Client Rejection Valid'" [data]="yesNoFilterOptions"
+                                       [(ngModel)] = "selectedIsClientRejectionValidOption" name="selectedIsClientRejectionValid"
+                                       [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                       (onSelect)="updateTutorMapperProperty('isClientRejectionValid', $event, 'list')"
+                                       (onDeSelect)="updateTutorMapperProperty('isClientRejectionValid', $event, 'list', true)">
+              </ng-multiselect-dropdown>
+            </td>              
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Client Response</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="clientResponse"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('clientResponse', $event, 'string')"
+                      >{{tutorMapperRecord.clientResponse}}</textarea>
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Admin Client Rejection Validity Response</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="adminClientRejectionValidityResponse"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('adminClientRejectionValidityResponse', $event, 'string')"
+                      >{{tutorMapperRecord.adminClientRejectionValidityResponse}}</textarea>
+            </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showClientContactedDetails">
+            <td class="td-label"><label>Admin Remarks For Client</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="adminRemarksForClient"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('adminRemarksForClient', $event, 'string')"
+                      >{{tutorMapperRecord.adminRemarksForClient}}</textarea>
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
@@ -344,43 +344,38 @@
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
-            <td colspan="2">          
-              <table class="form-container-generic-table">
-                <tr>
-                  <td class="td-label">
-                      <i
-                          id="employee-actions-details-collapser"
-                          class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                          (click)="showEmployeeActionDetails = false"></i>
-                  </td>
-                  <td colspan="5">
-                    Hide Action Details
-                  </td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label></label></td>
-                  <td><label class="data"></label></td>              
-                  <td class="td-label"><label>Who Acted</label></td>
-                  <td><label class="data">{{mappedTutorRecord.property['whoActedName']}}</label></td>              
-                  <td class="td-label"><label>Admin Action Date</label></td>
-                  <td><label class="data">{{getDateFromMillis(mappedTutorRecord.property['adminActionDateMillis'])}}</label></td>
-                </tr>
-                <tr>
-                  <td class="td-label"><label>Admin Action Remarks</label></td>
-                  <td colspan="5">
-                    <textarea 
-                            class="textarea_field"
-                            [disabled]="!editRecordForm" 
-                            (change)="updateMappedTutorProperty('adminActionRemarks', $event, 'string')"
-                            >{{mappedTutorRecord.property['adminActionRemarks']}}</textarea>
-                  </td>
-                </tr>
-              </table>
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showEmployeeActionDetails = false"></i>
+            </td>
+            <td>
+              Hide Action Details
+            </td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+            <td class="td-label"><label>Who Acted</label></td>
+            <td><label class="data">{{tutorMapperRecord.whoActedName}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+            <td class="td-label"><label>Admin Action Date</label></td>
+            <td><label class="data">{{adminActionDateAndTimeDisplay}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+            <td class="td-label"><label>Admin Action Remarks</label></td>
+            <td>
+              <textarea 
+                      class="textarea_field"
+                      id="adminActionRemarks"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateTutorMapperProperty('adminActionRemarks', $event, 'string')"
+                      >{{tutorMapperRecord.adminActionRemarks}}</textarea>
             </td>
           </tr>
           <tr>
             <td class="td-label"><label>Is Demo Scheduled</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(mappedTutorRecord.property['isDemoScheduled'], yesNoFilterOptions)}}</label></td>        
+            <td><label class="data">{{tutorMapperIsDemoScheduledLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
             <td class="td-label">
@@ -392,71 +387,73 @@
             <td>
               Show Action Buttons
             </td>
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
+            <td class="td-label">
+                <i
+                    id="employee-actions-details-collapser"
+                    class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                    (click)="showEmployeeActionButtons = false"></i>
+            </td>
+            <td>
+              Hide Action Buttons
+            </td>
           </tr>  
           <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
-            <td colspan="2">          
+            <td></td>
+            <td>          
               <table width="100%">
                   <tr>
-                    <td class="td-label">
-                        <i
-                            id="employee-actions-details-collapser"
-                            class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                            (click)="showEmployeeActionButtons = false"></i>
-                    </td>
-                    <td colspan="3">
-                      Hide Action Buttons
-                    </td>
-                  </tr>
-                  <tr *ngIf="selectedRecordMappingStatus === 'Pending'">
-                    <td></td>
                     <td>
                       <button type="submit"
-                              class="btnReject"
-                              (click)="unmapTutorRecord()">            
-                              Un-map Tutor
-                      </button>
-                    </td> 
-                    <td></td>              
-                    <td></td>
-                    <td>
-                      <button type="submit"
+                              *ngIf="canMakeDemoReady"
                               class="btnSubmit"
-                              (click)="takeActionOnMappedTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'demoReady')">            
+                              (click)="takeActionOnTutorMapperRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'demoReady')">            
                               Demo Ready
                       </button>
-                    </td>
-                  </tr>
-                  <tr *ngIf="selectedRecordMappingStatus === 'Demo Ready'">
-                    <td></td>
-                    <td>
-                      <button type="submit"
-                              class="btnReject"
-                              (click)="unmapTutorRecord()">            
-                              Un-map Tutor
-                      </button>
                     </td> 
-                    <td></td>              
-                    <td></td>
                     <td>
                       <button type="submit"
+                              *ngIf="canMakePending"
                               class="btnReset"
-                              (click)="takeActionOnMappedTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'pending', true)">            
+                              (click)="takeActionOnTutorMapperRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'pending', true)">            
                               Pending
                       </button>
                     </td>
+                    <td>
+                      <button type="submit"
+                              *ngIf="canUnmapTutor"
+                              class="btnReject"
+                              (click)="unmapTutorRecord()">            
+                              Un-map Tutor
+                      </button>
+                    </td>
                   </tr>
-                  <tr>
-                    <td colspan="4"></td>
-                  </tr>                         
               </table>
             </td>
           </tr>
       </table>
-      <button *ngIf="mappedTutorDataAccess.mappedEnquiryFormAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
-              class="ok-button form-container-update-button"
-              (click)="updateMappedTutorRecord()">
-        Update
-      </button>
+      <table class="form-container-generic-table">
+        <tr>
+          <td align="right">
+            <button *ngIf="showUpdateButton" type="submit"
+                    class="ok-button form-container-update-button"
+                    (click)="updateTutorMapperRecord()">
+              Update Tutor Mapper
+            </button>
+          </td>
+          <td>
+            <button *ngIf="showUpdateButton" type="submit"
+                    class="cancel-button form-container-update-button"
+                    (click)="resetTutorMapperRecord()">
+              Reset Tutor Mapper
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div class="form-mask" id="tutor-mapper-form-mask-loader" [hidden]="tutorMapperFormMaskLoaderHidden">
+        <div class="form-loader"></div>
+      </div>
     </form>
   </div>
 </div>

@@ -402,7 +402,8 @@ export class CommonUtilityFunctions {
     return gridRecordObject;
   }
 
-  public static setHTMLInputElementValue(elementId: string, elementValue: string) {
+  public static setHTMLInputElementValue(elementId: string, elementValue: any) {
+    elementValue = CommonUtilityFunctions.checkObjectAvailability(elementValue) ? elementValue.toString() : '';
     const element: HTMLInputElement = <HTMLInputElement>document.getElementById(elementId);
     if (CommonUtilityFunctions.checkObjectAvailability(element)) {
       if (!CommonUtilityFunctions.checkStringAvailability(elementValue)) {

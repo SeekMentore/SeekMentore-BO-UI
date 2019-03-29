@@ -149,7 +149,7 @@ export class DemoTrackerDataComponent implements OnInit {
       context.rescheduleMandatoryDisbaled = gridRecordObject.additionalProperties['demoRescheduleMandatoryDisbaled'];
       context.canSuccessFailDemo = gridRecordObject.additionalProperties['demoCanSuccessFailDemo'];
       context.canCancelDemo = gridRecordObject.additionalProperties['demoCanCancelDemo'];
-      context.setUpDataModal(gridRecordObject.record, null, true);
+      context.setUpDataModal(gridRecordObject.record);
     } else {
       context.helperService.showAlertDialog({
         isSuccess: false,

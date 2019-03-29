@@ -35,9 +35,9 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   enquiryMappingDataAccess: EnquiryMappingDataAccess = null;
 
   showMapTutorToEnquiryMappedTutorData = false;
-  selectedMappedTutorRecord: GridRecord = null;
-  interimHoldSelectedMappedTutorRecord: GridRecord = null;
-  mappedTutorDataAccess: MappedTutorDataAccess = null;
+  selectedTutorMapperSerialId: string = null;
+  interimHoldSelectedTutorMapperSerialId: string = null;
+  tutorMapperDataAccess: TutorMapperDataAccess = null;
 
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
@@ -261,19 +261,24 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           restURL: '/rest/sales/currentEnquiryAllMappedTutorsList'
         },
         columns: [{
+          id: 'tutorMapperSerialId',
+          headerName: 'Serial Id',
+          dataType: 'string',
+          mapping: 'tutorMapperSerialId',
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
+            this.interimHoldSelectedTutorMapperSerialId = record.getProperty('tutorMapperSerialId');
+            if (this.tutorMapperDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_mapper_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+            } else {
+              this.selectedTutorMapperSerialId = this.interimHoldSelectedTutorMapperSerialId;            
+              this.toggleVisibilityMappedTutorGrid();
+            }
+          }
+        },{
           id: 'tutorName',
           headerName: 'Tutor Name',
           dataType: 'string',
-          mapping: 'tutorName',
-          clickEvent: (record: GridRecord, column: Column) => {
-            this.interimHoldSelectedMappedTutorRecord = record;
-            if (this.mappedTutorDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-            } else {
-              this.selectedMappedTutorRecord = this.interimHoldSelectedMappedTutorRecord;            
-              this.toggleVisibilityMappedTutorGrid();
-            }
-          }        
+          mapping: 'tutorName'
         },{
           id: 'tutorEmail',
           headerName: 'Tutor Email',
@@ -374,7 +379,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                 message: 'Please confirm if you want to un-map this tutor from the Enquiry',
                 onOk: () => {
                   const data = {
-                    allIdsList: record.getProperty('tutorMapperId')
+                    allIdsList: record.getProperty('tutorMapperSerialId')
                   };
                   this.utilityService.makerequest(this, this.handleMappingRequest,
                     LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
@@ -437,12 +442,12 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.mappedTutorDataAccess = {
+      context.tutorMapperDataAccess = {
         success: response.success,
         message: response.message,
-        mappedEnquiryFormAccess: response.mappedEnquiryFormAccess
+        tutorMapperFormAccess: response.tutorMapperFormAccess
       };
-      context.selectedMappedTutorRecord = context.interimHoldSelectedMappedTutorRecord;
+      context.selectedTutorMapperSerialId = context.interimHoldSelectedTutorMapperSerialId;
       context.toggleVisibilityMappedTutorGrid();
     }
   }
@@ -450,7 +455,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   toggleVisibilityMappedTutorGrid() {
     if (this.showMapTutorToEnquiryMappedTutorData === true) {
       this.showMapTutorToEnquiryMappedTutorData = false;
-      this.selectedMappedTutorRecord = null;
+      this.selectedTutorMapperSerialId = null;
       const backToEnquiriesListingButton: HTMLElement = document.getElementById('back-to-all-enquiries-listing-button'); 
       backToEnquiriesListingButton.classList.remove('noscreen');
       setTimeout(() => {
@@ -474,8 +479,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
 
 }
 
-export interface MappedTutorDataAccess {
+export interface TutorMapperDataAccess {
   success: boolean;
   message: string;
-  mappedEnquiryFormAccess: boolean;
+  tutorMapperFormAccess: boolean;
 }

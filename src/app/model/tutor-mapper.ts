@@ -25,14 +25,14 @@ export class TutorMapper {
 	negotiatedRateWithTutor: number;
 	tutorNegotiationRemarks: string;
 	isTutorContacted: string;
-	tutorContactedDateMillis;
+	tutorContactedDateMillis: number;
 	isTutorAgreed: string;
 	isTutorRejectionValid: string;
 	adminTutorRejectionValidityResponse: string;
 	tutorResponse: string;
 	adminRemarksForTutor: string;
 	isClientContacted: string;
-	clientContactedDateMillis;
+	clientContactedDateMillis: number;
 	isClientAgreed: string;
 	clientResponse: string;
 	isClientRejectionValid: string;

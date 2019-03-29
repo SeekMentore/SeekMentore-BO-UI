@@ -165,7 +165,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
       context.canActivateSubscription = gridRecordObject.additionalProperties['subscriptionPackageCanActivateSubscription'];
       context.canTerminateSubscription = gridRecordObject.additionalProperties['subscriptionPackageCanTerminateSubscription'];
       context.canCreateAssignment = gridRecordObject.additionalProperties['subscriptionPackageCanCreateAssignment'];
-      context.setUpDataModal(gridRecordObject.record, null, true);
+      context.setUpDataModal(gridRecordObject.record);
     } else {      
       context.helperService.showAlertDialog({
         isSuccess: false,

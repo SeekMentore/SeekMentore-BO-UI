@@ -109,7 +109,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
       context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['packageAssignmentFormEditMandatoryDisbaled'];
       context.canStartAssignment = gridRecordObject.additionalProperties['packageAssignmentCanStartAssignment'];
       context.canReviewCompleteAssignment = gridRecordObject.additionalProperties['packageAssignmentCanReviewCompleteAssignment'];
-      context.setUpDataModal(gridRecordObject.record, null, true);
+      context.setUpDataModal(gridRecordObject.record);
     } else {
       context.helperService.showAlertDialog({
         isSuccess: false,

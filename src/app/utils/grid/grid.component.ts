@@ -906,12 +906,34 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public checkActionCoulmnActionButtonRenderStatus(record: GridRecord, button: ActionButton) {
-    if (button.uiRenderer === null) {
-      return true;
+  public checkActionColumnActionButtonVisibilityStatus(record: GridRecord, button: ActionButton) {
+    if (button.isSecured) {
+      if (GridCommonFunctions.checkStringAvailability(button.securityIsVisibleProperty) 
+              && !GridCommonFunctions.checkStringContainsText(button.securityIsVisibleProperty, '-UNKNOWN-')) {
+          let visiblePropertyValue: any = record.getProperty(button.securityIsVisibleProperty);
+          if (GridCommonFunctions.checkObjectAvailability(visiblePropertyValue) && visiblePropertyValue === true) {
+            return true;
+          }
+      }
     } else {
-      return button.uiRenderer.renderButton(record, button, this);
+      return true;
     }
+    return false;
+  }
+
+  public checkActionColumnActionButtonEnabledStatus(record: GridRecord, button: ActionButton) {
+    if (button.isSecured) {
+      if (GridCommonFunctions.checkStringAvailability(button.securityIsEnabledProperty) 
+              && !GridCommonFunctions.checkStringContainsText(button.securityIsEnabledProperty, '-UNKNOWN-')) {
+          let enabledPropertyValue: any = record.getProperty(button.securityIsEnabledProperty);
+          if (GridCommonFunctions.checkObjectAvailability(enabledPropertyValue) && enabledPropertyValue === true) {
+            return true;
+          }
+      }
+    } else {
+      return true;
+    }
+    return false;
   }
 
   /** Reset Filter Inputs */

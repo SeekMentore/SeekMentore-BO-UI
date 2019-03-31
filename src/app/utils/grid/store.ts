@@ -43,6 +43,7 @@ export class Store {
   }
 
   public load(grid: Grid, gridComponentObject: GridComponent) {
+    this.setStandardExtraParams(grid, gridComponentObject);
     if (GridCommonFunctions.checkObjectAvailability(this.precall_load)) {
       this.precall_load(gridComponentObject);
     }
@@ -121,11 +122,25 @@ export class Store {
     }    
   }
 
+  private setStandardExtraParams(grid: Grid, gridComponentObject: GridComponent) {
+    let hasActionButtons: boolean = (grid.hasActionColumn && grid.actionColumn.buttons.length > 0);
+    gridComponentObject.addExtraParams('hasActionButtons', hasActionButtons);
+    if (hasActionButtons) {
+      gridComponentObject.addExtraParams('secureActionColumnButtons', grid.actionColumn.secureButtons);
+    }
+    let hasSelectionButtons: boolean = (grid.hasSelectionColumn && grid.selectionColumn.buttons.length > 0);
+    gridComponentObject.addExtraParams('hasSelectionButtons', hasSelectionButtons);
+    if (hasSelectionButtons) {
+      gridComponentObject.addExtraParams('secureSelectionColumnButtons', grid.selectionColumn.secureButtons);
+    }
+  }
+
   public downloadGridData(grid: Grid, gridComponentObject: GridComponent) {
     if (this.isStatic) {
       return false;
     } else {
       if (GridCommonFunctions.checkStringAvailability(this.downloadURL)) {
+        this.setStandardExtraParams(grid, gridComponentObject);
         if (GridCommonFunctions.checkObjectAvailability(this.precall_download)) {
           this.precall_download(gridComponentObject);
         }

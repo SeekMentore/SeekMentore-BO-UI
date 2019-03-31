@@ -342,14 +342,13 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             id: 'unmapTutor',
             label: 'Un-map Tutor',
             btnclass: 'btnReject',
-            renderer: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
-              let tutorMapperStatusLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(record.getProperty('mappingStatus'), CommonFilterOptions.mappingStatusFilterOptions);
-              if ('Pending' === tutorMapperStatusLookupRendererFromValue) {
-                return true;
-              }
-              return false;
+            securityMapping: {
+              isSecured: true,
+              visible: 'showUnMap',
+              enabled: 'enableUnMap'              
             },
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
+              button.disable();
               this.helperService.showConfirmationDialog({
                 message: 'Please confirm if you want to un-map this tutor from the Enquiry',
                 onOk: () => {
@@ -359,8 +358,10 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                   this.utilityService.makerequest(this, this.handleMappingRequest,
                     LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
                     'application/x-www-form-urlencoded');
+                  button.enable();
                 },
                 onCancel: () => {
+                  button.enable();
                 }
               });
             }

@@ -401,32 +401,63 @@
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id}}"
           *ngFor="let button of grid.actionColumn.buttons">
-          <span 
-            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-enabled-span'}}"
-            *ngIf="checkActionCoulmnActionButtonRenderStatus(record, button)"
-          > 
-            <!-- Enabled Button -->
-            <button
-                id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-button-'+button.id+'-enabled'}}"                
-                class="{{button.btnclass}}" 
-                (click)="actionColumnActionButtonClicked(record, button)"
-                [disabled]="button.isDisabled"
+          <!-- Visible Button -->
+          <span
+            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'}}" 
+            *ngIf="checkActionColumnActionButtonVisibilityStatus(record, button)"
+          >
+            <!-- Record Property Enabled -->
+            <span
+              id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-enabled'}}"
+              *ngIf="checkActionColumnActionButtonEnabledStatus(record, button)"
+            >
+              <!-- Button Property Enabled -->
+              <span
+                id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-enabled'+'-span-button-property-enabled'}}"
+                *ngIf="!button.isDisabled"
+              >
+                  <button
+                    id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-enabled'+'-span-button-property-enabled'+'-button-enabled'}}"                
+                    class="{{button.btnclass}}" 
+                    (click)="actionColumnActionButtonClicked(record, button)"
+                  >
+                    {{button.label}}
+                  </button>
+              </span>
+              <!-- Button Property Disabled -->
+              <span
+                id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-enabled'+'-span-button-property-disabled'}}"
+                *ngIf="button.isDisabled"
+              >
+                  <button
+                    id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-enabled'+'-span-button-property-disabled'+'-button-disabled'}}"
+                    class="btnDisabled" 
+                    disabled="true"
+                  >
+                    {{button.label}}
+                  </button>
+              </span>
+            </span>
+            <!-- Record Property Disbaled -->
+            <span
+              id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-disabled'}}"
+              *ngIf="!checkActionColumnActionButtonEnabledStatus(record, button)"
+            >
+              <button
+              id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-visible'+'-span-record-property-disabled'+'-button-disabled'}}"
+                class="btnDisabled" 
+                disabled="true"
               >
                 {{button.label}}
               </button>
+            </span>
           </span>
+          <!-- Hidden Button -->
           <span 
-            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-disabled-span'}}"
-            *ngIf="!checkActionCoulmnActionButtonRenderStatus(record, button)"  
+            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-span-record-property-hidden'}}"
+            *ngIf="!checkActionColumnActionButtonVisibilityStatus(record, button)"
           >
-            <!-- Disabled Button -->
-            <button
-              id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-button-'+button.id+'-disabled'}}"
-              class="btnDisabled" 
-              disabled="true"
-            >
-              {{button.label}}
-            </button>
+            <!-- No Button Shown -->
           </span>
         </span>
       </div>

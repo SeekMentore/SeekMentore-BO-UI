@@ -6,6 +6,7 @@ export class ActionColumn {
   label: string = 'Action Column'
   buttons: ActionButton[];
   totalButtons: number = -1;
+  secureButtons: string[] = [];
 
   constructor(
       id: string, 
@@ -20,15 +21,40 @@ export class ActionColumn {
         var buttonMetadata:any = buttonsMetadata[i];
         if (GridCommonFunctions.checkObjectAvailability(buttonMetadata)) {
           const buttonId = GridCommonFunctions.checkObjectAvailability(buttonMetadata.id) ? buttonMetadata.id : i.toString();
+          let button: ActionButton;
           if (GridCommonFunctions.checkObjectAvailability(buttonMetadata.btnclass)) {
-            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.renderer, buttonMetadata.btnclass));
+            button = new ActionButton(
+                                    this.id + '-ActionButton-' + buttonId, 
+                                    buttonId,
+                                    buttonMetadata.label, 
+                                    buttonMetadata.clickEvent, 
+                                    buttonMetadata.renderer, 
+                                    buttonMetadata.btnclass,
+                                    buttonMetadata.securityMapping
+                      );
           } else {
-            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.renderer));
+            button = new ActionButton(
+                                  this.id + '-ActionButton-' + buttonId, 
+                                  buttonId,
+                                  buttonMetadata.label, 
+                                  buttonMetadata.clickEvent, 
+                                  buttonMetadata.renderer,
+                                  null,
+                                  buttonMetadata.securityMapping
+                    );
           }
+          this.buttons.push(button);
+          this.checkAndSetSecureButtons(button);
         }
       }
     }
     this.totalButtons =  this.buttons.length;
+  }
+
+  private checkAndSetSecureButtons(button: ActionButton) {
+    if (button.isSecured) {
+      this.secureButtons.push(button.userGivenId);
+    }
   }
 
   public getButtonFromButtonNumber(num: number) {

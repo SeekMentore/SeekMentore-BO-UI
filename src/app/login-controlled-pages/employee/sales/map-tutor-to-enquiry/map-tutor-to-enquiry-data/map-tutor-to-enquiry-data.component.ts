@@ -334,39 +334,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           mapping: 'tutorNegotiationRemarks',
           lengthyData: true
         }],
-        hasSelectionColumn: true,
-        selectionColumn: {
-          buttons: [{
-            id: 'unmapTutors',
-            label: 'Un-map Tutors',
-            btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              const tutorMapperIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorMapperId');
-              if (tutorMapperIdsList.length === 0) {
-                this.helperService.showAlertDialog({
-                  isSuccess: false,
-                  message: LcpConstants.grid_generic_no_record_selected_error,
-                  onButtonClicked: () => {
-                  }
-                });
-              } else {
-                this.helperService.showConfirmationDialog({
-                  message: 'Please confirm if you want to un-map the selected tutors from the Enquiry',
-                  onOk: () => {
-                    const data = {
-                      allIdsList: tutorMapperIdsList.join(';')
-                    };
-                    this.utilityService.makerequest(this, this.handleMappingRequest,
-                      LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                      'application/x-www-form-urlencoded');
-                  },
-                  onCancel: () => {
-                  }
-                });
-              }
-            }
-          }]
-        },
+        hasSelectionColumn: false,
         hasActionColumn: true,
         actionColumn: {
           label: 'Take Action',
@@ -374,7 +342,14 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             id: 'unmapTutor',
             label: 'Un-map Tutor',
             btnclass: 'btnReject',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            renderer: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
+              let tutorMapperStatusLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(record.getProperty('mappingStatus'), CommonFilterOptions.mappingStatusFilterOptions);
+              if ('Pending' === tutorMapperStatusLookupRendererFromValue) {
+                return true;
+              }
+              return false;
+            },
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               this.helperService.showConfirmationDialog({
                 message: 'Please confirm if you want to un-map this tutor from the Enquiry',
                 onOk: () => {

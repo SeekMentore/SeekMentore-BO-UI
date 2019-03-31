@@ -401,14 +401,33 @@
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id}}"
           *ngFor="let button of grid.actionColumn.buttons">
-          <button
-            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-button-'+button.id}}"
-            class="{{button.btnclass}}" 
-            (click)="actionColumnActionButtonClicked(record, button)"
-            [disabled]="button.isDisabled"
+          <span 
+            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-enabled-span'}}"
+            *ngIf="checkActionCoulmnActionButtonRenderStatus(record, button)"
+          > 
+            <!-- Enabled Button -->
+            <button
+                id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-button-'+button.id+'-enabled'}}"                
+                class="{{button.btnclass}}" 
+                (click)="actionColumnActionButtonClicked(record, button)"
+                [disabled]="button.isDisabled"
+              >
+                {{button.label}}
+              </button>
+          </span>
+          <span 
+            id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-disabled-span'}}"
+            *ngIf="!checkActionCoulmnActionButtonRenderStatus(record, button)"  
           >
-            {{button.label}}
-          </button>
+            <!-- Disabled Button -->
+            <button
+              id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-action-column'+'-span-button-'+button.id+'-button-'+button.id+'-disabled'}}"
+              class="btnDisabled" 
+              disabled="true"
+            >
+              {{button.label}}
+            </button>
+          </span>
         </span>
       </div>
     </div>

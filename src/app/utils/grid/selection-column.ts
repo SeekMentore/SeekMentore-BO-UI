@@ -25,9 +25,9 @@ export class SelectionColumn {
         if (GridCommonFunctions.checkObjectAvailability(buttonMetadata)) {
           const buttonId = GridCommonFunctions.checkObjectAvailability(buttonMetadata.id) ? buttonMetadata.id : i.toString();
           if (GridCommonFunctions.checkObjectAvailability(buttonMetadata.btnclass)) {
-            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.btnclass));
+            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.renderer, buttonMetadata.btnclass));
           } else {
-            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent));
+            this.buttons.push(new ActionButton(this.id + '-ActionButton-' + buttonId, buttonMetadata.label, buttonMetadata.clickEvent, buttonMetadata.renderer));
           }
         }
       }

@@ -906,6 +906,14 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public checkActionCoulmnActionButtonRenderStatus(record: GridRecord, button: ActionButton) {
+    if (button.uiRenderer === null) {
+      return true;
+    } else {
+      return button.uiRenderer.renderButton(record, button, this);
+    }
+  }
+
   /** Reset Filter Inputs */
   private resetFilterInputs(column: Column = null) {
     let elements: HTMLCollectionOf<Element> = null;
@@ -952,7 +960,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getColumnDisplayStyle(column) {
+  getColumnDisplayStyle(column: Column) {
     return column.hidden ? 'none' : 'flex';
   }
 

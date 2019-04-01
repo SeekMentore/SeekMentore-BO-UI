@@ -1,15 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Enquiry } from 'src/app/model/enquiry';
 import { TutorMapper } from 'src/app/model/tutor-mapper';
+import { AppConstants } from 'src/app/utils/app-constants';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { TutorMapperDataAccess } from '../map-tutor-to-enquiry-data.component';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { AppConstants } from 'src/app/utils/app-constants';
 
 @Component({
   selector: 'app-mapped-tutor-data',

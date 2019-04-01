@@ -81,7 +81,7 @@ const routes: Routes = [
       {path: 'error', component: ErrorComponent},
       {path: 'login', component: LoginComponent},
       {path: 'resetpassword', component: ResetPasswordComponent},
-      {path: 'resetpassword/:tokenId/:token', component: ForgotPasswordTokenResetComponent},
+      {path: 'resetpassword/:tokenSerialId/:token', component: ForgotPasswordTokenResetComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'},
       {path: '**', redirectTo: 'login', pathMatch: 'full'}
     ]

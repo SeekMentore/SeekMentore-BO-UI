@@ -14,7 +14,7 @@ import { NlpRestUrls } from 'src/app/utils/nlp-rest-urls';
 export class ForgotPasswordTokenResetComponent implements OnInit {
 
   token: string;
-  tokenId: string;
+  tokenSerialId: string;
   errorAjaxResponse: string;
   successMessage: string;
   errorNewPassword: string;
@@ -24,7 +24,7 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
 
   constructor(private helperService: HelperService, private route: ActivatedRoute, private utilityService: AppUtilityService) {
     this.route.params.subscribe(params => {  
-      this.tokenId = params['tokenId'];
+      this.tokenSerialId = params['tokenSerialId'];
       this.token = params['token'];
     });
   }
@@ -39,7 +39,7 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
       return;
     }
     const formData = new URLSearchParams();
-    formData.set('tokenId', this.tokenId);
+    formData.set('tokenSerialId', this.tokenSerialId);
     formData.set('token', this.token);
     formData.set('newPassword', this.newPassword);
     formData.set('retypeNewPassword', this.retypeNewPassword);

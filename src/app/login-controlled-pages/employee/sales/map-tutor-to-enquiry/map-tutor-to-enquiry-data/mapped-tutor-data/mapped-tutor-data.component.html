@@ -455,5 +455,46 @@
         <div class="form-loader"></div>
       </div>
     </form>
+    <form *ngIf="showSheduleDemoForm" class="form-container" style="max-width: 80%">
+      <div *ngIf="showSheduleDemoForm"
+            class="form-container-toggle-button">
+        <label class="tab_container" (change)="setScheduleDemoFormStatus(false)">
+          <input type="radio" [checked]="!editScheduleDemoRecordForm" name="editScheduleDemoFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="setScheduleDemoFormStatus(true)">
+          <input type="radio" [checked]="editScheduleDemoRecordForm" name="editScheduleDemoFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
+    <table class="form-container-generic-table">
+      <tr>
+        <td class="td-label"><label>Demo Date</label></td>
+        <td><input class="input_field"
+                    id="demoDate" 
+                    type="date" 
+                    value="{{scheduleDemoDateModal}}"
+                    [disabled]="!editScheduleDemoRecordForm"
+                    (change)="updateScheduleDemoProperty('demoDateMillis', $event, 'millis')"></td>
+      </tr>
+      <tr>
+        <td class="td-label"><label>New Demo Time</label></td>
+        <td><input class="input_field"
+                    id="demoTime"
+                    type="time" 
+                    value="{{scheduleDemoTimeModal}}"
+                    [disabled]="!editScheduleDemoRecordForm"
+                    (change)="updateScheduleDemoProperty('demoTimeMillis', $event, 'millis')"></td>
+      </tr>
+    </table>
+    <button *ngIf="showScheduleDemoButton" type="submit"
+          class="ok-button form-container-update-button"
+          (click)="scheduleDemo()">
+      Schedule Demo
+    </button>
+    <div class="form-mask" id="schedule-demo-form-mask-loader" [hidden]="scheduleDemoFormMaskLoaderHidden">
+      <div class="form-loader"></div>
+    </div>
+  </form>
   </div>
 </div>

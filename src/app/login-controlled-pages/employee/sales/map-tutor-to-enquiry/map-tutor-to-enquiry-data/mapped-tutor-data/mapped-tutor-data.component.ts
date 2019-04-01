@@ -9,6 +9,7 @@ import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { TutorMapperDataAccess } from '../map-tutor-to-enquiry-data.component';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { AppConstants } from 'src/app/utils/app-constants';
 
 @Component({
   selector: 'app-mapped-tutor-data',
@@ -24,6 +25,7 @@ export class MappedTutorDataComponent implements OnInit {
   tutorMapperDataAccess: TutorMapperDataAccess = null;
 
   tutorMapperUpdatedRecord = {};
+  scheduleDemoUpdatedRecord = {};
 
   showTutorContactedDetails = false;
   showClientContactedDetails = false;
@@ -35,6 +37,7 @@ export class MappedTutorDataComponent implements OnInit {
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
   editRecordForm = false;
+  editScheduleDemoRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
   multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
@@ -56,8 +59,13 @@ export class MappedTutorDataComponent implements OnInit {
   canUnmapTutor: boolean = false; 
   canMakeDemoReady: boolean = false;
   canMakePending: boolean = false;
+  canScheduleDemo: boolean = false;
   takeActionActionText: string;
   textMessage: string;
+  isScheduleDemoFormDirty: boolean = false;
+  scheduleDemoFormMaskLoaderHidden: boolean = true;
+  showSheduleDemoForm: boolean = false;
+  showScheduleDemoButton: boolean = false; 
 
   // Modal Variables
   tutorMapperRecord: TutorMapper;
@@ -76,6 +84,8 @@ export class MappedTutorDataComponent implements OnInit {
   selectedIsTutorRejectionValidOption: any[] = [];
   selectedIsClientAgreedOption: any[] = [];
   selectedIsClientRejectionValidOption: any[] = [];
+  scheduleDemoDateModal: string;
+  scheduleDemoTimeModal: string;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.tutorMapperRecord = new TutorMapper();    
@@ -93,11 +103,21 @@ export class MappedTutorDataComponent implements OnInit {
     this.tutorMapperFormMaskLoaderHidden = true;
   }
 
+  private showScheduleDemoFormLoaderMask() {
+    this.scheduleDemoFormMaskLoaderHidden = false;
+  }
+
+  private hideScheduleDemoFormLoaderMask() {
+    this.scheduleDemoFormMaskLoaderHidden = true;
+  }
+
   private setSectionShowParams() {
     this.showForm = this.tutorMapperDataAccess.tutorMapperFormAccess;
     this.showEditControlSection = this.tutorMapperDataAccess.tutorMapperFormAccess && !this.formEditMandatoryDisbaled;
     this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
     this.takeActionDisabled = !this.canUnmapTutor && !this.canMakeDemoReady && !this.canMakePending;
+    this.showSheduleDemoForm = this.tutorMapperDataAccess.scheduleDemoFormAccess && this.canScheduleDemo;
+    this.showScheduleDemoButton = this.showSheduleDemoForm && this.editScheduleDemoRecordForm;
   }
 
   public setFormEditStatus(isEditable: boolean) {
@@ -105,8 +125,14 @@ export class MappedTutorDataComponent implements OnInit {
     this.setSectionShowParams();
   }
 
+  public setScheduleDemoFormStatus(isEditable: boolean) {
+    this.editScheduleDemoRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
   private getTutorMapperGridRecord(tutorMapperSerialId: string) {
     this.showFormLoaderMask();
+    this.showScheduleDemoFormLoaderMask();
     this.showMessage = false;
     const data = {
       parentId: tutorMapperSerialId
@@ -128,6 +154,7 @@ export class MappedTutorDataComponent implements OnInit {
       context.canUnmapTutor = gridRecordObject.additionalProperties['tutorMapperCanUnmapTutor'];
       context.canMakeDemoReady = gridRecordObject.additionalProperties['tutorMapperCanMakeDemoReady'];
       context.canMakePending = gridRecordObject.additionalProperties['tutorMapperCanMakePending'];
+      context.canScheduleDemo = gridRecordObject.additionalProperties['tutorMapperCanScheduleDemo'];
       context.setUpDataModal(gridRecordObject.record);
     } else {
       context.helperService.showAlertDialog({
@@ -168,20 +195,69 @@ export class MappedTutorDataComponent implements OnInit {
     CommonUtilityFunctions.setHTMLInputElementValue('adminClientRejectionValidityResponse', this.tutorMapperRecord.adminClientRejectionValidityResponse);
     CommonUtilityFunctions.setHTMLInputElementValue('adminRemarksForClient', this.tutorMapperRecord.adminRemarksForClient);
     CommonUtilityFunctions.setHTMLInputElementValue('adminActionRemarks', this.tutorMapperRecord.adminActionRemarks);
+    this.scheduleDemoDateModal = CommonUtilityFunctions.getDateForDateMillisParam(new Date().getTime());
+    this.scheduleDemoTimeModal = CommonUtilityFunctions.getTimeForDateMillisParam(new Date().getTime());
     setTimeout(() => {
       this.editRecordForm = false;
+      this.editScheduleDemoRecordForm = false;
       this.setSectionShowParams();
       this.hideFormLoaderMask();
+      this.hideScheduleDemoFormLoaderMask();
     }, 500);
   }
 
+  private updateProperty(key: string, event: any, data_type: string, updatedRecord: any, deselected: boolean = false, isAllOPeration: boolean = false) {
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, updatedRecord, this.tutorMapperRecord, deselected, isAllOPeration);
+  }
+
   updateTutorMapperProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    this.isFormDirty = true;
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorMapperUpdatedRecord, this.tutorMapperRecord, deselected, isAllOPeration);
+    if (!this.isScheduleDemoFormDirty) {
+      this.isFormDirty = true;
+      this.updateProperty(key, event, data_type, this.tutorMapperUpdatedRecord, deselected, isAllOPeration);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the Schedule Demo form do you still want to continue.',
+        onOk: () => {
+          this.isScheduleDemoFormDirty = false;      
+          this.isFormDirty = true;
+          this.updateProperty(key, event, data_type, this.tutorMapperUpdatedRecord, deselected, isAllOPeration);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
   }  
 
   updateTutorMapperRecord() {
+    if (!this.isScheduleDemoFormDirty) {
+      this.updateTutorMapper();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the Schedule Demo form do you still want to continue.',
+        onOk: () => {
+          this.updateTutorMapper();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  private updateTutorMapper() {
     this.showFormLoaderMask();
+    this.showScheduleDemoFormLoaderMask();
     const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.tutorMapperUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
     this.utilityService.makerequest(this, this.onUpdateTutorMapperRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
@@ -197,20 +273,24 @@ export class MappedTutorDataComponent implements OnInit {
     if (response['success']) {
       context.editRecordForm = false;
       context.isFormDirty = false;
+      context.editScheduleDemoRecordForm = false;
+      context.isScheduleDemoFormDirty = false;
       context.getTutorMapperGridRecord(context.tutorMapperSerialId);
     } else {
       context.hideFormLoaderMask();
+      context.hideScheduleDemoFormLoaderMask();
     }
   }
 
   resetTutorMapperRecord() {
-    if (!this.isFormDirty) {
+    if (!this.isFormDirty || !this.isScheduleDemoFormDirty) {
       this.getTutorMapperGridRecord(this.tutorMapperSerialId);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
           this.isFormDirty = false;
+          this.isScheduleDemoFormDirty = false;
           this.getTutorMapperGridRecord(this.tutorMapperSerialId);
         },
         onCancel: () => {
@@ -225,14 +305,93 @@ export class MappedTutorDataComponent implements OnInit {
     }    
   }
 
-  unmapTutorRecord() {
+  updateScheduleDemoProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     if (!this.isFormDirty) {
-      this.unmapTutor();
+      this.isScheduleDemoFormDirty = true;
+      this.updateProperty(key, event, data_type, this.scheduleDemoUpdatedRecord, deselected, isAllOPeration);
     } else {
       this.helperService.showConfirmationDialog({
         message: 'You have unsaved changed on the Update form do you still want to continue.',
         onOk: () => {
           this.isFormDirty = false;
+          this.isScheduleDemoFormDirty = true;      
+          this.updateProperty(key, event, data_type, this.scheduleDemoUpdatedRecord, deselected, isAllOPeration);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  scheduleDemo() {
+    if (!this.isFormDirty) {
+      this.schedule();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        onOk: () => {
+          this.isFormDirty = false;
+          this.schedule();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  private schedule() {
+    this.showFormLoaderMask();
+    this.showScheduleDemoFormLoaderMask();
+    const demoDate: HTMLInputElement = <HTMLInputElement>document.getElementById('demoDate');
+    const demoTime: HTMLInputElement = <HTMLInputElement>document.getElementById('demoTime');
+    if (CommonUtilityFunctions.checkObjectAvailability(demoDate) && CommonUtilityFunctions.checkObjectAvailability(demoTime)) {
+      CommonUtilityFunctions.updateRecordProperty(null, null, 'predefined_value', this.scheduleDemoUpdatedRecord, null, null, null, AppConstants.VARIABLE_LOCAL_TZ_OFFSET_MS);
+      CommonUtilityFunctions.updateRecordProperty('demoDateMillis', demoDate.valueAsNumber.toString(), 'direct_value', this.scheduleDemoUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('demoTimeMillis', demoTime.valueAsNumber.toString(), 'direct_value', this.scheduleDemoUpdatedRecord, null, null, null);
+    }
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.scheduleDemoUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
+    this.utilityService.makerequest(this, this.onScheduleDemo, LcpRestUrls.schedule_demo, 'POST',
+      data, 'multipart/form-data', true);
+  }
+
+  onScheduleDemo(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+    if (response['success']) {
+      context.editRecordForm = false;
+      context.isFormDirty = false;
+      context.editScheduleDemoRecordForm = false;
+      context.isScheduleDemoFormDirty = false;
+      context.getTutorMapperGridRecord(context.tutorMapperSerialId);
+    } else {
+      context.hideFormLoaderMask();
+      context.hideScheduleDemoFormLoaderMask();
+    }
+  }
+
+  unmapTutorRecord() {
+    if (!this.isFormDirty || !this.isScheduleDemoFormDirty) {
+      this.unmapTutor();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {          
           this.unmapTutor();
         },
         onCancel: () => {
@@ -247,11 +406,34 @@ export class MappedTutorDataComponent implements OnInit {
     }
   }
 
+  private getConfirmationMessageForFormsDirty() {
+    let message: string = '';
+    if (this.isFormDirty || this.isScheduleDemoFormDirty) {
+      if (this.isFormDirty) {
+        message += 'You have unsaved changes on the Update form.'
+      }
+      if (CommonUtilityFunctions.checkStringAvailability(message)) {
+        message += '\n';
+      }
+      if (this.isScheduleDemoFormDirty) {
+        message += 'You have unsaved changes on the Schedule Demo form.'
+      }
+      if (CommonUtilityFunctions.checkStringAvailability(message)) {
+        message += '\n';
+        message += 'Do you still want to continue';
+      }
+    }
+    return message;
+  }
+
   private unmapTutor() {
     this.helperService.showConfirmationDialog({
       message: 'Please confirm if you want to un-map this tutor from the Enquiry',
       onOk: () => {
+        this.showFormLoaderMask();
+        this.showScheduleDemoFormLoaderMask();
         this.takeActionActionText = 'unmap'; 
+        this.isFormDirty = false;
         const data = {
           allIdsList: this.tutorMapperRecord.tutorMapperSerialId
         };
@@ -265,14 +447,12 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   takeActionOnTutorMapperRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
-    if (!this.isFormDirty) {
+    if (!this.isFormDirty || !this.isScheduleDemoFormDirty) {
       this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.takeActionActionText = actionText; 
-          this.isFormDirty = false;
           this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
@@ -293,7 +473,10 @@ export class MappedTutorDataComponent implements OnInit {
       titleText: titleText,
       placeholderText: placeholderText,
       onOk: (message) => {
-        this.takeActionActionText = actionText;            
+        this.showFormLoaderMask();
+        this.showScheduleDemoFormLoaderMask();
+        this.takeActionActionText = actionText; 
+        this.isFormDirty = false;            
         const data = {
           allIdsList: this.tutorMapperRecord.tutorMapperSerialId,
           button: actionText,
@@ -322,10 +505,14 @@ export class MappedTutorDataComponent implements OnInit {
         context.textMessage = 'Successfully Unmapped the Tutor Record, please go back to listing to select another record';
       } else {
         context.editRecordForm = false;
+        context.isFormDirty = false;
+        context.editScheduleDemoRecordForm = false;
+        context.isScheduleDemoFormDirty = false;
         context.getTutorMapperGridRecord(context.tutorMapperSerialId);
       }
     } else {
       context.hideFormLoaderMask();
+      context.hideScheduleDemoFormLoaderMask();
     }
   }
 }

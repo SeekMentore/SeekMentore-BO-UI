@@ -65,4 +65,10 @@ export class ActionButton {
   public enable() {
     this.isDisabled = false;
   }
+
+  public setLabel(label: string) {
+    if (GridCommonFunctions.checkStringAvailability(label)) {
+      this.label = label;
+    }
+  }
 }

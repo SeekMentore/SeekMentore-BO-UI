@@ -421,7 +421,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
       context.tutorMapperDataAccess = {
         success: response.success,
         message: response.message,
-        tutorMapperFormAccess: response.tutorMapperFormAccess
+        tutorMapperFormAccess: response.tutorMapperFormAccess,
+        scheduleDemoFormAccess: response.scheduleDemoFormAccess
       };
       context.selectedTutorMapperSerialId = context.interimHoldSelectedTutorMapperSerialId;
       context.toggleVisibilityMappedTutorGrid();
@@ -459,4 +460,5 @@ export interface TutorMapperDataAccess {
   success: boolean;
   message: string;
   tutorMapperFormAccess: boolean;
+  scheduleDemoFormAccess: boolean;
 }

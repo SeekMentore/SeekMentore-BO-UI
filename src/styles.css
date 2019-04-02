@@ -592,6 +592,13 @@ table.form-container-generic-table td.td-label {
   width: 99%;
 }
 
+.form-container-title {
+  line-height: 2.5;
+  margin-left: 36%;
+  font-weight: bold;
+  font-size: 2em;
+}
+
 .textarea_field {
   width: 97.8%;
 }

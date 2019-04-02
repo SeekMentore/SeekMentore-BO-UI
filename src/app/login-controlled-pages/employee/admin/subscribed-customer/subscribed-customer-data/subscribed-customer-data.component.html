@@ -1,51 +1,55 @@
 <div>
-  <app-grid *ngIf="customerDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid"
+  <app-grid *ngIf="subscribedCustomerDataAccess.subscribedCustomerActiveSubscriptionPackageViewAccess" #currentPackagesGrid id="current-packages-grid"
             [gridMetaData]="currentPackagesGridMetaData"></app-grid>
-  <app-grid *ngIf="customerDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
+  <app-grid *ngIf="subscribedCustomerDataAccess.subscribedCustomerHistorySubscriptionPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
             [gridMetaData]="historyPackagesGridMetaData"></app-grid>
   <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
     <input type="text" value="" size="10" name="customerSerialId" id="profileDownload-customerSerialId" />
   </form>
-  <div *ngIf="" class="form-container-div">
-    <form class="form-container" style="max-width: 80%">
-      <div *ngIf="customerDataAccess.formDataEditAccess"
-            class="form-container-toggle-button">
-        <button type="submit"
-            class="btnSubmit"
-            style="width: 140px; height: 46px;"
-            (click)="downloadProfile()">            
-            <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download
-        </button>
-        <label class="tab_container" (change)="editRecordForm = false;">
-          <input type="radio" checked name="editFormChoice">
-          <span class="tab_checkmark left">View</span>
-        </label>
-        <label class="tab_container" (change)="editRecordForm = true;">
-          <input type="radio" name="editFormChoice">
-          <span class="tab_checkmark right">Edit</span>
-        </label>
+  <div *ngIf="showRecordUpdateForm" class="form-container-div">
+    <form *ngIf="showRecordUpdateForm" class="form-container" style="max-width: 80%">
+      <div class="form-container-title">
+        <span>Record Update Form</span>
+      </div>
+      <div class="form-container-toggle-button">
+        <div>
+          <button type="submit"
+              class="btnSubmit"
+              style="width: 100%;"
+              (click)="downloadProfile()">            
+              <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Profile
+          </button>
+        </div>
+        <div *ngIf="showRecordUpdateEditControlSection">
+          <label class="tab_container" (change)="setFormEditStatus(false)">
+            <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="setFormEditStatus(true)">
+            <input type="radio" [checked]="editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
       </div>
       <table class="form-container-generic-table">
         <tr>
+          <td class="td-label"><label>Customer Serial Id</label></td>
+          <td><label class="data">{{customerRecord.customerSerialId}}</label></td>
+        </tr>
+        <tr>
           <td class="td-label"><label>Name</label></td>
-          <td><input class="input_field" type="text" value="{{customerRecord.property['name']}}"
+          <td><input class="input_field" type="text" id="customerName" value="{{customerRecord.name}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('name', $event, 'string')">
+                     (change)="updateSubscribedCustomerProperty('name', $event, 'string')">
           </td>
         </tr>
         <tr>
-          <td class="td-label"><label>Contact Number</label></td>
-          <td><label class="data">{{customerRecord.property['contactNumber']}}</label></td>
-          <!--<td><input class="input_field" type="text" value="{{customerRecord.property['contactNumber']}}"
-                     [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('contactNumber', $event, 'string')"></td>-->
+          <td class="td-label"><label>Primary Contact Number</label></td>
+          <td><label class="data">{{customerRecord.contactNumber}}</label></td>
         </tr>
         <tr>
-          <td class="td-label"><label>Email Id</label></td>
-          <td><label class="data">{{customerRecord.property['emailId']}}</label></td>
-          <!--<td><input class="input_field" type="text" value="{{customerRecord.property['emailId']}}"
-                     [disabled]="!editRecordForm"
-                     (change)="updateCustomerProperty('emailId', $event, 'string')"></td>-->
+          <td class="td-label"><label>Primary Email Id</label></td>
+          <td><label class="data">{{customerRecord.emailId}}</label></td>
         </tr>        
         <tr>
           <td class="td-label"><label>Student Grades</label></td>
@@ -53,10 +57,10 @@
             <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
                                      [(ngModel)]="selectedGradesOptions" name="studentGrades"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('studentGrades', $event, 'multilist')"
-                                     (onDeSelect)="updateCustomerProperty('studentGrades', $event, 'multilist', true)"
-                                     (onDeSelectAll)="updateCustomerProperty('studentGrades', $event, 'multilist', true, true)"
-                                     (onSelectAll)="updateCustomerProperty('studentGrades', $event, 'multilist', false, true)">
+                                     (onSelect)="updateSubscribedCustomerProperty('studentGrades', $event, 'multilist')"
+                                     (onDeSelect)="updateSubscribedCustomerProperty('studentGrades', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateSubscribedCustomerProperty('studentGrades', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateSubscribedCustomerProperty('studentGrades', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -66,10 +70,10 @@
             <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions"
                                      [(ngModel)]="selectedSubjectOptions" name="interestedSubjects"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('interestedSubjects', $event, 'multilist')"
-                                     (onDeSelect)="updateCustomerProperty('interestedSubjects', $event, 'multilist', true)"
-                                     (onDeSelectAll)="updateCustomerProperty('interestedSubjects', $event, 'multilist', true, true)"
-                                     (onSelectAll)="updateCustomerProperty('interestedSubjects', $event, 'multilist', false, true)">
+                                     (onSelect)="updateSubscribedCustomerProperty('interestedSubjects', $event, 'multilist')"
+                                     (onDeSelect)="updateSubscribedCustomerProperty('interestedSubjects', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateSubscribedCustomerProperty('interestedSubjects', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateSubscribedCustomerProperty('interestedSubjects', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -79,8 +83,8 @@
             <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
                                      [(ngModel)]="selectedLocationOption" name="selectedLocation"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateCustomerProperty('location', $event, 'list')"
-                                     (onDeSelect)="updateCustomerProperty('location', $event, 'list', true)">
+                                     (onSelect)="updateSubscribedCustomerProperty('location', $event, 'list')"
+                                     (onDeSelect)="updateSubscribedCustomerProperty('location', $event, 'list', true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -89,39 +93,57 @@
           <td>
               <textarea 
                       class="textarea_field"
+                      id="addressDetails"
                       [disabled]="!editRecordForm" 
-                      (change)="updateCustomerProperty('addressDetails', $event, 'string')"
-                      >{{customerRecord.property['addressDetails']}}</textarea>
+                      (change)="updateSubscribedCustomerProperty('addressDetails', $event, 'string')"
+              >{{customerRecord.addressDetails}}</textarea>
           </td>
         </tr>
         <tr>
           <td class="td-label"><label>Additional Details</label></td>
           <td>
               <textarea 
-                      class="textarea_field"
-                      [disabled]="!editRecordForm" 
-                      (change)="updateCustomerProperty('additionalDetails', $event, 'string')"
-                      >{{customerRecord.property['additionalDetails']}}</textarea>
+                    class="textarea_field"
+                    id="additionalDetails"
+                    [disabled]="!editRecordForm" 
+                    (change)="updateSubscribedCustomerProperty('additionalDetails', $event, 'string')"
+              >{{customerRecord.additionalDetails}}</textarea>
           </td>
         </tr>
         <tr>
           <td class="td-label"><label>User-Id</label></td>        
-          <td><label class="data">{{customerRecord.property['userId']}}</label></td>
+          <td><label class="data">{{customerRecord.userId}}</label></td>
         </tr>
         <tr>
           <td class="td-label"><label>Record Last Updated</label></td>
-          <td><label class="data">{{getDateFromMillis(customerRecord.property['recordLastUpdatedMillis'])}}</label></td>
+          <td><label class="data">{{recordLastUpdatedDateAndTimeDisplay}}</label></td>
         </tr>
         <tr>
           <td class="td-label"><label>Updated By</label></td>        
-          <td><label class="data">{{customerRecord.property['updatedByName']}}</label></td>
+          <td><label class="data">{{customerRecord.updatedByName}}</label></td>
         </tr>
       </table>
-      <button *ngIf="customerDataAccess.formDataEditAccess && editRecordForm" type="submit"
-              class="ok-button form-container-update-button"
-              (click)="updateCustomerRecord()">
-        Update
-      </button>      
+      <table class="form-container-generic-table">
+        <tr>
+          <td align="right">
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="ok-button form-container-update-button"
+                    (click)="updateSubscribedCustomerRecord()">
+              Update Subscribed Customer
+            </button>
+          </td>
+          <td>
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="cancel-button form-container-update-button"
+                    (click)="resetSubscribedCustomerRecord()">
+              Reset Subscribed Customer
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div class="form-mask" id="subscribed-customer-record-update-form-mask-loader" [hidden]="subscribeedCustomerUpdateFormMaskLoaderHidden">
+        <div class="form-loader"></div>
+      </div>
     </form>
   </div>
 </div>

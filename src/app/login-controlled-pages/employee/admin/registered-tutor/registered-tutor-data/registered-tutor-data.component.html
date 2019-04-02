@@ -1,13 +1,15 @@
 <div>
-  <app-grid *ngIf="tutorDataAccess.documentViewAccess" #uploadedDocumentGrid id="uploaded-document-grid"
+  <app-grid *ngIf="tutorDataAccess.documentViewAccess" 
+            #uploadedDocumentGrid id="uploaded-document-grid"
             [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>
   <form id="tutorDocumentDownloadForm" target="ifrDownload" method="post" class="noscreen">
-    <input type="text" value="" size="10" name="documentId" id="tutorDocumentDownloadForm-documentId" />
+    <input type="text" value="" size="10" name="documentSerialId" id="tutorDocumentDownloadForm-documentSerialId" />
   </form>
   <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
-    <input type="text" value="" size="10" name="tutorId" id="profileDownload-tutorId" />
+    <input type="text" value="" size="10" name="tutorSerialId" id="profileDownload-tutorSerialId" />
   </form>
-  <app-grid *ngIf="tutorDataAccess.bankViewAccess" #bankDetailGrid id="bank-detail-grid"
+  <app-grid *ngIf="tutorDataAccess.bankViewAccess" 
+            #bankDetailGrid id="bank-detail-grid"
             [gridMetaData]="bankDetailGridMetaData"></app-grid>
 
   <div *ngIf="renderTutorRecordForm" class="form-container-div">
@@ -39,16 +41,10 @@
         <tr>
           <td class="td-label"><label>Contact Number</label></td>
           <td><label class="data">{{tutorRecord.property['contactNumber']}}</label></td>
-          <!-- <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
-                     [disabled]="!editRecordForm"
-                     (change)="updateTutorProperty('contactNumber', $event, 'string')"></td>-->
         </tr>
         <tr>
           <td class="td-label"><label>Email</label></td>
           <td><label class="data">{{tutorRecord.property['emailId']}}</label></td>
-          <!--<td><input class="input_field" type="text" value="{{tutorRecord.property['emailId']}}"
-                     [disabled]="!editRecordForm"
-                     (change)="updateTutorProperty('emailId', $event, 'string')"></td>-->
         </tr>
         <tr>
           <td class="td-label"><label>Date of Brith</label></td>

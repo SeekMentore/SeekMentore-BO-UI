@@ -3,7 +3,6 @@ import { AppUtilityService } from '../../utils/app-utility.service';
 import { HelperService } from '../../utils/helper.service';
 import { LcpConstants } from "../../utils/lcp-constants";
 import { MultiSelectInputData } from '../../utils/multi-select-input/multi-select-input.component';
-import { AlertDialogEvent } from '../alert-dialog/alert-dialog.component';
 import { ActionButton } from './action-button';
 import { Column } from './column';
 import { Grid } from './grid';
@@ -30,6 +29,9 @@ export class GridComponent implements OnInit, AfterViewInit {
   record_display_input_data: RecordDisplayInputData = null;
   column_extra_data_display_input: ColumnExtraDataDisplayInputData = null;
   grid: Grid;
+  multiSelectHidden: boolean = true;
+  recordDisplayHidden: boolean = true;
+  columnExtraDataDisplayHidden: boolean = true;
 
   @Input()
   gridMetaData: GridDataInterface;
@@ -93,18 +95,49 @@ export class GridComponent implements OnInit, AfterViewInit {
     }, 1000);
   }
 
+  public showGridLoadingMask() {
+      this.grid.maskLoaderHidden = false;
+  }
+
+  public hideGridLoadingMask() {
+      this.grid.maskLoaderHidden = true;
+  }
+
+  public showGridMultiSelect() {
+      this.multiSelectHidden = false;
+  }
+
+  public hideGridMultiSelect() {
+      this.multiSelectHidden = true;
+  }
+
+  public showGridRecordDisplay() {
+      this.multiSelectHidden = false;
+  }
+
+  public hideGridRecordDisplay() {
+      this.multiSelectHidden = true;
+  }
+
+  public showColumnExtraDataDisplay() {
+      this.columnExtraDataDisplayHidden = false;
+  }
+
+  public hideColumnExtraDataDisplay() {
+      this.columnExtraDataDisplayHidden = true;
+  }
+
   public addExtraParams(paramKey: string, paramValue: Object) {
       this.grid.addExtraParams(paramKey, paramValue);
   }
 
   public showMessageOnGridStoreLoadFailure(errorMessage: string) {
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: errorMessage,
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
     return;
   }
 
@@ -114,22 +147,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.grid.loadData(this);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'This is the last page, cannot navigate to next page.',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Paging capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public loadPreviousPage() {
@@ -138,22 +169,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.grid.loadData(this);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'This is the first page, cannot navigate to previous page.',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Paging capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public goToPageNumber(pageNum) {
@@ -162,22 +191,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.grid.loadData(this);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Cannot navigate to Page : "' + pageNum + '". Please enter a page between 1 - ' + this.grid.paginator.totalPages,
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Paging capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public collapseGrid() {
@@ -190,24 +217,22 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public downloadGridData() {
     if (!this.grid.store.downloadGridData(this.grid, this)) {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Download capability not coded',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
   public showGridHelpComponentPopup() {
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Help component unavailable right now',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public applyFilter() {
@@ -227,13 +252,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.hideShowRemoveFilterTab();
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public resetFilter() {
@@ -252,13 +276,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.hideShowRemoveFilterTab();
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public toggleStatePreservedDownload(statePreserved: boolean) {
@@ -274,13 +297,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       sorter.order = sortOrder;
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Sorting capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public sortColumn(column: Column, sortOrder: SortingOrder) {
@@ -301,22 +323,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.grid.sorters.push(new Sorter(column.id + '-sorter', column.dataType, column.mapping, column.id, column.headerName, sortOrder, column.clubbedMapping, column.clubbedProperties));
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have Sorting capability',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Sorting capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public removeSorterFromSorterList(sorter: Sorter) {
@@ -328,13 +348,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Sorting capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public applySorter() {
@@ -346,13 +365,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Sorting capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public resetSorter() {
@@ -365,33 +383,30 @@ export class GridComponent implements OnInit, AfterViewInit {
       }
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Sorting capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
-  public selectionColumnSelectUnselectAll(element: HTMLInputElement) {
+  public selectionColumnSelectUnselectAll() {
     if (this.grid.hasSelectionColumn) {
-      for (const record of this.grid.filtered_records) {
-        const checkBox = document.getElementById('uigrid-' + this.grid.id + '-uigrid-row-grid-record-' + record.id + '-uigrid-cell-select-box' + '-input-checkbox');
-        if (checkBox) {
-          (<HTMLInputElement>checkBox).checked = element.checked;
-        }
+      if (this.grid.selectAllBoxChecked) {
+        this.grid.selectAllBoxChecked = false;
+      } else {
+        this.grid.selectAllBoxChecked = true;
       }
-      this.grid.store.setAllRecordsSelectedOrUnSelected(element.checked);
+      this.grid.store.setAllRecordsSelectedOrUnSelected(this.grid.selectAllBoxChecked);
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have SelectionColumn',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public removeFilterFromColumn(column: Column) {
@@ -408,22 +423,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.hideShowRemoveFilterTab(column);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have Filter capability',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public hideColumn(column: Column) {
@@ -431,13 +444,12 @@ export class GridComponent implements OnInit, AfterViewInit {
       column.hidden = true;
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Column does not have Hide capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public columnFilteredTextChanged(column: Column, element: HTMLInputElement) {
@@ -449,22 +461,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.hideShowRemoveFilterTab(column);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have Filter capability',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public toggleCaseSensitiveSearch(column: Column, caseSensitive: boolean) {
@@ -479,13 +489,12 @@ export class GridComponent implements OnInit, AfterViewInit {
         if (GridCommonFunctions.checkStringAvailability(stringValue)) {
           const numberValue: number = parseInt(stringValue);
           if (isNaN(numberValue)) {
-            const myListener: AlertDialogEvent = {
+            this.helperService.showAlertDialog({
               isSuccess: false,
               message: 'Please provide valid number in ' + field + ' filter for ' + column.headerName,
               onButtonClicked: () => {
               }
-            };
-            this.helperService.showAlertDialog(myListener);
+            });
             return;
           } else {
             if (field === 'GT') {
@@ -515,22 +524,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.hideShowRemoveFilterTab(column);
         return;  
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have Filter capability',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public columnFilteredDateChanged(column: Column, datePickerValue: any, label: HTMLElement, field: string) {
@@ -554,22 +561,20 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.hideShowRemoveFilterTab(column);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have Filter capability',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
   public addListFilterQuery(column: Column) {
@@ -590,38 +595,60 @@ export class GridComponent implements OnInit, AfterViewInit {
         this.hideShowRemoveFilterTab(column);
         return;
       }
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have Filter capability',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have Filter capability',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
   }
 
-  public selectionButtonCheckedUnchecked(record: GridRecord, element: HTMLInputElement) {
+  public selectionButtonCheckedUnchecked(record: GridRecord) {
     if (this.grid.hasSelectionColumn) {
       if (record !== null) {
-        record.selectionModelCheck = element.checked;
+        if (record.selectionModelCheck) {
+          record.selectionModelCheck = false;
+        } else {
+          record.selectionModelCheck = true;
+        }
       }
+      this.setSelectAllState();
       return;
     }
-    const myListener: AlertDialogEvent = {
+    this.helperService.showAlertDialog({
       isSuccess: false,
       message: 'Grid does not have SelectionColumn',
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
+  }
+
+  private setSelectAllState() {
+    let totalSelectedRecords: number = 0;
+    if (GridCommonFunctions.checkNonEmptyList(this.grid.store.data)) {
+      this.grid.store.data.forEach((record) => {
+          if (record.selectionModelCheck) {
+            totalSelectedRecords += 1;
+          }
+      });    
+    }
+    if (totalSelectedRecords === 0) {
+      this.grid.selectAllBoxChecked = false;
+    } else {
+      if (totalSelectedRecords === this.grid.store.totalRecordsOnThisPage) {
+        this.grid.selectAllBoxChecked = true;
+      } else {
+        this.grid.selectAllBoxChecked = false;
+      }
+    }
   }
 
   public refreshGridData() {
@@ -631,13 +658,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   /** REVIEW */
   public showMultiSelectFilter(column: Column, sourceButton: HTMLElement) {
     if (column.filterOptions === null || column.filterOptions.length === 0) {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Column does not have any FilterOptions for List Filter',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
       return;
     }
     const filterData: MultiSelectInputData = {
@@ -680,12 +706,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
   
   public closeMultiSelectInput() {
-    document.getElementById('multi-select-' + this.idForModalPopUp + '-dialog').hidden = true;
+    this.hideGridMultiSelect();
   }  
 
   public showMulitSelectInput(data: MultiSelectInputData) {
     this.mulit_select_input_data = data;
-    document.getElementById('multi-select-' + this.idForModalPopUp + '-dialog').hidden = false;
+    this.showGridMultiSelect();
   }
 
   public displayRecordAsPopUp(titleText: string = 'Record Data', dialogData: any) {
@@ -704,12 +730,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public dismissRecordDisplayPopUp() {
-    document.getElementById('record-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = true;
+    this.hideGridRecordDisplay();
   }
 
   public showRecordDisplayPopUp(recordDisplayInput: RecordDisplayInputData) {
     this.record_display_input_data = recordDisplayInput;
-    document.getElementById('record-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = false;
+    this.showGridRecordDisplay();
   }
 
   public displayColumnExtraDataAsPopUp(titleText: string = 'Column Data', dataText: string, record: GridRecord, column: Column, hasClickEventHandlerAttached: boolean) {   
@@ -725,12 +751,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public dismissColumnExtraDataDisplayPopUp() {
-    document.getElementById('column-extra-data-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = true;
+    this.hideColumnExtraDataDisplay();
   }
 
   public showColumnExtraDataDisplayPopUp(columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData) {
     this.column_extra_data_display_input = columnExtraDataDisplayInput;
-    document.getElementById('column-extra-data-display-pop-up-' + this.idForModalPopUp + '-dialog').hidden = false;
+    this.showColumnExtraDataDisplay();
   }
 
   public handleProceedWithEventOnColumnExtraDataPopUpDismiss(columnExtraDataDisplayInput: ColumnExtraDataDisplayInputData) {
@@ -804,13 +830,12 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (button.eventHandler !== null) {
       button.eventHandler.clickEventActionColumnButton(record, button, this);
     } else {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'No EventHandler defined for "' + button.label.toUpperCase() + '"',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -818,13 +843,12 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (button.eventHandler !== null) {
       button.eventHandler.clickEventSelectionColumnMultipleActionButton(this.grid.getSelectedRecords(), button, this);
     } else {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'No EventHandler defined for "' + button.label.toUpperCase() + '"',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -882,25 +906,21 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   private hideShowRemoveFilterTab(column: Column = null) {
     if (column !== null) {
-      const crossButton = document.getElementById('uigrid-' + this.grid.id + '-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-' + column.id + '-column-header-remove-filter');
       if (column.isFiltered) {
-        crossButton.hidden = false;
+        column.showFilterMarkerIcon();
       } else {
-        crossButton.hidden = true;
+        column.hideFilterMarkerIcon();
         this.resetFilterInputs(column);
         this.resetFilterLabels(column);
       }
     } else {
       for (const column of this.grid.columns) {
-        const crossButton = document.getElementById('uigrid-' + this.grid.id + '-uigrid-column-header-toolbar-uigrid-row-column-name-bar-uigrid-cell-column-' + column.id + '-column-header-remove-filter');
-        if (crossButton) {
-          if (column.isFiltered) {
-            crossButton.hidden = false;
-          } else {
-            crossButton.hidden = true;
-            this.resetFilterInputs(column);
-            this.resetFilterLabels(column);
-          }
+        if (column.isFiltered) {
+          column.showFilterMarkerIcon();
+        } else {
+          column.hideFilterMarkerIcon();
+          this.resetFilterInputs(column);
+          this.resetFilterLabels(column);
         }
       }
     }

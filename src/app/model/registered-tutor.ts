@@ -2,13 +2,20 @@ import { GridCommonFunctions } from "../utils/grid/grid-common-functions";
 import { GridRecord } from "../utils/grid/grid-record";
 import { User } from "./user";
 
-export class SubscribedCustomer extends User {
-	customerSerialId: string;
-	findTutorSerialId: string;
-	studentGrades: string;
+export class RegisteredTutor extends User {
+	tutorSerialId: string;
+	becomeTutorSerialId: string;
+	dateOfBirth: any;
+	gender: string;
+	qualification: string;
+	primaryProfession: string;
+	transportMode: string;
+	teachingExp: number;
+	interestedStudentGrades: string;
 	interestedSubjects: string;
-	location: string;
+	comfortableLocations: string;
 	additionalDetails: string;
+	preferredTeachingType: string;
 	addressDetails: string;
 	isBlacklisted: string;
 	blacklistedRemarks: string;
@@ -24,7 +31,7 @@ export class SubscribedCustomer extends User {
 		super();
 	}
   
-  setValuesFromGridRecord(record: GridRecord) {
+	setValuesFromGridRecord(record: GridRecord) {
 		GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
-  }
+	}
 }

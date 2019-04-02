@@ -130,7 +130,7 @@ export class DemoTrackerDataComponent implements OnInit {
     this.showFormLoaderMask();
     this.showRescheduleFormLoaderMask();
     const data = {
-      parentId: demoSerialId
+      parentSerialId: demoSerialId
     };    
     this.utilityService.makerequest(this, this.onGetDemoGridRecord, LcpRestUrls.get_demo_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
@@ -247,7 +247,7 @@ export class DemoTrackerDataComponent implements OnInit {
   private update() {
     this.showFormLoaderMask();
     this.showRescheduleFormLoaderMask();
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.demoUpdatedRecord, this.demoRecord.demoSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.demoUpdatedRecord, this.demoRecord.demoSerialId);
     this.utilityService.makerequest(this, this.onUpdateDemoRecord, LcpRestUrls.demo_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -325,7 +325,7 @@ export class DemoTrackerDataComponent implements OnInit {
       CommonUtilityFunctions.updateRecordProperty('demoDateMillis', newDemoDate.valueAsNumber.toString(), 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
       CommonUtilityFunctions.updateRecordProperty('demoTimeMillis', newDemoTime.valueAsNumber.toString(), 'direct_value', this.rescheduleUpdatedRecord, null, null, null);
     }
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.rescheduleUpdatedRecord, this.demoRecord.demoSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.rescheduleUpdatedRecord, this.demoRecord.demoSerialId);
     this.utilityService.makerequest(this, this.onRescheduleDemoRecord, LcpRestUrls.re_schedule_demo, 'POST',
       data, 'multipart/form-data', true);
   }

@@ -108,7 +108,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
     this.showFormLoaderMask();
     const data = {
-      parentId: packageAssignmentSerialId
+      parentSerialId: packageAssignmentSerialId
     };    
     this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
@@ -697,7 +697,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
+      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);
       }
@@ -739,7 +739,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
         CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
       }
-      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
+      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);
       }

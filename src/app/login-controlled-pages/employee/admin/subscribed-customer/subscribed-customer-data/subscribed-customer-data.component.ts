@@ -1,16 +1,16 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {AppUtilityService} from 'src/app/utils/app-utility.service';
-import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
-import {HelperService} from 'src/app/utils/helper.service';
-import {SubscribedCustomerDataAccess} from '../subscribed-customer.component';
-import {CommonFilterOptions} from '../../../../../utils/common-filter-options';
-import {LcpRestUrls} from '../../../../../utils/lcp-rest-urls';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
-import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SubscribedCustomer } from 'src/app/model/subscribed-customer';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
+import { CommonFilterOptions } from '../../../../../utils/common-filter-options';
+import { LcpRestUrls } from '../../../../../utils/lcp-rest-urls';
+import { SubscribedCustomerDataAccess } from '../subscribed-customer.component';
 
 @Component({
   selector: 'app-subscribed-customer-data',
@@ -31,11 +31,11 @@ export class SubscribedCustomerDataComponent implements OnInit {
   customerSerialId: string = null;
 
   @Input()
-  customerDataAccess: SubscribedCustomerDataAccess = null;
+  subscribedCustomerDataAccess: SubscribedCustomerDataAccess = null;
 
   customerUpdatedData = {};
 
-  formMandatoryDisbaled = true;
+  formEditMandatoryDisbaled = true;
   editRecordForm = false;
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
@@ -47,59 +47,109 @@ export class SubscribedCustomerDataComponent implements OnInit {
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
   isFormDirty: boolean = false;
-  subscribeedCustomerFormMaskLoaderHidden: boolean = true;
-  showForm: boolean = false;
-  showEditControlSection: boolean = false;
-  showUpdateButton: boolean = false; 
+  subscribeedCustomerUpdateFormMaskLoaderHidden: boolean = true;
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
+  showRecordUpdateButton: boolean = false; 
 
   // Modal Properties
   customerRecord: SubscribedCustomer;
+  recordLastUpdatedDateAndTimeDisplay: string;
   selectedGenderOption: any[] = [];
   selectedLocationOption: any[] = [];
   selectedGradesOptions: any[] = [];
   selectedSubjectOptions: any[] = [];
 
+  dirtyFlagList: string[] = ['RECORD_UPDATE'];
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.currentPackagesGridMetaData = null;
     this.historyPackagesGridMetaData = null;
+    this.customerRecord = new SubscribedCustomer();
   }
 
   ngOnInit() {
-    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.customerRecord.getProperty('location'));
-    this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
-    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
+    this.getSubscribedCustomerGridRecord(this.customerSerialId);
     this.setUpGridMetaData();
   }
 
-  
-
   ngAfterViewInit() {
     setTimeout(() => {
-      if (this.customerDataAccess.activePackageViewAccess) {
-        this.currentPackagesGridObject.init();
-        this.currentPackagesGridObject.addExtraParams('customerSerialId', this.customerSerialId);
-      }
-      if (this.customerDataAccess.historyPackagesViewAccess) {
-        this.historyPackagesGridObject.init();
-        this.historyPackagesGridObject.addExtraParams('customerSerialId', this.customerSerialId);
-      }
-    }, 0);
+      this.currentPackagesGridObject.init();
+      this.currentPackagesGridObject.addExtraParams('customerSerialId', this.customerSerialId);
+      this.historyPackagesGridObject.init();
+      this.historyPackagesGridObject.addExtraParams('customerSerialId', this.customerSerialId);
+    }, 100);
     setTimeout(() => {
-      if (this.customerDataAccess.activePackageViewAccess) {
-        this.currentPackagesGridObject.refreshGridData();
-      }
-      if (this.customerDataAccess.historyPackagesViewAccess) {
-        this.historyPackagesGridObject.refreshGridData();
-      }
-    }, 0);
+      this.currentPackagesGridObject.refreshGridData();
+      this.historyPackagesGridObject.refreshGridData();
+    }, 100);
   }
 
-  private showFormLoaderMask() {
-    this.tutorMapperFormMaskLoaderHidden = false;
+  private showUpdateFormLoaderMask() {
+    this.subscribeedCustomerUpdateFormMaskLoaderHidden = false;
   }
 
-  private hideFormLoaderMask() {
-    this.tutorMapperFormMaskLoaderHidden = true;
+  private hideUpdateFormLoaderMask() {
+    this.subscribeedCustomerUpdateFormMaskLoaderHidden = true;
+  }
+
+  public setFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
+  private setSectionShowParams() {
+    this.showRecordUpdateForm = this.subscribedCustomerDataAccess.subscribedCustomerRecordUpdateAccess;
+    this.showRecordUpdateEditControlSection = this.showRecordUpdateForm && !this.formEditMandatoryDisbaled;
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
+  }
+
+  private getSubscribedCustomerGridRecord(customerSerialId: string) {
+    this.showUpdateFormLoaderMask();
+    const data = {
+      parentSerialId: customerSerialId
+    };    
+    this.utilityService.makerequest(this, this.onSubscribedCustomerGridRecord, LcpRestUrls.get_subscribed_customer_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  onSubscribedCustomerGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['subscribedCustomerFormEditMandatoryDisbaled'];
+      context.setUpDataModal(gridRecordObject.record);
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      });
+    }
+  }
+
+  private setUpDataModal(subscribedCustomerGridRecord: GridRecord) {
+    this.customerRecord.setValuesFromGridRecord(subscribedCustomerGridRecord);
+    this.customerSerialId = this.customerRecord.customerSerialId;
+    this.recordLastUpdatedDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.customerRecord.recordLastUpdatedMillis);
+    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.customerRecord.location);
+    this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.customerRecord.studentGrades);
+    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.customerRecord.interestedSubjects);
+    CommonUtilityFunctions.setHTMLInputElementValue('customerName', this.customerRecord.name);
+    CommonUtilityFunctions.setHTMLInputElementValue('addressDetails', this.customerRecord.addressDetails);
+    CommonUtilityFunctions.setHTMLInputElementValue('additionalDetails', this.customerRecord.additionalDetails);
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.setSectionShowParams();
+      this.hideUpdateFormLoaderMask();
+    }, 500);
   }
 
   public getSubscriptionPackageGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -112,6 +162,14 @@ export class SubscribedCustomerDataComponent implements OnInit {
         restURL: restURL
       },
       columns: [{
+        id: 'subscriptionPackageSerialId',
+        headerName: 'Subscription Package Serial Id',
+        dataType: 'string',
+        mapping: 'subscriptionPackageSerialId',
+        clickEvent: (record: GridRecord, column: Column) => {
+          alert('Open Subscription');
+        }
+      },{
         id: 'tutorName',
         headerName: 'Tutor Name',
         dataType: 'string',
@@ -339,32 +397,110 @@ export class SubscribedCustomerDataComponent implements OnInit {
     };
   }
 
-  updateCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+  updateSubscribedCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    this.isFormDirty = true;
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
   }
 
-  updateCustomerRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.customerUpdatedData, this.customerRecord.customerSerialId);
+  updateSubscribedCustomerRecord() {
+    this.showUpdateFormLoaderMask();
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.customerUpdatedData, this.customerRecord.customerSerialId);
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
   onUpdateCustomerRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
     }
+    if (response['success']) {
+      context.editRecordForm = false;
+      context.isFormDirty = false;
+      context.getSubscribedCustomerGridRecord(context.customerSerialId);
+    } else {
+      context.hideUpdateFormLoaderMask();
+    }
+  }
+
+  resetSubscribedCustomerRecord() {
+    if (!this.isFlagListDirty()) {
+      this.getSubscribedCustomerGridRecord(this.customerSerialId);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.getSubscribedCustomerGridRecord(this.customerSerialId);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
   }
 
   downloadProfile() {
+    this.showUpdateFormLoaderMask();
     const customerSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-customerSerialId');
     customerSerialId.value = this.customerRecord.customerSerialId;
     this.utilityService.submitForm('profileDownloadForm', '/rest/subscribedCustomer/downloadAdminSubscribedCustomerProfilePdf', 'POST');
+    setTimeout(() => {
+      this.hideUpdateFormLoaderMask();
+    }, 4000);
   }
 }

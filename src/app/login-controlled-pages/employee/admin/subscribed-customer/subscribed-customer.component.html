@@ -8,6 +8,9 @@
       class="back-to-listing-button ok-button" (click)="toggleVisibilitySubscribedCustomerGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-subscribed-customer-data [customerRecord]="selectedCustomerRecord" [customerDataAccess]="customerDataAccess"></app-subscribed-customer-data>
+    <app-subscribed-customer-data 
+              [customerSerialId]="selectedCustomerSerialId" 
+              [subscribedCustomerDataAccess]="subscribedCustomerDataAccess">
+    </app-subscribed-customer-data>
   </div>
 </div>

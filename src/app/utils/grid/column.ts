@@ -26,7 +26,7 @@ export class Column {
   isFiltered: boolean = false; // Do not set in constructor
   shouldHide: boolean = false; // Do not set in constructor
   appliedClassNames: string = ''; // Do not set in constructor
-
+  filterMarkerIconHidden: boolean = true;
 
   constructor(
           id: string, 
@@ -92,5 +92,13 @@ export class Column {
 
   public getValueForColumn(record: GridRecord) {
     return record.getProperty(this.mapping);
+  }
+
+  public showFilterMarkerIcon() {
+    this.filterMarkerIconHidden = false;
+  }
+
+  public hideFilterMarkerIcon() {
+    this.filterMarkerIconHidden = true;
   }
 }

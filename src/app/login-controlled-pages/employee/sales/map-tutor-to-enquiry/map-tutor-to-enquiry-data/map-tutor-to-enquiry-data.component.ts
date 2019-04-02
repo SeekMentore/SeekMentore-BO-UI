@@ -208,7 +208,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                   message: 'Please confirm if you want to map the selected tutors to the Enquiry',
                   onOk: () => {
                     const data = {
-                      parentId: this.enquiryRecord.getProperty('enquiryId'),
+                      parentSerialId: this.enquiryRecord.getProperty('enquiryId'),
                       allIdsList: tutorIdsList.join(';')
                     };
                     this.utilityService.makerequest(this, this.handleMappingRequest,
@@ -234,7 +234,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                 message: 'Please confirm if you want to map this tutor to the Enquiry',
                 onOk: () => {
                   const data = {
-                    parentId: this.enquiryRecord.getProperty('enquiryId'),
+                    parentSerialId: this.enquiryRecord.getProperty('enquiryId'),
                     allIdsList: record.getProperty('tutorId')
                   };
                   this.utilityService.makerequest(this, this.handleMappingRequest,

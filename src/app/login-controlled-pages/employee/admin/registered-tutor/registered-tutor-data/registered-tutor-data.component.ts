@@ -154,6 +154,14 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         restURL: restURL
       },
       columns: [{
+        id: 'subscriptionPackageSerialId',
+        headerName: 'Subscription Package Serial Id',
+        dataType: 'string',
+        mapping: 'subscriptionPackageSerialId',
+        clickEvent: (record: GridRecord, column: Column) => {
+          alert('Open Subscription');
+        }
+      },{
         id: 'customerName',
         headerName: 'Customer Name',
         dataType: 'string',
@@ -377,17 +385,22 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           restURL: '/rest/registeredTutor/uploadedDocumentList'
         },
         columns: [{
+          id: 'documentSerialId',
+          headerName: 'Document Serial Id',
+          dataType: 'string',
+          mapping: 'documentSerialId',
+          clickEvent: (record: GridRecord, column: Column) => {
+            const documentSerialIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentSerialId');
+            documentSerialIdElement.value = record.getProperty('documentSerialId');
+            this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadTutorDocument', 'POST');
+          }
+        },{
           id: 'documentType',
           headerName: 'Document Type',
           dataType: 'list',
           filterOptions: CommonFilterOptions.tutorDocumentTypeFilterOptions,
           mapping: 'documentType',
-          renderer: AdminCommonFunctions.tutorDocumentTypeRenderer,
-          clickEvent: (record: GridRecord, column: Column) => {
-            const documentIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentId');
-            documentIdElement.value = record.getProperty('documentId');
-            this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadTutorDocument', 'POST');
-          }
+          renderer: AdminCommonFunctions.tutorDocumentTypeRenderer          
         }, {
           id: 'isApproved',
           headerName: 'Is Approved',
@@ -418,12 +431,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approveMultiple',
             label: 'Approve',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_document_grid_approve, 
                     selectedRecords,
                     'documentId', 
-                    this.uploadedDocumentGridObject,
+                    button,
+                    gridComponentObject,
                     'Enter comments to Approve Documents',
                     'Please provide your comments for approving the documents.',
                     false,
@@ -433,12 +447,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'sendReminderMultiple',
             label: 'Send Reminder',
             btnclass: 'btnReset',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_document_grid_reminder, 
                     selectedRecords,
                     'documentId', 
-                    this.uploadedDocumentGridObject, 
+                    button,
+                    gridComponentObject, 
                     'Enter comments to Send Reminder for Documents',
                     'Please provide your comments for reminding the documents.',
                     false,
@@ -449,12 +464,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'rejectMultiple',
             label: 'Reject',
             btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_document_grid_reject, 
                     selectedRecords,
                     'documentId', 
-                    this.uploadedDocumentGridObject,
+                    button,
+                    gridComponentObject,
                     'Enter comments to Reject Documents',
                     'Please provide your comments for rejecting the documents.',
                     true,
@@ -468,12 +484,18 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approve',
             label: 'Approve',
-            clickEvent: (record: GridRecord, button: ActionButton) => {              
+            securityMapping: {
+              isSecured: true,
+              visible: 'showApprove',
+              enabled: 'enableApprove'              
+            },
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {              
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_document_grid_approve, 
                     [record],
-                    'documentId', 
-                    this.uploadedDocumentGridObject,
+                    'documentSerialId', 
+                    button,
+                    gridComponentObject,
                     'Enter comments to Approve Document',
                     'Please provide your comments for approving the document.',
                     false);
@@ -482,12 +504,18 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'sendReminder',
             label: 'Remind',
             btnclass: 'btnReset',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            securityMapping: {
+              isSecured: true,
+              visible: 'showSendReminder',
+              enabled: 'enableSendReminder'              
+            },
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_document_grid_reminder, 
                     [record],
-                    'documentId', 
-                    this.uploadedDocumentGridObject,
+                    'documentSerialId', 
+                    button,
+                    gridComponentObject,
                     'Enter comments to Send Reminder for Document',
                     'Please provide your comments for reminding the document.',
                     false,
@@ -498,12 +526,18 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'reject',
             label: 'Reject',
             btnclass: 'btnReject',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            securityMapping: {
+              isSecured: true,
+              visible: 'showReject',
+              enabled: 'enableReject'              
+            },
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_document_grid_reject, 
                     [record],
-                    'documentId', 
-                    this.uploadedDocumentGridObject,
+                    'documentSerialId', 
+                    button,
+                    gridComponentObject,
                     'Enter comments to Reject Document',
                     'Please provide your comments for rejecting the document.');
             }
@@ -555,12 +589,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approveMultiple',
             label: 'Approve',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_bank_grid_approve, 
                     selectedRecords,
                     'bankAccountId', 
-                    this.bankDetailGridObject, 
+                    button,
+                    gridComponentObject,
                     'Enter comments to Approve Bank Accounts',
                     'Please provide your comments for approving the accounts.',
                     false,
@@ -571,12 +606,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'rejectMultiple',
             label: 'Reject',
             btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_bank_grid_reject, 
                     selectedRecords,
                     'bankAccountId', 
-                    this.bankDetailGridObject, 
+                    button,
+                    gridComponentObject,
                     'Enter comments to Reject Bank Accounts',
                     'Please provide your comments for rejecting the accounts.',
                     true,
@@ -590,12 +626,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'approve',
             label: 'Approve',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_bank_grid_approve, 
                     [record],
                     'bankAccountId', 
-                    this.bankDetailGridObject,
+                    button,
+                    gridComponentObject,
                     'Enter comments to Approve Bank Account',
                     'Please provide your comments for approving the account.',
                     false);
@@ -604,7 +641,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'makeDefault',
             label: 'Default',
             btnclass: 'btnReset',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               this.helperService.showPromptDialog({
                 required: false,
                 titleText: 'Enter comments to Make Default this Bank Account',
@@ -649,12 +686,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             id: 'reject',
             label: 'Reject',
             btnclass: 'btnReject',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               this.makeRestCallForGridOperation(
                     LcpRestUrls.tutor_bank_grid_reject, 
                     [record],
                     'bankAccountId', 
-                    this.bankDetailGridObject,
+                    button,
+                    gridComponentObject,
                     'Enter comments to Reject Bank Account',
                     'Please provide your comments for rejecting the account.');
             }
@@ -678,10 +716,11 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     };
   }
 
-  makeRestCallForGridOperation(
+  makeRestCallForGridOperation (
           url: string, 
           selectedRecords: GridRecord[], 
-          property: string, 
+          property: string,
+          button: ActionButton, 
           gridComponent: GridComponent, 
           commentPopupTitleText: string,
           commentPopupPlaceholderText: string,
@@ -727,13 +766,12 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
                 });
               } else {
                 if (showAlertMessageAndDoNotRefreshGrid) {
-                  const myListener: AlertDialogEvent = {
+                  this.helperService.showAlertDialog({
                     isSuccess: response['success'],
                     message: response['message'],
                     onButtonClicked: () => {
                     }
-                  };
-                  this.helperService.showAlertDialog(myListener);
+                  });
                 } else {
                   gridComponent.refreshGridData();
                 }
@@ -764,7 +802,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   }
   
   updateTutorRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
     if (this.panCard) {
       data.append('inputFilePANCard', this.panCard);
     }

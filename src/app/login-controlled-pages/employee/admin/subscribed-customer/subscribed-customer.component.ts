@@ -26,16 +26,15 @@ export class SubscribedCustomerComponent implements OnInit {
   subscribedCustomerGridMetaData: GridDataInterface;
 
   showCustomerData = false;
-  selectedCustomerRecord: GridRecord = null;
-  interimHoldSelectedCustomerRecord: GridRecord = null;
-  customerDataAccess: SubscribedCustomerDataAccess = null;
-
+  selectedCustomerSerialId: string = null;
+  interimHoldSelectedCustomerSerialId: string = null;
+  subscribedCustomerDataAccess: SubscribedCustomerDataAccess = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService, private router: Router) {
     this.subscribedCustomerGridMetaData = null;
     this.showCustomerData = false;
-    this.selectedCustomerRecord = null;
-    this.customerDataAccess = null;
+    this.selectedCustomerSerialId = null;
+    this.subscribedCustomerDataAccess = null;
   }
 
   ngOnInit() {
@@ -71,16 +70,16 @@ export class SubscribedCustomerComponent implements OnInit {
         },
         columns: [{
           id: 'customerSerialId',
-          headerName: ' Serial Id',
+          headerName: 'Customer Serial Id',
           dataType: 'string',
           mapping: 'customerSerialId',
           clickEvent: (record: GridRecord, column: Column) => {
             // Open the Data view port
-            this.interimHoldSelectedCustomerRecord = record;
-            if (this.customerDataAccess === null) {
+            this.interimHoldSelectedCustomerSerialId = record.getProperty('customerSerialId');
+            if (this.subscribedCustomerDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
-              this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
+              this.selectedCustomerSerialId = this.interimHoldSelectedCustomerSerialId;
               this.toggleVisibilitySubscribedCustomerGrid();
             }
           }
@@ -92,13 +91,13 @@ export class SubscribedCustomerComponent implements OnInit {
           },
           {
             id: 'contactNumber',
-            headerName: 'Contact Number',
+            headerName: 'Primary Contact Number',
             dataType: 'string',
             mapping: 'contactNumber'
           },
           {
             id: 'emailId',
-            headerName: 'Email Id',
+            headerName: 'Primary Email Id',
             dataType: 'string',
             mapping: 'emailId'
           },
@@ -167,8 +166,8 @@ export class SubscribedCustomerComponent implements OnInit {
             label: 'Blacklist',
             btnclass: 'btnReject',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              const customerIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerId');
-              if (customerIdsList.length === 0) {
+              const customerSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerSerialId');
+              if (customerSerialIdsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
                   message: LcpConstants.grid_generic_no_record_selected_error,
@@ -182,7 +181,7 @@ export class SubscribedCustomerComponent implements OnInit {
                   placeholderText: 'Please provide your comments for blacklisting the customers.',
                   onOk: (message) => {
                     const data = {
-                      allIdsList: customerIdsList.join(';'),
+                      allIdsList: customerSerialIdsList.join(';'),
                       comments: message
                     };
                     this.utilityService.makerequest(this, this.handleBlackListRequest,
@@ -224,15 +223,14 @@ export class SubscribedCustomerComponent implements OnInit {
         }
       });
     } else {
-      context.customerDataAccess = {
+      context.subscribedCustomerDataAccess = {
         success: response.success,
         message: response.message,
-        formDataEditAccess: response.formDataEditAccess,
-        activePackageViewAccess: response.activePackageViewAccess,
-        historyPackagesViewAccess: response.historyPackagesViewAccess,
+        subscribedCustomerRecordUpdateAccess: response.subscribedCustomerRecordUpdateAccess,
+        subscribedCustomerActiveSubscriptionPackageViewAccess: response.subscribedCustomerActiveSubscriptionPackageViewAccess,
+        subscribedCustomerHistorySubscriptionPackagesViewAccess: response.subscribedCustomerHistorySubscriptionPackagesViewAccess,
       };
-
-      context.selectedCustomerRecord = context.interimHoldSelectedCustomerRecord;
+      context.selectedCustomerSerialId = context.interimHoldSelectedCustomerSerialId;
       context.toggleVisibilitySubscribedCustomerGrid();
     }
   }
@@ -240,7 +238,7 @@ export class SubscribedCustomerComponent implements OnInit {
   toggleVisibilitySubscribedCustomerGrid() {
     if (this.showCustomerData === true) {
       this.showCustomerData = false;
-      this.selectedCustomerRecord = null;
+      this.selectedCustomerSerialId = null;
       setTimeout(() => {
         this.subscribedCustomerGridObject.init();
       }, 0);
@@ -258,7 +256,7 @@ export class SubscribedCustomerComponent implements OnInit {
 export interface SubscribedCustomerDataAccess {
   success: boolean;
   message: string;
-  formDataEditAccess: boolean;
-  activePackageViewAccess: boolean;
-  historyPackagesViewAccess: boolean;
+  subscribedCustomerRecordUpdateAccess: boolean;
+  subscribedCustomerActiveSubscriptionPackageViewAccess: boolean;
+  subscribedCustomerHistorySubscriptionPackagesViewAccess: boolean;
 }

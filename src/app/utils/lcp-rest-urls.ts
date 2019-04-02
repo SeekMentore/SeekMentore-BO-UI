@@ -66,4 +66,5 @@ export class LcpRestUrls {
   static get_subscription_package_record = '/rest/sales/getSubscriptionPackageRecord';
   static get_demo_record = '/rest/sales/getDemoRecord';
   static get_tutor_mapper_record = '/rest/sales/getTutorMapperRecord';
+  static get_subscribed_customer_record = '/rest/subscribedCustomer/getSubscribedCustomerRecord';
 }

@@ -161,7 +161,7 @@
           *ngIf="grid.hasSelectionColumn" class="uigrid-cell select_box">
           <input
             id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'+'-input-selectionColumnSelectUnselectAll'}}"
-            title="select all" type="checkbox" (change)="selectionColumnSelectUnselectAll($event.target)">
+            title="select all" type="checkbox" [checked]="grid.selectAllBoxChecked" (change)="selectionColumnSelectUnselectAll()">
         </span>
         <span
           id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-span-uigrid-cell-select_box'}}"
@@ -174,7 +174,7 @@
           <div
             id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'}}"
             *ngIf="!column.hidden" class="column-header">
-            <div hidden
+            <div [hidden]="column.filterMarkerIconHidden"
                  id="{{'uigrid-'+grid.id+'-uigrid-column-header-toolbar'+'-uigrid-row-column-name-bar'+'-uigrid-cell-column-'+column.id+'-column-header'+'-remove-filter'}}"
                  class="column-header-filter" *ngIf="grid.isFilterCapable && column.filterable">
               <div
@@ -381,7 +381,8 @@
         <input
           id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'+'-input-checkbox'}}"
           title="select" type="checkbox"
-          (change)="selectionButtonCheckedUnchecked(record, $event.target)">
+          [checked]="record.selectionModelCheck"
+          (change)="selectionButtonCheckedUnchecked(record)">
       </div>
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'}}"
             class="uigrid-cell select_box" *ngIf="!grid.hasSelectionColumn">
@@ -500,10 +501,12 @@
       <div id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'}}"
            *ngIf="grid.isPagingCapable">
         <i id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-i-loadPreviousPage'}}"
+          *ngIf="!grid.paginator.isFirstPage"
            class="fas fa-arrow-left" style="color: #1E1E1E" (click)="loadPreviousPage()"></i>
         <span id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-span-page-info'}}"
               style="margin: 0 20px"><b>Page {{grid.paginator.totalPages > 0 ? grid.paginator.currentPage : 0}} of {{grid.paginator.totalPages}}</b></span>
         <i id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-div-paging'+'-i-loadNextPage'}}"
+          *ngIf="!grid.paginator.isLastPage"
            class="fas fa-arrow-right" style="color: #1E1E1E" (click)="loadNextPage()"></i>
         <input id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-input-goto-page'}}"
                class="filter_input_field" type="number" #pageNumber placeholder="">
@@ -533,26 +536,26 @@
       </div>
   </div>
   <!--Grid Mask-->
-  <div class="grid-mask" id="{{'uigrid-'+grid.id+'mask-loader'}}" hidden>
+  <div class="grid-mask" id="{{'uigrid-'+grid.id+'mask-loader'}}" [hidden]="grid.maskLoaderHidden">
     <div class="loader"></div>
   </div>
 </div>
 <!--GRID POPUPS-->
 <!--Multi Select Popup Dialog-->
-<div id="{{'multi-select-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
+<div id="{{'multi-select-'+idForModalPopUp+'-dialog'}}" class="dialog" [hidden]="multiSelectHidden">
   <div id="{{'multi-select-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
     <app-multi-select-input [data]="mulit_select_input_data" (apply)="handleMulitSelectApply($event)"
                             (close)="closeMultiSelectInput()" style="width: 100%"></app-multi-select-input>
   </div>
 </div>
 <!--Record Display Popup Dialog-->
-<div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
+<div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" [hidden]="recordDisplayHidden">
   <div id="{{'record-display-pop-up-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
     <app-grid-record-pop-up [recordDisplayInput]="record_display_input_data" (close)="dismissRecordDisplayPopUp()" style="width: 100%"></app-grid-record-pop-up>
   </div>
 </div>
 <!--Column Extra Data Display Popup Dialog-->
-<div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" hidden>
+<div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'}}" class="dialog" [hidden]="columnExtraDataDisplayHidden">
   <div id="{{'column-extra-data-display-pop-up-'+idForModalPopUp+'-dialog'+'-dialog-modal'}}" class="dialog_modal">
     <app-grid-column-extra-data 
                 [columnExtraDataDisplayInput]="column_extra_data_display_input" 

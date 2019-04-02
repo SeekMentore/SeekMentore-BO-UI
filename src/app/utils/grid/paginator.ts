@@ -6,6 +6,8 @@ export class Paginator {
   currentPage: number = -1;
   startRecordNumber: number = -1;
   totalPages: number = -1;
+  isFirstPage: boolean = false;
+  isLastPage: boolean = false;
 
   constructor(id: string, numberOfRecordsPerPage: number = GridConstants.DEFAULT_NUMBER_OF_RECORDS_PER_PAGE) {    
     this.id = id;
@@ -55,6 +57,8 @@ export class Paginator {
 
   public setTotalPages(totalRecords: number) {
     this.totalPages = Math.ceil(totalRecords / this.numberOfRecordsPerPage);
+    this.isFirstPage = this.currentPage === 1;
+    this.isLastPage = this.currentPage === this.totalPages;
     this.computeStartRecordNumber();
   }
 

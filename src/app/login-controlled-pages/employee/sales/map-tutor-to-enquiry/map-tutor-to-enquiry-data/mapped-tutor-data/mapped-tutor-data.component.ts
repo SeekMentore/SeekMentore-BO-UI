@@ -134,7 +134,7 @@ export class MappedTutorDataComponent implements OnInit {
     this.showScheduleDemoFormLoaderMask();
     this.showMessage = false;
     const data = {
-      parentId: tutorMapperSerialId
+      parentSerialId: tutorMapperSerialId
     };    
     this.utilityService.makerequest(this, this.onGetTutorMapperGridRecord, LcpRestUrls.get_tutor_mapper_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
@@ -257,7 +257,7 @@ export class MappedTutorDataComponent implements OnInit {
   private updateTutorMapper() {
     this.showFormLoaderMask();
     this.showScheduleDemoFormLoaderMask();
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.tutorMapperUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.tutorMapperUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
     this.utilityService.makerequest(this, this.onUpdateTutorMapperRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -360,7 +360,7 @@ export class MappedTutorDataComponent implements OnInit {
       CommonUtilityFunctions.updateRecordProperty('demoDateMillis', demoDate.valueAsNumber.toString(), 'direct_value', this.scheduleDemoUpdatedRecord, null, null, null);
       CommonUtilityFunctions.updateRecordProperty('demoTimeMillis', demoTime.valueAsNumber.toString(), 'direct_value', this.scheduleDemoUpdatedRecord, null, null, null);
     }
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.scheduleDemoUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.scheduleDemoUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
     this.utilityService.makerequest(this, this.onScheduleDemo, LcpRestUrls.schedule_demo, 'POST',
       data, 'multipart/form-data', true);
   }

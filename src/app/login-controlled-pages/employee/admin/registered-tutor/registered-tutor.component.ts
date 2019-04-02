@@ -69,30 +69,35 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           }
         },
         columns: [{
+          id: 'customerSerialId',
+          headerName: 'Tutor Serial Id',
+          dataType: 'string',
+          mapping: 'tutorSerialId',
+          clickEvent: (record: GridRecord, column: Column) => {
+            // Open the Data view port
+            this.interimHoldSelectedTutorRecord = record;
+            if (this.tutorDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+            } else {
+              this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
+              this.toggleVisibilityRegisterTutorGrid();
+            }
+          }
+        },{
             id: 'name',
             headerName: 'Name',
             dataType: 'string',
-            mapping: 'name',
-            clickEvent: (record: GridRecord, column: Column) => {
-              // Open the Data view port
-              this.interimHoldSelectedTutorRecord = record;
-              if (this.tutorDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-              } else {
-                this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
-                this.toggleVisibilityRegisterTutorGrid();
-              }
-            }
+            mapping: 'name'
           },
           {
             id: 'contactNumber',
-            headerName: 'Contact Number',
+            headerName: 'Primary Contact Number',
             dataType: 'string',
             mapping: 'contactNumber'
           },
           {
             id: 'emailId',
-            headerName: 'Email Id',
+            headerName: 'Primary Email Id',
             dataType: 'string',
             mapping: 'emailId'
           },

@@ -94,7 +94,7 @@ export class EnquiryDataComponent implements OnInit {
   }
 
   updateEnquiryRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.enquiryUpdatedRecord, this.enquiryRecord.getProperty('enquiryId'));
     this.utilityService.makerequest(this, this.onUpdateEnquiryRecord, LcpRestUrls.enquiry_request_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

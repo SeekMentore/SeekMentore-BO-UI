@@ -38,6 +38,13 @@ export class CommonUtilityFunctions {
     return false;
   }
 
+  public static checkNonEmptyList(object: any[]) {
+    if (CommonUtilityFunctions.checkObjectAvailability(object) && object.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
   public static getDateForDateInputParam(completeDateSignatureInUTC: Date) {
     const dateParam = new Date(completeDateSignatureInUTC);
     let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
@@ -250,10 +257,10 @@ export class CommonUtilityFunctions {
     CKEDITOR.replace(editorId, CkeditorConfig.defaultConfiguration);
   }
   
-  public static encodeFormDataToUpdatedJSONWithParentId(updatedValues: any, parentId: any) {
+  public static encodeFormDataToUpdatedJSONWithParentSerialId(updatedValues: any, parentSerialId: any) {
     const formData = new FormData();
     formData.append('completeUpdatedRecord', JSON.stringify(updatedValues));
-    formData.append('parentId', parentId);
+    formData.append('parentSerialId', parentSerialId);
     return formData;
   }
 

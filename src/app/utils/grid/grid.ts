@@ -31,6 +31,8 @@ export class Grid {
     showOfflineToggle: boolean = false;
     stateExpanded: boolean = true;
     isCollapsable: boolean = true;
+    maskLoaderHidden: boolean = true;
+    selectAllBoxChecked: boolean = false;    
 
     constructor(
         id: string,
@@ -169,6 +171,7 @@ export class Grid {
     public setData() {
         this.filtered_records = this.store.data;
         this.paginator.setTotalPages(this.store.totalRecords);
+        this.store.totalRecordsOnThisPage = this.store.totalRecords > this.paginator.numberOfRecordsPerPage ? this.paginator.numberOfRecordsPerPage : this.store.totalRecords;
     }
 
     public addExtraParams(paramKey: string, paramValue: Object) {
@@ -176,12 +179,12 @@ export class Grid {
     }
 
     public getSelectedRecords() {
-        var selectedRecords = [];
-        for(var i = 0; i<this.store.data.length; i++) {
-            if (this.store.data[i].selectionModelCheck) {
-                selectedRecords.push(this.store.data[i]);
-            }
-        }
+        let selectedRecords: GridRecord[] = [];
+        if (GridCommonFunctions.checkNonEmptyList(this.store.data)) {
+            this.store.data.forEach((record) => {
+                selectedRecords.push(record);
+            });    
+        }        
         return selectedRecords;
-    }
+    }    
 }

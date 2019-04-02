@@ -91,7 +91,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
   private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
     this.showFormLoaderMask();
     const data = {
-      parentId: packageAssignmentSerialId
+      parentSerialId: packageAssignmentSerialId
     };    
     this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
@@ -149,7 +149,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
 
   updateSubscriptionPackageAssignmentRecord() {
     this.showFormLoaderMask();
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord.packageAssignmentSerialId);
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord.packageAssignmentSerialId);
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageAssignmentRecord, LcpRestUrls.subscription_package_assignment_update_record, 'POST',
       data, 'multipart/form-data', true);
   }

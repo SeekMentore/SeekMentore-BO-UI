@@ -14,6 +14,7 @@ export class Store {
   staticData: Object[]; // list of Objects that should be provided in static manner
   restData: Object[]; // list of Objects that should be fetched in REST call
   totalRecords: number = -1;
+  totalRecordsOnThisPage: number = -1;
   extraParams: Object;
   private precall_load: any;
   private postcall_load: any;
@@ -63,10 +64,7 @@ export class Store {
         sorters: (grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null,
         filters: (grid.isFilterCapable) ? JSON.stringify(grid.filters) : null
       };
-      const grid_mask_loader = document.getElementById('uigrid-' + grid.id + 'mask-loader');
-      if (grid_mask_loader) {
-        grid_mask_loader.hidden = false;
-      }
+      gridComponentObject.showGridLoadingMask();
       gridComponentObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', gridComponentObject.utility_service.urlEncodeData(params), 'application/x-www-form-urlencoded').subscribe(
         result => {
           let response = result['response'];
@@ -79,26 +77,20 @@ export class Store {
               this.data = [];
               this.totalRecords = response['totalRecords'];
               this.convertIntoRecordData(this.getRestData());
-              if (grid_mask_loader) {
-                grid_mask_loader.hidden = true;
-              }              
+              gridComponentObject.hideGridLoadingMask();
             } else {
               this.data = [];
               this.totalRecords = 0;
               this.responseError = false;
               this.responseErrorMessage = response['message'];
-              if (grid_mask_loader) {
-                grid_mask_loader.hidden = true;
-              }
+              gridComponentObject.hideGridLoadingMask();
             }
           } else {
             this.data = [];
             this.totalRecords = 0;
             this.responseError = false;
             this.responseErrorMessage = 'NULL response received from server, cannot load data.';
-            if (grid_mask_loader) {
-              grid_mask_loader.hidden = true;
-            }
+            gridComponentObject.hideGridLoadingMask();
           }
           grid.setData();
           if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
@@ -110,9 +102,7 @@ export class Store {
           this.totalRecords = 0;
           this.responseError = true;
           this.responseErrorMessage = 'Communication failure!! Something went wrong.';
-          if (grid_mask_loader) {
-            grid_mask_loader.hidden = true;
-          }
+          gridComponentObject.hideGridLoadingMask();
           grid.setData();
           if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
             this.postcall_load(gridComponentObject);
@@ -193,9 +183,11 @@ export class Store {
     return null;
   }
 
-  public setAllRecordsSelectedOrUnSelected(selected: boolean) {
-    for (const record of this.data) {
-      record.selectionModelCheck = selected;
+  public setAllRecordsSelectedOrUnSelected(selectedState: boolean) {
+    if (GridCommonFunctions.checkNonEmptyList(this.data)) {
+      this.data.forEach((record) => {
+        record.selectionModelCheck = selectedState;
+      });    
     }
   }
 

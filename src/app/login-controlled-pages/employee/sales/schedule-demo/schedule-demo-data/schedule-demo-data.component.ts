@@ -447,7 +447,7 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
   }
 
   updateScheduleDemoMappedTutorRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.scheduleDemoMappedTutorUpdatedRecord, this.mappedTutorRecord.getProperty('tutorMapperId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.scheduleDemoMappedTutorUpdatedRecord, this.mappedTutorRecord.getProperty('tutorMapperId'));
     this.utilityService.makerequest(this, this.onUpdateScheduleDemoMappedTutorRecord, LcpRestUrls.schedule_demo, 'POST',
       data, 'multipart/form-data', true);
   }

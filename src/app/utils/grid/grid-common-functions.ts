@@ -32,6 +32,13 @@ export class GridCommonFunctions {
     return false;
   }
 
+  public static checkNonEmptyList(object: any[]) {
+    if (GridCommonFunctions.checkObjectAvailability(object) && object.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
   /** Common Renderer functions */
   public static renderDateFromMillis(record: GridRecord, column: Column) {
     const datemillisInUTC = column.getValueForColumn(record);

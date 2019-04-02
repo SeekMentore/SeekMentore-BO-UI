@@ -73,9 +73,6 @@ export class SubscriptionPackage {
   
   setValuesFromGridRecord(record: GridRecord) {
 	GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
-	this.customerSerialId = record.getProperty('customerId');
-	this.tutorSerialId = record.getProperty('tutorId');
-	this.enquirySerialId = record.getProperty('enquiryId');
 	this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
 	this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
   }

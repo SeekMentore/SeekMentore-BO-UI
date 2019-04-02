@@ -41,8 +41,5 @@ export class PackageAssignment {
   
   setValuesFromGridRecord(record: GridRecord) {
     GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
-    this.customerSerialId = record.getProperty('customerId');
-    this.tutorSerialId = record.getProperty('tutorId');
-    this.enquirySerialId = record.getProperty('enquiryId');
   }
 }

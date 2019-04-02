@@ -69,22 +69,26 @@ export class SubscribedCustomerComponent implements OnInit {
             url: '/rest/admin/downloadAdminReportSubscribedCustomerList'
           }
         },
-        columns: [
-          {
+        columns: [{
+          id: 'customerSerialId',
+          headerName: ' Serial Id',
+          dataType: 'string',
+          mapping: 'customerSerialId',
+          clickEvent: (record: GridRecord, column: Column) => {
+            // Open the Data view port
+            this.interimHoldSelectedCustomerRecord = record;
+            if (this.customerDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+            } else {
+              this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
+              this.toggleVisibilitySubscribedCustomerGrid();
+            }
+          }
+        }, {
             id: 'name',
             headerName: 'Name',
             dataType: 'string',
-            mapping: 'name',
-            clickEvent: (record: GridRecord, column: Column) => {
-              // Open the Data view port
-              this.interimHoldSelectedCustomerRecord = record;
-              if (this.customerDataAccess === null) {
-                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-              } else {
-                this.selectedCustomerRecord = this.interimHoldSelectedCustomerRecord;
-                this.toggleVisibilitySubscribedCustomerGrid();
-              }
-            }
+            mapping: 'name'
           },
           {
             id: 'contactNumber',

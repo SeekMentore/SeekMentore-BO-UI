@@ -10,6 +10,7 @@ import {LcpRestUrls} from '../../../../../utils/lcp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { SubscribedCustomer } from 'src/app/model/subscribed-customer';
 
 @Component({
   selector: 'app-subscribed-customer-data',
@@ -27,32 +28,36 @@ export class SubscribedCustomerDataComponent implements OnInit {
   historyPackagesGridMetaData: GridDataInterface;
 
   @Input()
-  customerRecord: GridRecord = null;
+  customerSerialId: string = null;
 
   @Input()
   customerDataAccess: SubscribedCustomerDataAccess = null;
 
-  renderCustomerRecordForm = false;
+  customerUpdatedData = {};
 
-  mandatoryDisbaled = true;
-  superAccessAwarded = false;
+  formMandatoryDisbaled = true;
   editRecordForm = false;
+
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   subjectsFilterOptions = CommonFilterOptions.subjectsFilterOptions;
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
-  customerUpdatedData = {};
+  isFormDirty: boolean = false;
+  subscribeedCustomerFormMaskLoaderHidden: boolean = true;
+  showForm: boolean = false;
+  showEditControlSection: boolean = false;
+  showUpdateButton: boolean = false; 
 
+  // Modal Properties
+  customerRecord: SubscribedCustomer;
   selectedGenderOption: any[] = [];
   selectedLocationOption: any[] = [];
   selectedGradesOptions: any[] = [];
   selectedSubjectOptions: any[] = [];
-
-  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
-
-  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.currentPackagesGridMetaData = null;
@@ -60,32 +65,24 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.customerRecord.getProperty('gender'));
     this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.customerRecord.getProperty('location'));
     this.selectedGradesOptions = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.customerRecord.getProperty('studentGrades'));
     this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.customerRecord.getProperty('interestedSubjects'));
     this.setUpGridMetaData();
   }
 
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
-  }
-
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
-  }
+  
 
   ngAfterViewInit() {
     setTimeout(() => {
       if (this.customerDataAccess.activePackageViewAccess) {
         this.currentPackagesGridObject.init();
-        this.currentPackagesGridObject.addExtraParams('customerId', this.customerRecord.getProperty('customerId'));
+        this.currentPackagesGridObject.addExtraParams('customerSerialId', this.customerSerialId);
       }
       if (this.customerDataAccess.historyPackagesViewAccess) {
         this.historyPackagesGridObject.init();
-        this.historyPackagesGridObject.addExtraParams('customerId', this.customerRecord.getProperty('customerId'));
+        this.historyPackagesGridObject.addExtraParams('customerSerialId', this.customerSerialId);
       }
-      this.renderCustomerRecordForm = true;
     }, 0);
     setTimeout(() => {
       if (this.customerDataAccess.activePackageViewAccess) {
@@ -95,6 +92,14 @@ export class SubscribedCustomerDataComponent implements OnInit {
         this.historyPackagesGridObject.refreshGridData();
       }
     }, 0);
+  }
+
+  private showFormLoaderMask() {
+    this.tutorMapperFormMaskLoaderHidden = false;
+  }
+
+  private hideFormLoaderMask() {
+    this.tutorMapperFormMaskLoaderHidden = true;
   }
 
   public getSubscriptionPackageGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -335,11 +340,11 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   updateCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord.property, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
   }
 
   updateCustomerRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.customerUpdatedData, this.customerRecord.getProperty('customerId'));
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentId(this.customerUpdatedData, this.customerRecord.customerSerialId);
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -358,8 +363,8 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   downloadProfile() {
-    const customerId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-customerId');
-    customerId.value = this.customerRecord.getProperty('customerId');
+    const customerSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-customerSerialId');
+    customerSerialId.value = this.customerRecord.customerSerialId;
     this.utilityService.submitForm('profileDownloadForm', '/rest/subscribedCustomer/downloadAdminSubscribedCustomerProfilePdf', 'POST');
   }
 }

@@ -4,9 +4,9 @@
   <app-grid *ngIf="customerDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
             [gridMetaData]="historyPackagesGridMetaData"></app-grid>
   <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
-    <input type="text" value="" size="10" name="customerId" id="profileDownload-customerId" />
+    <input type="text" value="" size="10" name="customerSerialId" id="profileDownload-customerSerialId" />
   </form>
-  <div *ngIf="renderCustomerRecordForm" class="form-container-div">
+  <div *ngIf="" class="form-container-div">
     <form class="form-container" style="max-width: 80%">
       <div *ngIf="customerDataAccess.formDataEditAccess"
             class="form-container-toggle-button">

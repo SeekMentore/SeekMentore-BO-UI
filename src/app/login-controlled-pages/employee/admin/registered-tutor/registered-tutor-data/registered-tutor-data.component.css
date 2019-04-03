@@ -41,12 +41,21 @@ table .input_field {
 }
 
 .attachments {
-  display: flex;
-  flex-direction: row;
   justify-content: space-around;
   padding: 10px;
   margin-top: 10px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   width: 98%;
+  background-color: aliceblue;
+}
+
+.individual-docs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   background-color: aliceblue;
 }

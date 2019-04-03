@@ -26,15 +26,15 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   registeredTutorGridMetaData: GridDataInterface;
 
   showTutorData = false;
-  selectedTutorRecord: GridRecord = null;
-  interimHoldSelectedTutorRecord: GridRecord = null;
-  tutorDataAccess: RegisterTutorDataAccess = null;
+  selectedTutorSerialId: string = null;
+  interimHoldSelectedTutorSerialId: string = null;
+  registeredTutorDataAccess: RegisteredTutorDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
     this.registeredTutorGridMetaData = null;
     this.showTutorData = false;
-    this.selectedTutorRecord = null;
-    this.tutorDataAccess = null;
+    this.selectedTutorSerialId = null;
+    this.registeredTutorDataAccess = null;
   }
 
   ngOnInit() {
@@ -49,11 +49,10 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.registeredTutorGridObject.init();
-    }, 0);
-
+    }, 100);
     setTimeout(() => {
       this.registeredTutorGridObject.refreshGridData();
-    }, 0);
+    }, 100);
   }
 
   public setUpGridMetaData() {
@@ -69,77 +68,68 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           }
         },
         columns: [{
-          id: 'customerSerialId',
-          headerName: 'Tutor Serial Id',
-          dataType: 'string',
-          mapping: 'tutorSerialId',
-          clickEvent: (record: GridRecord, column: Column) => {
-            // Open the Data view port
-            this.interimHoldSelectedTutorRecord = record;
-            if (this.tutorDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-            } else {
-              this.selectedTutorRecord = this.interimHoldSelectedTutorRecord;
-              this.toggleVisibilityRegisterTutorGrid();
+            id: 'tutorSerialId',
+            headerName: 'Tutor Serial Id',
+            dataType: 'string',
+            mapping: 'tutorSerialId',
+            clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+              this.interimHoldSelectedTutorSerialId = column.getValueForColumn(record);
+              if (this.registeredTutorDataAccess === null) {
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+              } else {
+                this.selectedTutorSerialId = this.interimHoldSelectedTutorSerialId;
+                this.toggleVisibilityRegisterTutorGrid();
+              }
             }
-          }
-        },{
+          }, {
             id: 'name',
             headerName: 'Name',
             dataType: 'string',
             mapping: 'name'
-          },
-          {
+          }, {
             id: 'contactNumber',
             headerName: 'Primary Contact Number',
             dataType: 'string',
             mapping: 'contactNumber'
-          },
-          {
+          }, {
             id: 'emailId',
             headerName: 'Primary Email Id',
             dataType: 'string',
             mapping: 'emailId'
-          },
-          {
+          }, {
             id: 'gender',
             headerName: 'Gender',
             dataType: 'list',
             filterOptions: CommonFilterOptions.genderFilterOptions,
             mapping: 'gender',
             renderer: AdminCommonFunctions.genderRenderer
-          },
-          {
+          }, {
             id: 'qualification',
             headerName: 'Qualification',
             dataType: 'list',
             filterOptions: CommonFilterOptions.qualificationFilterOptions,
             mapping: 'qualification',
             renderer: AdminCommonFunctions.qualificationRenderer
-          },
-          {
+          }, {
             id: 'primaryProfession',
             headerName: 'Primary Profession',
             dataType: 'list',
             filterOptions: CommonFilterOptions.primaryProfessionFilterOptions,
             mapping: 'primaryProfession',
             renderer: AdminCommonFunctions.primaryProfessionRenderer
-          },
-          {
+          }, {
             id: 'transportMode',
             headerName: 'Transport Mode',
             dataType: 'list',
             filterOptions: CommonFilterOptions.transportModeFilterOptions,
             mapping: 'transportMode',
             renderer: AdminCommonFunctions.transportModeRenderer
-          },
-          {
+          }, {
             id: 'teachingExp',
             headerName: 'Teaching Experience',
             dataType: 'number',
             mapping: 'teachingExp'
-          },
-          {
+          }, {
             id: 'interestedStudentGrades',
             headerName: 'Interested Student Grades',
             dataType: 'list',
@@ -147,8 +137,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             mapping: 'interestedStudentGrades',
             multiList: true,
             renderer: AdminCommonFunctions.studentGradesMultiRenderer
-          },
-          {
+          }, {
             id: 'interestedSubjects',
             headerName: 'Interested Subjects',
             dataType: 'list',
@@ -156,8 +145,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             mapping: 'interestedSubjects',
             multiList: true,
             renderer: AdminCommonFunctions.subjectsMultiRenderer
-          },
-          {
+          }, {
             id: 'comfortableLocations',
             headerName: 'Comfortable Locations',
             dataType: 'list',
@@ -165,14 +153,13 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
             mapping: 'comfortableLocations',
             multiList: true,
             renderer: AdminCommonFunctions.locationsMultiRenderer
-          },
-          {
+          }, {
             id: 'additionalDetails',
             headerName: 'Additional Details',
             dataType: 'string',
             mapping: 'additionalDetails',
             lengthyData: true
-          },{
+          }, {
             id: 'addressDetails',
             headerName: 'Address Details',
             dataType: 'string',
@@ -184,8 +171,7 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
           buttons: [{
             id: 'sendEmail',
             label: 'Send Email',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              // Refer document
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
               const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
               if (selectedEmailsList.length === 0) {
                 this.helperService.showAlertDialog({
@@ -198,38 +184,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
                 this.helperService.showEmailDialog(selectedEmailsList.join(';'));
               }
             }
-          }, {
-            id: 'blacklist',
-            label: 'Blacklist',
-            btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorId');
-              if (tutorIdsList.length === 0) {
-                this.helperService.showAlertDialog({
-                  isSuccess: false,
-                  message: LcpConstants.grid_generic_no_record_selected_error,
-                  onButtonClicked: () => {
-                  }
-                });
-              } else {
-                this.helperService.showPromptDialog({
-                  required: true,
-                  titleText: 'Enter comments to Blacklist',
-                  placeholderText: 'Please provide your comments for blacklisting the tutors.',
-                  onOk: (message) => {
-                    const data = {
-                      allIdsList: tutorIdsList.join(';'),
-                      comments: message
-                    };
-                    this.utilityService.makerequest(this, this.handleBlackListRequest,
-                      LcpRestUrls.blackList_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                      'application/x-www-form-urlencoded');
-                  },
-                  onCancel: () => {
-                  }
-                });
-              }
-            }
           }]
         }
       },
@@ -237,7 +191,6 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
       hidden: false
     };
   }
-
 
   handleDataAccessRequest(context: any, response: any) {
     if (response['success'] === false) {
@@ -248,62 +201,46 @@ export class RegisteredTutorComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.tutorDataAccess = {
+      context.registeredTutorDataAccess = {
         success: response.success,
         message: response.message,
-        documentViewAccess: response.documentViewAccess,
-        documentHandleAccess: response.documentHandleAccess,
-        bankViewAccess: response.bankViewAccess,
-        bankHandleAccess: response.bankHandleAccess,
-        formDataEditAccess: response.formDataEditAccess,
-        activePackageViewAccess: response.activePackageViewAccess,
-        historyPackagesViewAccess: response.historyPackagesViewAccess,
+        registeredTutorDocumentViewAccess                   : response.registeredTutorDocumentViewAccess,
+        registeredTutorDocumentTakeActionAccess             : response.registeredTutorDocumentTakeActionAccess,
+        registeredTutorBankDetailViewAccess                 : response.registeredTutorBankDetailViewAccess,
+        registeredTutorBankDetailTakeActionAccess           : response.registeredTutorBankDetailTakeActionAccess,
+        registeredTutorRecordUpdateAccess                   : response.registeredTutorRecordUpdateAccess,
+        registeredTutorActiveSubscriptionPackageViewAccess  : response.registeredTutorActiveSubscriptionPackageViewAccess,
+        registeredTutorHistorySubscriptionPackagesViewAccess: response.registeredTutorHistorySubscriptionPackagesViewAccess,
       };
-
-      context.selectedTutorRecord = context.interimHoldSelectedTutorRecord;
+      context.selectedTutorSerialId = context.interimHoldSelectedTutorSerialId;
       context.toggleVisibilityRegisterTutorGrid();
-    }
-  }
-
-  handleBlackListRequest(context: any, response: any) {
-    if (response['success'] === false) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
-    } else {
-      context.registeredTutorGridObject.refreshGridData();
     }
   }
 
   toggleVisibilityRegisterTutorGrid() {
     if (this.showTutorData === true) {
       this.showTutorData = false;
-      this.selectedTutorRecord = null;
+      this.selectedTutorSerialId = null;
       setTimeout(() => {
         this.registeredTutorGridObject.init();
-
-      }, 0);
+      }, 100);
       setTimeout(() => {
         this.registeredTutorGridObject.refreshGridData();
-      }, 0);
-
+      }, 100);
     } else {
       this.showTutorData = true;
     }
   }
 }
 
-export interface RegisterTutorDataAccess {
+export interface RegisteredTutorDataAccess {
   success: boolean;
   message: string;
-  documentViewAccess: boolean;
-  documentHandleAccess: boolean;
-  bankViewAccess: boolean;
-  bankHandleAccess: boolean;
-  formDataEditAccess: boolean;
-  activePackageViewAccess: boolean;
-  historyPackagesViewAccess: boolean;
+  registeredTutorDocumentViewAccess: boolean;
+  registeredTutorDocumentTakeActionAccess: boolean;
+  registeredTutorBankDetailViewAccess: boolean;
+  registeredTutorBankDetailTakeActionAccess: boolean;
+  registeredTutorRecordUpdateAccess: boolean;
+  registeredTutorActiveSubscriptionPackageViewAccess: boolean;
+  registeredTutorHistorySubscriptionPackagesViewAccess: boolean;
 }

@@ -149,7 +149,7 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     return [{
       id: 'sendEmail',
       label: 'Send Email',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
         const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
         if (selectedEmailsList.length === 0) {
           this.helperService.showAlertDialog({

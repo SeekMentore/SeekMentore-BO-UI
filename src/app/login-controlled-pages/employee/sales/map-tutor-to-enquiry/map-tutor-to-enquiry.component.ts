@@ -65,7 +65,7 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         headerName: 'Customer Name',
         dataType: 'string',
         mapping: 'customerName',
-        clickEvent: (record: GridRecord, column: Column) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           this.interimHoldSelectedEnquiryRecord = record;
           if (this.enquiryMappingDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.map_tutor_to_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
@@ -182,7 +182,7 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         buttons: [{
           id: 'sendEmailCustomer',
           label: 'Send Email Customer',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
             // Refer document
             const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerEmail');
             if (selectedEmailsList.length === 0) {

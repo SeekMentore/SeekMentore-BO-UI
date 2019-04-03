@@ -1,12 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
+import { CommonUtilityFunctions } from './common-utility-functions';
 import { EnvironmentConstants } from './environment-constants';
 import { HelperService } from './helper.service';
-import { LcpConstants } from './lcp-constants';
 import { LcpRestUrls } from './lcp-rest-urls';
-import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
-import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,71 +17,85 @@ export class AppUtilityService {
   constructor(private http: HttpClient, private helperService: HelperService, private router: Router) {
   }
 
-  public makeRequestWithoutResponseHandler(url: string,
-                                           requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-                                           data: any = null,
-                                           contentType: string = 'application/json',
-                                           isMultipart: boolean = false,
-                                           params: HttpParams = null) {
-    if (!url.includes('http')) {
-      url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
-    }
+  public makeRequestWithoutResponseHandler (
+    url: string,
+    requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+    data: any = null,
+    contentType: string = 'application/x-www-form-urlencoded',
+    isMultipart: boolean = false,
+    params: HttpParams = null
+  ) {
+    url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType), withCredentials: true};
     if (requestType === 'GET') {
-      if (params != null) {
+      if (CommonUtilityFunctions.checkObjectAvailability(params)) {
         requestOptions['params'] = params;
       }
     } else {
-      if (data != null) {
+      if (CommonUtilityFunctions.checkObjectAvailability(data)) {
         requestOptions['body'] = data;
       }
     }
     return this.http.request(requestType, url, requestOptions);
   }
 
-  public makerequest(context: any,
-                     response_handler: any,
-                     url: string,
-                     requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
-                     data: any = null,
-                     contentType: string = 'application/json',
-                     isMultipart: boolean = false,
-                     params: HttpParams = null) {
-    if (!url.includes('http')) {
-      url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
-    }
+  public makerequest(
+    context: any,
+    response_handler: any,
+    url: string,
+    requestType: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET',
+    data: any = null,
+    contentType: string = 'application/x-www-form-urlencoded',
+    isMultipart: boolean = false,
+    params: HttpParams = null,
+    extraContextProperties: Object = null
+  ) {
+    url = EnvironmentConstants.SERVER_URL + EnvironmentConstants.CONTEXT_PATH + url;
     const requestOptions = {'headers': this.getRequestHeaders(isMultipart, contentType), withCredentials: true};
     if (requestType === 'GET') {
-      if (params != null) {
+      if (CommonUtilityFunctions.checkObjectAvailability(params)) {
         requestOptions['params'] = params;
       }
     } else {
-      if (data != null) {
+      if (CommonUtilityFunctions.checkObjectAvailability(data)) {
         requestOptions['body'] = data;
       }
     }
-
-    this.http.request(requestType, url, requestOptions).subscribe(result => {
+    this.http.request(requestType, url, requestOptions).subscribe(
+    result => {
       let response = result['response'];
-      response = this.decodeObjectFromJSON(response);
-      if (response != null) {
-        response_handler(context, response);
+      if (CommonUtilityFunctions.checkObjectAvailability(response)) {
+        response = this.decodeObjectFromJSON(response);
+        if (CommonUtilityFunctions.checkObjectAvailability(response)) {
+          response_handler(context, response, extraContextProperties);
+        } else {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Null response received from Server' + ' \n ' + 'Please refresh the page, if the issue persists raise a complaint with our Support Team',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      } else {
+        this.helperService.showAlertDialog({
+          isSuccess: false,
+          message: 'Null response received from Server' + ' \n ' + 'Please refresh the page, if the issue persists raise a complaint with our Support Team',
+          onButtonClicked: () => {
+          }
+        });
       }
     }, error2 => {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
-        message: 'Communication failure!! Something went wrong' +'\n' + 'Please refresh the page, if the issue persists raise a complaint with our Support Team',
+        message: 'Communication failure!! Something went wrong' + ' \n ' + 'Please refresh the page, if the issue persists raise a complaint with our Support Team',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
     });
   }
 
   private getRequestHeaders(isMultipart = false, contentType = 'application/json') {
-    let headers: HttpHeaders;
-    const token = localStorage.getItem(LcpConstants.auth_token_key);
-    headers = new HttpHeaders({});
+    let headers: HttpHeaders = new HttpHeaders({});
     if (!isMultipart) {
       headers = headers.append('Content-Type', contentType);
     }
@@ -96,16 +109,14 @@ export class AppUtilityService {
       formElement.method = method;
       formElement.submit();
     } else {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
-        message: 'Form is not valid',
+        message: 'Form to submit is not valid',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
     }
   }
-
 
   public decodeObjectFromJSON(json) {
     return null != json ? JSON.parse(json) : null;
@@ -128,7 +139,7 @@ export class AppUtilityService {
         result => {
           let response = result['response'];
           response = this.decodeObjectFromJSON(response);
-          if (response != null && response['success']) {
+          if (CommonUtilityFunctions.checkObjectAvailability(response) && CommonUtilityFunctions.checkObjectAvailability(response['success']) && response['success']) {
             observer.next(true);
           } else {
             this.router.navigateByUrl(response['redirectTo']);
@@ -136,18 +147,16 @@ export class AppUtilityService {
           }
         },
         error2 => {
-          const myListener: AlertDialogEvent = {
+          this.helperService.showAlertDialog({
             isSuccess: false,
-            message: 'Communication failure!! Error in route checking',
+            message: 'Communication failure!! Something went wrong' + ' \n ' + 'Please refresh the page, if the issue persists raise a complaint with our Support Team',
             onButtonClicked: () => {
             }
-          };
-          this.helperService.showAlertDialog(myListener);
+          });
           observer.next(false);
         }
       );
     });
     return _observable;
   }
-
 }

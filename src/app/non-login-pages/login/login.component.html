@@ -19,5 +19,8 @@
       Login
     </button>
     <span class="button-white-link" routerLink="/public/resetpassword" routerLinkActive="active" style="align-self: flex-start">Forgot Password</span>
+    <div class="form-mask" id="login-form-mask-loader" [hidden]="loginFormMaskLoaderHidden">
+      <div class="form-loader"></div>
+    </div>
   </form>
 </div>

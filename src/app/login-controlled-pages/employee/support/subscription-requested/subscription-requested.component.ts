@@ -142,7 +142,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     return [{
       id: 'sendEmail',
       label: 'Send Email',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
         // Refer document
         const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
         if (selectedEmailsList.length === 0) {
@@ -180,7 +180,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           headerName: 'Name',
           dataType: 'string',
           mapping: 'firstName',
-          renderer: (record: GridRecord, column: Column) => {
+          renderer: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
           },
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {

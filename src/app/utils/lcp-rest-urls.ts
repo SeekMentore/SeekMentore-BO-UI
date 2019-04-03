@@ -67,4 +67,7 @@ export class LcpRestUrls {
   static get_demo_record = '/rest/sales/getDemoRecord';
   static get_tutor_mapper_record = '/rest/sales/getTutorMapperRecord';
   static get_subscribed_customer_record = '/rest/subscribedCustomer/getSubscribedCustomerRecord';
+  static get_registered_tutor_record = '/rest/registeredTutor/getRegisteredTutorRecord';
+  static remove_registered_tutor_document_file = '/rest/registeredTutor/removeRegisteredTutorDocumentFile';
+  static get_registered_tutor_document_count_and_existence = '/rest/registeredTutor/getRegisteredTutorDocumentCountAndExistence';
 }

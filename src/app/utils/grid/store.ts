@@ -1,7 +1,8 @@
-import {GridComponent} from "./grid.component";
-import {GridRecord} from "./grid-record";
-import {Grid} from "./grid";
+import { CommonUtilityFunctions } from "../common-utility-functions";
+import { Grid } from "./grid";
 import { GridCommonFunctions } from "./grid-common-functions";
+import { GridRecord } from "./grid-record";
+import { GridComponent } from "./grid.component";
 
 export class Store {
   id: string;
@@ -16,6 +17,7 @@ export class Store {
   totalRecords: number = -1;
   totalRecordsOnThisPage: number = -1;
   extraParams: Object;
+  customDownloadTimer: number = 5000; // Milliseconds required for the download functionality
   private precall_load: any;
   private postcall_load: any;
   private precall_download: any;
@@ -25,7 +27,8 @@ export class Store {
       id: string, 
       isStatic: boolean = true, 
       restURL: string = null, 
-      downloadURL: string = null, 
+      downloadURL: string = null,
+      customDownloadTimer: number = 5000, 
       precall_load: any = null,
       postcall_load: any = null,
       precall_download: any = null,
@@ -34,6 +37,9 @@ export class Store {
     this.id = id;
     this.restURL = restURL;
     this.downloadURL = downloadURL;
+    if (GridCommonFunctions.checkNonNegativeNonZeroNumberAvailability(customDownloadTimer)) {
+      this.customDownloadTimer = customDownloadTimer;
+    }
     this.precall_load = precall_load;
     this.postcall_load = postcall_load;
     this.precall_download = precall_download;
@@ -43,18 +49,18 @@ export class Store {
     this.extraParams = {};
   }
 
-  public load(grid: Grid, gridComponentObject: GridComponent) {
-    this.setStandardExtraParams(grid, gridComponentObject);
+  public load(gridComponentObject: GridComponent) {
+    let grid: Grid = gridComponentObject.grid;
+    gridComponentObject.showGridLoadingMask();
+    this.setStandardExtraParams(gridComponentObject);
     if (GridCommonFunctions.checkObjectAvailability(this.precall_load)) {
       this.precall_load(gridComponentObject);
     }
     if (this.isStatic) {
       // --> convert staticData into data using convertIntoRecordData
+      this.totalRecords = this.getStaticData().length;
       this.convertIntoRecordData(this.getStaticData());
-      grid.setData();
-      if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
-        this.postcall_load(gridComponentObject);
-      }
+      this.finishLoadingStore(gridComponentObject);
     } else {
       // --> Make a rest call and store the response.data in restData
       const params = {
@@ -64,8 +70,8 @@ export class Store {
         sorters: (grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null,
         filters: (grid.isFilterCapable) ? JSON.stringify(grid.filters) : null
       };
-      gridComponentObject.showGridLoadingMask();
-      gridComponentObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', gridComponentObject.utility_service.urlEncodeData(params), 'application/x-www-form-urlencoded').subscribe(
+      gridComponentObject.utility_service.makeRequestWithoutResponseHandler(this.restURL, 'POST', 
+                            gridComponentObject.utility_service.urlEncodeData(params), 'application/x-www-form-urlencoded').subscribe(
         result => {
           let response = result['response'];
           response = gridComponentObject.utility_service.decodeObjectFromJSON(response);
@@ -77,42 +83,42 @@ export class Store {
               this.data = [];
               this.totalRecords = response['totalRecords'];
               this.convertIntoRecordData(this.getRestData());
-              gridComponentObject.hideGridLoadingMask();
             } else {
               this.data = [];
               this.totalRecords = 0;
-              this.responseError = false;
-              this.responseErrorMessage = response['message'];
-              gridComponentObject.hideGridLoadingMask();
+              this.responseError = true;
+              this.responseErrorMessage = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']);
             }
           } else {
             this.data = [];
             this.totalRecords = 0;
-            this.responseError = false;
+            this.responseError = true;
             this.responseErrorMessage = 'NULL response received from server, cannot load data.';
-            gridComponentObject.hideGridLoadingMask();
           }
-          grid.setData();
-          if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
-            this.postcall_load(gridComponentObject);
-          }
+          this.finishLoadingStore(gridComponentObject);
         },
         error2 => {
           this.data = [];
           this.totalRecords = 0;
           this.responseError = true;
           this.responseErrorMessage = 'Communication failure!! Something went wrong.';
-          gridComponentObject.hideGridLoadingMask();
-          grid.setData();
-          if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
-            this.postcall_load(gridComponentObject);
-          }          
+          this.finishLoadingStore(gridComponentObject);
         }
       );
     }    
   }
 
-  private setStandardExtraParams(grid: Grid, gridComponentObject: GridComponent) {
+  private finishLoadingStore(gridComponentObject: GridComponent) {
+    let grid: Grid = gridComponentObject.grid;
+    grid.setData();
+    if (GridCommonFunctions.checkObjectAvailability(this.postcall_load)) {
+      this.postcall_load(gridComponentObject);
+    }          
+    gridComponentObject.hideGridLoadingMask();
+  }
+
+  private setStandardExtraParams(gridComponentObject: GridComponent) {
+    let grid: Grid = gridComponentObject.grid;
     let hasActionButtons: boolean = (grid.hasActionColumn && grid.actionColumn.buttons.length > 0);
     gridComponentObject.addExtraParams('hasActionButtons', hasActionButtons);
     if (hasActionButtons) {
@@ -125,12 +131,15 @@ export class Store {
     }
   }
 
-  public downloadGridData(grid: Grid, gridComponentObject: GridComponent) {
+  public downloadGridData(gridComponentObject: GridComponent) {
+    let grid: Grid = gridComponentObject.grid;
+    gridComponentObject.showGridLoadingMask();
     if (this.isStatic) {
+      gridComponentObject.hideGridLoadingMask();
       return false;
     } else {
       if (GridCommonFunctions.checkStringAvailability(this.downloadURL)) {
-        this.setStandardExtraParams(grid, gridComponentObject);
+        this.setStandardExtraParams(gridComponentObject);
         if (GridCommonFunctions.checkObjectAvailability(this.precall_download)) {
           this.precall_download(gridComponentObject);
         }
@@ -145,21 +154,27 @@ export class Store {
         sorters.value = (grid.stateExpanded && grid.downloadWithStatePreserved && grid.isSortingCapable) ? JSON.stringify(grid.sorters) : null;
         filters.value = (grid.stateExpanded && grid.downloadWithStatePreserved && grid.isFilterCapable) ? JSON.stringify(grid.filters) : null;
         gridComponentObject.utility_service.submitForm('gridDownloadForm', this.downloadURL, 'POST');
-        if (GridCommonFunctions.checkObjectAvailability(this.postcall_download)) {
-          this.postcall_download(gridComponentObject);
-        }
+        setTimeout(() => {
+          if (GridCommonFunctions.checkObjectAvailability(this.postcall_download)) {
+            this.postcall_download(gridComponentObject);
+          }
+          gridComponentObject.hideGridLoadingMask();
+        }, this.customDownloadTimer);
         return true;
       }
+      gridComponentObject.hideGridLoadingMask();
       return false;
     }
   }
 
   public convertIntoRecordData(objectList: Object[]) {
     const storeRecordIdentifierId = this.id + ((this.isStatic) ? '-Static' : '-Rest');
-    objectList.forEach((value, index) => {
-      const record = new GridRecord(storeRecordIdentifierId + '-R-' + index.toString(), value);
-      this.data.push(record);
-    });
+    if (GridCommonFunctions.checkNonEmptyList(objectList)) {
+      objectList.forEach((value, index) => {
+        const record = new GridRecord(storeRecordIdentifierId + '-R-' + index.toString(), value);
+        this.data.push(record);
+      });
+    }
   }
 
   public setStaticData(objects: Object[]) {

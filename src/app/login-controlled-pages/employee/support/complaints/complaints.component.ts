@@ -95,7 +95,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
           headerName: 'Name',
           dataType: 'string',
           mapping: 'name',
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             // Open the Data view port
             this.interimHoldSelectedComplaintRecord = record;
             if (this.complaintDataAccess === null) {
@@ -155,7 +155,7 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
         buttons: [{
           id: 'sendEmail',
           label: 'Send Email',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
             // Refer document
             const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
             if (selectedEmailsList.length === 0) {

@@ -49,11 +49,10 @@ export class SubscribedCustomerComponent implements OnInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.subscribedCustomerGridObject.init();
-    }, 0);
-
+    }, 100);
     setTimeout(() => {
       this.subscribedCustomerGridObject.refreshGridData();
-    }, 0);
+    }, 100);
   }
 
   public setUpGridMetaData() {
@@ -69,39 +68,35 @@ export class SubscribedCustomerComponent implements OnInit {
           }
         },
         columns: [{
-          id: 'customerSerialId',
-          headerName: 'Customer Serial Id',
-          dataType: 'string',
-          mapping: 'customerSerialId',
-          clickEvent: (record: GridRecord, column: Column) => {
-            // Open the Data view port
-            this.interimHoldSelectedCustomerSerialId = record.getProperty('customerSerialId');
-            if (this.subscribedCustomerDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-            } else {
-              this.selectedCustomerSerialId = this.interimHoldSelectedCustomerSerialId;
-              this.toggleVisibilitySubscribedCustomerGrid();
+            id: 'customerSerialId',
+            headerName: 'Customer Serial Id',
+            dataType: 'string',
+            mapping: 'customerSerialId',
+            clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+              this.interimHoldSelectedCustomerSerialId = column.getValueForColumn(record);
+              if (this.subscribedCustomerDataAccess === null) {
+                this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.customer_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+              } else {
+                this.selectedCustomerSerialId = this.interimHoldSelectedCustomerSerialId;
+                this.toggleVisibilitySubscribedCustomerGrid();
+              }
             }
-          }
-        }, {
+          }, {
             id: 'name',
             headerName: 'Name',
             dataType: 'string',
             mapping: 'name'
-          },
-          {
+          }, {
             id: 'contactNumber',
             headerName: 'Primary Contact Number',
             dataType: 'string',
             mapping: 'contactNumber'
-          },
-          {
+          }, {
             id: 'emailId',
             headerName: 'Primary Email Id',
             dataType: 'string',
             mapping: 'emailId'
-          },
-          {
+          }, {
             id: 'studentGrades',
             headerName: 'Student Grades',
             dataType: 'list',
@@ -109,8 +104,7 @@ export class SubscribedCustomerComponent implements OnInit {
             mapping: 'studentGrades',
             multiList: true,
             renderer: AdminCommonFunctions.studentGradesMultiRenderer
-          },
-          {
+          }, {
             id: 'interestedSubjects',
             headerName: 'Interested Subjects',
             dataType: 'list',
@@ -118,23 +112,20 @@ export class SubscribedCustomerComponent implements OnInit {
             mapping: 'interestedSubjects',
             multiList: true,
             renderer: AdminCommonFunctions.subjectsMultiRenderer
-          },
-          {
+          }, {
             id: 'location',
             headerName: 'Location',
             dataType: 'list',
             filterOptions: CommonFilterOptions.locationsFilterOptions,
             mapping: 'location',
             renderer: AdminCommonFunctions.locationsRenderer
-          },
-          {
+          }, {
             id: 'addressDetails',
             headerName: 'Address Details',
             dataType: 'string',
             mapping: 'addressDetails',
             lengthyData: true
-          },
-          {
+          }, {
             id: 'additionalDetails',
             headerName: 'Additional Details',
             dataType: 'string',
@@ -147,8 +138,7 @@ export class SubscribedCustomerComponent implements OnInit {
           buttons: [{
             id: 'sendEmail',
             label: 'Send Email',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              // Refer document
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
               const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
               if (selectedEmailsList.length === 0) {
                 this.helperService.showAlertDialog({
@@ -161,57 +151,12 @@ export class SubscribedCustomerComponent implements OnInit {
                 this.helperService.showEmailDialog(selectedEmailsList.join(';'));
               }
             }
-          }, {
-            id: 'blacklist',
-            label: 'Blacklist',
-            btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
-              const customerSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerSerialId');
-              if (customerSerialIdsList.length === 0) {
-                this.helperService.showAlertDialog({
-                  isSuccess: false,
-                  message: LcpConstants.grid_generic_no_record_selected_error,
-                  onButtonClicked: () => {
-                  }
-                });
-              } else {
-                this.helperService.showPromptDialog({
-                  required: true,
-                  titleText: 'Enter comments to Blacklist',
-                  placeholderText: 'Please provide your comments for blacklisting the customers.',
-                  onOk: (message) => {
-                    const data = {
-                      allIdsList: customerSerialIdsList.join(';'),
-                      comments: message
-                    };
-                    this.utilityService.makerequest(this, this.handleBlackListRequest,
-                      LcpRestUrls.blackList_subscribed_customers, 'POST', this.utilityService.urlEncodeData(data),
-                      'application/x-www-form-urlencoded');
-                  },
-                  onCancel: () => {
-                  }
-                });
-              }
-            }
           }]
         }
       },
       htmlDomElementId: 'subscribed-customer-grid',
       hidden: false
     };
-  }
-
-  handleBlackListRequest(context: any, response: any) {
-    if (response['success'] === false) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
-    } else {
-      context.subscribedCustomerGridObject.refreshGridData();
-    }
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -226,9 +171,9 @@ export class SubscribedCustomerComponent implements OnInit {
       context.subscribedCustomerDataAccess = {
         success: response.success,
         message: response.message,
-        subscribedCustomerRecordUpdateAccess: response.subscribedCustomerRecordUpdateAccess,
-        subscribedCustomerActiveSubscriptionPackageViewAccess: response.subscribedCustomerActiveSubscriptionPackageViewAccess,
-        subscribedCustomerHistorySubscriptionPackagesViewAccess: response.subscribedCustomerHistorySubscriptionPackagesViewAccess,
+        subscribedCustomerRecordUpdateAccess                      : response.subscribedCustomerRecordUpdateAccess,
+        subscribedCustomerActiveSubscriptionPackageViewAccess     : response.subscribedCustomerActiveSubscriptionPackageViewAccess,
+        subscribedCustomerHistorySubscriptionPackagesViewAccess   : response.subscribedCustomerHistorySubscriptionPackagesViewAccess,
       };
       context.selectedCustomerSerialId = context.interimHoldSelectedCustomerSerialId;
       context.toggleVisibilitySubscribedCustomerGrid();
@@ -241,16 +186,14 @@ export class SubscribedCustomerComponent implements OnInit {
       this.selectedCustomerSerialId = null;
       setTimeout(() => {
         this.subscribedCustomerGridObject.init();
-      }, 0);
+      }, 100);
       setTimeout(() => {
         this.subscribedCustomerGridObject.refreshGridData();
-      }, 0);
-
+      }, 100);
     } else {
       this.showCustomerData = true;
     }
   }
-
 }
 
 export interface SubscribedCustomerDataAccess {

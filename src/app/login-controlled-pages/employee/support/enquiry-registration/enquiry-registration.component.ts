@@ -142,7 +142,7 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     return [{
       id: 'sendEmail',
       label: 'Send Email',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
         // Refer document
         const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
         if (selectedEmailsList.length === 0) {

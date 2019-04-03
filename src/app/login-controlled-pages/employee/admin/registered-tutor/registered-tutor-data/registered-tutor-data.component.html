@@ -1,56 +1,67 @@
 <div>
-  <app-grid *ngIf="tutorDataAccess.documentViewAccess" 
+  <app-grid *ngIf="registeredTutorDataAccess.registeredTutorDocumentViewAccess" 
             #uploadedDocumentGrid id="uploaded-document-grid"
             [gridMetaData]="uploadedDocumentGridMetaData"></app-grid>
+  <app-grid *ngIf="registeredTutorDataAccess.registeredTutorBankDetailViewAccess" 
+            #bankDetailGrid id="bank-detail-grid"
+            [gridMetaData]="bankDetailGridMetaData"></app-grid>
   <form id="tutorDocumentDownloadForm" target="ifrDownload" method="post" class="noscreen">
     <input type="text" value="" size="10" name="documentSerialId" id="tutorDocumentDownloadForm-documentSerialId" />
+    <input type="text" value="" size="10" name="tutorSerialId" id="tutorDocumentDownloadForm-tutorSerialId" />
+    <input type="text" value="" size="10" name="documentType" id="tutorDocumentDownloadForm-documentType" />
   </form>
   <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
     <input type="text" value="" size="10" name="tutorSerialId" id="profileDownload-tutorSerialId" />
-  </form>
-  <app-grid *ngIf="tutorDataAccess.bankViewAccess" 
-            #bankDetailGrid id="bank-detail-grid"
-            [gridMetaData]="bankDetailGridMetaData"></app-grid>
-
-  <div *ngIf="renderTutorRecordForm" class="form-container-div">
-    <form class="form-container" style="max-width: 80%">
-      <div *ngIf="tutorDataAccess.formDataEditAccess"
-            class="form-container-toggle-button">
-        <button type="submit"
-            class="btnSubmit"
-            style="width: 140px; height: 46px;"
-            (click)="downloadProfile()">            
-            <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download
-        </button>
-        <label class="tab_container" (change)="editRecordForm = false;">
-          <input type="radio" checked name="editFormChoice">
-          <span class="tab_checkmark left">View</span>
-        </label>
-        <label class="tab_container" (change)="editRecordForm = true;">
-          <input type="radio" name="editFormChoice">
-          <span class="tab_checkmark right">Edit</span>
-        </label>
+  </form>  
+  <div *ngIf="showRecordUpdateForm" class="form-container-div">
+    <form *ngIf="showRecordUpdateForm" class="form-container" style="max-width: 80%">
+      <div class="form-container-title">
+        <span>Record Update Form</span>
+      </div>
+      <div class="form-container-toggle-button">
+        <div>
+          <button type="submit"
+              class="btnSubmit"
+              style="width: 100%;"
+              (click)="downloadProfile()">            
+              <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Profile
+          </button>
+        </div>
+        <div *ngIf="showRecordUpdateEditControlSection">
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(false)">
+            <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(true)">
+            <input type="radio" [checked]="editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
       </div>
       <table class="form-container-generic-table">
         <tr>
+          <td class="td-label"><label>Tutor Serial Id</label></td>
+          <td><label class="data">{{tutorRecord.tutorSerialId}}</label></td>
+        </tr>
+        <tr>
           <td class="td-label"><label>Name</label></td>
-          <td><input class="input_field" type="text" value="{{tutorRecord.property['name']}}"
-                     [disabled]="!editRecordForm" (change)="updateTutorProperty('name', $event, 'string')">
+          <td><input class="input_field" type="text" id="tutorName" value="{{tutorRecord.name}}"
+                     [disabled]="!editRecordForm" (change)="updateRegisteredTutorProperty('name', $event, 'string')">
           </td>
         </tr>
         <tr>
-          <td class="td-label"><label>Contact Number</label></td>
-          <td><label class="data">{{tutorRecord.property['contactNumber']}}</label></td>
+          <td class="td-label"><label>Primary Contact Number</label></td>
+          <td><label class="data">{{tutorRecord.contactNumber}}</label></td>
         </tr>
         <tr>
-          <td class="td-label"><label>Email</label></td>
-          <td><label class="data">{{tutorRecord.property['emailId']}}</label></td>
+          <td class="td-label"><label>Primay Email Id</label></td>
+          <td><label class="data">{{tutorRecord.emailId}}</label></td>
         </tr>
         <tr>
           <td class="td-label"><label>Date of Brith</label></td>
-          <td><input class="input_field" type="date" value="{{getDateForDateInputParam(tutorRecord.property['dateOfBirth'])}}"
+          <td><input class="input_field" type="date" value="{{dateOfBirthValue}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateTutorProperty('dateOfBirth', $event, 'date')"></td>
+                     (change)="updateRegisteredTutorProperty('dateOfBirth', $event, 'date')"></td>
         </tr>
         <tr>
           <td class="td-label"><label>Gender</label></td>
@@ -58,8 +69,8 @@
             <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
                                      [(ngModel)] = "selectedGenderOption" name="selectedGender"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('gender', $event, 'list')"
-                                     (onDeSelect)="updateTutorProperty('reference', $event, 'list', true)">
+                                     (onSelect)="updateRegisteredTutorProperty('gender', $event, 'list')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('reference', $event, 'list', true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -69,8 +80,8 @@
             <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
                                      [(ngModel)]="selectedQualificationOption" name="qualificationOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('qualification', $event, 'list')"
-                                     (onDeSelect)="updateTutorProperty('qualification', $event, 'list', true)">
+                                     (onSelect)="updateRegisteredTutorProperty('qualification', $event, 'list')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('qualification', $event, 'list', true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -80,8 +91,8 @@
             <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
                                      [(ngModel)]="selectedProfessionOption" name="professionOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('primaryProfession', $event, 'list')"
-                                     (onDeSelect)="updateTutorProperty('primaryProfession', $event, 'list', true)">
+                                     (onSelect)="updateRegisteredTutorProperty('primaryProfession', $event, 'list')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('primaryProfession', $event, 'list', true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -91,16 +102,16 @@
             <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
                                      [(ngModel)] = "selectedTransportOption" name="transportOption"
                                      [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('transportMode', $event, 'list')"
-                                     (onDeSelect)="updateTutorProperty('transportMode', $event, 'list', true)">
+                                     (onSelect)="updateRegisteredTutorProperty('transportMode', $event, 'list')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('transportMode', $event, 'list', true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
         <tr>
           <td class="td-label"><label>Teaching Experience</label></td>
-          <td><input class="input_field" type="number" value="{{tutorRecord.property['teachingExp']}}"
+          <td><input class="input_field" type="number" id="teachingExp" value="{{tutorRecord.teachingExp}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateTutorProperty('teachingExp', $event, 'number')"></td>
+                     (change)="updateRegisteredTutorProperty('teachingExp', $event, 'number')"></td>
         </tr>
         <tr>
           <td class="td-label"><label>Interested Student Grades</label></td>
@@ -108,10 +119,10 @@
             <ng-multiselect-dropdown [placeholder]="'Interested Student Grades'" [data]="studentGradesFilterOptions" name="gradeFilter"
                                      [(ngModel)] = "selectedStudentGrades"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('interestedStudentGrades', $event, 'multilist')"
-                                     (onDeSelect)="updateTutorProperty('interestedStudentGrades', $event, 'multilist', true)"
-                                     (onDeSelectAll)="updateTutorProperty('interestedStudentGrades', $event, 'multilist', true, true)"
-                                     (onSelectAll)="updateTutorProperty('interestedStudentGrades', $event, 'multilist', false, true)">
+                                     (onSelect)="updateRegisteredTutorProperty('interestedStudentGrades', $event, 'multilist')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('interestedStudentGrades', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateRegisteredTutorProperty('interestedStudentGrades', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateRegisteredTutorProperty('interestedStudentGrades', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -121,10 +132,10 @@
             <ng-multiselect-dropdown [placeholder]="'Interested Subjects'" [data]="subjectsFilterOptions" name="subjectFilter"
                                      [(ngModel)] = "selectedSubjectOptions"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('interestedSubjects', $event, 'multilist')"
-                                     (onDeSelect)="updateTutorProperty('interestedSubjects', $event, 'multilist', true)"
-                                     (onDeSelectAll)="updateTutorProperty('interestedSubjects', $event, 'multilist', true, true)"
-                                     (onSelectAll)="updateTutorProperty('interestedSubjects', $event, 'multilist', false, true)">
+                                     (onSelect)="updateRegisteredTutorProperty('interestedSubjects', $event, 'multilist')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('interestedSubjects', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateRegisteredTutorProperty('interestedSubjects', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateRegisteredTutorProperty('interestedSubjects', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -134,10 +145,10 @@
             <ng-multiselect-dropdown [placeholder]="'Comfortable Locations'" [data]="locationsFilterOptions" name="locationFilters"
                                      [(ngModel)] = "selectedLocationOptions"
                                      [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                     (onSelect)="updateTutorProperty('comfortableLocations', $event, 'multilist')"
-                                     (onDeSelect)="updateTutorProperty('comfortableLocations', $event, 'multilist', true)"
-                                     (onDeSelectAll)="updateTutorProperty('comfortableLocations', $event, 'multilist', true, true)"
-                                     (onSelectAll)="updateTutorProperty('comfortableLocations', $event, 'multilist', false, true)">
+                                     (onSelect)="updateRegisteredTutorProperty('comfortableLocations', $event, 'multilist')"
+                                     (onDeSelect)="updateRegisteredTutorProperty('comfortableLocations', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateRegisteredTutorProperty('comfortableLocations', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateRegisteredTutorProperty('comfortableLocations', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
@@ -146,9 +157,10 @@
           <td>
               <textarea 
                       class="textarea_field"
+                      id="additionalDetails"
                       [disabled]="!editRecordForm" 
-                      (change)="updateTutorProperty('additionalDetails', $event, 'string')"
-                      >{{tutorRecord.property['additionalDetails']}}</textarea>
+                      (change)="updateRegisteredTutorProperty('additionalDetails', $event, 'string')"
+                      >{{tutorRecord.additionalDetails}}</textarea>
           </td>
         </tr>
         <tr>
@@ -156,9 +168,10 @@
           <td>
               <textarea 
                       class="textarea_field"
+                      id="addressDetails"
                       [disabled]="!editRecordForm" 
-                      (change)="updateTutorProperty('addressDetails', $event, 'string')"
-                      >{{tutorRecord.property['addressDetails']}}</textarea>
+                      (change)="updateRegisteredTutorProperty('addressDetails', $event, 'string')"
+                      >{{tutorRecord.addressDetails}}</textarea>
           </td>
         </tr>
         <tr>
@@ -167,69 +180,134 @@
             <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
                                       [(ngModel)]="selectedTeachingTypeOptions" name="teachingTypeOptions"
                                       [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                      (onSelect)="updateTutorProperty('preferredTeachingType', $event, 'multilist')"
-                                      (onDeSelect)="updateTutorProperty('preferredTeachingType', $event, 'multilist', true)"
-                                      (onDeSelectAll)="updateTutorProperty('preferredTeachingType', $event, 'multilist', true, true)"
-                                      (onSelectAll)="updateTutorProperty('preferredTeachingType', $event, 'multilist', false, true)">
+                                      (onSelect)="updateRegisteredTutorProperty('preferredTeachingType', $event, 'multilist')"
+                                      (onDeSelect)="updateRegisteredTutorProperty('preferredTeachingType', $event, 'multilist', true)"
+                                      (onDeSelectAll)="updateRegisteredTutorProperty('preferredTeachingType', $event, 'multilist', true, true)"
+                                      (onSelectAll)="updateRegisteredTutorProperty('preferredTeachingType', $event, 'multilist', false, true)">
             </ng-multiselect-dropdown>
           </td>
         </tr>
         <tr>
           <td class="td-label"><label>User-Id</label></td>        
-          <td><label class="data">{{tutorRecord.property['userId']}}</label></td>
+          <td><label class="data">{{tutorRecord.userId}}</label></td>
         </tr>
         <tr>
           <td class="td-label"><label>Record Last Updated</label></td>
-          <td><label class="data">{{getDateFromMillis(tutorRecord.property['recordLastUpdatedMillis'])}}</label></td>
+          <td><label class="data">{{recordLastUpdatedDateAndTimeDisplay}}</label></td>
         </tr>
         <tr>
           <td class="td-label"><label>Updated By</label></td>        
-          <td><label class="data">{{tutorRecord.property['updatedByName']}}</label></td>
+          <td><label class="data">{{tutorRecord.updatedByName}}</label></td>
         </tr>     
       </table>
-
-      <div class="attachments" *ngIf="editRecordForm">
-        <!--Aadhar Card-->
-        <div class="file_chooser_container">
-          <span>Attach Aadhar card:</span>
-          <label for="aadhar_card_file" class="choose_file_container">
-            <input name="id_proof" type="file" accept="file/*" id="aadhar_card_file" [disabled]="!editRecordForm"
-                   (change)="attachFile($event,'aadhar_card')">
-            <span class="button-primary"> Click to Upload </span>
-            <span *ngIf="aadharCard">{{aadharCard.name}}</span>
-          </label>
+      <div class="attachments">
+        <div *ngIf="totalTutorDocumentFiles == 0">
+          <span *ngIf="editRecordForm"><strong>Upload Tutor Documents</strong></span>
+          <span *ngIf="!editRecordForm"><strong>No documents available to download</strong></span>
         </div>
-        <!--Pan Card-->
-        <div class="file_chooser_container">
-          <span>Attach PAN card:</span>
-          <label for="pan_card_file" class="choose_file_container">
-            <input name="id_proof" type="file" accept="file/*" id="pan_card_file" [disabled]="!editRecordForm"
-                   (change)="attachFile($event,'pan_card')">
-            <span class="button-primary"> Click to Upload </span>
-            <span *ngIf="panCard">{{panCard.name}}</span>
-          </label>
-        </div>
-        <!--Photo-->
-        <div class="file_chooser_container">
-          <span>Attach Photo:</span>
-          <label for="photo_file" class="choose_file_container">
-            <input name="id_proof" type="file" accept="file/*" id="photo_file" [disabled]="!editRecordForm"
-                   (change)="attachFile($event,'photo')">
-            <span class="button-primary"> Click to Upload </span>
-            <span *ngIf="photograph">{{photograph.name}}</span>
-          </label>
+        <div *ngIf="totalTutorDocumentFiles > 0">
+          <a href="javascript:void(0);" (click)="downloadAllTutorDocuments()">
+            <i class="fa fa-download" style="padding-right: 15px;"></i>Download All
+          </a>
+          <span *ngIf="editRecordForm"><strong>[Upload Additional Documents]</strong></span>
+        </div>            
+        <div class="individual-docs">
+          <!--Aadhar Card Document-->
+          <div class="file_chooser_container">
+            <div *ngIf="!aadharCardFileExists && editRecordForm">
+              <span>Attach Aadhar Card:</span>
+              <label *ngIf="!aadharCardFile" for="aadhar_card_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="aadhar_card_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'aadharCard')">
+                <span class="button-primary"> Click to Upload </span>              
+              </label>
+              <div *ngIf="aadharCardFile" class="attachment_layout">
+                <span title="{{aadharCardFile.name.split('/').pop()}}" style="cursor: default">{{aadharCardFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('aadharCard')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="aadharCardFileExists">
+              <div style="margin-left: 20%;">Aadhar Card File:</div>
+              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('aadharCard')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('aadharCard')">Download</button>
+            </div>
+            <div *ngIf="!aadharCardFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Aadhar Card File</div>
+            </div>
+          </div>
+          <!--Pan Card Document-->
+          <div class="file_chooser_container">
+            <div *ngIf="!panCardFileExists && editRecordForm">
+              <span>Attach Pan Card:</span>
+              <label *ngIf="!panCardFile" for="pan_card_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="pan_card_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'panCard')">
+                <span class="button-primary"> Click to Upload </span>
+              </label>
+              <div *ngIf="panCardFile" class="attachment_layout">
+                <span title="{{panCardFile.name.split('/').pop()}}" style="cursor: default">{{panCardFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('panCard')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="panCardFileExists">
+              <div style="margin-left: 20%;">Pan Card File:</div>
+              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('panCard')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('panCard')">Download</button>
+            </div>
+            <div *ngIf="!panCardFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Pan Card File</div>
+            </div>
+          </div>
+          <!--Photo Document-->
+          <div class="file_chooser_container">
+            <div *ngIf="!photographFileExists && editRecordForm">
+              <span>Attach Photo:</span>
+              <label *ngIf="!photographFile" for="test_file" class="choose_file_container">
+                <input name="id_proof" type="file" accept="file/*" id="test_file" [disabled]="!editRecordForm"
+                        (change)="attachFile($event,'photo')">
+                <span class="button-primary"> Click to Upload </span>
+              </label>
+              <div *ngIf="photographFile" class="attachment_layout">
+                <span title="{{photographFile.name.split('/').pop()}}" style="cursor: default">{{photographFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
+                <span style="cursor: pointer" (click)="detachFile('photo')">&times;</span>
+              </div>
+            </div>
+            <div *ngIf="photographFileExists">
+              <div style="margin-left: 20%;">Photo File:</div>
+              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('photo')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('photo')">Download</button>
+            </div>
+            <div *ngIf="!photographFileExists && !editRecordForm">
+                <div style="margin-left: 20%;">No Photo File</div>
+            </div>
+          </div>
         </div>
       </div>
-      <button *ngIf="tutorDataAccess.formDataEditAccess && editRecordForm" type="submit"
-              class="ok-button form-container-update-button"
-              (click)="updateTutorRecord()">
-        Update
-      </button>      
+      <table class="form-container-generic-table">
+        <tr>
+          <td align="right">
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="ok-button form-container-update-button"
+                    (click)="updateRegisteredTutorRecord()">
+              Update Registered Tutor
+            </button>
+          </td>
+          <td>
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="cancel-button form-container-update-button"
+                    (click)="resetRegisteredTutorRecord()">
+              Reset Registered Tutor
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div class="form-mask" id="registered--tutor-record-update-form-mask-loader" [hidden]="registeredTutorUpdateFormMaskLoaderHidden">
+        <div class="form-loader"></div>
+      </div>     
     </form>
   </div>
-
-  <app-grid *ngIf="tutorDataAccess.activePackageViewAccess" #currentPackagesGrid id="current-packages-grid"
+  <app-grid *ngIf="registeredTutorDataAccess.registeredTutorActiveSubscriptionPackageViewAccess" #currentPackagesGrid id="current-packages-grid"
             [gridMetaData]="currentPackagesGridMetaData"></app-grid>
-  <app-grid *ngIf="tutorDataAccess.historyPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
+  <app-grid *ngIf="registeredTutorDataAccess.registeredTutorHistorySubscriptionPackagesViewAccess" #historyPackagesGrid id="history-packages-grid"
             [gridMetaData]="historyPackagesGridMetaData"></app-grid>
 </div>

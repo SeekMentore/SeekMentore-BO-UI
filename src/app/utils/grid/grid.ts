@@ -24,7 +24,7 @@ export class Grid {
     filters: Filter[] = [];
     columns: Column[];
     store: Store;
-    filtered_records: GridRecord[] = [];
+    filteredRecords: GridRecord[] = [];
     downloadWithStatePreserved: boolean;
     offline: boolean;
     showDownload: boolean = false;
@@ -57,6 +57,7 @@ export class Grid {
       this.store = null;
       if (GridCommonFunctions.checkObjectAvailability(storeMetaData)) {
           let downloadURL: string = null;
+          let customDownloadTimer: number = null;
           let precall_load: any = null;
           let postcall_load: any = null;
           let precall_download: any = null;
@@ -72,6 +73,9 @@ export class Grid {
             if (GridCommonFunctions.checkStringAvailability(downloadURL)) {
                 this.showDownload = true;
             }
+            if (GridCommonFunctions.checkNonNegativeNonZeroNumberAvailability(storeMetaData.download.timer)) {
+                customDownloadTimer = storeMetaData.download.timer;
+            }
             if (GridCommonFunctions.checkObjectAvailability(storeMetaData.download.preDownload)) {
                 precall_download = storeMetaData.download.preDownload;
             }
@@ -84,6 +88,7 @@ export class Grid {
                             storeMetaData.isStatic, 
                             storeMetaData.restURL, 
                             downloadURL, 
+                            customDownloadTimer,
                             precall_load,
                             postcall_load,
                             precall_download,
@@ -164,14 +169,21 @@ export class Grid {
       this.downloadWithStatePreserved = false;
     }
 
-    public loadData(gridObject: GridComponent) {
-        this.store.load(this, gridObject);
+    public loadData(gridComponentObject: GridComponent) {
+        this.store.load(gridComponentObject);
     }
 
     public setData() {
-        this.filtered_records = this.store.data;
+        this.filteredRecords = this.store.data;
         this.paginator.setTotalPages(this.store.totalRecords);
-        this.store.totalRecordsOnThisPage = this.store.totalRecords > this.paginator.numberOfRecordsPerPage ? this.paginator.numberOfRecordsPerPage : this.store.totalRecords;
+        this.store.totalRecordsOnThisPage = this.store.totalRecords;
+        if (this.paginator.totalPages > 0) {
+            if (this.paginator.isLastPage) {
+                this.store.totalRecordsOnThisPage = (this.store.totalRecords - ((this.paginator.currentPage - 1) * this.paginator.numberOfRecordsPerPage));
+            } else {
+                this.store.totalRecordsOnThisPage = this.paginator.numberOfRecordsPerPage;
+            }
+        }
     }
 
     public addExtraParams(paramKey: string, paramValue: Object) {

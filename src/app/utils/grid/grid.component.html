@@ -374,7 +374,7 @@
       </div>
     </div>
     <!--Grid Records-->
-    <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id}}" *ngFor="let record of grid.filtered_records"
+    <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id}}" *ngFor="let record of grid.filteredRecords"
          class="uigrid-row">
       <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-'+record.id+'-uigrid-cell-select-box'}}"
             class="uigrid-cell select_box" *ngIf="grid.hasSelectionColumn">
@@ -463,7 +463,7 @@
         </span>
       </div>
     </div>
-    <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-no-record'}}" *ngIf="!(grid.filtered_records.length > 0)"
+    <div id="{{'uigrid-'+grid.id+'-uigrid-row-grid-record-no-record'}}" *ngIf="!(grid.filteredRecords.length > 0)"
          class="uigrid-row" style="height: 60px">
         <span class="uigrid-cell" style="line-height: 60px; font-weight: 600; border: 0px !important;">
             <i style="cursor: default; color: #7f7f7f">No Records</i>
@@ -509,8 +509,10 @@
           *ngIf="!grid.paginator.isLastPage"
            class="fas fa-arrow-right" style="color: #1E1E1E" (click)="loadNextPage()"></i>
         <input id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-input-goto-page'}}"
+              [hidden]="!grid.paginator.hasAnyPage"
                class="filter_input_field" type="number" #pageNumber placeholder="">
         <button id="{{'uigrid-'+grid.id+'-uigrid-pagination-toolbar'+'-uigrid-cell'+'-button-goToPageNumber'}}"
+              [hidden]="!grid.paginator.hasAnyPage"
                 class="uigrid-green-button" (click)="goToPageNumber(pageNumber.value)">Go to page
         </button>
       </div>

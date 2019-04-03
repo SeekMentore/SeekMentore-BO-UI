@@ -5,7 +5,7 @@ import { User } from "./user";
 export class RegisteredTutor extends User {
 	tutorSerialId: string;
 	becomeTutorSerialId: string;
-	dateOfBirth: any;
+	dateOfBirth: any; // Date signature property
 	gender: string;
 	qualification: string;
 	primaryProfession: string;

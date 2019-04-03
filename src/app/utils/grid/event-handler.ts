@@ -19,13 +19,13 @@ export class EventHandler {
     }
   }
 
-  public clickEventActionColumnButton(record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) {
+  public clickEventActionColumnActionButton(record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) {
     if (GridCommonFunctions.checkObjectAvailability(this.callback_clickEvent)) {
       this.callback_clickEvent(record, button, gridComponentObject);
     }
   }
 
-  public clickEventSelectionColumnMultipleActionButton(selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) {
+  public clickEventSelectionColumnActionButton(selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) {
     if (GridCommonFunctions.checkObjectAvailability(this.callback_clickEvent)) {
       this.callback_clickEvent(selectedRecords, button, gridComponentObject);
     }

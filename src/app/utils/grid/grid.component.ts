@@ -187,10 +187,10 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public goToPageNumber(pageNum) {
     if (this.grid.isPagingCapable) {
-      if (this.grid.paginator.navigateToPage(pageNum)) {
+      if (GridCommonFunctions.checkNonNegativeNonZeroNumberAvailability(pageNum) && this.grid.paginator.navigateToPage(pageNum)) {
         this.grid.loadData(this);
         return;
-      }
+      }      
       this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Cannot navigate to Page : "' + pageNum + '". Please enter a page between 1 - ' + this.grid.paginator.totalPages,
@@ -216,7 +216,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   public downloadGridData() {
-    if (!this.grid.store.downloadGridData(this.grid, this)) {
+    if (!this.grid.store.downloadGridData(this)) {
       this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Download capability not coded',
@@ -828,7 +828,7 @@ export class GridComponent implements OnInit, AfterViewInit {
    */
   public actionColumnActionButtonClicked(record: GridRecord, button: ActionButton) {
     if (button.eventHandler !== null) {
-      button.eventHandler.clickEventActionColumnButton(record, button, this);
+      button.eventHandler.clickEventActionColumnActionButton(record, button, this);
     } else {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -841,7 +841,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   public selectionColumnActionButtonClicked(button: ActionButton) {
     if (button.eventHandler !== null) {
-      button.eventHandler.clickEventSelectionColumnMultipleActionButton(this.grid.getSelectedRecords(), button, this);
+      button.eventHandler.clickEventSelectionColumnActionButton(this.grid.getSelectedRecords(), button, this);
     } else {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -1012,7 +1012,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   * Offline Sorting
   */
   private sortRowRecordData() {
-    this.grid.filtered_records.sort((a, b) => {
+    this.grid.filteredRecords.sort((a, b) => {
       for (const sorter of this.grid.sorters) {
         const propertyA = a.getProperty(sorter.mapping);
         const propertyB = b.getProperty(sorter.mapping);
@@ -1040,7 +1040,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   * Offline Filtering
   */
   private filterRecords() {
-    this.grid.filtered_records = [];
+    this.grid.filteredRecords = [];
     for (let i = 0; i < this.grid.store.data.length; i++) {
       let rowMatchesQuery = true;
       const record_instance = this.grid.store.data[i];
@@ -1096,7 +1096,7 @@ export class GridComponent implements OnInit, AfterViewInit {
         }
       }
       if (rowMatchesQuery) {
-        this.grid.filtered_records.push(record_instance);
+        this.grid.filteredRecords.push(record_instance);
       }
     }
   }

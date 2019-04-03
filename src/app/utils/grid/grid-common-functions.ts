@@ -32,6 +32,20 @@ export class GridCommonFunctions {
     return false;
   }
 
+  public static checkNonNegativeNumberAvailability(object: number) {
+    if (GridCommonFunctions.checkObjectAvailability(object)) {
+      return object >= 0;
+    }    
+    return false;
+  }
+
+  public static checkNonNegativeNonZeroNumberAvailability(object: number) {
+    if (GridCommonFunctions.checkObjectAvailability(object)) {
+      return object > 0;
+    }    
+    return false;
+  }
+
   public static checkNonEmptyList(object: any[]) {
     if (GridCommonFunctions.checkObjectAvailability(object) && object.length > 0) {
       return true;

@@ -12,13 +12,14 @@ import { NlpRestUrls } from '../../utils/nlp-rest-urls';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  username;
-  password;
-  userType = '';
+  username: string;
+  password: string;
+  userType: string = '';
   errorAjaxResponse: string;
   errorUsername: string;
   errorPassword: string;
   errorUserType: string;
+  loginFormMaskLoaderHidden: boolean = true;
 
   constructor(private helperService: HelperService, private utilityService: AppUtilityService, private router: Router) {
     this.resetErrorMessages();
@@ -34,8 +35,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  private showLoginFormLoaderMask() {
+    this.loginFormMaskLoaderHidden = false;
+  }
+
+  private hideLoginFormLoaderMask() {
+    this.loginFormMaskLoaderHidden = true;
+  }
+
   login() {
+    this.showLoginFormLoaderMask();
     if (this.isValidLoginData() === false) {
+      this.hideLoginFormLoaderMask();
       return;
     }
     const data = {
@@ -43,7 +54,6 @@ export class LoginComponent implements OnInit {
       password: this.password,
       userType: this.userType
     };
-
     this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.login_url, 'POST',
       this.utilityService.urlEncodeData(data),
       'application/x-www-form-urlencoded');
@@ -52,7 +62,6 @@ export class LoginComponent implements OnInit {
   isValidLoginData(): boolean {
     let isValidData = true;
     this.resetErrorMessages();
-
     if (!this.username || this.username === '') {
       this.errorUsername = NlpConstants.enter_username;
       isValidData = false;
@@ -65,7 +74,6 @@ export class LoginComponent implements OnInit {
       this.errorUserType = NlpConstants.select_usertype;
       isValidData = false;
     }
-
     return isValidData;
   }
 
@@ -78,10 +86,12 @@ export class LoginComponent implements OnInit {
 
   onSuccess(context: any, response: any) {
     if (response['success'] === true) {
+      context.hideLoginFormLoaderMask();
       localStorage.setItem(LcpConstants.user_type_key, context.userType);
       context.router.navigateByUrl('/user/home');
     } else {
       context.errorAjaxResponse = response['message'];
+      context.hideLoginFormLoaderMask();
     }
   }
 }

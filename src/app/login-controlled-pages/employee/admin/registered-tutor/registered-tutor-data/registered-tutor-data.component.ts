@@ -1,18 +1,18 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {RegisterTutorDataAccess} from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
-import {AppUtilityService} from 'src/app/utils/app-utility.service';
-import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
-import {ActionButton} from 'src/app/utils/grid/action-button';
-import {GridCommonFunctions} from 'src/app/utils/grid/grid-common-functions';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {GridComponent, GridDataInterface} from 'src/app/utils/grid/grid.component';
-import {HelperService} from 'src/app/utils/helper.service';
-import {LcpConstants} from 'src/app/utils/lcp-constants';
-import {LcpRestUrls} from 'src/app/utils/lcp-rest-urls';
-import {AlertDialogEvent} from 'src/app/utils/alert-dialog/alert-dialog.component';
-import {Column} from 'src/app/utils/grid/column';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { RegisteredTutorDataAccess } from 'src/app/login-controlled-pages/employee/admin/registered-tutor/registered-tutor.component';
+import { RegisteredTutor } from 'src/app/model/registered-tutor';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { ActionButton } from 'src/app/utils/grid/action-button';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpConstants } from 'src/app/utils/lcp-constants';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 
 @Component({
   selector: 'app-registered-tutor-data',
@@ -38,18 +38,18 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   historyPackagesGridMetaData: GridDataInterface;
 
   @Input()
-  tutorRecord: GridRecord = null;
+  tutorSerialId: string = null;
 
   @Input()
-  tutorDataAccess: RegisterTutorDataAccess = null;
-
-  renderTutorRecordForm = false;
-  
-  mandatoryDisbaled = true;
-  superAccessAwarded = false;
-  editRecordForm = false;
+  registeredTutorDataAccess: RegisteredTutorDataAccess = null;
 
   tutorUpdatedData = {};
+
+  formEditMandatoryDisbaled = true;
+  editRecordForm = false;
+
+  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
+  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
 
   genderFilterOptions = CommonFilterOptions.genderFilterOptions;
   qualificationFilterOptions = CommonFilterOptions.qualificationFilterOptions;
@@ -62,6 +62,19 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   preferredTeachingTypeFilterOptions = CommonFilterOptions.preferredTeachingTypeFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
 
+  isRecordUpdateFormDirty: boolean = false;
+  registeredTutorUpdateFormMaskLoaderHidden: boolean = true;
+  documentRemovalAccess: boolean = false;
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
+  showRecordUpdateButton: boolean = false; 
+
+  dirtyFlagList: string[] = ['RECORD_UPDATE'];
+
+  // Modal Properties
+  tutorRecord: RegisteredTutor;
+  dateOfBirthValue: string;
+  recordLastUpdatedDateAndTimeDisplay: string;
   selectedGenderOption: any[] = [];
   selectedQualificationOption: any[] = [];
   selectedProfessionOption: any[] = [];
@@ -70,78 +83,256 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   selectedSubjectOptions: any[] = [];
   selectedLocationOptions: any[] = [];
   selectedTeachingTypeOptions: any[] = []; 
-
-  singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
-
-  multiSelectOptions = CommonFilterOptions.multiSelectOptionsConfiguration;
-
-  aadharCard: any = null;
-  panCard: any = null;
-  photograph: any = null;
+  totalTutorDocumentFiles: number = 0;
+  aadharCardFile: any = null;
+  aadharCardFileExists: boolean = false;
+  panCardFile: any = null;
+  panCardFileExists: boolean = false;
+  photographFile: any = null;
+  photographFileExists: boolean = false;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
     this.uploadedDocumentGridMetaData = null;
     this.bankDetailGridMetaData = null;
     this.currentPackagesGridMetaData = null;
     this.historyPackagesGridMetaData = null;
-    this.tutorUpdatedData = {};
+    this.tutorRecord = new RegisteredTutor();
   }
 
   ngOnInit() {
-    this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.getProperty('gender'));
-    this.selectedQualificationOption = CommonUtilityFunctions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.getProperty('qualification'));
-    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.tutorRecord.getProperty('primaryProfession'));
-    this.selectedTransportOption = CommonUtilityFunctions.getSelectedFilterItems(this.transportModeFilterOptions, this.tutorRecord.getProperty('transportMode'));
-    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.getProperty('interestedSubjects'));
-    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.getProperty('comfortableLocations'));
-    this.selectedStudentGrades = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.getProperty('interestedStudentGrades'));
-    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.getProperty('preferredTeachingType'));
+    this.getRegisteredTutorGridRecord(this.tutorSerialId);
     this.setUpGridMetaData();
-  }
-
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
-  }
-
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);;
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if (this.tutorDataAccess.documentViewAccess) {
-        this.uploadedDocumentGridObject.init();
-        this.uploadedDocumentGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
-      }
-      if (this.tutorDataAccess.bankViewAccess) {
-        this.bankDetailGridObject.init();
-        this.bankDetailGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
-      }
-      this.renderTutorRecordForm = true;
-      if (this.tutorDataAccess.activePackageViewAccess) {
-        this.currentPackagesGridObject.init();
-        this.currentPackagesGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
-      }
-      if (this.tutorDataAccess.historyPackagesViewAccess) {
-        this.historyPackagesGridObject.init();
-        this.historyPackagesGridObject.addExtraParams('tutorId', this.tutorRecord.getProperty('tutorId'));
-      }
-    }, 0);
-
+      this.uploadedDocumentGridObject.init();
+      this.uploadedDocumentGridObject.addExtraParams('tutorSerialId', this.tutorSerialId);
+      this.bankDetailGridObject.init();
+      this.bankDetailGridObject.addExtraParams('tutorSerialId', this.tutorSerialId);
+      this.currentPackagesGridObject.init();
+      this.currentPackagesGridObject.addExtraParams('tutorSerialId', this.tutorSerialId);
+      this.historyPackagesGridObject.init();
+      this.historyPackagesGridObject.addExtraParams('tutorSerialId', this.tutorSerialId);
+    }, 100);
     setTimeout(() => {
-      if (this.tutorDataAccess.documentViewAccess) {
-        this.uploadedDocumentGridObject.refreshGridData();
+      this.uploadedDocumentGridObject.refreshGridData();
+      this.bankDetailGridObject.refreshGridData();
+      this.currentPackagesGridObject.refreshGridData();
+      this.historyPackagesGridObject.refreshGridData();
+    }, 100);
+  }
+
+  private showRecordUpdateFormLoaderMask() {
+    this.registeredTutorUpdateFormMaskLoaderHidden = false;
+  }
+
+  private hideRecordUpdateFormLoaderMask() {
+    this.registeredTutorUpdateFormMaskLoaderHidden = true;
+  }
+
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
+  private setSectionShowParams() {
+    this.showRecordUpdateForm = this.registeredTutorDataAccess.registeredTutorRecordUpdateAccess;
+    this.showRecordUpdateEditControlSection = this.showRecordUpdateForm && !this.formEditMandatoryDisbaled;
+    this.documentRemovalAccess = !this.formEditMandatoryDisbaled && this.editRecordForm;
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
+  }
+
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private getRegisteredTutorGridRecord(tutorSerialId: string) {
+    this.showRecordUpdateFormLoaderMask();
+    const data = {
+      parentSerialId: tutorSerialId
+    };    
+    this.utilityService.makerequest(this, this.onRegisteredTutorGridRecord, LcpRestUrls.get_registered_tutor_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+    this.getRegisteredTutorDocumentCountAndExistence(tutorSerialId);
+  }
+
+  onRegisteredTutorGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['registeredTutorFormEditMandatoryDisbaled'];
+      context.setUpDataModal(gridRecordObject.record);
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      });
+      context.hideRecordUpdateFormLoaderMask();
+    }
+  }
+
+  private getRegisteredTutorDocumentCountAndExistence(tutorSerialId: string) {    
+    const data = {
+      tutorSerialId: tutorSerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetRegisteredTutorDocumentCountAndExistence, LcpRestUrls.get_registered_tutor_document_count_and_existence, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  onGetRegisteredTutorDocumentCountAndExistence(context: any, response: any) {
+    CommonUtilityFunctions.logOnConsole(response);
+    if (response['success']) {
+      let registeredTutorDocumentCountAndExistenceObject = response['recordObject'];
+      if (CommonUtilityFunctions.checkObjectAvailability(registeredTutorDocumentCountAndExistenceObject)) {
+        context.totalTutorDocumentFiles = registeredTutorDocumentCountAndExistenceObject['TOTAL_FILES'];
+        context.aadharCardFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(registeredTutorDocumentCountAndExistenceObject['AADHAR_CARD_FILE_EXIST']);
+        context.panCardFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(registeredTutorDocumentCountAndExistenceObject['PAN_CARD_FILE_EXIST']);
+        context.photographFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(registeredTutorDocumentCountAndExistenceObject['PHOTOGRAH_FILE_EXIST']);
       }
-      if (this.tutorDataAccess.bankViewAccess) {
-        this.bankDetailGridObject.refreshGridData();
-      }
-      if (this.tutorDataAccess.activePackageViewAccess) {
-        this.currentPackagesGridObject.refreshGridData();
-      }
-      if (this.tutorDataAccess.historyPackagesViewAccess) {
-        this.historyPackagesGridObject.refreshGridData();
-      }
-    }, 0);
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: false,
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    }
+  }
+
+  private setUpDataModal(registeredTutorGridRecord: GridRecord) {
+    this.tutorRecord.setValuesFromGridRecord(registeredTutorGridRecord);
+    this.tutorSerialId = this.tutorRecord.tutorSerialId;
+    this.dateOfBirthValue = CommonUtilityFunctions.getDateForDateInputParam(this.tutorRecord.dateOfBirth);
+    this.recordLastUpdatedDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.tutorRecord.recordLastUpdatedMillis);
+    this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.tutorRecord.gender);
+    this.selectedQualificationOption = CommonUtilityFunctions.getSelectedFilterItems(this.qualificationFilterOptions, this.tutorRecord.qualification);
+    this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.tutorRecord.primaryProfession);
+    this.selectedTransportOption = CommonUtilityFunctions.getSelectedFilterItems(this.transportModeFilterOptions, this.tutorRecord.transportMode);
+    this.selectedSubjectOptions = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.tutorRecord.interestedSubjects);
+    this.selectedLocationOptions = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.tutorRecord.comfortableLocations);
+    this.selectedStudentGrades = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.tutorRecord.interestedStudentGrades);
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.tutorRecord.preferredTeachingType);
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorName', this.tutorRecord.name);
+    CommonUtilityFunctions.setHTMLInputElementValue('teachingExp', this.tutorRecord.teachingExp);
+    CommonUtilityFunctions.setHTMLInputElementValue('addressDetails', this.tutorRecord.addressDetails);
+    CommonUtilityFunctions.setHTMLInputElementValue('additionalDetails', this.tutorRecord.additionalDetails);
+    this.detachAllFiles();
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.setSectionShowParams();
+      this.hideRecordUpdateFormLoaderMask();
+    }, 500);
+  }
+
+  attachFile(event: any, type: any) {
+    if (type === 'aadharCard') {
+      this.aadharCardFile = event.target.files[0];
+    }
+    if (type === 'panCard') {
+      this.panCardFile = event.target.files[0];
+    }
+    if (type === 'photo') {
+      this.photographFile = event.target.files[0];
+    }
+  }
+
+  detachFile(type: any) {
+    if (type === 'aadharCard') {
+      this.aadharCardFile = null;
+    }
+    if (type === 'panCard') {
+      this.panCardFile = null;
+    }
+    if (type === 'photo') {
+      this.photographFile = null;
+    }
+  }
+
+  detachAllFiles() {
+    this.panCardFile = null;
+    this.aadharCardFile = null;
+    this.photographFile = null;    
   }
 
   public getSubscriptionPackageGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
@@ -158,7 +349,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
         headerName: 'Subscription Package Serial Id',
         dataType: 'string',
         mapping: 'subscriptionPackageSerialId',
-        clickEvent: (record: GridRecord, column: Column) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           alert('Open Subscription');
         }
       },{
@@ -389,10 +580,14 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           headerName: 'Document Serial Id',
           dataType: 'string',
           mapping: 'documentSerialId',
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            gridComponentObject.showGridLoadingMask()
             const documentSerialIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentSerialId');
-            documentSerialIdElement.value = record.getProperty('documentSerialId');
+            documentSerialIdElement.value = column.getValueForColumn(record);
             this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadTutorDocument', 'POST');
+            setTimeout(() => {
+              gridComponentObject.hideGridLoadingMask();
+            }, 5000);
           }
         },{
           id: 'documentType',
@@ -426,59 +621,8 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           mapping: 'actionDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillisWithTime
         }],
-        hasSelectionColumn: this.tutorDataAccess.documentHandleAccess,
-        selectionColumn: {
-          buttons: [{
-            id: 'approveMultiple',
-            label: 'Approve',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
-                    LcpRestUrls.tutor_document_grid_approve, 
-                    selectedRecords,
-                    'documentId', 
-                    button,
-                    gridComponentObject,
-                    'Enter comments to Approve Documents',
-                    'Please provide your comments for approving the documents.',
-                    false,
-                    true);
-            }
-          }, {
-            id: 'sendReminderMultiple',
-            label: 'Send Reminder',
-            btnclass: 'btnReset',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
-                    LcpRestUrls.tutor_document_grid_reminder, 
-                    selectedRecords,
-                    'documentId', 
-                    button,
-                    gridComponentObject, 
-                    'Enter comments to Send Reminder for Documents',
-                    'Please provide your comments for reminding the documents.',
-                    false,
-                    true,
-                    true);
-            }
-          }, {
-            id: 'rejectMultiple',
-            label: 'Reject',
-            btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
-                    LcpRestUrls.tutor_document_grid_reject, 
-                    selectedRecords,
-                    'documentId', 
-                    button,
-                    gridComponentObject,
-                    'Enter comments to Reject Documents',
-                    'Please provide your comments for rejecting the documents.',
-                    true,
-                    true);
-            }
-          }]
-        },
-        hasActionColumn: true,
+        hasSelectionColumn: false,
+        hasActionColumn: this.registeredTutorDataAccess.registeredTutorDocumentTakeActionAccess,
         actionColumn: {
           label: 'Take Action',
           buttons: [{
@@ -490,7 +634,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
               enabled: 'enableApprove'              
             },
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {              
-              this.makeRestCallForGridOperation(
+              this.takeActionOnGridRecord(
                     LcpRestUrls.tutor_document_grid_approve, 
                     [record],
                     'documentSerialId', 
@@ -510,7 +654,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
               enabled: 'enableSendReminder'              
             },
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
+              this.takeActionOnGridRecord(
                     LcpRestUrls.tutor_document_grid_reminder, 
                     [record],
                     'documentSerialId', 
@@ -532,7 +676,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
               enabled: 'enableReject'              
             },
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
+              this.takeActionOnGridRecord(
                     LcpRestUrls.tutor_document_grid_reject, 
                     [record],
                     'documentSerialId', 
@@ -557,6 +701,14 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           restURL: '/rest/registeredTutor/bankDetailList'
         },
         columns: [{
+          id: 'bankAccountSerialId',
+          headerName: 'Bank Account Serial Id',
+          dataType: 'string',
+          mapping: 'bankAccountSerialId',
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            alert('Open Bank Account Details');
+          }
+        }, {
           id: 'bankName',
           headerName: 'Bank Name',
           dataType: 'string',
@@ -584,53 +736,18 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           mapping: 'isDefault',
           renderer: GridCommonFunctions.yesNoRenderer
         }],
-        hasSelectionColumn: this.tutorDataAccess.bankHandleAccess,
-        selectionColumn: {
-          buttons: [{
-            id: 'approveMultiple',
-            label: 'Approve',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
-                    LcpRestUrls.tutor_bank_grid_approve, 
-                    selectedRecords,
-                    'bankAccountId', 
-                    button,
-                    gridComponentObject,
-                    'Enter comments to Approve Bank Accounts',
-                    'Please provide your comments for approving the accounts.',
-                    false,
-                    true);
-
-            }
-          }, {
-            id: 'rejectMultiple',
-            label: 'Reject',
-            btnclass: 'btnReject',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
-                    LcpRestUrls.tutor_bank_grid_reject, 
-                    selectedRecords,
-                    'bankAccountId', 
-                    button,
-                    gridComponentObject,
-                    'Enter comments to Reject Bank Accounts',
-                    'Please provide your comments for rejecting the accounts.',
-                    true,
-                    true);
-            }
-          }]
-        },
-        hasActionColumn: true,
+        hasSelectionColumn: false,
+        hasActionColumn: this.registeredTutorDataAccess.registeredTutorBankDetailTakeActionAccess,
         actionColumn: {
           label: 'Take Action',
           buttons: [{
             id: 'approve',
             label: 'Approve',
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
+              this.takeActionOnGridRecord(
                     LcpRestUrls.tutor_bank_grid_approve, 
                     [record],
-                    'bankAccountId', 
+                    'bankAccountSerialId', 
                     button,
                     gridComponentObject,
                     'Enter comments to Approve Bank Account',
@@ -642,55 +759,24 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
             label: 'Default',
             btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
-              this.helperService.showPromptDialog({
-                required: false,
-                titleText: 'Enter comments to Make Default this Bank Account',
-                placeholderText: 'Please provide your comments for making the account Default.',
-                onOk: (message) => {
-                  const data = {
-                    bankAccountId: record.getProperty('bankAccountId'),
-                    tutorId: this.tutorRecord.getProperty('tutorId'),
-                    comments: message
-                  };
-                  this.utilityService.makeRequestWithoutResponseHandler(LcpRestUrls.tutor_bank_grid_make_default, 'POST', this.utilityService.urlEncodeData(data),
-                    'application/x-www-form-urlencoded').subscribe(result => {
-                    let response = result['response'];
-                    response = this.utilityService.decodeObjectFromJSON(response);
-                    if (response != null) {
-                      if (response['success'] === false) {
-                        this.helperService.showAlertDialog({
-                          isSuccess: response['success'],
-                          message: response['message'],
-                          onButtonClicked: () => {
-                          }
-                        });
-                      } else {
-                        this.bankDetailGridObject.refreshGridData();
-                      }
-                    }
-                  }, error2 => {
-                    const myListener: AlertDialogEvent = {
-                      isSuccess: false,
-                      message: 'Communication failure!! Something went wrong',
-                      onButtonClicked: () => {
-                      }
-                    };
-                    this.helperService.showAlertDialog(myListener);
-                  });  
-                },
-                onCancel: () => {
-                }
-              });
+              this.takeActionOnGridRecord(
+                    LcpRestUrls.tutor_bank_grid_approve, 
+                    [record],
+                    'bankAccountSerialId', 
+                    button,
+                    gridComponentObject,
+                    'Enter comments to Make Default this Bank Account',
+                    'Please provide your comments for making the account Default.');
             }
           }, {
             id: 'reject',
             label: 'Reject',
             btnclass: 'btnReject',
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
-              this.makeRestCallForGridOperation(
+              this.takeActionOnGridRecord(
                     LcpRestUrls.tutor_bank_grid_reject, 
                     [record],
-                    'bankAccountId', 
+                    'bankAccountSerialId', 
                     button,
                     gridComponentObject,
                     'Enter comments to Reject Bank Account',
@@ -716,17 +802,52 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     };
   }
 
-  makeRestCallForGridOperation (
-          url: string, 
-          selectedRecords: GridRecord[], 
-          property: string,
-          button: ActionButton, 
-          gridComponent: GridComponent, 
-          commentPopupTitleText: string,
-          commentPopupPlaceholderText: string,
-          commentsMandatory: boolean = true, 
-          multipleRecords: boolean = false,
-          showAlertMessageAndDoNotRefreshGrid: boolean = false
+  takeActionOnGridRecord(
+    url: string, 
+    selectedRecords: GridRecord[], 
+    property: string,
+    button: ActionButton, 
+    gridComponentObject: GridComponent, 
+    commentPopupTitleText: string,
+    commentPopupPlaceholderText: string,
+    commentsMandatory: boolean = true, 
+    multipleRecords: boolean = false,
+    showAlertMessageAndDoNotRefreshGrid: boolean = false
+  ) {
+    if (!this.isFlagListDirty()) {
+      this.takeActionOnGridRecordPrompt(url, selectedRecords, property, button, gridComponentObject, commentPopupTitleText, 
+                                        commentPopupPlaceholderText, commentsMandatory, multipleRecords, showAlertMessageAndDoNotRefreshGrid);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.takeActionOnGridRecordPrompt(url, selectedRecords, property, button, gridComponentObject, commentPopupTitleText, 
+                                          commentPopupPlaceholderText, commentsMandatory, multipleRecords, showAlertMessageAndDoNotRefreshGrid);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  private takeActionOnGridRecordPrompt(
+    url: string, 
+    selectedRecords: GridRecord[], 
+    property: string,
+    button: ActionButton, 
+    gridComponentObject: GridComponent, 
+    commentPopupTitleText: string,
+    commentPopupPlaceholderText: string,
+    commentsMandatory: boolean = true, 
+    multipleRecords: boolean = false,
+    showAlertMessageAndDoNotRefreshGridAndReloadForm: boolean = false
   ) {
     let selectedIdsList = [];
     if (multipleRecords) {
@@ -734,135 +855,228 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     } else {
       selectedIdsList = [selectedRecords[0].getProperty(property)];
     }
-    if (selectedIdsList.length === 0) {
+    if (selectedIdsList.length > 0) {
+      this.helperService.showPromptDialog({
+        required: commentsMandatory,
+        titleText: commentPopupTitleText,
+        placeholderText: commentPopupPlaceholderText,
+        onOk: (message) => {
+          if (CommonUtilityFunctions.checkObjectAvailability(button)) {
+            button.disable();
+          }
+          if (CommonUtilityFunctions.checkObjectAvailability(gridComponentObject)) {
+            gridComponentObject.showGridLoadingMask();
+          }
+          const data = {
+            allIdsList: selectedIdsList.join(';'),
+            tutorSerialId: this.tutorRecord.tutorSerialId,
+            comments: message
+          };
+          const extraContextProperties = {
+            button: button,
+            gridComponentObject: gridComponentObject,
+            showAlertMessageAndDoNotRefreshGridAndReloadForm: showAlertMessageAndDoNotRefreshGridAndReloadForm
+          }
+          this.utilityService.makerequest(this, this.handleTakeActionOnGridRecord, url, 'POST', this.utilityService.urlEncodeData(data), 
+                                          'application/x-www-form-urlencoded', false, null, extraContextProperties);
+        },
+        onCancel: () => {
+        }
+      });  
+    } else {
       this.helperService.showAlertDialog({
         isSuccess: false,
         message: LcpConstants.grid_generic_no_record_selected_error,
         onButtonClicked: () => {
         }
       });
-    } else {
-      this.helperService.showPromptDialog({
-        required: commentsMandatory,
-        titleText: commentPopupTitleText,
-        placeholderText: commentPopupPlaceholderText,
-        onOk: (message) => {
-          const data = {
-            allIdsList: selectedIdsList.join(';'),
-            tutorId: this.tutorRecord.getProperty('tutorId'),
-            comments: message
-          };
-          this.utilityService.makeRequestWithoutResponseHandler(url, 'POST', this.utilityService.urlEncodeData(data),
-            'application/x-www-form-urlencoded').subscribe(result => {
-            let response = result['response'];
-            response = this.utilityService.decodeObjectFromJSON(response);
-            if (response != null) {
-              if (response['success'] === false) {
-                this.helperService.showAlertDialog({
-                  isSuccess: response['success'],
-                  message: response['message'],
-                  onButtonClicked: () => {
-                  }
-                });
-              } else {
-                if (showAlertMessageAndDoNotRefreshGrid) {
-                  this.helperService.showAlertDialog({
-                    isSuccess: response['success'],
-                    message: response['message'],
-                    onButtonClicked: () => {
-                    }
-                  });
-                } else {
-                  gridComponent.refreshGridData();
-                }
-              }
-            }
-          }, error2 => {
-            const myListener: AlertDialogEvent = {
-              isSuccess: false,
-              message: 'Communication failure!! Something went wrong',
-              onButtonClicked: () => {
-              }
-            };
-            this.helperService.showAlertDialog(myListener);
-          });  
-        },
-        onCancel: () => {
-        }
-      });     
     }
   }
 
-  getDateForDateInputParam(value: any) {
-    return CommonUtilityFunctions.getDateForDateInputParam(value);
-  }
+  handleTakeActionOnGridRecord(context: any, response: any, extraContextProperties: Object) {
+    let button: ActionButton = extraContextProperties['button']; 
+    let gridComponentObject: GridComponent = extraContextProperties['gridComponentObject'];   
+    let showAlertMessageAndDoNotRefreshGridAndReloadForm: boolean = extraContextProperties['showAlertMessageAndDoNotRefreshGridAndReloadForm']; 
+    if (CommonUtilityFunctions.checkObjectAvailability(button)) {
+      button.enable();
+    }
+    if (CommonUtilityFunctions.checkObjectAvailability(gridComponentObject)) {
+      gridComponentObject.hideGridLoadingMask();
+    }
+    if (response['success']) {
+      if (showAlertMessageAndDoNotRefreshGridAndReloadForm) {
+        context.helperService.showAlertDialog({
+          isSuccess: response['success'],
+          message: response['message'],
+          onButtonClicked: () => {
+          }
+        });
+      } else {
+        if (CommonUtilityFunctions.checkObjectAvailability(gridComponentObject)) {
+          gridComponentObject.refreshGridData();
+        }
+        context.getRegisteredTutorGridRecord(context.tutorSerialId);
+      }
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });      
+    }
+  }  
 
-  updateTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {    
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorUpdatedData, this.tutorRecord.property, deselected, isAllOPeration);
+  updateRegisteredTutorProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    this.setFlagListDirty(false, ['RECORD_UPDATE']);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.tutorUpdatedData, this.tutorRecord, deselected, isAllOPeration);
   }
   
-  updateTutorRecord() {
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.tutorUpdatedData, this.tutorRecord.getProperty('tutorId'));
-    if (this.panCard) {
-      data.append('inputFilePANCard', this.panCard);
+  updateRegisteredTutorRecord() {
+    this.showRecordUpdateFormLoaderMask();
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.tutorUpdatedData, this.tutorSerialId);
+    if (CommonUtilityFunctions.checkObjectAvailability(this.panCardFile)) {
+      data.append('inputFilePANCard', this.panCardFile);
     }
-    if (this.aadharCard) {
-      data.append('inputFileAadhaarCard', this.aadharCard);
+    if (CommonUtilityFunctions.checkObjectAvailability(this.aadharCardFile)) {
+      data.append('inputFileAadhaarCard', this.aadharCardFile);
     }
-    if (this.photograph) {
-      data.append('inputFilePhoto', this.photograph);
+    if (CommonUtilityFunctions.checkObjectAvailability(this.photographFile)) {
+      data.append('inputFilePhoto', this.photographFile);
     }
-    this.utilityService.makerequest(this, this.onUpdateTutorRecord, LcpRestUrls.tutor_update_record, 'POST',
-      data, 'multipart/form-data', true);
+    this.utilityService.makerequest(this, this.onUpdateRegisteredTutorRecord, LcpRestUrls.tutor_update_record, 'POST',
+                                    data, 'multipart/form-data', true);
   }
 
-  onUpdateTutorRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+  onUpdateRegisteredTutorRecord(context: any, response: any) {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
-      context.detachAllFiles();
-    } 
-  }
-
-  attachFile(event: any, type: any) {
-    if (type === 'pan_card') {
-      this.panCard = event.target.files[0];
-    }
-    if (type === 'aadhar_card') {
-      this.aadharCard = event.target.files[0];
-    }
-    if (type === 'photo') {
-      this.photograph = event.target.files[0];
+      context.setFlagListNotDirty(false, ['RECORD_UPDATE']);
+      context.getRegisteredTutorGridRecord(context.tutorSerialId);
+    } else {
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
-  detachFile(type: any) {
-    if (type === 'pan_card') {
-      this.panCard = null;
+  resetRegisteredTutorRecord() {
+    if (!this.isFlagListDirty()) {
+      this.getRegisteredTutorGridRecord(this.tutorSerialId);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.getRegisteredTutorGridRecord(this.tutorSerialId);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
     }
-    if (type === 'aadhar_card') {
-      this.aadharCard = null;
-    }
-    if (type === 'photo') {
-      this.photograph = null;
-    }
-  }
-
-  detachAllFiles() {
-    this.panCard = null;
-    this.aadharCard = null;
-    this.photograph = null;    
   }
 
   downloadProfile() {
-    const tutorId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-tutorId');
-    tutorId.value = this.tutorRecord.getProperty('tutorId');
+    this.showRecordUpdateFormLoaderMask();
+    const tutorSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-tutorSerialId');
+    tutorSerialId.value = this.tutorSerialId;
     this.utilityService.submitForm('profileDownloadForm', '/rest/registeredTutor/downloadAdminRegisteredTutorProfilePdf', 'POST');
+    setTimeout(() => {
+      this.hideRecordUpdateFormLoaderMask();
+    }, 4000);
+  }
+
+  downloadTutorDocumentFile(type: any) {
+    this.showRecordUpdateFormLoaderMask();
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorDocumentDownloadForm-tutorSerialId', this.tutorSerialId);
+    CommonUtilityFunctions.setHTMLInputElementValue('tutorDocumentDownloadForm-documentType', type);
+    this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadRegisteredTutorDocumentFile', 'POST');
+    setTimeout(() => {
+      this.hideRecordUpdateFormLoaderMask();
+    }, 5000);
+  }
+
+  downloadAllTutorDocuments() {
+    if (this.totalTutorDocumentFiles > 0) {
+      this.showRecordUpdateFormLoaderMask();
+      CommonUtilityFunctions.setHTMLInputElementValue('tutorDocumentDownloadForm-tutorSerialId', this.tutorSerialId);
+      this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadRegisteredTutorAllDocuments', 'POST');
+      setTimeout(() => {
+        this.hideRecordUpdateFormLoaderMask();
+      }, (this.totalTutorDocumentFiles * 5000));
+    } else {
+      this.helperService.showAlertDialog({
+        isSuccess: false,
+        message: 'No files are present for this Tutor',
+        onButtonClicked: () => {
+        }
+      });
+    }
+  }
+
+  removeTutorDocumentUploadedFile(type: any) {
+    this.helperService.showConfirmationDialog({
+      message: 'Are you sure you want to remove the "' + type + '" file for Tutor - "' + this.tutorRecord.name + '"',
+      onOk: () => {
+        const data = {
+          tutorSerialId: this.tutorSerialId,
+          documentType: type
+        };
+        this.showRecordUpdateFormLoaderMask();    
+        this.utilityService.makerequest(this, this.onRemoveTutorDocumentUploadedFile, LcpRestUrls.remove_registered_tutor_document_file, 
+                                        'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+      },
+      onCancel: () => {
+        this.helperService.showAlertDialog({
+          isSuccess: false,
+          message: 'File not removed',
+          onButtonClicked: () => {
+          }
+        });
+      }
+    });
+  }
+
+  onRemoveTutorDocumentUploadedFile(context: any, response: any) {
+    CommonUtilityFunctions.logOnConsole(response);
+    if (response['success']) {
+      let removedDocumentType = response['removedDocumentType'];
+      if (CommonUtilityFunctions.checkObjectAvailability(removedDocumentType)) {
+        if (removedDocumentType === 'aadharCard') {
+          context.aadharCardFileExists = false;
+        }
+        if (removedDocumentType === 'panCard') {
+          context.panCardFileExists = false;
+        }
+        if (removedDocumentType === 'photo') {
+          context.photographFileExists = false;
+        }
+        context.helperService.showAlertDialog({
+          isSuccess: true,
+          message: 'Successfully removed document',
+          onButtonClicked: () => {
+          }
+        });
+        context.uploadedDocumentGridObject.refreshGridData();
+      }
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: false,
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    }
+    context.hideRecordUpdateFormLoaderMask();
   }
 }

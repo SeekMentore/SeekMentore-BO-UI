@@ -129,7 +129,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           filterOptions: CommonFilterOptions.subjectsFilterOptions,
           mapping: 'subject',
           renderer: AdminCommonFunctions.subjectsRenderer,
-          clickEvent: (record: GridRecord, column: Column) => {
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             alert(record.getProperty('subject'));
           }
         }, {

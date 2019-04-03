@@ -8,6 +8,9 @@
       class="back-to-listing-button ok-button" (click)="toggleVisibilityRegisterTutorGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-registered-tutor-data [tutorRecord]="selectedTutorRecord" [tutorDataAccess]="tutorDataAccess"></app-registered-tutor-data>
+    <app-registered-tutor-data 
+          [tutorSerialId]="selectedTutorSerialId" 
+          [registeredTutorDataAccess]="registeredTutorDataAccess">
+    </app-registered-tutor-data>
   </div>
 </div>

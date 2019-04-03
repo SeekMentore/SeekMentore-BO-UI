@@ -194,7 +194,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             id: 'mapTutors',
             label: 'Map Tutors',
             btnclass: 'btnReset',
-            clickEvent: (selectedRecords: GridRecord[], button: ActionButton) => {
+            clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
               const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorId');
               if (tutorIdsList.length === 0) {
                 this.helperService.showAlertDialog({
@@ -229,7 +229,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             id: 'mapTutor',
             label: 'Map Tutor',
             btnclass: 'btnReset',
-            clickEvent: (record: GridRecord, button: ActionButton) => {
+            clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
               this.helperService.showConfirmationDialog({
                 message: 'Please confirm if you want to map this tutor to the Enquiry',
                 onOk: () => {

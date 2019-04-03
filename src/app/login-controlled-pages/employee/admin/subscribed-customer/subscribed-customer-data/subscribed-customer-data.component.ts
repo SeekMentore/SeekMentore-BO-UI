@@ -46,7 +46,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
   locationsFilterOptions = CommonFilterOptions.locationsFilterOptions;
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
 
-  isFormDirty: boolean = false;
+  isRecordUpdateFormDirty: boolean = false;
   subscribeedCustomerUpdateFormMaskLoaderHidden: boolean = true;
   showRecordUpdateForm: boolean = false;
   showRecordUpdateEditControlSection: boolean = false;
@@ -55,7 +55,6 @@ export class SubscribedCustomerDataComponent implements OnInit {
   // Modal Properties
   customerRecord: SubscribedCustomer;
   recordLastUpdatedDateAndTimeDisplay: string;
-  selectedGenderOption: any[] = [];
   selectedLocationOption: any[] = [];
   selectedGradesOptions: any[] = [];
   selectedSubjectOptions: any[] = [];
@@ -86,15 +85,15 @@ export class SubscribedCustomerDataComponent implements OnInit {
     }, 100);
   }
 
-  private showUpdateFormLoaderMask() {
+  private showRecordUpdateFormLoaderMask() {
     this.subscribeedCustomerUpdateFormMaskLoaderHidden = false;
   }
 
-  private hideUpdateFormLoaderMask() {
+  private hideRecordUpdateFormLoaderMask() {
     this.subscribeedCustomerUpdateFormMaskLoaderHidden = true;
   }
 
-  public setFormEditStatus(isEditable: boolean) {
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
     this.editRecordForm = isEditable;
     this.setSectionShowParams();
   }
@@ -105,8 +104,85 @@ export class SubscribedCustomerDataComponent implements OnInit {
     this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
   }
 
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
+  }
+
   private getSubscribedCustomerGridRecord(customerSerialId: string) {
-    this.showUpdateFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     const data = {
       parentSerialId: customerSerialId
     };    
@@ -132,6 +208,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
@@ -148,7 +225,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
     setTimeout(() => {
       this.editRecordForm = false;
       this.setSectionShowParams();
-      this.hideUpdateFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
     }, 500);
   }
 
@@ -166,7 +243,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
         headerName: 'Subscription Package Serial Id',
         dataType: 'string',
         mapping: 'subscriptionPackageSerialId',
-        clickEvent: (record: GridRecord, column: Column) => {
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           alert('Open Subscription');
         }
       },{
@@ -398,13 +475,13 @@ export class SubscribedCustomerDataComponent implements OnInit {
   }
 
   updateSubscribedCustomerProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    this.isFormDirty = true;
+    this.setFlagListDirty(false, ['RECORD_UPDATE']);
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.customerUpdatedData, this.customerRecord, deselected, isAllOPeration);
   }
 
   updateSubscribedCustomerRecord() {
-    this.showUpdateFormLoaderMask();
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.customerUpdatedData, this.customerRecord.customerSerialId);
+    this.showRecordUpdateFormLoaderMask();
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.customerUpdatedData, this.customerSerialId);
     this.utilityService.makerequest(this, this.onUpdateCustomerRecord, LcpRestUrls.customer_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
@@ -418,13 +495,10 @@ export class SubscribedCustomerDataComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
-    }
-    if (response['success']) {
-      context.editRecordForm = false;
-      context.isFormDirty = false;
+      context.setFlagListNotDirty(false, ['RECORD_UPDATE']);
       context.getSubscribedCustomerGridRecord(context.customerSerialId);
     } else {
-      context.hideUpdateFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
@@ -435,6 +509,7 @@ export class SubscribedCustomerDataComponent implements OnInit {
       this.helperService.showConfirmationDialog({
         message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
+          this.setFlagListNotDirty();
           this.getSubscribedCustomerGridRecord(this.customerSerialId);
         },
         onCancel: () => {
@@ -447,60 +522,15 @@ export class SubscribedCustomerDataComponent implements OnInit {
         }
       });
     }
-  }
-
-  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
-    let confirmationMessage: string = '';
-    let messageList: string[] = [];
-    if (allFlags) {
-      flagList = this.dirtyFlagList;
-    }
-    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
-      flagList.forEach((flag) => {
-        switch(flag) {
-          case 'RECORD_UPDATE' : {
-            if (this.isFormDirty) {
-              messageList.push('You have unsaved changes on the Update form.');
-            }
-            break;
-          }
-        }
-      });
-    }
-    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
-      messageList.push('Do you still want to continue');
-      messageList.forEach((message) => {
-        confirmationMessage += message + '\n';
-      });      
-    }
-    return confirmationMessage;
-  }
-
-  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
-    let resultantFlagValue: boolean = false;
-    if (allFlags) {
-      flagList = this.dirtyFlagList;
-    }
-    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
-      flagList.forEach((flag) => {
-        switch(flag) {
-          case 'RECORD_UPDATE' : {
-            resultantFlagValue = resultantFlagValue || this.isFormDirty;
-            break;
-          }
-        }
-      });
-    }
-    return resultantFlagValue;
-  }
+  }  
 
   downloadProfile() {
-    this.showUpdateFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     const customerSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('profileDownload-customerSerialId');
     customerSerialId.value = this.customerRecord.customerSerialId;
     this.utilityService.submitForm('profileDownloadForm', '/rest/subscribedCustomer/downloadAdminSubscribedCustomerProfilePdf', 'POST');
     setTimeout(() => {
-      this.hideUpdateFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
     }, 4000);
   }
 }

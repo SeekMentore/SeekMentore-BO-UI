@@ -21,11 +21,11 @@
           </button>
         </div>
         <div *ngIf="showRecordUpdateEditControlSection">
-          <label class="tab_container" (change)="setFormEditStatus(false)">
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(false)">
             <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
             <span class="tab_checkmark left">View</span>
           </label>
-          <label class="tab_container" (change)="setFormEditStatus(true)">
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(true)">
             <input type="radio" [checked]="editRecordForm" name="editFormChoice">
             <span class="tab_checkmark right">Edit</span>
           </label>

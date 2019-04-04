@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/index';
-import { AlertDialogEvent } from './alert-dialog/alert-dialog.component';
-import { ConfirmationDialogEvent } from './confirmation-dialog/confirmation-dialog.component';
+import { BreadCrumbInterface } from '../login-controlled-pages/bread-crumb/bread-crumb.component';
+import { AlertDialogInterface } from './alert-dialog/alert-dialog.component';
+import { ConfirmationDialogInterface } from './confirmation-dialog/confirmation-dialog.component';
 import { EmailInterface } from './email/email.component';
 import { PromptDialogInterface } from "./prompt-dialog/prompt-dialog.component";
-import { BreadCrumbEvent } from '../login-controlled-pages/bread-crumb/bread-crumb.component';
 
 @Injectable({
   providedIn: 'root'
@@ -24,42 +24,42 @@ export class HelperService {
   private promptDialogSubject = new Subject();
   public promptDialogState = this.promptDialogSubject.asObservable();
 
-  constructor() {
-  }
+  constructor() {}
 
   public setTitle(title: string) {
     this.titleSubject.next(title);
   }
 
-  public setBreadCrumb(eventListener: BreadCrumbEvent) {
-    this.breadCrumbSubject.next(eventListener);
+  public setBreadCrumb(eventInterface: BreadCrumbInterface) {
+    this.breadCrumbSubject.next(eventInterface);
   }
 
-  public showConfirmationDialog(eventListener: ConfirmationDialogEvent) {
-    this.confirmationDialogSubject.next(eventListener);
+  public showConfirmationDialog(eventInterface: ConfirmationDialogInterface) {
+    this.confirmationDialogSubject.next(eventInterface);
   }
 
-  public showAlertDialog(eventListener: AlertDialogEvent) {
-    this.alertDialogSubject.next(eventListener);
+  public showAlertDialog(eventInterface: AlertDialogInterface) {
+    this.alertDialogSubject.next(eventInterface);
   }
 
-  public showEmailDialog(to = '', cc = '', bcc = '', subject = '', body = '') {
-    const emailData: EmailInterface = {
+  public showPromptDialog(eventInterface: PromptDialogInterface) {
+    this.promptDialogSubject.next(eventInterface);
+  }  
+
+  public showEmailDialog(
+    to: string = '', 
+    cc: string = '', 
+    bcc: string = '', 
+    subject: string = '', 
+    body: string = ''
+  ) {
+    const eventInterface: EmailInterface = {
       to: to,
       cc: cc,
       bcc: bcc,
       subject: subject,
       body: body
     };
-    this.emailDialogSubject.next(emailData);
+    this.emailDialogSubject.next(eventInterface);
   }
-
-
-  public hideEmailDialog() {
-    this.emailDialogSubject.next(null);
-  }
-
-  public showPromptDialog(eventListener: PromptDialogInterface) {
-    this.promptDialogSubject.next(eventListener);
-  }  
 }

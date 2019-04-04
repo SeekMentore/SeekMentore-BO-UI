@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { Router } from '@angular/router';
-import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
-import { BreadCrumbEvent } from '../bread-crumb/bread-crumb.component';
 
 @Component({
   selector: 'app-change-password',
@@ -29,11 +28,10 @@ export class ChangePasswordComponent implements OnInit {
 
   ngOnInit() {
     this.resetErrorMessages();
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);
+    });
   }
 
   changePassword() {

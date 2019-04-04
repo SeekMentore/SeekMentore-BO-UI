@@ -1,78 +1,82 @@
-import {Component, OnInit, OnChanges, Input, SimpleChange} from '@angular/core';
-import {LcpConstants} from '../lcp-constants';
-import {AppUtilityService} from '../app-utility.service';
-import {HelperService} from '../helper.service';
-import {LcpRestUrls} from '../lcp-rest-urls';
-import {CkeditorConfig} from '../ckeditor-config';
-import {tryCatch} from "rxjs/internal/util/tryCatch";
-import {CommonFilterOptions} from 'src/app/utils/common-filter-options';
+import { Component, OnInit } from '@angular/core';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { AppUtilityService } from '../app-utility.service';
+import { CkeditorConfig } from '../ckeditor-config';
 import { CommonUtilityFunctions } from '../common-utility-functions';
+import { HelperService } from '../helper.service';
+import { LcpConstants } from '../lcp-constants';
+import { LcpRestUrls } from '../lcp-rest-urls';
 
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
   styleUrls: ['./email.component.css']
 })
-export class EmailComponent implements OnInit, OnChanges {
+export class EmailComponent implements OnInit {
 
   title = LcpConstants.email_dialog_title;
-  attachments: File[] = [];
-  emailTemplatesArray: EmailTemplateInterface[];
-  filteredTemplateArray: EmailTemplateInterface[];
-  defaultValueEmailTemplate: EmailTemplateInterface;
+  hideEmailPopup: boolean = true;
+  hideEmailTemplateDropdownValues: boolean = true;
+  emailInterface: EmailInterface = null;
   selectedEmailTemplate: EmailTemplateInterface;
-  emailData: EmailInterface;
-  emailDialog: HTMLDivElement; 
-  allowedFileTypes = LcpConstants.email_attachment_allowed_types;
+  defaultEmailTemplate: EmailTemplateInterface;
+  attachments: File[] = [];
+  emailTemplateList: EmailTemplateInterface[];
+  filteredEmailTemplateList: EmailTemplateInterface[];
+  emailFormMaskLoaderHidden: boolean = true;
 
-  emailBodyEditorId = 'email_body';
-
-  @Input('emailData')
-  receivedEmailData: EmailInterface = null;
+  emailBodyEditorId = 'email_body'; 
 
   singleSelectOptions = CommonFilterOptions.singleSelectOptionsConfiguration;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService) {
     this.setDefaultData();
+    this.getEmailTemplates();
   }
 
   ngOnInit() {
     CommonUtilityFunctions.makeRichEditor(this.emailBodyEditorId, CkeditorConfig.emailConfiguration);
     CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
-    const formData = new URLSearchParams();
-    this.utilityService.makerequest(this, this.onSuccessEmailTemplates, LcpRestUrls.email_templates_url, 'POST', formData.toString(), 'application/x-www-form-urlencoded');
-    // set event handler for email
-    this.emailDialog = <HTMLDivElement>document.getElementById('email-dialog');
-    this.helperService.emailDialogState.subscribe((data: EmailInterface) => {
-      if (data === null) {
-        this.emailDialog.style.display = 'none';
-      } else {
-        this.emailData = data;
-        this.emailDialog.style.display = 'flex';
+    this.helperService.emailDialogState.subscribe((emailInterface: EmailInterface) => {
+      if (CommonUtilityFunctions.checkObjectAvailability(emailInterface)) {
+        this.emailInterface = emailInterface;
+        if (CommonUtilityFunctions.checkStringAvailability(emailInterface.body)) {
+          CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, emailInterface.body);
+        }
+        this.hideEmailPopup = false;
       }
     });
   }
 
-  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    const log: string[] = [];
-    for (const propName in changes) {
-      const changedProp = changes[propName];
-      if (propName === 'receivedEmailData' && changedProp.currentValue !== null) {
-        this.emailData = changedProp.currentValue;
-      }
-    }
+  showEmailFormLoader() {
+    this.emailFormMaskLoaderHidden = false;
   }
 
-  removeAttachment(i: number) {
-    this.attachments.splice(i, 1);
+  hideEmailFormLoader() {
+    this.emailFormMaskLoaderHidden = true;
   }
 
-  onSuccessEmailTemplates(context: any, response: any) {
-    context.emailTemplatesArray = response['emailTemplates'];
-    context.filteredTemplateArray = context.emailTemplatesArray;
+  setDefaultData() {
+    this.attachments = [];
+    this.defaultEmailTemplate = {
+      label: '-Select E-mail template-',
+      value: ''
+    };
+    this.selectedEmailTemplate = this.defaultEmailTemplate;
+    this.emailInterface = {
+      to: '',
+      cc: '',
+      bcc: '',
+      subject: '',
+      body: ''
+    };
   }
 
-  onAttachmentSelected(event) {
+  openAttachmentSelector() {
+    document.getElementById('select_attachments').click();
+  }
+
+  onAttachmentSelected(event: any) {
     if ((<any>event.target).files.length > LcpConstants.email_attachments_max_number) {
       this.helperService.showAlertDialog({
         isSuccess: false,
@@ -82,24 +86,11 @@ export class EmailComponent implements OnInit, OnChanges {
       });
       return;
     }
-
     for (const attachment of (<any>event.target).files) {
-      let totalSize = 0; // in KB
-      const attachmentsNumber = this.attachments.length;
-      let errorMessage = null;
-      this.attachments.forEach((value2 => {
-        totalSize = totalSize + value2.size / 1024;
-      }));
-      totalSize += attachment.size / 1024;
-      if (totalSize > LcpConstants.email_attachemnts_max_size_MB * 1024) {
-        errorMessage = LcpConstants.email_attachment_size_error;
-      } else if (attachmentsNumber >= LcpConstants.email_attachments_max_number) {
-        errorMessage = LcpConstants.email_attachments_number_error;
-      }
-      if (errorMessage !== null) {
+      if (this.attachments.length >= LcpConstants.email_attachments_max_number) {
         this.helperService.showAlertDialog({
           isSuccess: false,
-          message: errorMessage,
+          message: LcpConstants.email_attachments_number_error,
           onButtonClicked: () => {
           }
         });
@@ -111,184 +102,187 @@ export class EmailComponent implements OnInit, OnChanges {
     (<any>event.target).value = '';
   }
 
-  emailTemplateSelected(emailTemplate: EmailTemplateInterface) {
-    this.toggleDropDown();
-    let dataExists = false;
-    for (const key in this.emailData) {
-      const value = this.emailData[key];
-      if (key === 'to') {
-        continue;
-      }
-      if (value !== '' && value !== null) {
-        dataExists = true;
-        break;
-      }
-    }
-    if (dataExists) {
-      this.helperService.showConfirmationDialog({
-        message: LcpConstants.replace_email_data,
-        onOk: () => {
-          this.selectedEmailTemplate = emailTemplate;
-          this.loadEmailDataFromServer(emailTemplate.value);
-        },
-        onCancel: () => {
-        }
-      });
-    } else {
-      this.selectedEmailTemplate = emailTemplate;
-      this.loadEmailDataFromServer(emailTemplate.value);
-    }
-
+  removeAttachment(i: number) {
+    this.attachments.splice(i, 1);
   }
 
-  loadEmailDataFromServer(templateValue: string) {
-    if (templateValue === null || templateValue === '') {
-      this.setDefaultData();
-      CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
-      return;
-    }
+  getEmailTemplates() {
     const formData = new URLSearchParams();
-    formData.set('templateId', templateValue);
-    this.utilityService.makerequest(this, this.onSuccessTemplateData, LcpRestUrls.email_template_data_url, 'POST', formData.toString(),
-      'application/x-www-form-urlencoded');
+    this.utilityService.makerequest(this, this.onGetEmailTemplates, LcpRestUrls.get_email_templates_url, 
+                                    'POST', formData.toString(), 'application/x-www-form-urlencoded');
+  } 
+
+  onGetEmailTemplates(context: any, response: any) {
+    context.emailTemplateList = response['emailTemplates'];
+    context.filteredEmailTemplateList = response['emailTemplates'];
   }
 
-  onSuccessTemplateData(context: any, response: any) {
-    if (response['success']) {
-      let emailTemplate = response['emailTemplate'];
-      context.emailData['to'] = emailTemplate['to'];
-      context.emailData['cc'] = emailTemplate['cc'];
-      context.emailData['bcc'] = emailTemplate['bcc'];
-      context.emailData['subject'] = emailTemplate['subject'];
-      context.emailData['body'] = emailTemplate['body'];      
-      CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, context.emailData.body);
+  selectedTemplateClicked(event: any) {
+    event.stopPropagation(); 
+    this.toggleDropDown();
+  }
+
+  toggleDropDown() {
+    if (this.hideEmailTemplateDropdownValues) {
+      this.hideEmailTemplateDropdownValues = false;
+      window.addEventListener('click', this.hideDropDownListener);
     } else {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
+      this.hideEmailTemplateDropdownValues = true;
+      window.removeEventListener('click', this.hideDropDownListener);
     }
   }
 
-  hideDialog() {
-    if (this.isFormDirty()) {
-      this.helperService.showConfirmationDialog({
-        message: LcpConstants.email_dismiss_data_exists_error,
-        onOk: () => {
-          this.setDefaultData();
-          CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
-          this.helperService.hideEmailDialog();
-        },
-        onCancel: () => {
-        }
-      });
-    } else {
-      this.setDefaultData();
-      CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
-      this.helperService.hideEmailDialog();
-    }
+  hideDropDownListener = () => {
+    this.toggleDropDown();
   }
 
-  isFormDirty(): boolean {
-    let isDataEntered = false;
-    for (const key in this.emailData) {
-      if ((this.emailData[key] + '').trim() !== '') {
-        isDataEntered = true;
+  searchTemplateClicked(event: any) {
+    event.stopPropagation();
+  }
+
+  searchTemplateChanged(event: any) {
+    let query: string = event.target.value;
+    this.filteredEmailTemplateList = [];
+    for (const element of this.emailTemplateList) {
+      if (element.label.toLowerCase().includes(query.toLowerCase())) {
+        this.filteredEmailTemplateList.push(element);
       }
     }
-    if (!isDataEntered && CommonUtilityFunctions.getDataFromRichEditor(this.emailBodyEditorId) !== '') {
+  }
+
+  selectEmailTemplate(event: any, emailTemplate: EmailTemplateInterface) {
+    event.stopPropagation();
+    if (CommonUtilityFunctions.checkObjectAvailability(emailTemplate)) {
+      this.emailTemplateSelected(emailTemplate);
+    } else {
+      this.emailTemplateSelected(this.defaultEmailTemplate);
+    }
+  }
+
+  isEmailFormDirty(): boolean {
+    let isDataEntered: boolean = false;
+    if (CommonUtilityFunctions.checkStringAvailability(this.emailInterface.to)
+        || CommonUtilityFunctions.checkStringAvailability(this.emailInterface.cc)
+        || CommonUtilityFunctions.checkStringAvailability(this.emailInterface.bcc)
+        || CommonUtilityFunctions.checkStringAvailability(this.emailInterface.subject)
+        || CommonUtilityFunctions.checkStringAvailability(this.emailInterface.body)
+        || CommonUtilityFunctions.checkStringAvailability(CommonUtilityFunctions.getDataFromRichEditor(this.emailBodyEditorId))
+    ) {
       isDataEntered = true;
     }
     return isDataEntered;
   }
 
-  sendEmail() {
-    const formData = new FormData();
-    this.emailData.body = CommonUtilityFunctions.getDataFromRichEditor(this.emailBodyEditorId);
-    this.emailData.body.trim();
-
-    for (const key in this.emailData) {
-      formData.append(key, this.emailData[key]);
-    }
-    const inputFilesNames = ['inputFile1', 'inputFile2', 'inputFile3', 'inputFile4'];
-
-    for (let i = 0; i < this.attachments.length; i++) {
-      if (i >= 4) {
-        break;
-      }
-      formData.append(inputFilesNames[i], this.attachments[i]);
-    }
-    this.utilityService.makerequest(this, this.onSuccessEmailSent, LcpRestUrls.send_email_url, 'POST', formData,
-      'multipart/form-data', true);
-  }
-
-  onSuccessEmailSent(context: any, response: any) {
-    if (response['success']) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-          context.setDefaultData();
-          CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, '');
-        }
-      });
-    } else {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
-    }
-  }
-
-  setDefaultData() {
-    this.attachments = [];
-    this.defaultValueEmailTemplate = {
-      label: 'Select E-mail template',
-      value: '-1'
-    };
-    this.selectedEmailTemplate = this.defaultValueEmailTemplate;
-    this.emailData = {
-      to: '',
-      cc: '',
-      bcc: '',
-      subject: '',
-      body: ''
-    };
-  }
-
-  getDataForTemplate(response_handler: any, value: string) {
-    const formData = new URLSearchParams();
-    formData.set('templateId', value);
-    return this.utilityService.makerequest(this, response_handler, LcpRestUrls.email_template_data_url, 'POST', formData.toString(),
-      'application/x-www-form-urlencoded');
-  }
-
-  hideDropDownListener = (event) => {
+  emailTemplateSelected(emailTemplate: EmailTemplateInterface) {
     this.toggleDropDown();
-  }
-
-  toggleDropDown() {
-    const element = document.getElementById('email_template_dropdown');
-    element.classList.toggle('show');
-    if (element.classList.contains('show')) {
-      window.addEventListener('click', this.hideDropDownListener);
+    if (this.isEmailFormDirty()) {
+      this.helperService.showConfirmationDialog({
+        message: LcpConstants.replace_email_data,
+        onOk: () => {
+          this.loadEmailTemplate(emailTemplate);
+        },
+        onCancel: () => {
+        }
+      });
     } else {
-      window.removeEventListener('click', this.hideDropDownListener);
+      this.loadEmailTemplate(emailTemplate);
     }
   }
 
-  searchTemplate(query) {
-    CommonUtilityFunctions.logOnConsole(query, false, event);
-    this.filteredTemplateArray = [];
-    for (const element of this.emailTemplatesArray) {
-      if (element.label.toLowerCase().includes(query.toLowerCase())) {
-        this.filteredTemplateArray.push(element);
+  private loadEmailTemplate(emailTemplate: EmailTemplateInterface) {
+    this.showEmailFormLoader();
+    this.selectedEmailTemplate = emailTemplate;
+    this.loadEmailTemplateData(emailTemplate.value);
+  }
+
+  loadEmailTemplateData(templateValue: string) {
+    if (CommonUtilityFunctions.checkStringAvailability(templateValue)) {
+      const formData = new URLSearchParams();
+      formData.set('templateId', templateValue);
+      this.utilityService.makerequest(this, this.onLoadEmailTemplateData, LcpRestUrls.email_template_data_url, 
+                                      'POST', formData.toString(), 'application/x-www-form-urlencoded');
+    } else {
+      this.setDefaultData();
+      CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
+      this.hideEmailFormLoader();
+    }
+  }
+
+  onLoadEmailTemplateData(context: any, response: any) {
+    if (response['success']) {
+      let emailTemplate = response['emailTemplate'];
+      context.emailInterface['to'] = emailTemplate['to'];
+      context.emailInterface['cc'] = emailTemplate['cc'];
+      context.emailInterface['bcc'] = emailTemplate['bcc'];
+      context.emailInterface['subject'] = emailTemplate['subject'];
+      context.emailInterface['body'] = emailTemplate['body'];      
+      CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, context.emailInterface.body);
+      context.attachments = [];
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
+        }
+      });
+    }
+    context.hideEmailFormLoader();
+  }
+
+  sendEmail() {
+    this.showEmailFormLoader();
+    const formData = new FormData();
+    formData.append('to', this.emailInterface['to']);
+    formData.append('cc', this.emailInterface['cc']);
+    formData.append('bcc', this.emailInterface['bcc']);
+    formData.append('subject', this.emailInterface['subject']);
+    formData.append('body', CommonUtilityFunctions.getDataFromRichEditor(this.emailBodyEditorId));
+    const inputFilesNames = ['inputFile1', 'inputFile2', 'inputFile3', 'inputFile4'];
+    if (CommonUtilityFunctions.checkNonEmptyList(this.attachments)) {
+      for (let i = 0; i < this.attachments.length; i++) {
+        if (i >= 4) {
+          break;
+        }
+        formData.append(inputFilesNames[i], this.attachments[i]);
       }
     }
+    this.utilityService.makerequest(this, this.onSendEmail, LcpRestUrls.send_email_url, 
+                                    'POST', formData, 'multipart/form-data', true);
+  }
+
+  onSendEmail(context: any, response: any) {
+    context.helperService.showAlertDialog({
+      isSuccess: response['success'],
+      message: response['message'],
+      onButtonClicked: () => {
+      }
+    });
+    if (response['success']) {
+      context.setDefaultData();
+      CommonUtilityFunctions.setDataForRichEditor(context.emailBodyEditorId, '');
+    }
+    context.hideEmailFormLoader();
+  }
+
+  closeEmailPopup() {
+    if (this.isEmailFormDirty()) {
+      this.helperService.showConfirmationDialog({
+        message: LcpConstants.email_dismiss_data_exists_error,
+        onOk: () => {
+          this.closeEmail();
+        },
+        onCancel: () => {
+        }
+      });
+    } else {
+      this.closeEmail();
+    }
+  }
+
+  private closeEmail() {
+    this.setDefaultData();
+    CommonUtilityFunctions.setDataForRichEditor(this.emailBodyEditorId, '');
+    this.hideEmailPopup = true;
   }
 }
 

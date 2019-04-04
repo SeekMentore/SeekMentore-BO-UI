@@ -6,7 +6,6 @@ import { EnvironmentConstants } from "src/app/utils/environment-constants";
 import { HelperService } from "src/app/utils/helper.service";
 import { LcpConstants } from "src/app/utils/lcp-constants";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
-import { AlertDialogEvent } from "../utils/alert-dialog/alert-dialog.component";
 import { EmailInterface } from "../utils/email/email.component";
 
 @Component({
@@ -46,7 +45,6 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
     this.staticPageURl = EnvironmentConstants.PUBLIC_PAGES_URL;
     this.idleTime = 0;
     this.setActivityTimer();
-    this.emailData = null; 
     this.parseMenu(); 
     this.getServerConfiguration();  
   }
@@ -87,13 +85,12 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
       context.divertedEmailId = response['divertedEmailId'];
       context.lastDeployedVersionAndDate = response['lastDeployedVersionAndDate'];
     } else {
-      const myListener: AlertDialogEvent = {
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: response['message'],
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -125,13 +122,12 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
       context.computeHasAccessToServerInfo();
     } else {
-      const myListener: AlertDialogEvent = {
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: response['message'],
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -142,13 +138,12 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
         break;
       }
       default : {
-        const myListener: AlertDialogEvent = {
+        this.helperService.showAlertDialog({
           isSuccess: false,
           message: itemName + ' - Does not have any action configured',
           onButtonClicked: () => {
           }
-        };
-        this.helperService.showAlertDialog(myListener);
+        });
       }
     }
   } 

@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { GridDataInterface, GridComponent } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { HelperService } from 'src/app/utils/helper.service';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { Router } from '@angular/router';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { Router } from '@angular/router';
-import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
-import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-subscription-packages',
@@ -41,11 +40,10 @@ export class SubscriptionPackagesComponent implements OnInit {
 
   ngOnInit() {
     this.setUpGridMetaData();
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);
+    });
   }
 
   ngAfterViewInit() {

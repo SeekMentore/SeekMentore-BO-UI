@@ -1,4 +1,4 @@
-.attachment_layout {
+  .attachment_layout {
     display: flex;
     flex-direction: row;
     background-color: var(--colorPrimary);
@@ -14,7 +14,7 @@
   }
   
   .dropdown-select-content {
-    display: none;
+    display: block;
     position: absolute;
     background-color: #f0f0f0;
     right: 0;
@@ -47,4 +47,79 @@
   
   .show {
     display: block;
-  }  
+  }
+
+  .email-dialog {
+    display: flex; 
+    overflow-y: auto;
+  }
+
+  .email-form-div {
+    width: 100%;
+    display: flex; 
+    flex-direction: column; 
+    margin: 20px; 
+    justify-content: center; 
+    align-items: center;
+  }
+
+  .email-form {
+    max-width: 70%; 
+    min-width: 700px; 
+    width: 70%
+  }
+
+  .email-header-div {
+    display: flex; 
+    flex-direction: row; 
+    align-items: center;
+  }
+
+  .email-attachment-div {
+    display: flex; 
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    flex: 1 1 auto;
+  }
+
+  .attachment-name-span {
+    cursor: default;
+  }
+
+  .attachment-remove-span {
+    cursor: pointer;
+  }
+
+  .email-template-selector-dropdown-div {
+    min-width: 225px;
+  }
+
+  .selected-template-name-dropdown-span {
+    margin: 0; 
+    width: 100%; 
+    background-color: white; 
+    cursor:pointer;
+  }
+
+  .search-template-input-box {
+    width: calc(100% - 10px);
+  }
+
+  .email-body-textarea {
+    min-height: 200px; 
+    max-height: 200px; 
+    border: solid 1px var(--divider);
+  }
+
+  .email-button-div {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .email-button-div button {
+    margin: 8px;
+  }
+
+  .email-form-textarea {
+    max-height: 40px;
+  }

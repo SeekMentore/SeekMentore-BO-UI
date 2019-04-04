@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { BecomeTutorDataAccess } from 'src/app/login-controlled-pages/employee/support/tutor-registration/tutor-registration.component';
 import { AppUtilityService } from "src/app/utils/app-utility.service";
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from "src/app/utils/helper.service";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
-import { BecomeTutorDataAccess } from 'src/app/login-controlled-pages/employee/support/tutor-registration/tutor-registration.component';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 
 @Component({
   selector: 'app-become-tutor-data',
@@ -152,13 +151,12 @@ export class BecomeTutorDataComponent implements OnInit {
   }
 
   onUpdateTutorRecord(context: any, data: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: data['success'],
       message: data['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (data['success']) {
       context.editRecordForm = false;
     } 

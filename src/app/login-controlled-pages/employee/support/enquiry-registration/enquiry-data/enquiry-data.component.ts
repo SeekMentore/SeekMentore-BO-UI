@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { EnquiryDataAccess } from 'src/app/login-controlled-pages/employee/support/enquiry-registration/enquiry-registration.component';
+import { AppUtilityService } from "src/app/utils/app-utility.service";
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AppUtilityService } from "src/app/utils/app-utility.service";
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { HelperService } from "src/app/utils/helper.service";
 import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
-import { EnquiryDataAccess } from 'src/app/login-controlled-pages/employee/support/enquiry-registration/enquiry-registration.component';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-enquiry-data',
@@ -133,13 +132,12 @@ export class EnquiryDataComponent implements OnInit {
   }
 
   onUpdateEnquiryRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
     }

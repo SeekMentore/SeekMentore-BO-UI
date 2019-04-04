@@ -10,49 +10,47 @@ import { CommonUtilityFunctions } from '../common-utility-functions';
 })
 export class PromptDialogComponent implements OnInit {
 
-  promptDialog: HTMLDivElement;
-  showErrorMessage: boolean;
+  showErrorMessage: boolean = false;
+  hidePromptBox: boolean = true;
+  promptTitle: string = '';
+  placeHolderText: string = '';
+  textSectionValue: string = '';
+  isTextRequired: boolean = false;
+  eventInterface: PromptDialogInterface = null;
 
-  constructor(private helperService: HelperService) {
-  }
+  constructor(private helperService: HelperService) {}
 
   ngOnInit() {
-    this.promptDialog = <HTMLDivElement>document.getElementById('prompt-dialog');
-    this.showErrorMessage = false;
-    this.helperService.promptDialogState.subscribe((eventListener: PromptDialogInterface) => {
+    this.helperService.promptDialogState.subscribe((eventInterface: PromptDialogInterface) => {
       this.showErrorMessage = false;
-      const okButton = <HTMLButtonElement>this.promptDialog.getElementsByClassName('ok-button')[0];
-      const cancelButton = <HTMLButtonElement>this.promptDialog.getElementsByClassName('cancel-button')[0];
-      const inputElement = <HTMLInputElement>this.promptDialog.getElementsByClassName('textarea_field')[0];
-      const titleElement = <HTMLSpanElement>this.promptDialog.getElementsByClassName('title')[0];
-      inputElement.value = '';
-      titleElement.innerText = CommonUtilityFunctions.checkStringAvailability(eventListener.titleText) ? eventListener.titleText : LcpConstants.prompt_dialog_title;
-      inputElement.placeholder = CommonUtilityFunctions.checkStringAvailability(eventListener.placeholderText) ? eventListener.placeholderText : LcpConstants.prompt_dialog_title;
-      inputElement.required = eventListener.required;
-      okButton.onclick = (ev: Event) => {
-        if (eventListener.required && inputElement.value.trim() === '') {
-          this.showErrorMessage = true;
-        } else {
-          eventListener.onOk(inputElement.value);
-          this.promptDialog.style.display = 'none';
-        }
-      };
-      cancelButton.onclick = (ev: Event) => {
-        eventListener.onCancel();
-        this.promptDialog.style.display = 'none';
-      };
-      this.promptDialog.style.display = 'flex';
+      this.textSectionValue = '';
+      this.promptTitle = CommonUtilityFunctions.checkStringAvailability(eventInterface.titleText) ? eventInterface.titleText : LcpConstants.prompt_dialog_title;
+      this.placeHolderText = CommonUtilityFunctions.checkStringAvailability(eventInterface.placeholderText) ? eventInterface.placeholderText : LcpConstants.prompt_dialog_title;
+      this.isTextRequired = eventInterface.required;
+      this.eventInterface = eventInterface;
+      this.hidePromptBox = false;
     });
   }
 
+  onOk() {
+    if (this.isTextRequired && !CommonUtilityFunctions.checkStringAvailability(this.textSectionValue)) {
+      this.showErrorMessage = true;
+    } else {
+      this.eventInterface.onOk(this.textSectionValue);
+      this.hidePromptBox = true;
+    }
+  }
+
+  onCancel() {
+    this.eventInterface.onCancel();
+    this.hidePromptBox = true;
+  }
 }
 
 export interface PromptDialogInterface {
   required: boolean;
   titleText: string;
   placeholderText: string;
-
   onOk(message: string): void;
-
   onCancel(): void;
 }

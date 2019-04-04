@@ -1,0 +1,16 @@
+.dialog {
+    display: flex;
+}
+
+.prompt-form {
+    border: none; 
+    box-shadow: none; 
+    margin: 0; 
+    padding: 0; 
+    width: 80%
+}
+
+.error-span {
+    padding: 0; 
+    padding-top: 10px
+}

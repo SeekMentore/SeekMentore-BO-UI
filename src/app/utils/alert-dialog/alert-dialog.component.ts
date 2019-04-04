@@ -10,39 +10,53 @@ import { CommonUtilityFunctions } from '../common-utility-functions';
 })
 export class AlertDialogComponent implements OnInit {
 
-  alertDialog: HTMLDivElement;
+  hideAlertBox: boolean = true;
+  isSuccess: boolean = true;
+  alertTitle: string = '';
+  alertMessage: string = '';
+  alertMessagesList: string[] = [];
+  isMultiMessage: boolean = false;
+  eventInterface: AlertDialogInterface = null;
 
-  constructor(private helperService: HelperService) { }
+  constructor(private helperService: HelperService) {}
 
   ngOnInit() {
-    this.alertDialog = <HTMLDivElement>document.getElementById('alert-dialog');
-    this.helperService.alertDialogState.subscribe((eventListener: AlertDialogEvent) => {
-      const actionButton = <HTMLButtonElement>this.alertDialog.getElementsByClassName('action-button')[0];
-      const titleElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('title')[0];
-      const messageElement = <HTMLSpanElement>this.alertDialog.getElementsByClassName('message')[0];
-      actionButton.classList.remove('cancel-button');
-      actionButton.classList.remove('ok-button');
-      if (eventListener.isSuccess) {
-        titleElement.innerText = LcpConstants.success_alert_title;
-        actionButton.innerText = 'ok';
-        actionButton.classList.add('ok-button');
+    this.helperService.alertDialogState.subscribe((eventInterface: AlertDialogInterface) => {
+      this.isMultiMessage = false;
+      this.alertMessagesList = [];
+      if (eventInterface.isSuccess) {
+        this.isSuccess = true;
+        this.alertTitle = LcpConstants.success_alert_title;
       } else {
-        titleElement.innerText = LcpConstants.failure_alert_title;
-        actionButton.innerText = 'Dismiss';
-        actionButton.classList.add('cancel-button');
+        this.isSuccess = false;
+        this.alertTitle = LcpConstants.failure_alert_title;
       }
-      messageElement.innerText = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(eventListener.message);
-
-      actionButton.onclick = (ev: Event) => {
-        eventListener.onButtonClicked();
-        this.alertDialog.style.display = 'none';
-      };
-      this.alertDialog.style.display = 'flex';
+      this.alertMessage = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(eventInterface.message);
+      if (CommonUtilityFunctions.checkStringAvailability(this.alertMessage)) {
+        if (CommonUtilityFunctions.checkNonEmptyList(this.alertMessage.split('\n'))) {
+          let messageList: string[] = this.alertMessage.split('\n');
+          messageList.forEach((message) => {
+            if (CommonUtilityFunctions.checkStringAvailability(message)) {
+              this.alertMessagesList.push(message);
+            }
+          });
+          if (CommonUtilityFunctions.checkNonEmptyList(this.alertMessagesList)) {
+            this.isMultiMessage = true;
+          }
+        }
+      }
+      this.eventInterface = eventInterface;
+      this.hideAlertBox = false;
     });
+  }
+
+  onButtonClicked() {
+    this.eventInterface.onButtonClicked();
+    this.hideAlertBox = true;
   }
 }
 
-export interface AlertDialogEvent {
+export interface AlertDialogInterface {
   isSuccess: boolean;
   message: string;
   onButtonClicked(): void;

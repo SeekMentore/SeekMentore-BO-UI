@@ -1,13 +1,12 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {GridRecord} from 'src/app/utils/grid/grid-record';
-import {ComplaintDataAccess} from '../complaints.component';
-import {CommonFilterOptions} from "src/app/utils/common-filter-options";
-import {AppUtilityService} from "src/app/utils/app-utility.service";
-import {HelperService} from "src/app/utils/helper.service";
-import {LcpRestUrls} from "../../../../../utils/lcp-rest-urls";
+import { Component, Input, OnInit } from '@angular/core';
+import { AppUtilityService } from "src/app/utils/app-utility.service";
+import { CommonFilterOptions } from "src/app/utils/common-filter-options";
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { HelperService } from "src/app/utils/helper.service";
+import { LcpRestUrls } from "../../../../../utils/lcp-rest-urls";
+import { ComplaintDataAccess } from '../complaints.component';
 
 @Component({
   selector: 'app-complaint-data',
@@ -66,15 +65,14 @@ export class ComplaintDataComponent implements OnInit {
   }
 
   onUpdateComplaintRecord(context: any, data: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: data['success'],
       message: data['message'],
       onButtonClicked: () => {
       }
-    };
-    this.helperService.showAlertDialog(myListener);
+    });
     if (data['success']) {
-      this.editRecordForm = false;
+      context.editRecordForm = false;
     }
   }
 }

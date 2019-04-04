@@ -9,7 +9,6 @@ import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 })
 export class BreadCrumbComponent implements OnInit {
 
-  breadCrumbDiv: HTMLDivElement;
   crumbs: {
     label: string,
     url: string,
@@ -17,23 +16,21 @@ export class BreadCrumbComponent implements OnInit {
     isActivated: boolean
   }[] = [];
 
-  constructor(private helperService: HelperService) { }
+  constructor(private helperService: HelperService) {}
 
   ngOnInit() {
-    this.breadCrumbDiv = <HTMLDivElement>document.getElementById('bread-crumb-main-div');
-    this.helperService.breadCrumbState.subscribe((eventListener: BreadCrumbEvent) => {
-      if (eventListener.resetCrumbList) {
+    this.helperService.breadCrumbState.subscribe((eventInterface: BreadCrumbInterface) => {
+      if (eventInterface.resetCrumbList) {
         this.crumbs = [];
       }
-      if (CommonUtilityFunctions.checkObjectAvailability(eventListener.newCrumbList)) {
-        this.crumbs = this.crumbs.concat(eventListener.newCrumbList);
+      if (CommonUtilityFunctions.checkObjectAvailability(eventInterface.newCrumbList)) {
+        this.crumbs = this.crumbs.concat(eventInterface.newCrumbList);
       }
     });
   }
-
 }
 
-export interface BreadCrumbEvent {
+export interface BreadCrumbInterface {
   newCrumbList: {
     label: string,
     url: string,

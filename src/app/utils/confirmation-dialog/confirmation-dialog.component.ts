@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HelperService } from '../helper.service';
 import { LcpConstants } from '../lcp-constants';
+import { CommonUtilityFunctions } from '../common-utility-functions';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -9,34 +10,51 @@ import { LcpConstants } from '../lcp-constants';
 })
 export class ConfirmationDialogComponent implements OnInit {
 
-  confirmationDialog: HTMLDivElement;
+  hideConfirmBox: boolean = true;
+  confirmTitle: string = '';
+  confirmMessage: string = '';
+  confirmMessagesList: string[] = [];
+  isMultiMessage: boolean = false;
+  eventInterface: ConfirmationDialogInterface = null;
 
-  constructor(private helperService: HelperService) { }
+  constructor(private helperService: HelperService) {}
 
   ngOnInit() {
-    this.confirmationDialog = <HTMLDivElement>document.getElementById('confirmation-dialog');
-    this.helperService.confirmationDialogState.subscribe((eventListener: ConfirmationDialogEvent) => {
-      const okButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('ok-button')[0];
-      const cancelButton = <HTMLButtonElement>this.confirmationDialog.getElementsByClassName('cancel-button')[0];
-      const messageElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('message')[0];
-      const titleElement = <HTMLSpanElement>this.confirmationDialog.getElementsByClassName('title')[0];
-      titleElement.innerText = LcpConstants.confirmation_dialog_title;
-      messageElement.innerText = eventListener.message;
-      okButton.onclick = (ev: Event) => {
-        eventListener.onOk();
-        this.confirmationDialog.style.display = 'none';
-      };
-      cancelButton.onclick = (ev: Event) => {
-        eventListener.onCancel();
-        this.confirmationDialog.style.display = 'none';
-      };
-      this.confirmationDialog.style.display = 'flex';
+    this.helperService.confirmationDialogState.subscribe((eventInterface: ConfirmationDialogInterface) => {
+      this.isMultiMessage = false;
+      this.confirmMessagesList = [];
+      this.confirmTitle = LcpConstants.confirmation_dialog_title;
+      this.confirmMessage = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(eventInterface.message);
+      if (CommonUtilityFunctions.checkStringAvailability(this.confirmMessage)) {
+        if (CommonUtilityFunctions.checkNonEmptyList(this.confirmMessage.split('\n'))) {
+          let messageList: string[] = this.confirmMessage.split('\n');
+          messageList.forEach((message) => {
+            if (CommonUtilityFunctions.checkStringAvailability(message)) {
+              this.confirmMessagesList.push(message);
+            }
+          });
+          if (CommonUtilityFunctions.checkNonEmptyList(this.confirmMessagesList)) {
+            this.isMultiMessage = true;
+          }
+        }
+      }
+      this.eventInterface = eventInterface;
+      this.hideConfirmBox = false;
     });
   }
 
+  onOk() {
+    this.eventInterface.onOk();
+    this.hideConfirmBox = true;
+  }
+
+  onCancel() {
+    this.eventInterface.onCancel();
+    this.hideConfirmBox = true;
+  }
 }
 
-export interface ConfirmationDialogEvent {
+export interface ConfirmationDialogInterface {
   message: string;
   onOk(): void;
   onCancel(): void;

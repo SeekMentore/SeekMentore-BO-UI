@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
-import { BreadCrumbEvent } from '../bread-crumb/bread-crumb.component';
-import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 
 @Component({
   selector: 'app-home',
@@ -21,10 +20,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.userType = localStorage.getItem(LcpConstants.user_type_key); 
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);   
+    });   
   }
 }

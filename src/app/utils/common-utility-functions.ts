@@ -438,6 +438,16 @@ export class CommonUtilityFunctions {
     }
   }
 
+  public static getHTMLInputElementValue(elementId: string) {
+    const element: HTMLInputElement = <HTMLInputElement>document.getElementById(elementId);
+    if (CommonUtilityFunctions.checkObjectAvailability(element)) {
+      return element.value;
+    } else {
+      CommonUtilityFunctions.logOnConsole('Element with HTML ID - ' + elementId + ' does not exists, hence cannot get value');
+    }
+    return null;
+  }
+
   public static logOnConsole(messageOrObject: any, isError: boolean = false, event: Event = null) {
     if (EnvironmentConstants.IS_LOGGING_ENABLED) {
       if (isError) {

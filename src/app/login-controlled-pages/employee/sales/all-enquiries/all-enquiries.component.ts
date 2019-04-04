@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { ActionButton } from 'src/app/utils/grid/action-button';
 import { Column } from 'src/app/utils/grid/column';
@@ -10,9 +12,6 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
-import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-enquiries',
@@ -53,11 +52,10 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setUpGridMetaData();
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);
+    });
   }
 
   ngAfterViewInit() {

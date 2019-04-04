@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HelperService } from 'src/app/utils/helper.service';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { Router } from '@angular/router';
-import { BreadCrumbEvent } from '../../bread-crumb/bread-crumb.component';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
+import { HelperService } from 'src/app/utils/helper.service';
 
 @Component({
   selector: 'app-tutor-home',
@@ -16,11 +15,9 @@ export class TutorHomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);   
+    });   
   }
-
 }

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
 import { AppUtilityService } from "src/app/utils/app-utility.service";
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
@@ -107,13 +106,12 @@ export class QueryDataComponent implements OnInit {
   }
 
   onUpdateQueryRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
     } 

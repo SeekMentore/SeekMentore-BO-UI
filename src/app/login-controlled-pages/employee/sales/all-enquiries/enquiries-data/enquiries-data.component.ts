@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { AllEnquiriesDataAccess } from '../all-enquiries.component';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { Column } from 'src/app/utils/grid/column';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { AllEnquiriesDataAccess } from '../all-enquiries.component';
 
 @Component({
   selector: 'app-enquiries-data',
@@ -261,13 +260,12 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   onUpdateEnquiryRecord(context: any, data: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: data['success'],
       message: data['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (data['success']) {
       context.editRecordForm = false;
     }

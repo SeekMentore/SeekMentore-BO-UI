@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { MappedTutorScheduleDemoAccess } from '../schedule-demo.component';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { Column } from 'src/app/utils/grid/column';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { MappedTutorScheduleDemoAccess } from '../schedule-demo.component';
 
 @Component({
   selector: 'app-schedule-demo-data',
@@ -482,13 +481,12 @@ export class ScheduleDemoDataComponent implements OnInit, AfterViewInit {
   }
 
   onUpdateScheduleDemoMappedTutorRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
     }

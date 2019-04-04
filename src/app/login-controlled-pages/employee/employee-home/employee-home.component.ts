@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { Router } from '@angular/router';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { Column } from 'src/app/utils/grid/column';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { BreadCrumbEvent } from '../../bread-crumb/bread-crumb.component';
-import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-home',
@@ -48,11 +47,10 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);
+    });
   }
 
   ngAfterViewInit() {

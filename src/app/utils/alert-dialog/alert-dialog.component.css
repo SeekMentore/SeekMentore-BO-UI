@@ -1,0 +1,12 @@
+.dialog {
+    display: flex;
+}
+
+.multi-message-div {
+    padding-bottom: 15px;
+}
+
+.message-div {
+    display: flex;
+    margin-bottom: -30px;
+}

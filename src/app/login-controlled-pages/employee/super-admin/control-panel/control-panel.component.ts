@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
 import { Router } from '@angular/router';
-import { BreadCrumbEvent } from 'src/app/login-controlled-pages/bread-crumb/bread-crumb.component';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
+import { HelperService } from 'src/app/utils/helper.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -16,11 +15,9 @@ export class ControlPanelComponent implements OnInit {
   }
 
   ngOnInit() {
-    const breadCrumb: BreadCrumbEvent = {
+    this.helperService.setBreadCrumb({
       newCrumbList: ApplicationBreadCrumbConfig.getBreadCrumbList(this.router.routerState.snapshot.url),    
       resetCrumbList: true
-    };
-    this.helperService.setBreadCrumb(breadCrumb);
+    });
   }
-
 }

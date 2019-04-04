@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
-import { AlertDialogEvent } from 'src/app/utils/alert-dialog/alert-dialog.component';
+import { AppConstants } from 'src/app/utils/app-constants';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
@@ -11,7 +11,6 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AssignmentAttendanceMarkingAccess } from '../assignment-attendance.component';
-import { AppConstants } from 'src/app/utils/app-constants';
 
 @Component({
   selector: 'app-mark-assignment-attendance',
@@ -143,13 +142,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       context.formEditMandatoryDisbaled = gridRecordObject.additionalProperties['assignmentMarkAndUpdateAttendanceFormEditDisbaled'];
       context.setUpDataModal(gridRecordObject.record, null, true);
     } else {
-      const myListener: AlertDialogEvent = {
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: gridRecordObject.errorMessage,
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -165,13 +163,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         context.otherFileExists = CommonUtilityFunctions.decodeTrueFalseFromYN(assignmentAttendanceUploadedDocumentCountAndExistenceObject['OTHER_FILE_EXIST']);
       }
     } else {
-      const myListener: AlertDialogEvent = {
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: response['message'],
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -188,13 +185,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
           this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
         },
         onCancel: () => {
-          const myListener: AlertDialogEvent = {
+          this.helperService.showAlertDialog({
             isSuccess: false,
             message: 'Action Aborted',
             onButtonClicked: () => {
             }
-          };
-          this.helperService.showAlertDialog(myListener);
+          });
         }
       });
     }
@@ -370,13 +366,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
                                         'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
       },
       onCancel: () => {
-        const myListener: AlertDialogEvent = {
+        this.helperService.showAlertDialog({
           isSuccess: false,
           message: 'File not removed',
           onButtonClicked: () => {
           }
-        };
-        this.helperService.showAlertDialog(myListener);
+        });
       }
     });
   }
@@ -398,22 +393,20 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         if (removedDocumentType === 'other') {
           context.otherFileExists = false;
         }
-        const myListener: AlertDialogEvent = {
+        context.helperService.showAlertDialog({
           isSuccess: true,
           message: 'Successfully removed document',
           onButtonClicked: () => {
           }
-        };
-        context.helperService.showAlertDialog(myListener);
+        });
       }
     } else {
-      const myListener: AlertDialogEvent = {
+      context.helperService.showAlertDialog({
         isSuccess: false,
         message: response['message'],
         onButtonClicked: () => {
         }
-      };
-      context.helperService.showAlertDialog(myListener);
+      });
     }
     context.hideFormLoaderMask();
   }
@@ -437,13 +430,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         this.hideFormLoaderMask();
       }, (this.totalFiles * 5000));
     } else {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'No files are present for this Attendance Record',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);
+      });
     }
   }
 
@@ -484,13 +476,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
                 this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
               },
               onCancel: () => {
-                const myListener: AlertDialogEvent = {
+                this.helperService.showAlertDialog({
                   isSuccess: false,
                   message: 'Action Aborted',
                   onButtonClicked: () => {
                   }
-                };
-                this.helperService.showAlertDialog(myListener);
+                });
               }
             });
           }
@@ -714,13 +705,12 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.insert_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Please select a valid Class Duration before Inserting Attendance',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);      
+      });      
     }
   }
 
@@ -756,24 +746,22 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.update_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
-      const myListener: AlertDialogEvent = {
+      this.helperService.showAlertDialog({
         isSuccess: false,
         message: 'Please select a valid Class Duration before Updating Attendance',
         onButtonClicked: () => {
         }
-      };
-      this.helperService.showAlertDialog(myListener);      
+      });      
     }
   }
 
   onInsertOrUpdateAssignmentAttendanceRecord(context: any, response: any) {
-    const myListener: AlertDialogEvent = {
+    context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
       onButtonClicked: () => {
       }
-    };
-    context.helperService.showAlertDialog(myListener);
+    });
     if (response['success']) {
       context.editRecordForm = false;
       context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);

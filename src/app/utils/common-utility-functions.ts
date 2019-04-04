@@ -103,6 +103,22 @@ export class CommonUtilityFunctions {
     return selectedOptionsArray;
   }
 
+  public static getLabelForLookupValue(lookupList: { value: any, label: any }[], lookupValue: string) {
+    let lookupLabel: string = '';
+    if (CommonUtilityFunctions.checkStringAvailability(lookupValue)) {
+      if (CommonUtilityFunctions.checkNonEmptyList(lookupList)) {
+        for (var i = 0; i < lookupList.length; i++) {
+          let lookupItem: { value: any, label: any } = lookupList[i];
+          if (lookupItem.value.toString() === lookupValue) {
+            lookupLabel = lookupItem.label.toString();
+            break;
+          }
+        }
+      }
+    }
+    return lookupLabel;
+  }
+
   public static checkStringContainsText(stringObject: string, textToSearch: string) {
     if (CommonUtilityFunctions.checkObjectAvailability(stringObject)) {
       if ('' !== stringObject.trim()) {
@@ -120,7 +136,7 @@ export class CommonUtilityFunctions {
       if (selectOptions.length > 0) {
         selectOptions.forEach( (selectOption) => {
           valueList.push(selectOption.value);
-        })
+        });
       }
     }
     return valueList;

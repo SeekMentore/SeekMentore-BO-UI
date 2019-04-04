@@ -12,7 +12,10 @@
   </form>
   <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
     <input type="text" value="" size="10" name="tutorSerialId" id="profileDownload-tutorSerialId" />
-  </form>  
+  </form> 
+  <div *ngIf="showAlertMessage" class="form-container-div">
+    <span>{{alertMessage}}</span>
+  </div>
   <div *ngIf="showRecordUpdateForm" class="form-container-div">
     <form *ngIf="showRecordUpdateForm" class="form-container" style="max-width: 80%">
       <div class="form-container-title">

@@ -581,13 +581,23 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'documentSerialId',
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-            gridComponentObject.showGridLoadingMask()
-            const documentSerialIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentSerialId');
-            documentSerialIdElement.value = column.getValueForColumn(record);
-            this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadTutorDocument', 'POST');
-            setTimeout(() => {
-              gridComponentObject.hideGridLoadingMask();
-            }, 5000);
+            let documentSerialId: string = column.getValueForColumn(record);
+            if (CommonUtilityFunctions.checkStringAvailability(documentSerialId)) {
+              gridComponentObject.showGridLoadingMask();
+              const documentSerialIdElement: HTMLInputElement = <HTMLInputElement>document.getElementById('tutorDocumentDownloadForm-documentSerialId');
+              documentSerialIdElement.value = documentSerialId;
+              this.utilityService.submitForm('tutorDocumentDownloadForm', '/rest/registeredTutor/downloadTutorDocument', 'POST');
+              setTimeout(() => {
+                gridComponentObject.hideGridLoadingMask();
+              }, 5000);
+            } else {
+              this.helperService.showAlertDialog({
+                isSuccess: false,
+                message: 'Document Type "' + CommonUtilityFunctions.getLabelForLookupValue(CommonFilterOptions.tutorDocumentTypeFilterOptions, record.getProperty('documentType')) + '" is unavailable for download, Please send a reminder to the tutor to upload.',
+                onButtonClicked: () => {
+                }
+              });
+            }
           }
         },{
           id: 'documentType',

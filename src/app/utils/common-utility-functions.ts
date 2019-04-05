@@ -212,8 +212,7 @@ export class CommonUtilityFunctions {
         break;
       }
       case 'date' : {
-        let value = event.target.valueAsDate;
-        updatedData[key] = CommonUtilityFunctions.formatDateYYYYMMDD(value);
+        updatedData[key] = CommonUtilityFunctions.formatDateYYYYMMDD((new Date(event.target.valueAsNumber + (new Date().getTimezoneOffset() * 60 * 1000))));
         break;
       }
       case 'string' : {
@@ -472,5 +471,17 @@ export class CommonUtilityFunctions {
 
   public static decodeTrueFalseFromYN(yesNoResponse: string, nonCaseSensitive: boolean = false) {
     return (CommonUtilityFunctions.checkStringAvailability(yesNoResponse) && ('Y' === yesNoResponse || (nonCaseSensitive && 'y' === yesNoResponse)));      
+  }
+
+  public static getAllIdsStringFromPropertyAndAlternatePropertyList(selectedPropertyList: any[], selectedAlternatePropertyList: any[]): string {
+    let allIdsListString: string = '';
+    if (CommonUtilityFunctions.checkNonEmptyList(selectedPropertyList)) {
+      allIdsListString += selectedPropertyList.join(';');
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(selectedAlternatePropertyList)) {
+      allIdsListString += ':';
+      allIdsListString += selectedAlternatePropertyList.join(';');
+    }
+    return allIdsListString;
   }
 }

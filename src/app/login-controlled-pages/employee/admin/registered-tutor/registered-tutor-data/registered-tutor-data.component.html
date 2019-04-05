@@ -48,8 +48,11 @@
         </tr>
         <tr>
           <td class="td-label"><label>Name</label></td>
-          <td><input class="input_field" type="text" id="tutorName" value="{{tutorRecord.name}}"
-                     [disabled]="!editRecordForm" (change)="updateRegisteredTutorProperty('name', $event, 'string')">
+          <td><input class="input_field" 
+                     type="text" 
+                     id="tutorName" 
+                     value="{{tutorRecord.name}}"
+                     [disabled]="!editRecordForm" (change)="updateRegisteredTutorProperty('name', $event, 'string')"/>
           </td>
         </tr>
         <tr>
@@ -62,7 +65,10 @@
         </tr>
         <tr>
           <td class="td-label"><label>Date of Brith</label></td>
-          <td><input class="input_field" type="date" value="{{dateOfBirthValue}}"
+          <td><input class="input_field" 
+                     id="dateOfBirth"
+                     type="date" 
+                     value="{{dateOfBirthValue}}"
                      [disabled]="!editRecordForm"
                      (change)="updateRegisteredTutorProperty('dateOfBirth', $event, 'date')"></td>
         </tr>
@@ -112,9 +118,13 @@
         </tr>
         <tr>
           <td class="td-label"><label>Teaching Experience</label></td>
-          <td><input class="input_field" type="number" id="teachingExp" value="{{tutorRecord.teachingExp}}"
+          <td><input class="input_field" 
+                     type="number" 
+                     id="teachingExp"
+                     value="{{tutorRecord.teachingExp}}"
                      [disabled]="!editRecordForm"
-                     (change)="updateRegisteredTutorProperty('teachingExp', $event, 'number')"></td>
+                     (change)="updateRegisteredTutorProperty('teachingExp', $event, 'number')"/>
+          </td>
         </tr>
         <tr>
           <td class="td-label"><label>Interested Student Grades</label></td>
@@ -163,7 +173,7 @@
                       id="additionalDetails"
                       [disabled]="!editRecordForm" 
                       (change)="updateRegisteredTutorProperty('additionalDetails', $event, 'string')"
-                      >{{tutorRecord.additionalDetails}}</textarea>
+              >{{tutorRecord.additionalDetails}}</textarea>
           </td>
         </tr>
         <tr>
@@ -174,7 +184,7 @@
                       id="addressDetails"
                       [disabled]="!editRecordForm" 
                       (change)="updateRegisteredTutorProperty('addressDetails', $event, 'string')"
-                      >{{tutorRecord.addressDetails}}</textarea>
+              >{{tutorRecord.addressDetails}}</textarea>
           </td>
         </tr>
         <tr>
@@ -221,18 +231,18 @@
               <span>Attach Aadhar Card:</span>
               <label *ngIf="!aadharCardFile" for="aadhar_card_file" class="choose_file_container">
                 <input name="id_proof" type="file" accept="file/*" id="aadhar_card_file" [disabled]="!editRecordForm"
-                        (change)="attachFile($event,'aadharCard')">
+                        (change)="attachFile($event,'03')">
                 <span class="button-primary"> Click to Upload </span>              
               </label>
               <div *ngIf="aadharCardFile" class="attachment_layout">
                 <span title="{{aadharCardFile.name.split('/').pop()}}" style="cursor: default">{{aadharCardFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
-                <span style="cursor: pointer" (click)="detachFile('aadharCard')">&times;</span>
+                <span style="cursor: pointer" (click)="detachFile('03')">&times;</span>
               </div>
             </div>
             <div *ngIf="aadharCardFileExists">
               <div style="margin-left: 20%;">Aadhar Card File:</div>
-              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('aadharCard')">Remove</button>
-              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('aadharCard')">Download</button>
+              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('03')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('03')">Download</button>
             </div>
             <div *ngIf="!aadharCardFileExists && !editRecordForm">
                 <div style="margin-left: 20%;">No Aadhar Card File</div>
@@ -244,18 +254,18 @@
               <span>Attach Pan Card:</span>
               <label *ngIf="!panCardFile" for="pan_card_file" class="choose_file_container">
                 <input name="id_proof" type="file" accept="file/*" id="pan_card_file" [disabled]="!editRecordForm"
-                        (change)="attachFile($event,'panCard')">
+                        (change)="attachFile($event,'01')">
                 <span class="button-primary"> Click to Upload </span>
               </label>
               <div *ngIf="panCardFile" class="attachment_layout">
                 <span title="{{panCardFile.name.split('/').pop()}}" style="cursor: default">{{panCardFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
-                <span style="cursor: pointer" (click)="detachFile('panCard')">&times;</span>
+                <span style="cursor: pointer" (click)="detachFile('01')">&times;</span>
               </div>
             </div>
             <div *ngIf="panCardFileExists">
               <div style="margin-left: 20%;">Pan Card File:</div>
-              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('panCard')">Remove</button>
-              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('panCard')">Download</button>
+              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('01')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('01')">Download</button>
             </div>
             <div *ngIf="!panCardFileExists && !editRecordForm">
                 <div style="margin-left: 20%;">No Pan Card File</div>
@@ -267,18 +277,18 @@
               <span>Attach Photo:</span>
               <label *ngIf="!photographFile" for="test_file" class="choose_file_container">
                 <input name="id_proof" type="file" accept="file/*" id="test_file" [disabled]="!editRecordForm"
-                        (change)="attachFile($event,'photo')">
+                        (change)="attachFile($event,'02')">
                 <span class="button-primary"> Click to Upload </span>
               </label>
               <div *ngIf="photographFile" class="attachment_layout">
                 <span title="{{photographFile.name.split('/').pop()}}" style="cursor: default">{{photographFile.name.split('/').pop().split('.')[0].substr(0,8)}}</span>
-                <span style="cursor: pointer" (click)="detachFile('photo')">&times;</span>
+                <span style="cursor: pointer" (click)="detachFile('02')">&times;</span>
               </div>
             </div>
             <div *ngIf="photographFileExists">
               <div style="margin-left: 20%;">Photo File:</div>
-              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('photo')">Remove</button>
-              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('photo')">Download</button>
+              <button *ngIf="documentRemovalAccess" class="inline-btnReject" (click)="removeTutorDocumentUploadedFile('02')">Remove</button>
+              <button class="inline-btnSubmit" (click)="downloadTutorDocumentFile('02')">Download</button>
             </div>
             <div *ngIf="!photographFileExists && !editRecordForm">
                 <div style="margin-left: 20%;">No Photo File</div>

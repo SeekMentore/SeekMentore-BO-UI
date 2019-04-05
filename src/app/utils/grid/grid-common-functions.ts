@@ -1,6 +1,6 @@
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 import { Column } from './column';
 import { GridRecord } from './grid-record';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
 
 export class GridCommonFunctions {
 
@@ -113,7 +113,7 @@ export class GridCommonFunctions {
     return returnHTMLList.join(seperationJoiner);
   }
 
-  public static yesNoRenderer(record, column) {
+  public static yesNoRenderer(record: GridRecord, column: Column) {
     return GridCommonFunctions.lookupRenderer(record, column, CommonFilterOptions.yesNoFilterOptions);
   }
 
@@ -125,6 +125,34 @@ export class GridCommonFunctions {
       }
     }
     return selectedPropertyList;
+  }
+
+  public static getGridRecordsPropertyAndAlternatePropertyList (
+      selectedRecords: GridRecord[], 
+      propertyName: string, 
+      alternatePropertyName: string
+  ) : {
+    selectedPropertyList: any[],
+    selectedAlternatePropertyList: any[]
+  } {
+    let selectedValuesList : {
+      selectedPropertyList: any[],
+      selectedAlternatePropertyList: any[]
+    } = {
+      selectedPropertyList: [],
+      selectedAlternatePropertyList: []
+    };
+    for(const record of selectedRecords) {
+      let propertyValue: any = record.getProperty(propertyName);
+      if (GridCommonFunctions.checkStringAvailability(propertyValue.toString())) {
+        selectedValuesList.selectedPropertyList.push(propertyValue);
+      } else {
+        if (GridCommonFunctions.checkStringAvailability(alternatePropertyName)) {
+          selectedValuesList.selectedAlternatePropertyList.push(record.getProperty(alternatePropertyName))
+        }
+      }      
+    }
+    return selectedValuesList;
   }
 
   public static setGridRecordPropertiesInCustomObject(record: GridRecord, customObject: any) {

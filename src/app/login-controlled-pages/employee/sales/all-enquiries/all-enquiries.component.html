@@ -1,20 +1,19 @@
 <div>
-  <div id="all-enquiries-list-page" *ngIf="!showAllEnquiriesData">
-    <app-grid #pendingEnquiriesGrid id="pending-enquiries-grid" [gridMetaData]="pendingEnquiriesGridMetaData"></app-grid>
-    <app-grid #toBeMappedEnquiriesGrid id="to-be-mapped-enquiries-grid" [gridMetaData]="toBeMappedEnquiriesGridMetaData"></app-grid>
-    <app-grid #completedEnquiriesGrid id="completed-enquiries-grid" [gridMetaData]="completedEnquiriesGridMetaData"></app-grid>
-    <app-grid #abortedEnquiriesGrid id="aborted-enquiries-grid" [gridMetaData]="abortedEnquiriesGridMetaData"></app-grid>
+  <div id="enquiry-list-page" *ngIf="!showEnquiryData">
+    <app-grid #pendingEnquiryGrid id="pending-enquiry-grid" [gridMetaData]="pendingEnquiryGridMetaData"></app-grid>
+    <app-grid #toBeMappedEnquiryGrid id="to-be-mapped-enquiry-grid" [gridMetaData]="toBeMappedEnquiryGridMetaData"></app-grid>
+    <app-grid #completedEnquiryGrid id="completed-enquiry-grid" [gridMetaData]="completedEnquiryGridMetaData"></app-grid>
+    <app-grid #abortedEnquiryGrid id="aborted-enquiry-grid" [gridMetaData]="abortedEnquiryGridMetaData"></app-grid>
   </div>
-  <div id="all-enquiries-data-page" *ngIf="showAllEnquiriesData">
+  <div id="enquiry-data-page" *ngIf="showEnquiryData">
     <button
-      id="back-to-all-enquiries-listing-button"
-      class="back-to-listing-button ok-button" (click)="toggleVisibilityAllEnquiriesGrid()">
+      id="back-to-enquiry-listing-button"
+      class="back-to-listing-button ok-button" (click)="toggleVisibilityEnquiryGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-enquiries-data 
-                  [enquiriesRecord]="selectedAllEnquiriesRecord" 
-                  [allEnquiriesDataAccess]="allEnquiriesDataAccess"
-                  [selectedRecordGridType]="selectedRecordGridType">
+                  [enquirySerialId]="selectedEnquirySerialId" 
+                  [enquiryDataAccess]="enquiryDataAccess">
     </app-enquiries-data>
   </div>
 </div>

@@ -88,15 +88,19 @@ export class GridCommonFunctions {
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
-  public static lookupRendererForValue(value: any, lookupList: any []) {
-    let returnValue = value;
-    for (var i  = 0; i < lookupList.length; i++) {
-      let filterOption = lookupList[i];
-      if (filterOption.value === value) {        
-        returnValue = filterOption.label; 
-        break;      
-      } 
-    }       	
+  public static lookupRendererForValue(lookupValue: any, lookupList: { value: any, label: any }[]) {
+    let returnValue: any = lookupValue;
+    if (GridCommonFunctions.checkNonEmptyList(lookupList) 
+          && GridCommonFunctions.checkObjectAvailability(lookupValue)
+          && GridCommonFunctions.checkStringAvailability(lookupValue.toString())) {
+      for (var i  = 0; i < lookupList.length; i++) {
+        let filterOption = lookupList[i];
+        if (filterOption.value.toString() === lookupValue.toString()) {        
+          returnValue = filterOption.label.toString(); 
+          break;      
+        } 
+      }       	
+    }
     return returnValue;
   }
 

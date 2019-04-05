@@ -36,7 +36,7 @@ export class LcpRestUrls {
   static submitted_query_update_record = '/rest/support/updateSubmitQueryRecord';
   static complaint_data_access = '/rest/support/complaintCheckDataAccess';
   static complaint_update_record = '/rest/support/updateComplaintRecord';  
-  static pending_enquiry_data_access = '/rest/sales/pendingEnquiryCheckDataAccess';
+  static enquiry_data_access = '/rest/sales/enquiryCheckDataAccess';
   static take_action_on_enquiry = '/rest/sales/takeActionOnEnquiry';
   static pending_enquiry_update_record = '/rest/sales/updateEnquiryRecord';  
   static map_tutor_to_enquiry_data_access = '/rest/sales/mapTutorToEnquiryCheckDataAccess';
@@ -70,4 +70,5 @@ export class LcpRestUrls {
   static get_registered_tutor_record = '/rest/registeredTutor/getRegisteredTutorRecord';
   static remove_registered_tutor_document_file = '/rest/registeredTutor/removeRegisteredTutorDocumentFile';
   static get_registered_tutor_document_count_and_existence = '/rest/registeredTutor/getRegisteredTutorDocumentCountAndExistence';
+  static get_enquiry_record = '/rest/sales/getEnquiryRecord';
 }

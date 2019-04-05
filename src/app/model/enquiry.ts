@@ -10,7 +10,7 @@ export class Enquiry {
 	subject: string;
 	grade: string;
 	quotedClientRate: number;
-	negotiatedRateWithClient;
+	negotiatedRateWithClient: number;
 	clientNegotiationRemarks: string;
 	isMapped: string;
 	lastActionDateMillis: number;
@@ -36,7 +36,7 @@ export class Enquiry {
   
   setValuesFromGridRecord(record: GridRecord) {
     GridCommonFunctions.setGridRecordPropertiesInCustomObject(record, this);
-	this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
-	this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
+		this.isEnquiryEmailSameAsCustomerEmail = (this.enquiryEmail === this.customerEmail);
+		this.isEnquiryContactNumberSameAsCustomerContactNumber = (this.enquiryContactNumber === this.customerContactNumber);
   }
 }

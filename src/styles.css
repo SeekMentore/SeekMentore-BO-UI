@@ -752,3 +752,8 @@ div.form-container-div {
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
+
+.link_opener {
+  text-decoration: underline;
+  cursor: pointer;
+}

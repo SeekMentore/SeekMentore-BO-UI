@@ -225,12 +225,12 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
     const data = {
       parentSerialId: tutorSerialId
     };    
-    this.utilityService.makerequest(this, this.onRegisteredTutorGridRecord, LcpRestUrls.get_registered_tutor_record, 
+    this.utilityService.makerequest(this, this.onGetRegisteredTutorGridRecord, LcpRestUrls.get_registered_tutor_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
     this.getRegisteredTutorDocumentCountAndExistence(tutorSerialId);
   }
 
-  onRegisteredTutorGridRecord(context: any, response: any) {
+  onGetRegisteredTutorGridRecord(context: any, response: any) {
     let gridRecordObject: {
       record: GridRecord,
       isError: boolean,
@@ -594,7 +594,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
               this.helperService.showAlertDialog({
                 isSuccess: false,
                 message: 'Document Type "' 
-                          + CommonUtilityFunctions.getLabelForLookupValue(CommonFilterOptions.tutorDocumentTypeFilterOptions, record.getProperty('documentType')) 
+                          + GridCommonFunctions.lookupRendererForValue(record.getProperty('documentType'), CommonFilterOptions.tutorDocumentTypeFilterOptions) 
                           + '" is unavailable for download, Please send a reminder to the tutor to upload.',
                 onButtonClicked: () => {
                 }
@@ -992,6 +992,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   resetRegisteredTutorRecord() {
     if (!this.isFlagListDirty()) {
       this.getRegisteredTutorGridRecord(this.tutorSerialId);
+      this.uploadedDocumentGridObject.refreshGridData();
     } else {
       this.helperService.showConfirmationDialog({
         message: this.getConfirmationMessageForFormsDirty(),
@@ -1053,7 +1054,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
   removeTutorDocumentUploadedFile(type: any) {
     this.helperService.showConfirmationDialog({
       message: 'Are you sure you want to remove the "' 
-                + CommonUtilityFunctions.getLabelForLookupValue(CommonFilterOptions.tutorDocumentTypeFilterOptions, type) 
+                + GridCommonFunctions.lookupRendererForValue(type, CommonFilterOptions.tutorDocumentTypeFilterOptions) 
                 + '" file for Tutor - "' + this.tutorRecord.name + '"',
       onOk: () => {
         const data = {

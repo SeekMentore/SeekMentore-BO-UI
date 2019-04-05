@@ -20,34 +20,31 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 })
 export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('pendingEnquiriesGrid')
-  pendingEnquiriesGridObject: GridComponent;
-  pendingEnquiriesGridMetaData: GridDataInterface;
+  @ViewChild('pendingEnquiryGrid')
+  pendingEnquiryGridObject: GridComponent;
+  pendingEnquiryGridMetaData: GridDataInterface;
 
-  @ViewChild('toBeMappedEnquiriesGrid')
-  toBeMappedEnquiriesGridObject: GridComponent;
-  toBeMappedEnquiriesGridMetaData: GridDataInterface;
+  @ViewChild('toBeMappedEnquiryGrid')
+  toBeMappedEnquiryGridObject: GridComponent;
+  toBeMappedEnquiryGridMetaData: GridDataInterface;
 
-  @ViewChild('completedEnquiriesGrid')
-  completedEnquiriesGridObject: GridComponent;
-  completedEnquiriesGridMetaData: GridDataInterface;
+  @ViewChild('completedEnquiryGrid')
+  completedEnquiryGridObject: GridComponent;
+  completedEnquiryGridMetaData: GridDataInterface;
 
-  @ViewChild('abortedEnquiriesGrid')
-  abortedEnquiriesGridObject: GridComponent;
-  abortedEnquiriesGridMetaData: GridDataInterface;
+  @ViewChild('abortedEnquiryGrid')
+  abortedEnquiryGridObject: GridComponent;
+  abortedEnquiryGridMetaData: GridDataInterface;
 
-  showAllEnquiriesData = false;
-  selectedAllEnquiriesRecord: GridRecord = null;
-  interimHoldSelectedAllEnquiriesRecord: GridRecord = null;
-  allEnquiriesDataAccess: AllEnquiriesDataAccess = null;
-  selectedRecordGridType: string = null;
-
-  interimHoldSelectedAllEnquiriesObject: GridComponent = null;
+  showEnquiryData = false;
+  selectedEnquirySerialId: string = null;
+  interimHoldSelectedEnquirySerialId: string = null;
+  enquiryDataAccess: EnquiryDataAccess = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService, private router: Router) { 
-    this.pendingEnquiriesGridMetaData = null;
-    this.completedEnquiriesGridMetaData = null;
-    this.abortedEnquiriesGridMetaData = null;   
+    this.pendingEnquiryGridMetaData = null;
+    this.completedEnquiryGridMetaData = null;
+    this.abortedEnquiryGridMetaData = null;   
   }
 
   ngOnInit() {
@@ -60,56 +57,20 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.pendingEnquiriesGridObject.init();
-      this.toBeMappedEnquiriesGridObject.init();
-      this.completedEnquiriesGridObject.init();
-      this.abortedEnquiriesGridObject.init();
+      this.pendingEnquiryGridObject.init();
+      this.toBeMappedEnquiryGridObject.init();
+      this.completedEnquiryGridObject.init();
+      this.abortedEnquiryGridObject.init();
     }, 0);
     setTimeout(() => {
-      this.pendingEnquiriesGridObject.refreshGridData();
-      this.toBeMappedEnquiriesGridObject.refreshGridData();
-      this.completedEnquiriesGridObject.refreshGridData();
-      this.abortedEnquiriesGridObject.refreshGridData();
+      this.pendingEnquiryGridObject.refreshGridData();
+      this.toBeMappedEnquiryGridObject.refreshGridData();
+      this.completedEnquiryGridObject.refreshGridData();
+      this.abortedEnquiryGridObject.refreshGridData();
     }, 0);
   }
 
-  private getSelectionColumnBaseButton() {
-    return [{
-      id: 'sendEmailTutor',
-      label: 'Send Email Tutor',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorEmail');
-        if (selectedEmailsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-        }
-      }
-    }, {
-      id: 'sendEmailCustomer',
-      label: 'Send Email Customer',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerEmail');
-        if (selectedEmailsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-        }
-      }
-    }];
-  }
-
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], collapsed: boolean = false) {
+  public getGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
@@ -119,30 +80,19 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         restURL: restURL
       },
       columns: [{
-        id: 'customerName',
-        headerName: 'Customer Name',
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
         dataType: 'string',
-        mapping: 'customerName',
+        mapping: 'enquirySerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedAllEnquiriesRecord = record;
-          this.selectedRecordGridType = gridComponentObject.grid.id; 
-          if (this.allEnquiriesDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.pending_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          this.interimHoldSelectedEnquirySerialId = column.getValueForColumn(record);
+          if (this.enquiryDataAccess === null) {
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedAllEnquiriesRecord = this.interimHoldSelectedAllEnquiriesRecord;            
-            this.toggleVisibilityAllEnquiriesGrid();
+            this.selectedEnquirySerialId = this.interimHoldSelectedEnquirySerialId;            
+            this.toggleVisibilityEnquiryGrid();
           }
         }
-      }, {
-        id: 'customerEmail',
-        headerName: 'Customer Email',
-        dataType: 'string',
-        mapping: 'customerEmail'
-      }, {
-        id: 'customerContactNumber',
-        headerName: 'Customer Contact Number',
-        dataType: 'string',
-        mapping: 'customerContactNumber'
       }, {
         id: 'subject',
         headerName: 'Subject',
@@ -192,6 +142,29 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'matchStatus',
         renderer: AdminCommonFunctions.matchStatusRenderer
       }, {
+        id: 'customerSerialId',
+        headerName: 'Customer Serial Id',
+        dataType: 'string',
+        mapping: 'customerSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Customer Section ' + column.getValueForColumn(record));
+        }
+      }, {
+        id: 'customerName',
+        headerName: 'Customer Name',
+        dataType: 'string',
+        mapping: 'customerName'
+      }, {
+        id: 'customerEmail',
+        headerName: 'Customer Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      }, {
+        id: 'customerContactNumber',
+        headerName: 'Customer Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
+      }, {
         id: 'quotedClientRate',
         headerName: 'Quoted Client Rate',
         dataType: 'number',
@@ -221,6 +194,14 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'isMapped',
         renderer: GridCommonFunctions.yesNoRenderer
       }, {
+        id: 'tutorSerialId',
+        headerName: 'Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'tutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Tutor Section ' + column.getValueForColumn(record));
+        }
+      }, {
         id: 'tutorName',
         headerName: 'Tutor Name',
         dataType: 'string',
@@ -236,86 +217,30 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         dataType: 'string',
         mapping: 'tutorContactNumber'
       }],
-      hasSelectionColumn: true,
-      selectionColumn: {
-        buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
-      }
+      hasSelectionColumn: false
     }
     return grid;
   }
 
-  private getCustomButton (
-      id:string, 
-      label: string, 
-      btnclass: string = 'btnSubmit', 
-      actionText: string, 
-      commentsRequired: boolean = false,
-      titleText: string,
-      placeholderText: string
-  ) {
-    return {
-      id: id,
-      label: label,
-      btnclass: btnclass,
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedAllEnquiriesObject = gridComponentObject;
-        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
-        if (enquiryIdsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showPromptDialog({
-            required: commentsRequired,
-            titleText: titleText,
-            placeholderText: placeholderText,
-            onOk: (message) => {                  
-              const data = {
-                allIdsList: enquiryIdsList.join(';'),
-                button: actionText,
-                comments: message
-              };
-              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.take_action_on_enquiry, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            },
-            onCancel: () => {
-            }
-          });
-        }
-      }
-    };
-  }
-
   public setUpGridMetaData() {
-    let toBeMapped = this.getCustomButton('toBeMapped', 'To Be Mapped', 'btnSubmit', 'toBeMapped', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let aborted = this.getCustomButton('aborted', 'Aborted', 'btnReject', 'aborted', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let pending = this.getCustomButton('pending', 'Pending', 'btnReset', 'pending', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
-
-    this.pendingEnquiriesGridMetaData = {
-      grid: this.getGridObject('pendingEnquiriesGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList', [toBeMapped, aborted]),
-      htmlDomElementId: 'pending-enquiries-grid',
+    this.pendingEnquiryGridMetaData = {
+      grid: this.getGridObject('pendingEnquiryGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList'),
+      htmlDomElementId: 'pending-enquiry-grid',
       hidden: false
     };
-
-    this.toBeMappedEnquiriesGridMetaData = {
-      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList', [pending, aborted], true),
-      htmlDomElementId: 'to-be-mapped-enquiries-grid',
+    this.toBeMappedEnquiryGridMetaData = {
+      grid: this.getGridObject('toBeMappedEnquiryGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiryGridList', true),
+      htmlDomElementId: 'to-be-mapped-enquiry-grid',
       hidden: false
     };
-
-    this.completedEnquiriesGridMetaData = {
-      grid: this.getGridObject('completedEnquiriesGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', [], true),
-      htmlDomElementId: 'completed-enquiries-grid',
+    this.completedEnquiryGridMetaData = {
+      grid: this.getGridObject('completedEnquiryGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', true),
+      htmlDomElementId: 'completed-enquiry-grid',
       hidden: false
     };
-
-    this.abortedEnquiriesGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', [pending], true),
-      htmlDomElementId: 'aborted-enquiries-grid',
+    this.abortedEnquiryGridMetaData = {
+      grid: this.getGridObject('abortedEnquiryGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', true),
+      htmlDomElementId: 'aborted-enquiry-grid',
       hidden: false
     }; 
   }
@@ -329,13 +254,13 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.allEnquiriesDataAccess = {
+      context.enquiryDataAccess = {
         success: response.success,
         message: response.message,
-        allEnquiriesDataModificationAccess: response.allEnquiriesDataModificationAccess
+        enquiryDataModificationAccess: response.enquiryDataModificationAccess
       };
-      context.selectedAllEnquiriesRecord = context.interimHoldSelectedAllEnquiriesRecord;
-      context.toggleVisibilityAllEnquiriesGrid();
+      context.selectedEnquirySerialId = context.interimHoldSelectedEnquirySerialId;
+      context.toggleVisibilityEnquiryGrid();
     }
   }
 
@@ -352,31 +277,30 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  toggleVisibilityAllEnquiriesGrid() {
-    if (this.showAllEnquiriesData === true) {
-      this.showAllEnquiriesData = false;
-      this.selectedAllEnquiriesRecord = null;
+  toggleVisibilityEnquiryGrid() {
+    if (this.showEnquiryData === true) {
+      this.showEnquiryData = false;
+      this.selectedEnquirySerialId = null;
       setTimeout(() => {
-        this.pendingEnquiriesGridObject.init();
-        this.toBeMappedEnquiriesGridObject.init();
-        this.completedEnquiriesGridObject.init();
-        this.abortedEnquiriesGridObject.init();
+        this.pendingEnquiryGridObject.init();
+        this.toBeMappedEnquiryGridObject.init();
+        this.completedEnquiryGridObject.init();
+        this.abortedEnquiryGridObject.init();
       }, 100);   
       setTimeout(() => {
-        this.pendingEnquiriesGridObject.refreshGridData();
-        this.toBeMappedEnquiriesGridObject.refreshGridData();
-        this.completedEnquiriesGridObject.refreshGridData();
-        this.abortedEnquiriesGridObject.refreshGridData();
+        this.pendingEnquiryGridObject.refreshGridData();
+        this.toBeMappedEnquiryGridObject.refreshGridData();
+        this.completedEnquiryGridObject.refreshGridData();
+        this.abortedEnquiryGridObject.refreshGridData();
       }, 200);
     } else {
-      this.showAllEnquiriesData = true;
+      this.showEnquiryData = true;
     }
   }
-
 }
 
-export interface AllEnquiriesDataAccess {
+export interface EnquiryDataAccess {
   success: boolean;
   message: string;
-  allEnquiriesDataModificationAccess: boolean;
+  enquiryDataModificationAccess: boolean;
 }

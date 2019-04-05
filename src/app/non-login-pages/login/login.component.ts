@@ -5,6 +5,7 @@ import { HelperService } from '../../utils/helper.service';
 import { LcpConstants } from '../../utils/lcp-constants';
 import { NlpConstants } from '../../utils/nlp-constants';
 import { NlpRestUrls } from '../../utils/nlp-rest-urls';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
   userType: string = '';
-  errorAjaxResponse: string;
+  errorResponse: string;
   errorUsername: string;
   errorPassword: string;
   errorUserType: string;
@@ -62,15 +63,15 @@ export class LoginComponent implements OnInit {
   isValidLoginData(): boolean {
     let isValidData = true;
     this.resetErrorMessages();
-    if (!this.username || this.username === '') {
+    if (!CommonUtilityFunctions.checkStringAvailability(this.username)) {
       this.errorUsername = NlpConstants.enter_username;
       isValidData = false;
     }
-    if (!this.password || this.password === '') {
+    if (!CommonUtilityFunctions.checkStringAvailability(this.password)) {
       this.errorPassword = NlpConstants.enter_password;
       isValidData = false;
     }
-    if (!this.userType || this.userType === 'Blank' || this.userType === '') {
+    if (!CommonUtilityFunctions.checkStringAvailability(this.userType)) {
       this.errorUserType = NlpConstants.select_usertype;
       isValidData = false;
     }
@@ -78,7 +79,7 @@ export class LoginComponent implements OnInit {
   }
 
   resetErrorMessages() {
-    this.errorAjaxResponse = null;
+    this.errorResponse = null;
     this.errorUsername = null;
     this.errorPassword = null;
     this.errorUserType = null;
@@ -90,7 +91,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem(LcpConstants.user_type_key, context.userType);
       context.router.navigateByUrl('/user/home');
     } else {
-      context.errorAjaxResponse = response['message'];
+      context.errorResponse = response['message'];
       context.hideLoginFormLoaderMask();
     }
   }

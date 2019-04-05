@@ -15,12 +15,13 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
 
   token: string;
   tokenSerialId: string;
-  errorAjaxResponse: string;
+  errorResponse: string;
   successMessage: string;
   errorNewPassword: string;
   errorRetypeNewPassword: string;
   newPassword: string;
   retypeNewPassword: string;
+  forgotPasswordMaskLoaderHidden: boolean = true;
 
   constructor(private helperService: HelperService, private route: ActivatedRoute, private utilityService: AppUtilityService) {
     this.route.params.subscribe(params => {  
@@ -34,16 +35,28 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
     this.resetErrorMessages();
   }
 
+  private showForgotPasswordFormLoaderMask() {
+    this.forgotPasswordMaskLoaderHidden = false;
+  }
+
+  private hideForgotPasswordFormLoaderMask() {
+    this.forgotPasswordMaskLoaderHidden = true;
+  }
+
   changePassword() {
+    this.showForgotPasswordFormLoaderMask();
     if (this.isValidFormData() === false) {
+      this.hideForgotPasswordFormLoaderMask();
       return;
     }
-    const formData = new URLSearchParams();
-    formData.set('tokenSerialId', this.tokenSerialId);
-    formData.set('token', this.token);
-    formData.set('newPassword', this.newPassword);
-    formData.set('retypeNewPassword', this.retypeNewPassword);
-    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.forgot_password_token_change_url, 'POST', formData.toString(),
+    const data = {
+      tokenSerialId: this.tokenSerialId,
+      token: this.token,
+      newPassword: this.newPassword,
+      retypeNewPassword: this.retypeNewPassword
+    };   
+    this.utilityService.makerequest(this, this.onSuccess, NlpRestUrls.forgot_password_token_change_url, 'POST', 
+      this.utilityService.urlEncodeData(data),
       'application/x-www-form-urlencoded');
   }
 
@@ -53,8 +66,9 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
       context.newPassword = '';
       context.retypeNewPassword = '';
     } else {
-      context.errorAjaxResponse = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']);
+      context.errorResponse = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']);
     }
+    context.hideForgotPasswordFormLoaderMask();
   }
 
   isValidFormData(): boolean {
@@ -72,11 +86,10 @@ export class ForgotPasswordTokenResetComponent implements OnInit {
   }
 
   resetErrorMessages() {
-    this.errorAjaxResponse = null;
+    this.errorResponse = null;
     this.successMessage = null;
     this.errorNewPassword = null;
     this.errorNewPassword = null;
     this.errorRetypeNewPassword = null;
   }
-
 }

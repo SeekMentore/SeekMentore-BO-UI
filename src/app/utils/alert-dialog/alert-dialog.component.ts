@@ -22,6 +22,7 @@ export class AlertDialogComponent implements OnInit {
 
   ngOnInit() {
     this.helperService.alertDialogState.subscribe((eventInterface: AlertDialogInterface) => {
+      CommonUtilityFunctions.logOnConsole(eventInterface);
       this.isMultiMessage = false;
       this.alertMessagesList = [];
       if (eventInterface.isSuccess) {

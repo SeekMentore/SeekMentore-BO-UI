@@ -21,7 +21,7 @@ export class Enquiry {
 	tutorEmail: string;
 	tutorContactNumber: string;
 	adminRemarks: string;
-	locationDetails: string;
+	location: string;
 	addressDetails: string;
 	additionalDetails: string;
 	whoActed: string;

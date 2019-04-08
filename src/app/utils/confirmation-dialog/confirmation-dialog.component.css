@@ -4,6 +4,9 @@
 
 .multi-message-div {
     padding-bottom: 15px;
+    max-height: 275px;
+    min-height: 150px;
+    overflow-y: auto;
 }
 
 .message-div {

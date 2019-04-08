@@ -21,6 +21,7 @@ export class ConfirmationDialogComponent implements OnInit {
 
   ngOnInit() {
     this.helperService.confirmationDialogState.subscribe((eventInterface: ConfirmationDialogInterface) => {
+      CommonUtilityFunctions.logOnConsole(eventInterface);
       this.isMultiMessage = false;
       this.confirmMessagesList = [];
       this.confirmTitle = LcpConstants.confirmation_dialog_title;

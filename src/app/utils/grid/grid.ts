@@ -194,7 +194,9 @@ export class Grid {
         let selectedRecords: GridRecord[] = [];
         if (GridCommonFunctions.checkNonEmptyList(this.store.data)) {
             this.store.data.forEach((record) => {
-                selectedRecords.push(record);
+                if (record.selectionModelCheck) {
+                    selectedRecords.push(record);
+                }
             });    
         }        
         return selectedRecords;

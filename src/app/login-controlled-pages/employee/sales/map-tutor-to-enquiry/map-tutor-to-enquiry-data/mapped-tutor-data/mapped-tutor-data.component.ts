@@ -49,12 +49,12 @@ export class MappedTutorDataComponent implements OnInit {
   mappingStatusFilterOptions = CommonFilterOptions.mappingStatusFilterOptions;
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   
-  isFormDirty: boolean = false;
+  isRecordUpdateFormDirty: boolean = false;
   tutorMapperFormMaskLoaderHidden: boolean = true;
   showMessage: boolean = false;
-  showForm: boolean = false;
-  showEditControlSection: boolean = false;
-  showUpdateButton: boolean = false; 
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
+  showRecordUpdateButton: boolean = false; 
   canUnmapTutor: boolean = false; 
   canMakeDemoReady: boolean = false;
   canMakePending: boolean = false;
@@ -64,7 +64,9 @@ export class MappedTutorDataComponent implements OnInit {
   isScheduleDemoFormDirty: boolean = false;
   scheduleDemoFormMaskLoaderHidden: boolean = true;
   showSheduleDemoForm: boolean = false;
-  showScheduleDemoButton: boolean = false; 
+  showScheduleDemoButton: boolean = false;
+  
+  dirtyFlagList: string[] = ['RECORD_UPDATE', 'SCHEDULE_DEMO'];
 
   // Modal Variables
   tutorMapperRecord: TutorMapper;
@@ -94,11 +96,11 @@ export class MappedTutorDataComponent implements OnInit {
     this.getTutorMapperGridRecord(this.tutorMapperSerialId);
   }
 
-  private showFormLoaderMask() {
+  private showRecordUpdateFormLoaderMask() {
     this.tutorMapperFormMaskLoaderHidden = false;
   }
 
-  private hideFormLoaderMask() {
+  private hideRecordUpdateFormLoaderMask() {
     this.tutorMapperFormMaskLoaderHidden = true;
   }
 
@@ -110,16 +112,7 @@ export class MappedTutorDataComponent implements OnInit {
     this.scheduleDemoFormMaskLoaderHidden = true;
   }
 
-  private setSectionShowParams() {
-    this.showForm = this.tutorMapperDataAccess.tutorMapperFormAccess;
-    this.showEditControlSection = this.tutorMapperDataAccess.tutorMapperFormAccess && !this.formEditMandatoryDisbaled;
-    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
-    this.takeActionDisabled = !this.canUnmapTutor && !this.canMakeDemoReady && !this.canMakePending;
-    this.showSheduleDemoForm = this.tutorMapperDataAccess.scheduleDemoFormAccess && this.canScheduleDemo;
-    this.showScheduleDemoButton = this.showSheduleDemoForm && this.editScheduleDemoRecordForm;
-  }
-
-  public setFormEditStatus(isEditable: boolean) {
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
     this.editRecordForm = isEditable;
     this.setSectionShowParams();
   }
@@ -129,8 +122,112 @@ export class MappedTutorDataComponent implements OnInit {
     this.setSectionShowParams();
   }
 
+  private setSectionShowParams() {
+    this.showRecordUpdateForm = this.tutorMapperDataAccess.tutorMapperFormAccess;
+    this.showRecordUpdateEditControlSection = this.tutorMapperDataAccess.tutorMapperFormAccess && !this.formEditMandatoryDisbaled;
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canUnmapTutor && !this.canMakeDemoReady && !this.canMakePending;
+    this.showSheduleDemoForm = this.tutorMapperDataAccess.scheduleDemoFormAccess && this.canScheduleDemo;
+    this.showScheduleDemoButton = this.showSheduleDemoForm && this.editScheduleDemoRecordForm;
+  }
+
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+          case 'SCHEDULE_DEMO' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Schedule Demo form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+          case 'SCHEDULE_DEMO' : {
+            resultantFlagValue = resultantFlagValue || this.isScheduleDemoFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+          case 'SCHEDULE_DEMO' : {
+            this.isScheduleDemoFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+          case 'SCHEDULE_DEMO' : {
+            this.isScheduleDemoFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
+  }  
+
   private getTutorMapperGridRecord(tutorMapperSerialId: string) {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     this.showScheduleDemoFormLoaderMask();
     this.showMessage = false;
     const data = {
@@ -200,7 +297,7 @@ export class MappedTutorDataComponent implements OnInit {
       this.editRecordForm = false;
       this.editScheduleDemoRecordForm = false;
       this.setSectionShowParams();
-      this.hideFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
       this.hideScheduleDemoFormLoaderMask();
     }, 500);
   }
@@ -210,15 +307,15 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   updateTutorMapperProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    if (!this.isScheduleDemoFormDirty) {
-      this.isFormDirty = true;
+    if (!this.isFlagListDirty(false, ['SCHEDULE_DEMO'])) {
+      this.setFlagListDirty(false, ['RECORD_UPDATE']);
       this.updateProperty(key, event, data_type, this.tutorMapperUpdatedRecord, deselected, isAllOPeration);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Schedule Demo form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isScheduleDemoFormDirty = false;      
-          this.isFormDirty = true;
+          this.setFlagListNotDirty(false, ['SCHEDULE_DEMO']);
+          this.setFlagListDirty(false, ['RECORD_UPDATE']);
           this.updateProperty(key, event, data_type, this.tutorMapperUpdatedRecord, deselected, isAllOPeration);
         },
         onCancel: () => {
@@ -234,12 +331,13 @@ export class MappedTutorDataComponent implements OnInit {
   }  
 
   updateTutorMapperRecord() {
-    if (!this.isScheduleDemoFormDirty) {
+    if (!this.isFlagListDirty(false, ['SCHEDULE_DEMO'])) {
       this.updateTutorMapper();
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Schedule Demo form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
+          this.setFlagListNotDirty(false, ['SCHEDULE_DEMO']);
           this.updateTutorMapper();
         },
         onCancel: () => {
@@ -255,7 +353,7 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   private updateTutorMapper() {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     this.showScheduleDemoFormLoaderMask();
     const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.tutorMapperUpdatedRecord, this.tutorMapperRecord.tutorMapperSerialId);
     this.utilityService.makerequest(this, this.onUpdateTutorMapperRecord, LcpRestUrls.mapped_tutor_update_record, 'POST',
@@ -271,25 +369,23 @@ export class MappedTutorDataComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
-      context.isFormDirty = false;
       context.editScheduleDemoRecordForm = false;
-      context.isScheduleDemoFormDirty = false;
+      context.setFlagListNotDirty();
       context.getTutorMapperGridRecord(context.tutorMapperSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
       context.hideScheduleDemoFormLoaderMask();
     }
   }
 
   resetTutorMapperRecord() {
-    if (!this.isFormDirty || !this.isScheduleDemoFormDirty) {
+    if (!this.isFlagListDirty()) {
       this.getTutorMapperGridRecord(this.tutorMapperSerialId);
     } else {
       this.helperService.showConfirmationDialog({
         message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isFormDirty = false;
-          this.isScheduleDemoFormDirty = false;
+          this.setFlagListNotDirty();
           this.getTutorMapperGridRecord(this.tutorMapperSerialId);
         },
         onCancel: () => {
@@ -305,15 +401,15 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   updateScheduleDemoProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    if (!this.isFormDirty) {
-      this.isScheduleDemoFormDirty = true;
+    if (!this.isFlagListDirty(false, ['RECORD_UPDATE'])) {
+      this.setFlagListDirty(false, ['SCHEDULE_DEMO']);
       this.updateProperty(key, event, data_type, this.scheduleDemoUpdatedRecord, deselected, isAllOPeration);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isFormDirty = false;
-          this.isScheduleDemoFormDirty = true;      
+          this.setFlagListNotDirty(false, ['RECORD_UPDATE']);
+          this.setFlagListDirty(false, ['SCHEDULE_DEMO']);
           this.updateProperty(key, event, data_type, this.scheduleDemoUpdatedRecord, deselected, isAllOPeration);
         },
         onCancel: () => {
@@ -329,13 +425,13 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   scheduleDemo() {
-    if (!this.isFormDirty) {
+    if (!this.isFlagListDirty(false, ['RECORD_UPDATE'])) {
       this.schedule();
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isFormDirty = false;
+          this.setFlagListNotDirty(false, ['RECORD_UPDATE']);
           this.schedule();
         },
         onCancel: () => {
@@ -351,7 +447,7 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   private schedule() {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     this.showScheduleDemoFormLoaderMask();
     const demoDate: HTMLInputElement = <HTMLInputElement>document.getElementById('demoDate');
     const demoTime: HTMLInputElement = <HTMLInputElement>document.getElementById('demoTime');
@@ -374,23 +470,23 @@ export class MappedTutorDataComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
-      context.isFormDirty = false;
       context.editScheduleDemoRecordForm = false;
-      context.isScheduleDemoFormDirty = false;
+      context.setFlagListNotDirty();
       context.getTutorMapperGridRecord(context.tutorMapperSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
       context.hideScheduleDemoFormLoaderMask();
     }
   }
 
   unmapTutorRecord() {
-    if (!this.isFormDirty || !this.isScheduleDemoFormDirty) {
+    if (!this.isFlagListDirty()) {
       this.unmapTutor();
     } else {
       this.helperService.showConfirmationDialog({
         message: this.getConfirmationMessageForFormsDirty(),
-        onOk: () => {          
+        onOk: () => {
+          this.setFlagListNotDirty();     
           this.unmapTutor();
         },
         onCancel: () => {
@@ -405,34 +501,18 @@ export class MappedTutorDataComponent implements OnInit {
     }
   }
 
-  private getConfirmationMessageForFormsDirty() {
-    let message: string = '';
-    if (this.isFormDirty || this.isScheduleDemoFormDirty) {
-      if (this.isFormDirty) {
-        message += 'You have unsaved changes on the Update form.'
-      }
-      if (CommonUtilityFunctions.checkStringAvailability(message)) {
-        message += '\n';
-      }
-      if (this.isScheduleDemoFormDirty) {
-        message += 'You have unsaved changes on the Schedule Demo form.'
-      }
-      if (CommonUtilityFunctions.checkStringAvailability(message)) {
-        message += '\n';
-        message += 'Do you still want to continue';
-      }
-    }
-    return message;
-  }
-
   private unmapTutor() {
     this.helperService.showConfirmationDialog({
-      message: 'Please confirm if you want to un-map this tutor from the Enquiry',
+      message: 'Please confirm if you want to un-map tutor '
+                          + this.tutorMapperRecord.tutorSerialId 
+                          + ' - ' 
+                          + this.tutorMapperRecord.tutorName
+                          + ' from the Enquiry',
       onOk: () => {
-        this.showFormLoaderMask();
+        this.showRecordUpdateFormLoaderMask();
         this.showScheduleDemoFormLoaderMask();
         this.takeActionActionText = 'unmap'; 
-        this.isFormDirty = false;
+        this.setFlagListNotDirty();     
         const data = {
           allIdsList: this.tutorMapperRecord.tutorMapperSerialId
         };
@@ -446,12 +526,13 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   takeActionOnTutorMapperRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
-    if (!this.isFormDirty || !this.isScheduleDemoFormDirty) {
+    if (!this.isFlagListDirty()) {
       this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
     } else {
       this.helperService.showConfirmationDialog({
         message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
+          this.setFlagListNotDirty();     
           this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
@@ -472,10 +553,10 @@ export class MappedTutorDataComponent implements OnInit {
       titleText: titleText,
       placeholderText: placeholderText,
       onOk: (message) => {
-        this.showFormLoaderMask();
+        this.showRecordUpdateFormLoaderMask();
         this.showScheduleDemoFormLoaderMask();
         this.takeActionActionText = actionText; 
-        this.isFormDirty = false;            
+        this.setFlagListNotDirty();              
         const data = {
           allIdsList: this.tutorMapperRecord.tutorMapperSerialId,
           button: actionText,
@@ -499,19 +580,96 @@ export class MappedTutorDataComponent implements OnInit {
     });
     if (response['success']) {
       if (context.takeActionActionText === 'unmap') {
-        context.showForm = false;
+        context.showRecordUpdateForm = false;
         context.showMessage = true;
         context.textMessage = 'Successfully Unmapped the Tutor Record, please go back to listing to select another record';
       } else {
         context.editRecordForm = false;
-        context.isFormDirty = false;
         context.editScheduleDemoRecordForm = false;
-        context.isScheduleDemoFormDirty = false;
+        context.setFlagListNotDirty(); 
         context.getTutorMapperGridRecord(context.tutorMapperSerialId);
       }
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
       context.hideScheduleDemoFormLoaderMask();
     }
+  }
+
+  openCustomerRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadCustomerRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadCustomerRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadCustomerRecord() {
+    alert("Loading Customer Record > " + this.tutorMapperRecord.customerSerialId);
+  }
+
+  openEnquiryRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadEnquiryRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadTutorRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadEnquiryRecord() {
+    alert("Loading Enquiry Record > " + this.tutorMapperRecord.tutorSerialId);
+  }
+  
+  openTutorRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadTutorRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadTutorRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadTutorRecord() {
+    alert("Loading Tutor Record > " + this.tutorMapperRecord.tutorSerialId);
   }
 }

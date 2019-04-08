@@ -4,14 +4,13 @@ import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { ActionButton } from 'src/app/utils/grid/action-button';
 import { Column } from 'src/app/utils/grid/column';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { EnquiryDataAccess } from '../all-enquiries/all-enquiries.component';
 
 @Component({
   selector: 'app-map-tutor-to-enquiry',
@@ -20,17 +19,17 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 })
 export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('toBeMappedEnquiriesGrid')
-  toBeMappedEnquiriesGridObject: GridComponent;
-  toBeMappedEnquiriesGridMetaData: GridDataInterface;
+  @ViewChild('toBeMappedEnquiryGrid')
+  toBeMappedEnquiryGridObject: GridComponent;
+  toBeMappedEnquiryGridMetaData: GridDataInterface;
 
   showMapTutorToEnquiryData = false;
-  selectedEnquiryRecord: GridRecord = null;
-  interimHoldSelectedEnquiryRecord: GridRecord = null;
-  enquiryMappingDataAccess: EnquiryMappingDataAccess = null;
+  selectedEnquirySerialId: string = null;
+  interimHoldSelectedEnquirySerialId: string = null;
+  enquiryDataAccess: EnquiryDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
-    this.toBeMappedEnquiriesGridMetaData = null;
+    this.toBeMappedEnquiryGridMetaData = null;
   }
 
   ngOnInit() {
@@ -43,10 +42,10 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.toBeMappedEnquiriesGridObject.init();
+      this.toBeMappedEnquiryGridObject.init();
     }, 0);
     setTimeout(() => {
-      this.toBeMappedEnquiriesGridObject.refreshGridData();
+      this.toBeMappedEnquiryGridObject.refreshGridData();
     }, 0);
   }
 
@@ -59,29 +58,19 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         restURL: restURL
       },
       columns: [{
-        id: 'customerName',
-        headerName: 'Customer Name',
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
         dataType: 'string',
-        mapping: 'customerName',
+        mapping: 'enquirySerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedEnquiryRecord = record;
-          if (this.enquiryMappingDataAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.map_tutor_to_enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          this.interimHoldSelectedEnquirySerialId = column.getValueForColumn(record);
+          if (this.enquiryDataAccess === null) {
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;            
-            this.toggleVisibilityAllEnquiriesGrid();
+            this.selectedEnquirySerialId = this.interimHoldSelectedEnquirySerialId ;            
+            this.toggleVisibilityEnquiryGrid();
           }
         }
-      }, {
-        id: 'customerEmail',
-        headerName: 'Customer Email',
-        dataType: 'string',
-        mapping: 'customerEmail'
-      }, {
-        id: 'customerContactNumber',
-        headerName: 'Customer Contact Number',
-        dataType: 'string',
-        mapping: 'customerContactNumber'
       }, {
         id: 'subject',
         headerName: 'Subject',
@@ -105,11 +94,11 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         multiList: true,
         renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
       }, {
-        id: 'locationDetails',
-        headerName: 'Location Details',
+        id: 'location',
+        headerName: 'Location',
         dataType: 'list',
         filterOptions: CommonFilterOptions.locationsFilterOptions,
-        mapping: 'locationDetails',
+        mapping: 'location',
         renderer: AdminCommonFunctions.locationsRenderer
       }, {
         id: 'addressDetails',
@@ -123,6 +112,36 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         dataType: 'string',
         mapping: 'additionalDetails',
         lengthyData: true
+      }, {
+        id: 'matchStatus',
+        headerName: 'Match Status',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.matchStatusFilterOptions,
+        mapping: 'matchStatus',
+        renderer: AdminCommonFunctions.matchStatusRenderer
+      }, {
+        id: 'customerSerialId',
+        headerName: 'Customer Serial Id',
+        dataType: 'string',
+        mapping: 'customerSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Customer Section ' + column.getValueForColumn(record));
+        }
+      }, {
+        id: 'customerName',
+        headerName: 'Customer Name',
+        dataType: 'string',
+        mapping: 'customerName'
+      }, {
+        id: 'customerEmail',
+        headerName: 'Customer Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      }, {
+        id: 'customerContactNumber',
+        headerName: 'Customer Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
       }, {
         id: 'quotedClientRate',
         headerName: 'Quoted Client Rate',
@@ -140,13 +159,6 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         mapping: 'clientNegotiationRemarks',
         lengthyData: true
       }, {
-        id: 'matchStatus',
-        headerName: 'Match Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.matchStatusFilterOptions,
-        mapping: 'matchStatus',
-        renderer: AdminCommonFunctions.matchStatusRenderer
-      }, {
         id: 'adminRemarks',
         headerName: 'Admin Remarks',
         dataType: 'string',
@@ -159,6 +171,14 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         filterOptions: CommonFilterOptions.yesNoFilterOptions,
         mapping: 'isMapped',
         renderer: GridCommonFunctions.yesNoRenderer
+      }, {
+        id: 'tutorSerialId',
+        headerName: 'Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'tutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Tutor Section ' + column.getValueForColumn(record));
+        }
       }, {
         id: 'tutorName',
         headerName: 'Tutor Name',
@@ -175,34 +195,14 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         dataType: 'string',
         mapping: 'tutorContactNumber'
       }],
-      hasSelectionColumn: true,
-      selectionColumn: {
-        buttons: [{
-          id: 'sendEmailCustomer',
-          label: 'Send Email Customer',
-          clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-            // Refer document
-            const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'customerEmail');
-            if (selectedEmailsList.length === 0) {
-              this.helperService.showAlertDialog({
-                isSuccess: false,
-                message: LcpConstants.grid_generic_no_record_selected_error,
-                onButtonClicked: () => {
-                }
-              });
-            } else {
-              this.helperService.showEmailDialog(selectedEmailsList.join(';'));
-            }
-          }
-        }]
-      }
+      hasSelectionColumn: false      
     }
     return grid;
   }
 
   public setUpGridMetaData() {
-    this.toBeMappedEnquiriesGridMetaData = {
-      grid: this.getGridObject('toBeMappedEnquiriesGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiriesGridList'),
+    this.toBeMappedEnquiryGridMetaData = {
+      grid: this.getGridObject('toBeMappedEnquiryGrid', 'To Be Mapped Enquiries', '/rest/sales/toBeMappedEnquiryGridList'),
       htmlDomElementId: 'to-be-mapped-enquiries-grid',
       hidden: false
     };
@@ -217,35 +217,29 @@ export class MapTutorToEnquiryComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.enquiryMappingDataAccess = {
+      context.enquiryDataAccess = {
         success: response.success,
         message: response.message,
-        enquiryMappingAccess: response.enquiryMappingAccess
+        enquiryDataModificationAccess: response.enquiryDataModificationAccess,
+        enquiryTutorMappingAccess: response.enquiryTutorMappingAccess
       };
-      context.selectedEnquiryRecord = context.interimHoldSelectedEnquiryRecord;
-      context.toggleVisibilityAllEnquiriesGrid();
+      context.selectedEnquirySerialId = context.interimHoldSelectedEnquirySerialId;
+      context.toggleVisibilityEnquiryGrid();
     }
   }
 
-  toggleVisibilityAllEnquiriesGrid() {
+  toggleVisibilityEnquiryGrid() {
     if (this.showMapTutorToEnquiryData === true) {
       this.showMapTutorToEnquiryData = false;
-      this.selectedEnquiryRecord = null;
+      this.selectedEnquirySerialId = null;
       setTimeout(() => {
-        this.toBeMappedEnquiriesGridObject.init();
+        this.toBeMappedEnquiryGridObject.init();
       }, 100);   
       setTimeout(() => {
-        this.toBeMappedEnquiriesGridObject.refreshGridData();
+        this.toBeMappedEnquiryGridObject.refreshGridData();
       }, 200);
     } else {
       this.showMapTutorToEnquiryData = true;
     }
   }
-
-}
-
-export interface EnquiryMappingDataAccess {
-  success: boolean;
-  message: string;
-  enquiryMappingAccess: boolean;
 }

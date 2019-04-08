@@ -47,7 +47,6 @@ import { RoutingModule } from './utils/routing.module';
 import { MapTutorToEnquiryDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
 import { MappedTutorDataComponent } from './login-controlled-pages/employee/sales/map-tutor-to-enquiry/map-tutor-to-enquiry-data/mapped-tutor-data/mapped-tutor-data.component';
 import { ScheduleDemoComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo.component';
-import { ScheduleDemoDataComponent } from './login-controlled-pages/employee/sales/schedule-demo/schedule-demo-data/schedule-demo-data.component';
 import { PromptDialogComponent } from './utils/prompt-dialog/prompt-dialog.component';
 import { DemoTrackerDataComponent } from './login-controlled-pages/employee/sales/demo-tracker/demo-tracker-data/demo-tracker-data.component';
 import { ChangePasswordComponent } from './login-controlled-pages/change-password/change-password.component';
@@ -100,7 +99,6 @@ import { MarkAssignmentAttendanceComponent } from './login-controlled-pages/empl
     MapTutorToEnquiryDataComponent,
     MappedTutorDataComponent,
     ScheduleDemoComponent,
-    ScheduleDemoDataComponent,
     PromptDialogComponent,
     DemoTrackerDataComponent,
     ChangePasswordComponent,

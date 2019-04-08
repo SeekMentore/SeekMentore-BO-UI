@@ -11,10 +11,9 @@
       class="back-to-listing-button ok-button" (click)="toggleVisibilityScheduleDemoMappedTutorGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-schedule-demo-data 
-                  [mappedTutorRecord]="selectedMappedTutorRecord" 
-                  [mappedTutorScheduleDemoAccess]="mappedTutorScheduleDemoAccess"
-                  [selectedRecordGridType]="selectedRecordGridType">
-    </app-schedule-demo-data>
+    <app-mapped-tutor-data 
+                [tutorMapperSerialId]="selectedTutorMapperSerialId" 
+                [tutorMapperDataAccess]="tutorMapperDataAccess">
+    </app-mapped-tutor-data>
   </div>
 </div>

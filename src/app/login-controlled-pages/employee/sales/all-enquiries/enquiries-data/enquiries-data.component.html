@@ -48,19 +48,19 @@
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Serial Id</label></td>
-            <td><label class="data link_opener" (click)="openCustomerRecord()">{{enqruiyRecord.customerSerialId}}</label></td>
+            <td><label class="data link_opener" (click)="openCustomerRecord()">{{enquiryRecord.customerSerialId}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Name</label></td>
-            <td><label class="data">{{enqruiyRecord.customerName}}</label></td>
+            <td><label class="data">{{enquiryRecord.customerName}}</label></td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Email</label></td>
-            <td><label class="data">{{enqruiyRecord.customerEmail}}</label></td>              
+            <td><label class="data">{{enquiryRecord.customerEmail}}</label></td>              
           </tr> 
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">            
             <td class="td-label"><label>Customer Contact Number</label></td>
-            <td><label class="data">{{enqruiyRecord.customerContactNumber}}</label></td>
+            <td><label class="data">{{enquiryRecord.customerContactNumber}}</label></td>
           </tr>
           <tr>
             <td class="td-label"><label></label></td>
@@ -68,7 +68,7 @@
           </tr>
           <tr>
             <td class="td-label"><label>Enquiry Serial Id</label></td>
-            <td><label class="data">{{enqruiyRecord.enquirySerialId}}</label></td>        
+            <td><label class="data">{{enquiryRecord.enquirySerialId}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Subject</label></td>
@@ -101,7 +101,7 @@
             <td><input  class="input_field" 
                         type="number" 
                         id="quotedClientRate"
-                        value="{{enqruiyRecord.quotedClientRate}}"
+                        value="{{enquiryRecord.quotedClientRate}}"
                         [disabled]="!editRecordForm"
                         (change)="updateEnquiryProperty('quotedClientRate', $event, 'number')"></td>
           </tr>
@@ -110,7 +110,7 @@
             <td><input  class="input_field" 
                         type="number" 
                         id="negotiatedRateWithClient"
-                        value="{{enqruiyRecord.negotiatedRateWithClient}}"
+                        value="{{enquiryRecord.negotiatedRateWithClient}}"
                         [disabled]="!editRecordForm"
                         (change)="updateEnquiryProperty('negotiatedRateWithClient', $event, 'number')"></td>
           </tr>
@@ -122,7 +122,7 @@
                         id="clientNegotiationRemarks"
                         [disabled]="!editRecordForm" 
                         (change)="updateEnquiryProperty('clientNegotiationRemarks', $event, 'string')"
-                >{{enqruiyRecord.clientNegotiationRemarks}}</textarea>
+                >{{enquiryRecord.clientNegotiationRemarks}}</textarea>
             </td>
           </tr>          
           <tr>
@@ -133,17 +133,17 @@
                         id="additionalDetails"
                         [disabled]="!editRecordForm" 
                         (change)="updateEnquiryProperty('additionalDetails', $event, 'string')"
-                >{{enqruiyRecord.additionalDetails}}</textarea>
+                >{{enquiryRecord.additionalDetails}}</textarea>
             </td>
           </tr>
           <tr>
             <td class="td-label"><label>Location</label></td>
             <td>
               <ng-multiselect-dropdown [placeholder]="'Location'" [data]="locationsFilterOptions"
-                                        [(ngModel)]="selectedLocationOption" name="locationDetails"
+                                        [(ngModel)]="selectedLocationOption" name="location"
                                         [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                        (onSelect)="updateEnquiryProperty('locationDetails', $event, 'list')"
-                                        (onDeSelect)="updateEnquiryProperty('locationDetails', $event, 'list', true)">
+                                        (onSelect)="updateEnquiryProperty('location', $event, 'list')"
+                                        (onDeSelect)="updateEnquiryProperty('location', $event, 'list', true)">
               </ng-multiselect-dropdown>
             </td>        
           </tr>
@@ -155,7 +155,7 @@
                         id="addressDetails"
                         [disabled]="!editRecordForm" 
                         (change)="updateEnquiryProperty('addressDetails', $event, 'string')"
-                >{{enqruiyRecord.addressDetails}}</textarea>
+                >{{enquiryRecord.addressDetails}}</textarea>
             </td>
           </tr>
           <tr>
@@ -177,19 +177,19 @@
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Serial Id</label></td>
-            <td><label class="data link_opener" (click)="openTutorRecord()">{{enqruiyRecord.tutorSerialId}}</label></td>        
+            <td><label class="data link_opener" (click)="openTutorRecord()">{{enquiryRecord.tutorSerialId}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Name</label></td>
-            <td><label class="data">{{enqruiyRecord.tutorName}}</label></td>        
+            <td><label class="data">{{enquiryRecord.tutorName}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Email</label></td>
-            <td><label class="data">{{enqruiyRecord.tutorEmail}}</label></td>        
+            <td><label class="data">{{enquiryRecord.tutorEmail}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Tutor Contact Number</label></td>
-            <td><label class="data">{{enqruiyRecord.tutorContactNumber}}</label></td>        
+            <td><label class="data">{{enquiryRecord.tutorContactNumber}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Last Action Date</label></td>
@@ -197,12 +197,12 @@
           </tr>
           <tr>
             <td class="td-label"><label>Who Acted</label></td>
-            <td><label class="data">{{enqruiyRecord.whoActedName}}</label></td>
+            <td><label class="data">{{enquiryRecord.whoActedName}}</label></td>
           </tr>
           <tr>
             <td class="td-label"><label>Action Remarks</label></td>
             <td>
-              <div class="form-remakrs">{{enqruiyRecord.adminRemarks}}</div>
+              <div class="form-remakrs">{{enquiryRecord.adminRemarks}}</div>
             </td>
           </tr>
           <tr>

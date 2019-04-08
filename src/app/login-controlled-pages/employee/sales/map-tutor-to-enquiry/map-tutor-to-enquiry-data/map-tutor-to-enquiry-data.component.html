@@ -26,16 +26,20 @@
             </td>
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
+            <td class="td-label"><label>Customer Serial Id</label></td>
+            <td><label class="data link_opener" (click)="openCustomerRecord()">{{enquiryRecord.customerSerialId}}</label></td>
+          </tr>
+          <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Name</label></td>
-            <td><label class="data">{{enquiryRecord.property['customerName']}}</label></td>        
+            <td><label class="data">{{enquiryRecord.customerName}}</label></td>        
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Email</label></td>
-            <td><label class="data">{{enquiryRecord.property['customerEmail']}}</label></td>        
+            <td><label class="data">{{enquiryRecord.customerEmail}}</label></td>        
           </tr>
           <tr style="background-color: aliceblue;" *ngIf="showCustomerDetails">
             <td class="td-label"><label>Customer Contact Number</label></td>
-            <td><label class="data">{{enquiryRecord.property['customerContactNumber']}}</label></td>        
+            <td><label class="data">{{enquiryRecord.customerContactNumber}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="!showEnquiryDetails">
             <td class="td-label">
@@ -60,44 +64,48 @@
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
+            <td class="td-label"><label>Enquiry Serial Id</label></td>
+            <td><label class="data link_opener" (click)="openEnquiryRecord()">{{enquiryRecord.enquirySerialId}}</label></td>        
+          </tr>
+          <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Subject</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['subject'], subjectsFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquirySubjectLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Grade</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['grade'], studentGradesFilterOptions)}}</label></td>        
+            <td><label class="data">{{enquiryGradeLookupRendererFromValue}}</label></td>        
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Preferred Teaching Type</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['preferredTeachingType'], preferredTeachingTypeFilterOptions)}}</label></td>                    
+            <td><label class="data">{{enquiryPreferredTeachingTypeLookupRendererFromValue}}</label></td>                    
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Location</label></td>
-            <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['locationDetails'], locationsFilterOptions)}}</label></td>
+            <td><label class="data">{{enquiryLocationLookupRendererFromValue}}</label></td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Address Details</label></td>
             <td>
-              <div class="form-remakrs">{{enquiryRecord.property['addressDetails']}}</div>
+              <div class="form-remakrs">{{enquiryRecord.addressDetails}}</div>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Additional Details</label></td>
             <td>
-                <div class="form-remakrs">{{enquiryRecord.property['additionalDetails']}}</div>
+                <div class="form-remakrs">{{enquiryRecord.additionalDetails}}</div>
             </td>
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Quoted Client Rate</label></td>
-            <td><label class="data">{{enquiryRecord.property['quotedClientRate']}}</label></td>            
+            <td><label class="data">{{enquiryRecord.quotedClientRate}}</label></td>            
           </tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Negotiated Rate With Client</label></td>
-            <td><label class="data">{{enquiryRecord.property['negotiatedRateWithClient']}}</label></td></tr>
+            <td><label class="data">{{enquiryRecord.negotiatedRateWithClient}}</label></td></tr>
           <tr style="background-color: beige;" *ngIf="showEnquiryDetails">
             <td class="td-label"><label>Client Negotiation Remarks</label></td>
             <td>
-              <div class="form-remakrs">{{enquiryRecord.property['clientNegotiationRemarks']}}</div>
+              <div class="form-remakrs">{{enquiryRecord.clientNegotiationRemarks}}</div>
             </td>
           </tr>
           <tr>
@@ -131,14 +139,14 @@
         <table class="form-container-generic-table">
           <tr>
             <td align="right">
-              <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
+              <button *ngIf="enquiryDataAccess.enquiryTutorMappingAccess" type="submit"
                       class="ok-button form-container-update-button"
                       (click)="searchEligibleMappingTutors()">
                 Search Tutors
               </button>
             </td>
             <td>
-              <button *ngIf="enquiryMappingDataAccess.enquiryMappingAccess" type="submit"
+              <button *ngIf="enquiryDataAccess.enquiryTutorMappingAccess" type="submit"
                       class="cancel-button form-container-update-button"
                       (click)="resetSearchEligibleMappingTutors()">
                 Reset Search

@@ -264,7 +264,14 @@ export class CommonUtilityFunctions {
   }
 
   public static removeHTMLBRTagsFromServerResponse(responseString: string) {
-    return CommonUtilityFunctions.checkStringAvailability(responseString) ? responseString.replace(/\<BR\/\>/g, '\n').replace('\n','') : '';
+    if (CommonUtilityFunctions.checkStringAvailability(responseString)) {
+      let brRemovedHtmlString: string = responseString.replace(/\<BR\/\>/g, '\n');
+      if (brRemovedHtmlString.indexOf('\n') == 0) {
+        brRemovedHtmlString = brRemovedHtmlString.replace('\n','');
+      }
+      return brRemovedHtmlString;
+    }
+    return '';
   }
 
   public static searchItemsInStringListThatHasSearchedSubstring(stringList: string[], substring: string, caseSensitiveSearch: boolean = false) {

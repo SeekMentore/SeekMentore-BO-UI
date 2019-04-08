@@ -39,13 +39,11 @@ export class LcpRestUrls {
   static enquiry_data_access = '/rest/sales/enquiryCheckDataAccess';
   static take_action_on_enquiry = '/rest/sales/takeActionOnEnquiry';
   static pending_enquiry_update_record = '/rest/sales/updateEnquiryRecord';  
-  static map_tutor_to_enquiry_data_access = '/rest/sales/mapTutorToEnquiryCheckDataAccess';
   static map_tutor_to_enquiry_map_registered_tutors = '/rest/sales/mapRegisteredTutors';
   static map_tutor_to_enquiry_unmap_registered_tutors = '/rest/sales/unmapRegisteredTutors';
   static take_action_on_mapped_tutor = '/rest/sales/takeActionOnMappedTutor';
   static tutor_mapper_data_access = '/rest/sales/tutorMapperCheckDataAccess';
   static mapped_tutor_update_record = '/rest/sales/updateTutorMapperRecord';
-  static mapped_tutor_schedule_demo_access = '/rest/sales/mappedTutorCheckScheduleDemoAccess';
   static schedule_demo = '/rest/sales/scheduleDemo';
   static demo_modify_data_access = '/rest/sales/demoModifyCheckDataAccess';
   static take_action_on_demo = '/rest/sales/takeActionOnDemo';

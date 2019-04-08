@@ -64,7 +64,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   dirtyFlagList: string[] = ['RECORD_UPDATE'];
 
   // Modal Properties
-  enqruiyRecord: Enquiry;
+  enquiryRecord: Enquiry;
   recordLastUpdatedDateAndTimeDisplay: string;
   matchStatusDisplay: string;
   isMappedDisplay: string;
@@ -75,7 +75,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.currentCustomerAllPendingEnquiryGridMetaData = null;
-    this.enqruiyRecord = new Enquiry();
+    this.enquiryRecord = new Enquiry();
   }
 
   ngOnInit() {
@@ -229,21 +229,21 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   private setUpDataModal(enquiryGridRecord: GridRecord) {
-    this.enqruiyRecord.setValuesFromGridRecord(enquiryGridRecord);
-    this.enquirySerialId = this.enqruiyRecord.enquirySerialId;
-    this.customerSerialId = this.enqruiyRecord.customerSerialId;
-    this.recordLastUpdatedDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.enqruiyRecord.lastActionDateMillis);
-    this.matchStatusDisplay = GridCommonFunctions.lookupRendererForValue(this.enqruiyRecord.matchStatus, this.matchStatusFilterOptions);
-    this.isMappedDisplay = GridCommonFunctions.lookupRendererForValue(this.enqruiyRecord.isMapped, this.yesNoFilterOptions);
-    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enqruiyRecord.grade);
-    this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enqruiyRecord.subject);
-    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enqruiyRecord.locationDetails);
-    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.enqruiyRecord.preferredTeachingType);
-    CommonUtilityFunctions.setHTMLInputElementValue('quotedClientRate', this.enqruiyRecord.quotedClientRate);
-    CommonUtilityFunctions.setHTMLInputElementValue('negotiatedRateWithClient', this.enqruiyRecord.negotiatedRateWithClient);
-    CommonUtilityFunctions.setHTMLInputElementValue('clientNegotiationRemarks', this.enqruiyRecord.clientNegotiationRemarks);
-    CommonUtilityFunctions.setHTMLInputElementValue('additionalDetails', this.enqruiyRecord.additionalDetails);
-    CommonUtilityFunctions.setHTMLInputElementValue('addressDetails', this.enqruiyRecord.addressDetails);
+    this.enquiryRecord.setValuesFromGridRecord(enquiryGridRecord);
+    this.enquirySerialId = this.enquiryRecord.enquirySerialId;
+    this.customerSerialId = this.enquiryRecord.customerSerialId;
+    this.recordLastUpdatedDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.enquiryRecord.lastActionDateMillis);
+    this.matchStatusDisplay = GridCommonFunctions.lookupRendererForValue(this.enquiryRecord.matchStatus, this.matchStatusFilterOptions);
+    this.isMappedDisplay = GridCommonFunctions.lookupRendererForValue(this.enquiryRecord.isMapped, this.yesNoFilterOptions);
+    this.selectedStudentGradeOption = CommonUtilityFunctions.getSelectedFilterItems(this.studentGradesFilterOptions, this.enquiryRecord.grade);
+    this.selectedSubjectOption = CommonUtilityFunctions.getSelectedFilterItems(this.subjectsFilterOptions, this.enquiryRecord.subject);
+    this.selectedLocationOption = CommonUtilityFunctions.getSelectedFilterItems(this.locationsFilterOptions, this.enquiryRecord.location);
+    this.selectedTeachingTypeOptions = CommonUtilityFunctions.getSelectedFilterItems(this.preferredTeachingTypeFilterOptions, this.enquiryRecord.preferredTeachingType);
+    CommonUtilityFunctions.setHTMLInputElementValue('quotedClientRate', this.enquiryRecord.quotedClientRate);
+    CommonUtilityFunctions.setHTMLInputElementValue('negotiatedRateWithClient', this.enquiryRecord.negotiatedRateWithClient);
+    CommonUtilityFunctions.setHTMLInputElementValue('clientNegotiationRemarks', this.enquiryRecord.clientNegotiationRemarks);
+    CommonUtilityFunctions.setHTMLInputElementValue('additionalDetails', this.enquiryRecord.additionalDetails);
+    CommonUtilityFunctions.setHTMLInputElementValue('addressDetails', this.enquiryRecord.addressDetails);
     setTimeout(() => {
       this.editRecordForm = false;
       this.setSectionShowParams();
@@ -259,7 +259,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
         collapsed: true,
         store: {
           isStatic: false,
-          restURL: '/rest/sales/currentCustomerAllPendingEnquiriesList'
+          restURL: '/rest/sales/currentCustomerAllPendingEnquiryList'
         },
         columns: [{
           id: 'enquirySerialId',
@@ -320,11 +320,11 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
           multiList: true,
           renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
         }, {
-          id: 'locationDetails',
-          headerName: 'Location Details',
+          id: 'location',
+          headerName: 'Location',
           dataType: 'list',
           filterOptions: CommonFilterOptions.locationsFilterOptions,
-          mapping: 'locationDetails',
+          mapping: 'location',
           renderer: AdminCommonFunctions.locationsRenderer
         }, {
           id: 'addressDetails',
@@ -437,7 +437,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
 
   updateEnquiryProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
     this.setFlagListDirty(false, ['RECORD_UPDATE']);
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enqruiyRecord, deselected, isAllOPeration);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.enquiryUpdatedRecord, this.enquiryRecord, deselected, isAllOPeration);
   }
 
   updateEnquiryRecord() {
@@ -572,7 +572,7 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   loadCustomerRecord() {
-    alert("Loading Customer Record > " + this.enqruiyRecord.customerSerialId);
+    alert("Loading Customer Record > " + this.enquiryRecord.customerSerialId);
   }
   
   openTutorRecord() {
@@ -598,6 +598,6 @@ export class EnquiriesDataComponent implements OnInit, AfterViewInit {
   }
 
   loadTutorRecord() {
-    alert("Loading Tutor Record > " + this.enqruiyRecord.tutorSerialId);
+    alert("Loading Tutor Record > " + this.enquiryRecord.tutorSerialId);
   }
 }

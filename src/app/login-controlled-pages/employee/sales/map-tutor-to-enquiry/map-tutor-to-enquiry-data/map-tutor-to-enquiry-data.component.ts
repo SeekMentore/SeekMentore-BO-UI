@@ -1,17 +1,18 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { GridRecord } from 'src/app/utils/grid/grid-record';
-import { EnquiryMappingDataAccess } from '../map-tutor-to-enquiry.component';
-import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
-import { AppUtilityService } from 'src/app/utils/app-utility.service';
-import { HelperService } from 'src/app/utils/helper.service';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
-import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { ActionButton } from 'src/app/utils/grid/action-button';
+import { Column } from 'src/app/utils/grid/column';
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { Column } from 'src/app/utils/grid/column';
+import { EnquiryDataAccess } from '../../all-enquiries/all-enquiries.component';
+import { Enquiry } from 'src/app/model/enquiry';
 
 @Component({
   selector: 'app-map-tutor-to-enquiry-data',
@@ -29,10 +30,12 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
   allMappedTutorsGridMetaData: GridDataInterface;
 
   @Input()
-  enquiryRecord: GridRecord = null;
+  enquirySerialId: string = null;
 
   @Input()
-  enquiryMappingDataAccess: EnquiryMappingDataAccess = null;
+  enquiryDataAccess: EnquiryDataAccess = null;
+
+  enquiryTutorMapperMaskLoaderHidden: boolean = true;
 
   showMapTutorToEnquiryMappedTutorData = false;
   selectedTutorMapperSerialId: string = null;
@@ -61,41 +64,90 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
 
   searchTutorExtraParam : any = null;
 
+  // Modal Properties
+  enquiryRecord: Enquiry;
+  enquirySubjectLookupRendererFromValue: string;
+  enquiryGradeLookupRendererFromValue: string;
+  enquiryPreferredTeachingTypeLookupRendererFromValue: string;
+  enquiryLocationLookupRendererFromValue: string;
+
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
     this.allMappingEligibleTutorsGridMetaData = null;
     this.allMappedTutorsGridMetaData = null;
+    this.enquiryRecord = new Enquiry();
   }
 
   ngOnInit() {
+    this.getEnquiryGridRecord(this.enquirySerialId);
     this.setUpGridMetaData();
-  }
-
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
-  }
-
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if (this.enquiryMappingDataAccess.enquiryMappingAccess) {
+      if (this.enquiryDataAccess.enquiryTutorMappingAccess) {
         this.allMappingEligibleTutorsGridObject.init();
-        this.allMappingEligibleTutorsGridObject.addExtraParams('enquiryId', this.enquiryRecord.getProperty('enquiryId'));
-        // Remaining extra params from the form will also go
-
+        this.allMappingEligibleTutorsGridObject.addExtraParams('enquirySerialId', this.enquirySerialId);
         this.allMappedTutorsGridObject.init();
-        this.allMappedTutorsGridObject.addExtraParams('enquiryId', this.enquiryRecord.getProperty('enquiryId'));
+        this.allMappedTutorsGridObject.addExtraParams('enquirySerialId', this.enquirySerialId);
       }
     }, 0);
     setTimeout(() => {
-      if (this.enquiryMappingDataAccess.enquiryMappingAccess) {
+      if (this.enquiryDataAccess.enquiryTutorMappingAccess) {
         this.allMappingEligibleTutorsGridObject.refreshGridData();
         this.allMappedTutorsGridObject.refreshGridData();
       }
     }, 0);
-  }  
+  }
+
+  private showEnquiryTutorMappingFormLoaderMask() {
+    this.enquiryTutorMapperMaskLoaderHidden = false;
+  }
+
+  private hideEnquiryTutorMappingFormLoaderMask() {
+    this.enquiryTutorMapperMaskLoaderHidden = true;
+  }
+
+  private getEnquiryGridRecord(enquirySerialId: string) {
+    this.showEnquiryTutorMappingFormLoaderMask();
+    const data = {
+      parentSerialId: enquirySerialId
+    };    
+    this.utilityService.makerequest(this, this.onGetEnquiryGridRecord, LcpRestUrls.get_enquiry_record, 
+                                    'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
+  }
+
+  onGetEnquiryGridRecord(context: any, response: any) {
+    let gridRecordObject: {
+      record: GridRecord,
+      isError: boolean,
+      errorMessage: string,
+      responseMessage: string,
+      additionalProperties: any     
+    } = CommonUtilityFunctions.extractGridRecordObject(response);
+    if (!gridRecordObject.isError) {
+      context.setUpDataModal(gridRecordObject.record);
+    } else {
+      context.helperService.showAlertDialog({
+        isSuccess: false,
+        message: gridRecordObject.errorMessage,
+        onButtonClicked: () => {
+        }
+      });
+      context.hideEnquiryTutorMappingFormLoaderMask();
+    }
+  }
+
+  private setUpDataModal(enquiryGridRecord: GridRecord) {
+    this.enquiryRecord.setValuesFromGridRecord(enquiryGridRecord);
+    this.enquirySerialId = this.enquiryRecord.enquirySerialId;
+    this.enquirySubjectLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.enquiryRecord.subject, this.subjectsFilterOptions);
+    this.enquiryGradeLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.enquiryRecord.grade, this.studentGradesFilterOptions);
+    this.enquiryPreferredTeachingTypeLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.enquiryRecord.preferredTeachingType, this.preferredTeachingTypeFilterOptions);
+    this.enquiryLocationLookupRendererFromValue = GridCommonFunctions.lookupRendererForValue(this.enquiryRecord.location, this.locationsFilterOptions);
+    setTimeout(() => {
+      this.hideEnquiryTutorMappingFormLoaderMask();
+    }, 500);
+  }
 
   public setUpGridMetaData() {
     this.allMappingEligibleTutorsGridMetaData = {
@@ -110,18 +162,26 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           }
         },
         columns: [{
+          id: 'tutorSerialId',
+          headerName: 'Tutor Serial Id',
+          dataType: 'string',
+          mapping: 'tutorSerialId',
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            alert('Open Tutor Section ' + column.getValueForColumn(record));
+          }
+        }, {
           id: 'name',
-          headerName: 'Name',
+          headerName: 'Tutor Name',
           dataType: 'string',
           mapping: 'name'          
         },{
           id: 'contactNumber',
-          headerName: 'Contact Number',
+          headerName: 'Primary Contact Number',
           dataType: 'string',
           mapping: 'contactNumber'
         },{
           id: 'emailId',
-          headerName: 'Email Id',
+          headerName: 'Primary Email Id',
           dataType: 'string',
           mapping: 'emailId'
         },{
@@ -195,7 +255,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             label: 'Map Tutors',
             btnclass: 'btnReset',
             clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-              const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorId');
+              const tutorIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorSerialId');
               if (tutorIdsList.length === 0) {
                 this.helperService.showAlertDialog({
                   isSuccess: false,
@@ -204,13 +264,21 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
                   }
                 });
               } else {
+                let message: string = 'Please confirm if you want to map the selected tutors to the Enquiry';
+                selectedRecords.forEach((record) => {
+                  message += '\n'
+                          + record.getProperty('tutorSerialId') 
+                          + ' - '
+                          + record.getProperty('name');
+                });
                 this.helperService.showConfirmationDialog({
-                  message: 'Please confirm if you want to map the selected tutors to the Enquiry',
+                  message: message,
                   onOk: () => {
                     const data = {
-                      parentSerialId: this.enquiryRecord.getProperty('enquiryId'),
+                      parentSerialId: this.enquirySerialId,
                       allIdsList: tutorIdsList.join(';')
                     };
+                    gridComponentObject.showGridLoadingMask();
                     this.utilityService.makerequest(this, this.handleMappingRequest,
                       LcpRestUrls.map_tutor_to_enquiry_map_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
                       'application/x-www-form-urlencoded');
@@ -231,12 +299,17 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             btnclass: 'btnReset',
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
               this.helperService.showConfirmationDialog({
-                message: 'Please confirm if you want to map this tutor to the Enquiry',
+                message: 'Please confirm if you want to map tutor ' 
+                          + record.getProperty('tutorSerialId') 
+                          + ' - '
+                          + record.getProperty('name') 
+                          + ' to the Enquiry',
                 onOk: () => {
                   const data = {
-                    parentSerialId: this.enquiryRecord.getProperty('enquiryId'),
-                    allIdsList: record.getProperty('tutorId')
+                    parentSerialId: this.enquirySerialId,
+                    allIdsList: record.getProperty('tutorSerialId')
                   };
+                  gridComponentObject.showGridLoadingMask();
                   this.utilityService.makerequest(this, this.handleMappingRequest,
                     LcpRestUrls.map_tutor_to_enquiry_map_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
                     'application/x-www-form-urlencoded');
@@ -262,7 +335,7 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         },
         columns: [{
           id: 'tutorMapperSerialId',
-          headerName: 'Serial Id',
+          headerName: 'Tutor Mapper Serial Id',
           dataType: 'string',
           mapping: 'tutorMapperSerialId',
           clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
@@ -274,7 +347,15 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
               this.toggleVisibilityMappedTutorGrid();
             }
           }
-        },{
+        }, {
+          id: 'tutorSerialId',
+          headerName: 'Tutor Serial Id',
+          dataType: 'string',
+          mapping: 'tutorSerialId',
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            alert('Open Tutor Section ' + column.getValueForColumn(record));
+          }
+        }, {
           id: 'tutorName',
           headerName: 'Tutor Name',
           dataType: 'string',
@@ -350,11 +431,16 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
             clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject :GridComponent) => {
               button.disable();
               this.helperService.showConfirmationDialog({
-                message: 'Please confirm if you want to un-map this tutor from the Enquiry',
+                message: 'Please confirm if you want to un-map tutor '
+                          + record.getProperty('tutorSerialId') 
+                          + ' - ' 
+                          + record.getProperty('tutorName')
+                          + ' from the Enquiry',
                 onOk: () => {
                   const data = {
                     allIdsList: record.getProperty('tutorMapperSerialId')
                   };
+                  gridComponentObject.showGridLoadingMask();
                   this.utilityService.makerequest(this, this.handleMappingRequest,
                     LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
                     'application/x-www-form-urlencoded');
@@ -437,16 +523,15 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
       backToEnquiriesListingButton.classList.remove('noscreen');
       setTimeout(() => {
         this.allMappingEligibleTutorsGridObject.init();
-        this.allMappingEligibleTutorsGridObject.addExtraParams('enquiryId', this.enquiryRecord.getProperty('enquiryId'));
-        // Remaining extra params from the form will also go
-
+        this.allMappingEligibleTutorsGridObject.addExtraParams('enquirySerialId', this.enquirySerialId);
         this.allMappedTutorsGridObject.init();
-        this.allMappedTutorsGridObject.addExtraParams('enquiryId', this.enquiryRecord.getProperty('enquiryId'));
+        this.allMappedTutorsGridObject.addExtraParams('enquirySerialId', this.enquirySerialId);
       }, 100);   
       setTimeout(() => {
         this.allMappingEligibleTutorsGridObject.refreshGridData();
         this.allMappedTutorsGridObject.refreshGridData();
       }, 200);
+      this.getEnquiryGridRecord(this.enquirySerialId);
     } else {
       const backToEnquiriesListingButton: HTMLElement = document.getElementById('back-to-all-enquiries-listing-button'); 
       backToEnquiriesListingButton.classList.add('noscreen');     
@@ -454,6 +539,21 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     }
   }
 
+  openCustomerRecord() {
+    this.loadCustomerRecord();
+  }
+
+  loadCustomerRecord() {
+    alert("Loading Customer Record > " + this.enquiryRecord.customerSerialId);
+  }
+
+  openEnquiryRecord() {
+    this.loadEnquiryRecord();
+  }
+
+  loadEnquiryRecord() {
+    alert("Loading Enquiry Record > " + this.enquiryRecord.enquirySerialId);
+  }
 }
 
 export interface TutorMapperDataAccess {

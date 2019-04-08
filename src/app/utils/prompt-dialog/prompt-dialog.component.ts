@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {HelperService} from 'src/app/utils/helper.service';
-import {LcpConstants} from 'src/app/utils/lcp-constants';
+import { Component, OnInit } from '@angular/core';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { CommonUtilityFunctions } from '../common-utility-functions';
 
 @Component({
@@ -22,6 +22,7 @@ export class PromptDialogComponent implements OnInit {
 
   ngOnInit() {
     this.helperService.promptDialogState.subscribe((eventInterface: PromptDialogInterface) => {
+      CommonUtilityFunctions.logOnConsole(eventInterface);
       this.showErrorMessage = false;
       this.textSectionValue = '';
       this.promptTitle = CommonUtilityFunctions.checkStringAvailability(eventInterface.titleText) ? eventInterface.titleText : LcpConstants.prompt_dialog_title;

@@ -38,7 +38,9 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
   showEnquiryData = false;
   selectedEnquirySerialId: string = null;
+  selectedCustomerSerialId: string = null;
   interimHoldSelectedEnquirySerialId: string = null;
+  interimHoldSelectedCustomerSerialId: string = null;
   enquiryDataAccess: EnquiryDataAccess = null;
 
   constructor(public utilityService: AppUtilityService, public helperService: HelperService, private router: Router) { 
@@ -86,10 +88,12 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         mapping: 'enquirySerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
           this.interimHoldSelectedEnquirySerialId = column.getValueForColumn(record);
+          this.interimHoldSelectedCustomerSerialId = record.getProperty('customerSerialId');
           if (this.enquiryDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedEnquirySerialId = this.interimHoldSelectedEnquirySerialId;            
+            this.selectedEnquirySerialId = this.interimHoldSelectedEnquirySerialId; 
+            this.selectedCustomerSerialId = this.interimHoldSelectedCustomerSerialId;      
             this.toggleVisibilityEnquiryGrid();
           }
         }
@@ -116,11 +120,11 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
         multiList: true,
         renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
       }, {
-        id: 'locationDetails',
-        headerName: 'Location Details',
+        id: 'location',
+        headerName: 'Location',
         dataType: 'list',
         filterOptions: CommonFilterOptions.locationsFilterOptions,
-        mapping: 'locationDetails',
+        mapping: 'location',
         renderer: AdminCommonFunctions.locationsRenderer
       }, {
         id: 'addressDetails',
@@ -224,7 +228,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
 
   public setUpGridMetaData() {
     this.pendingEnquiryGridMetaData = {
-      grid: this.getGridObject('pendingEnquiryGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiriesList'),
+      grid: this.getGridObject('pendingEnquiryGrid', 'Pending Enquiries', '/rest/sales/pendingEnquiryList'),
       htmlDomElementId: 'pending-enquiry-grid',
       hidden: false
     };
@@ -234,12 +238,12 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       hidden: false
     };
     this.completedEnquiryGridMetaData = {
-      grid: this.getGridObject('completedEnquiryGrid', 'Completed Enquiries', '/rest/sales/completedEnquiriesList', true),
+      grid: this.getGridObject('completedEnquiryGrid', 'Completed Enquiries', '/rest/sales/completedEnquiryList', true),
       htmlDomElementId: 'completed-enquiry-grid',
       hidden: false
     };
     this.abortedEnquiryGridMetaData = {
-      grid: this.getGridObject('abortedEnquiryGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiriesList', true),
+      grid: this.getGridObject('abortedEnquiryGrid', 'Aborted Enquiries', '/rest/sales/abortedEnquiryList', true),
       htmlDomElementId: 'aborted-enquiry-grid',
       hidden: false
     }; 
@@ -257,9 +261,11 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
       context.enquiryDataAccess = {
         success: response.success,
         message: response.message,
-        enquiryDataModificationAccess: response.enquiryDataModificationAccess
+        enquiryDataModificationAccess: response.enquiryDataModificationAccess,
+        enquiryTutorMappingAccess: response.enquiryTutorMappingAccess
       };
       context.selectedEnquirySerialId = context.interimHoldSelectedEnquirySerialId;
+      context.selectedCustomerSerialId = context.interimHoldSelectedCustomerSerialId;
       context.toggleVisibilityEnquiryGrid();
     }
   }
@@ -281,6 +287,7 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     if (this.showEnquiryData === true) {
       this.showEnquiryData = false;
       this.selectedEnquirySerialId = null;
+      this.selectedCustomerSerialId = null;
       setTimeout(() => {
         this.pendingEnquiryGridObject.init();
         this.toBeMappedEnquiryGridObject.init();
@@ -303,4 +310,5 @@ export interface EnquiryDataAccess {
   success: boolean;
   message: string;
   enquiryDataModificationAccess: boolean;
+  enquiryTutorMappingAccess: boolean;
 }

@@ -1,13 +1,16 @@
 <div>
   <div id="map-tutor-to-enquiry-list-page" *ngIf="!showMapTutorToEnquiryData">
-    <app-grid #toBeMappedEnquiriesGrid id="to-be-mapped-enquiries-grid" [gridMetaData]="toBeMappedEnquiriesGridMetaData"></app-grid>
+    <app-grid #toBeMappedEnquiryGrid id="to-be-mapped-enquiries-grid" [gridMetaData]="toBeMappedEnquiryGridMetaData"></app-grid>
   </div>
   <div id="map-tutor-to-enquiry-data-page" *ngIf="showMapTutorToEnquiryData">
     <button
       id="back-to-all-enquiries-listing-button"
-      class="back-to-listing-button ok-button" (click)="toggleVisibilityAllEnquiriesGrid()">
+      class="back-to-listing-button ok-button" (click)="toggleVisibilityEnquiryGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
-    <app-map-tutor-to-enquiry-data [enquiryRecord]="selectedEnquiryRecord" [enquiryMappingDataAccess]="enquiryMappingDataAccess"></app-map-tutor-to-enquiry-data>
+    <app-map-tutor-to-enquiry-data 
+                [enquirySerialId]="selectedEnquirySerialId" 
+                [enquiryDataAccess]="enquiryDataAccess">
+    </app-map-tutor-to-enquiry-data>
   </div>
 </div>

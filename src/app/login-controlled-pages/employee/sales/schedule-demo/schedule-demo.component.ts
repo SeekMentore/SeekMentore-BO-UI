@@ -10,8 +10,8 @@ import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { TutorMapperDataAccess } from '../map-tutor-to-enquiry/map-tutor-to-enquiry-data/map-tutor-to-enquiry-data.component';
 
 @Component({
   selector: 'app-schedule-demo',
@@ -37,13 +37,9 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
   enquiryClosedMappedTutorsGridMetaData: GridDataInterface;
 
   showScheduleDemoMappedTutorData = false;
-  selectedMappedTutorRecord: GridRecord = null;
-  interimHoldSelectedMappedTutorRecord: GridRecord = null;
-  mappedTutorScheduleDemoAccess: MappedTutorScheduleDemoAccess = null;
-
-  selectedRecordGridType: string = null;
-
-  interimHoldSelectedMappedTutorObject: GridComponent = null;
+  selectedTutorMapperSerialId: string = null;
+  interimHoldSelectedTutorMapperSerialId: string = null;
+  tutorMapperDataAccess: TutorMapperDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.pendingMappedTutorsGridMetaData = null;
@@ -79,7 +75,6 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     id: string, 
     title: string, 
     restURL: string, 
-    customSelectionButtons: any[], 
     hasActionColumn: boolean = false, 
     actionColumn: any = null, 
     collapsed: boolean = false
@@ -93,20 +88,32 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         restURL: restURL
       },
       columns: [{
+        id: 'tutorMapperSerialId',
+        headerName: 'Tutor Mapper Serial Id',
+        dataType: 'string',
+        mapping: 'tutorMapperSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
+          this.interimHoldSelectedTutorMapperSerialId = column.getValueForColumn(record);
+          if (this.tutorMapperDataAccess === null) {
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_mapper_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          } else {
+            this.selectedTutorMapperSerialId = this.interimHoldSelectedTutorMapperSerialId;            
+            this.toggleVisibilityScheduleDemoMappedTutorGrid();
+          }
+        }
+      }, {
+        id: 'tutorSerialId',
+        headerName: 'Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'tutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Tutor Section ' + column.getValueForColumn(record));
+        }
+      }, {
         id: 'tutorName',
         headerName: 'Tutor Name',
         dataType: 'string',
-        mapping: 'tutorName',
-        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedMappedTutorRecord = record;
-          this.selectedRecordGridType = gridComponentObject.grid.id; 
-          if (this.mappedTutorScheduleDemoAccess === null) {
-            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.mapped_tutor_schedule_demo_access, 'POST', null, 'application/x-www-form-urlencoded');
-          } else {
-            this.selectedMappedTutorRecord = this.interimHoldSelectedMappedTutorRecord;            
-            this.toggleVisibilityScheduleDemoMappedTutorGrid();
-          }
-        }        
+        mapping: 'tutorName'    
       },{
         id: 'tutorEmail',
         headerName: 'Tutor Email',
@@ -117,7 +124,15 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         headerName: 'Tutor Contact Number',
         dataType: 'string',
         mapping: 'tutorContactNumber'
-      },{
+      }, {
+        id: 'customerSerialId',
+        headerName: 'Customer Serial Id',
+        dataType: 'string',
+        mapping: 'customerSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Customer Section ' + column.getValueForColumn(record));
+        }
+      }, {
         id: 'customerName',
         headerName: 'Customer Name',
         dataType: 'string',
@@ -132,6 +147,14 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         headerName: 'Customer Contact Number',
         dataType: 'string',
         mapping: 'customerContactNumber'
+      }, {
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
+        dataType: 'string',
+        mapping: 'enquirySerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Enquiry Section ' + column.getValueForColumn(record));
+        }
       }, {
         id: 'enquirySubject',
         headerName: 'Enquiry Subject',
@@ -234,115 +257,58 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         mapping: 'isDemoScheduled',
         renderer: GridCommonFunctions.yesNoRenderer
       }],
-      hasSelectionColumn: true,
-      selectionColumn: {
-        buttons: customSelectionButtons
-      },
+      hasSelectionColumn: false,
       hasActionColumn: hasActionColumn,
       actionColumn: hasActionColumn ? actionColumn : null
     };
     return grid;
   }
 
-  private getCustomSelectionButton (
-      id:string, 
-      label: string, 
-      btnclass: string = 'btnSubmit', 
-      actionText: string, 
-      commentsRequired: boolean = false,
-      titleText: string,
-      placeholderText: string
-  ) {
-    return {
-      id: id,
-      label: label,
-      btnclass: btnclass,
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedMappedTutorObject = gridComponentObject;
-        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorMapperId');
-        if (enquiryIdsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showPromptDialog({
-            required: commentsRequired,
-            titleText: titleText,
-            placeholderText: placeholderText,
-            onOk: (message) => {                  
-              const data = {
-                allIdsList: enquiryIdsList.join(';'),
-                button: actionText,
-                comments: message
-              };
-              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.take_action_on_mapped_tutor, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            },
-            onCancel: () => {
-            }
-          });
+  handleUnmapRequest(context: any, response: any) {
+    if (response['success'] === false) {
+      context.helperService.showAlertDialog({
+        isSuccess: response['success'],
+        message: response['message'],
+        onButtonClicked: () => {
         }
-      }
-    };
+      });
+    } else {
+      context.pendingMappedTutorsGridObject.refreshGridData();
+    }
   }
 
   public setUpGridMetaData() {
-    let demoReady = this.getCustomSelectionButton('demoReady', 'Demo Ready', 'btnSubmit', 'demoReady', false, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let pending = this.getCustomSelectionButton('pending', 'Pending', 'btnReset', 'pending', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
-    let unmapTutorsSelectionButton = {
-      id: 'unmapTutors',
-      label: 'Un-map Tutors',
-      btnclass: 'btnReject',
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedMappedTutorObject = gridComponentObject;
-        const tutorMapperIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tutorMapperId');
-        if (tutorMapperIdsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showConfirmationDialog({
-            message: 'Please confirm if you want to un-map the selected tutors from the Enquiry',
-            onOk: () => {
-              const data = {
-                allIdsList: tutorMapperIdsList.join(';')
-              };
-              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            },
-            onCancel: () => {
-            }
-          });
-        }
-      }
-    };
     let actionColumn = {
       label: 'Take Action',
       buttons: [{
         id: 'unmapTutor',
         label: 'Un-map Tutor',
         btnclass: 'btnReject',
+        securityMapping: {
+          isSecured: true,
+          visible: 'showUnMap',
+          enabled: 'enableUnMap'              
+        },
         clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedMappedTutorObject = gridComponentObject;
+          button.disable();
           this.helperService.showConfirmationDialog({
-            message: 'Please confirm if you want to un-map this tutor from the Enquiry',
+            message: 'Please confirm if you want to un-map tutor '
+                      + record.getProperty('tutorSerialId') 
+                      + ' - ' 
+                      + record.getProperty('tutorName')
+                      + ' from the Enquiry',
             onOk: () => {
               const data = {
-                allIdsList: record.getProperty('tutorMapperId')
+                allIdsList: record.getProperty('tutorMapperSerialId')
               };
-              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
+              gridComponentObject.showGridLoadingMask();
+              this.utilityService.makerequest(this, this.handleUnmapRequest,
                 LcpRestUrls.map_tutor_to_enquiry_unmap_registered_tutors, 'POST', this.utilityService.urlEncodeData(data),
                 'application/x-www-form-urlencoded');
+              button.enable();
             },
             onCancel: () => {
+              button.enable();
             }
           });
         }
@@ -350,54 +316,25 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     };
 
     this.pendingMappedTutorsGridMetaData = {
-      grid: this.getGridObject('pendingMappedTutorsGrid', 'Pending Mapped Tutors', '/rest/sales/pendingMappedTutorsList', [demoReady, unmapTutorsSelectionButton], true, actionColumn, true),
+      grid: this.getGridObject('pendingMappedTutorsGrid', 'Pending Mapped Tutors', '/rest/sales/pendingMappedTutorsList', true, actionColumn, true),
       htmlDomElementId: 'pending-mapped-tutors-grid',
       hidden: false,
     };
-
     this.demoReadyMappedTutorsGridMetaData = {
-      grid: this.getGridObject('demoReadyMappedTutorsGrid', 'Demo Ready Mapped Tutors', '/rest/sales/demoReadyMappedTutorsList', [pending]),
+      grid: this.getGridObject('demoReadyMappedTutorsGrid', 'Demo Ready Mapped Tutors', '/rest/sales/demoReadyMappedTutorsList'),
       htmlDomElementId: 'demo-ready-mapped-tutors-grid',
       hidden: false,
     };
-
     this.demoScheduledMappedTutorsGridMetaData = {
-      grid: this.getGridObject('demoScheduledMappedTutorsGrid', 'Demo Scheduled Mapped Tutors', '/rest/sales/demoScheduledMappedTutorsList', [], false, null, true),
+      grid: this.getGridObject('demoScheduledMappedTutorsGrid', 'Demo Scheduled Mapped Tutors', '/rest/sales/demoScheduledMappedTutorsList', false, null, true),
       htmlDomElementId: 'demo-scheduled-mapped-tutors-grid',
       hidden: false,
     };
-
     this.enquiryClosedMappedTutorsGridMetaData = {
-      grid: this.getGridObject('enquiryClosedMappedTutorsGrid', 'Enquiry Closed Mapped Tutors', '/rest/sales/enquiryClosedMappedTutorsList', [], false, null, true),
+      grid: this.getGridObject('enquiryClosedMappedTutorsGrid', 'Enquiry Closed Mapped Tutors', '/rest/sales/enquiryClosedMappedTutorsList', false, null, true),
       htmlDomElementId: 'enquiry-closed-mapped-tutors-grid',
       hidden: false,
     };
-  }
-
-  handleSelectionActionRequest(context: any, response: any) {
-    if (response['success'] === false) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
-    } else {
-      context.interimHoldSelectedMappedTutorObject.refreshGridData();
-    }
-  }
-
-  handleUndoDemoReadyRequest(context: any, response: any) {
-    if (response['success'] === false) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: response['message'],
-        onButtonClicked: () => {
-        }
-      });
-    } else {
-      context.demoReadyMappedTutorsGridObject.refreshGridData();
-    }
   }
 
   handleDataAccessRequest(context: any, response: any) {
@@ -409,12 +346,13 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.mappedTutorScheduleDemoAccess = {
+      context.tutorMapperDataAccess = {
         success: response.success,
         message: response.message,
+        tutorMapperFormAccess: response.tutorMapperFormAccess,
         scheduleDemoFormAccess: response.scheduleDemoFormAccess
       };
-      context.selectedMappedTutorRecord = context.interimHoldSelectedMappedTutorRecord;
+      context.selectedTutorMapperSerialId = context.interimHoldSelectedTutorMapperSerialId;
       context.toggleVisibilityScheduleDemoMappedTutorGrid();
     }
   }
@@ -422,7 +360,7 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
   toggleVisibilityScheduleDemoMappedTutorGrid() {
     if (this.showScheduleDemoMappedTutorData === true) {
       this.showScheduleDemoMappedTutorData = false;
-      this.selectedMappedTutorRecord = null;
+      this.selectedTutorMapperSerialId = null;
       setTimeout(() => {
         this.pendingMappedTutorsGridObject.init();
         this.demoReadyMappedTutorsGridObject.init();
@@ -439,11 +377,4 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
       this.showScheduleDemoMappedTutorData = true;
     }
   }
-
-}
-
-export interface MappedTutorScheduleDemoAccess {
-  success: boolean;
-  message: string;
-  scheduleDemoFormAccess: boolean;
 }

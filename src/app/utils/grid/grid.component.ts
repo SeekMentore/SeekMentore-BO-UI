@@ -95,6 +95,14 @@ export class GridComponent implements OnInit, AfterViewInit {
     }, 1000);
   }
 
+  public show() {
+    this.hidden = false;
+  }
+
+  public hide() {
+    this.hidden = true;
+  }
+
   public showGridLoadingMask() {
       this.grid.maskLoaderHidden = false;
   }

@@ -39,7 +39,11 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
 
   showMapTutorToEnquiryMappedTutorData = false;
   selectedTutorMapperSerialId: string = null;
+  selectedTutorSerialId: string = null;
+  selectedCustomerSerialId: string = null;
   interimHoldSelectedTutorMapperSerialId: string = null;
+  interimHoldSelectedTutorSerialId: string = null;
+  interimHoldSelectedCustomerSerialId: string = null;
   tutorMapperDataAccess: TutorMapperDataAccess = null;
 
   studentGradesFilterOptions = CommonFilterOptions.studentGradesFilterOptions;
@@ -339,11 +343,15 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
           dataType: 'string',
           mapping: 'tutorMapperSerialId',
           clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
-            this.interimHoldSelectedTutorMapperSerialId = record.getProperty('tutorMapperSerialId');
+            this.interimHoldSelectedTutorMapperSerialId = column.getValueForColumn(record);
+            this.interimHoldSelectedTutorSerialId = record.getProperty('tutorMapperSerialId');
+            this.interimHoldSelectedCustomerSerialId = record.getProperty('customerSerialId');
             if (this.tutorMapperDataAccess === null) {
               this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_mapper_data_access, 'POST', null, 'application/x-www-form-urlencoded');
             } else {
-              this.selectedTutorMapperSerialId = this.interimHoldSelectedTutorMapperSerialId;            
+              this.selectedTutorMapperSerialId = this.interimHoldSelectedTutorMapperSerialId;   
+              this.selectedTutorSerialId = this.interimHoldSelectedTutorSerialId;           
+              this.selectedCustomerSerialId = this.interimHoldSelectedCustomerSerialId;  
               this.toggleVisibilityMappedTutorGrid();
             }
           }
@@ -511,6 +519,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
         scheduleDemoFormAccess: response.scheduleDemoFormAccess
       };
       context.selectedTutorMapperSerialId = context.interimHoldSelectedTutorMapperSerialId;
+      context.selectedTutorSerialId = context.interimHoldSelectedTutorSerialId;           
+      context.selectedCustomerSerialId = context.interimHoldSelectedCustomerSerialId;  
       context.toggleVisibilityMappedTutorGrid();
     }
   }
@@ -519,6 +529,8 @@ export class MapTutorToEnquiryDataComponent implements OnInit, AfterViewInit {
     if (this.showMapTutorToEnquiryMappedTutorData === true) {
       this.showMapTutorToEnquiryMappedTutorData = false;
       this.selectedTutorMapperSerialId = null;
+      this.selectedTutorSerialId = null;
+      this.selectedCustomerSerialId = null;
       const backToEnquiriesListingButton: HTMLElement = document.getElementById('back-to-all-enquiries-listing-button'); 
       backToEnquiriesListingButton.classList.remove('noscreen');
       setTimeout(() => {

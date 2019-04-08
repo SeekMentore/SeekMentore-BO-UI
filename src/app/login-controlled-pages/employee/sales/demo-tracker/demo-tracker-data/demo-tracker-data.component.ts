@@ -51,11 +51,11 @@ export class DemoTrackerDataComponent implements OnInit {
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   demoStatusFilterOptions = CommonFilterOptions.demoStatusFilterOptions;
 
-  isFormDirty: boolean = false;
+  isRecordUpdateFormDirty: boolean = false;
   demoFormMaskLoaderHidden: boolean = true;
-  showForm: boolean = false;
-  showEditControlSection: boolean = false;
-  showUpdateButton: boolean = false; 
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
+  showRecordUpdateButton: boolean = false; 
   canSuccessFailDemo: boolean = false; 
   canCancelDemo: boolean = false;
   takeActionActionText: string;
@@ -63,6 +63,8 @@ export class DemoTrackerDataComponent implements OnInit {
   demoRescheduleFormMaskLoaderHidden: boolean = true;
   showRescheduleForm: boolean = false;
   showRescheduleButton: boolean = false; 
+
+  dirtyFlagList: string[] = ['RECORD_UPDATE', 'RE_SCHEDULE_DEMO'];
 
   // Modal Variables
   demoRecord: Demo;
@@ -91,11 +93,11 @@ export class DemoTrackerDataComponent implements OnInit {
     this.getDemoGridRecord(this.demoSerialId);
   }
 
-  private showFormLoaderMask() {
+  private showRecordUpdateFormLoaderMask() {
     this.demoFormMaskLoaderHidden = false;
   }
 
-  private hideFormLoaderMask() {
+  private hideRecordUpdateFormLoaderMask() {
     this.demoFormMaskLoaderHidden = true;
   }
 
@@ -107,16 +109,7 @@ export class DemoTrackerDataComponent implements OnInit {
     this.demoRescheduleFormMaskLoaderHidden = true;
   }
 
-  private setSectionShowParams() {
-    this.showForm = this.demoModifyAccess.demoUpdateFormAccess;
-    this.showEditControlSection = this.demoModifyAccess.demoUpdateFormAccess && !this.formEditMandatoryDisbaled;
-    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
-    this.takeActionDisabled = !this.canCancelDemo && !this.canSuccessFailDemo;
-    this.showRescheduleForm = this.demoModifyAccess.demoRescheduleFormAccess && !this.rescheduleMandatoryDisbaled;
-    this.showRescheduleButton = this.showRescheduleForm && this.editReScheduleRecordForm;
-  }
-
-  public setFormEditStatus(isEditable: boolean) {
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
     this.editRecordForm = isEditable;
     this.setSectionShowParams();
   }
@@ -125,9 +118,113 @@ export class DemoTrackerDataComponent implements OnInit {
     this.editReScheduleRecordForm = isEditable;
     this.setSectionShowParams();
   }
+
+  private setSectionShowParams() {
+    this.showRecordUpdateForm = this.demoModifyAccess.demoUpdateFormAccess;
+    this.showRecordUpdateEditControlSection = this.demoModifyAccess.demoUpdateFormAccess && !this.formEditMandatoryDisbaled;
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canCancelDemo && !this.canSuccessFailDemo;
+    this.showRescheduleForm = this.demoModifyAccess.demoRescheduleFormAccess && !this.rescheduleMandatoryDisbaled;
+    this.showRescheduleButton = this.showRescheduleForm && this.editReScheduleRecordForm;
+  }
+
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+          case 'RE_SCHEDULE_DEMO' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Re-Schedule Demo form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+          case 'RE_SCHEDULE_DEMO' : {
+            resultantFlagValue = resultantFlagValue || this.isRescheduleFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+          case 'RE_SCHEDULE_DEMO' : {
+            this.isRescheduleFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+          case 'RE_SCHEDULE_DEMO' : {
+            this.isRescheduleFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
+  }    
   
   private getDemoGridRecord(demoSerialId: string) {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     this.showRescheduleFormLoaderMask();
     const data = {
       parentSerialId: demoSerialId
@@ -157,6 +254,7 @@ export class DemoTrackerDataComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
@@ -189,7 +287,7 @@ export class DemoTrackerDataComponent implements OnInit {
       this.editRecordForm = false;
       this.editReScheduleRecordForm = false;
       this.setSectionShowParams();
-      this.hideFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
       this.hideRescheduleFormLoaderMask();
     }, 500);
   }
@@ -199,15 +297,15 @@ export class DemoTrackerDataComponent implements OnInit {
   }
 
   updateDemoProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    if (!this.isRescheduleFormDirty) {
-      this.isFormDirty = true;      
+    if (!this.isFlagListDirty(false, ['RE_SCHEDULE_DEMO'])) {
+      this.setFlagListDirty(false, ['RECORD_UPDATE']);   
       this.updateProperty(key, event, data_type, this.demoUpdatedRecord, deselected, isAllOPeration);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the reschedule form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isRescheduleFormDirty = false;
-          this.isFormDirty = true;      
+          this.setFlagListNotDirty(false, ['RE_SCHEDULE_DEMO']);
+          this.setFlagListDirty(false, ['RECORD_UPDATE']);   
           this.updateProperty(key, event, data_type, this.demoUpdatedRecord, deselected, isAllOPeration);
         },
         onCancel: () => {
@@ -223,11 +321,11 @@ export class DemoTrackerDataComponent implements OnInit {
   } 
 
   updateDemoRecord() {
-    if (!this.isRescheduleFormDirty) {
+    if (!this.isFlagListDirty(false, ['RE_SCHEDULE_DEMO'])) {
       this.update();
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the reschedule form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
           this.isRescheduleFormDirty = false;
           this.update();
@@ -245,7 +343,7 @@ export class DemoTrackerDataComponent implements OnInit {
   }
 
   private update() {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     this.showRescheduleFormLoaderMask();
     const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.demoUpdatedRecord, this.demoRecord.demoSerialId);
     this.utilityService.makerequest(this, this.onUpdateDemoRecord, LcpRestUrls.demo_update_record, 'POST',
@@ -261,24 +359,24 @@ export class DemoTrackerDataComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
-      context.isFormDirty = false;
+      context.setFlagListNotDirty();  
       context.getDemoGridRecord(context.demoSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
       context.hideRescheduleFormLoaderMask();
     }
   }
 
   updateReScheduleProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    if (!this.isFormDirty) {
-      this.isRescheduleFormDirty = true;      
+    if (!this.isFlagListDirty(false, ['RECORD_UPDATE'])) {
+      this.setFlagListDirty(false, ['RE_SCHEDULE_DEMO']);
       this.updateProperty(key, event, data_type, this.rescheduleUpdatedRecord, deselected, isAllOPeration);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isFormDirty = false;
-          this.isRescheduleFormDirty = true;      
+          this.setFlagListNotDirty(false, ['RECORD_UPDATE']);
+          this.setFlagListDirty(false, ['RE_SCHEDULE_DEMO']);     
           this.updateProperty(key, event, data_type, this.rescheduleUpdatedRecord, deselected, isAllOPeration);
         },
         onCancel: () => {
@@ -294,13 +392,15 @@ export class DemoTrackerDataComponent implements OnInit {
   }
 
   reScheduleDemo() {
-    if (!this.isFormDirty) {
+    if (!this.isFlagListDirty(false, ['RECORD_UPDATE'])) {
+      this.setFlagListDirty(false, ['RE_SCHEDULE_DEMO']);     
       this.reschedule();
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changed on the Update form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
-          this.isFormDirty = false;
+          this.setFlagListNotDirty(false, ['RECORD_UPDATE']);
+          this.setFlagListDirty(false, ['RE_SCHEDULE_DEMO']);     
           this.reschedule();
         },
         onCancel: () => {
@@ -316,7 +416,7 @@ export class DemoTrackerDataComponent implements OnInit {
   }
 
   private reschedule() {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     this.showRescheduleFormLoaderMask();
     const newDemoDate: HTMLInputElement = <HTMLInputElement>document.getElementById('newDemoDate');
     const newDemoTime: HTMLInputElement = <HTMLInputElement>document.getElementById('newDemoTime');
@@ -339,36 +439,38 @@ export class DemoTrackerDataComponent implements OnInit {
     });
     if (response['success']) {
       context.editReScheduleRecordForm = false;
-      context.isRescheduleFormDirty = false;
+      context.setFlagListNotDirty(); 
       context.getDemoGridRecord(response['newRescheduledDemoSerialId']);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
       context.hideRescheduleFormLoaderMask();
     }
   }
 
-  private getConfirmationMessageForFormsDirty() {
-    let message: string = '';
-    if (this.isFormDirty || this.isRescheduleFormDirty) {
-      if (this.isFormDirty) {
-        message += 'You have unsaved changes on the Update form.'
-      }
-      if (CommonUtilityFunctions.checkStringAvailability(message)) {
-        message += '\n';
-      }
-      if (this.isRescheduleFormDirty) {
-        message += 'You have unsaved changes on the Reschedule form.'
-      }
-      if (CommonUtilityFunctions.checkStringAvailability(message)) {
-        message += '\n';
-        message += 'Do you still want to continue';
-      }
-    }
-    return message;
+  resetDemoRecord() {
+    if (!this.isFlagListDirty()) {
+      this.getDemoGridRecord(this.demoSerialId);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.getDemoGridRecord(this.demoSerialId);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }    
   }
 
   takeActionOnDemoRecord(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
-    if (!this.isFormDirty || !this.isRescheduleFormDirty) {      
+    if (!this.isFlagListDirty()) {      
       this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
     } else {
       this.helperService.showConfirmationDialog({
@@ -394,10 +496,9 @@ export class DemoTrackerDataComponent implements OnInit {
       titleText: titleText,
       placeholderText: placeholderText,
       onOk: (message) => {
-        this.showFormLoaderMask();
+        this.showRecordUpdateFormLoaderMask();
         this.showRescheduleFormLoaderMask();
-        this.isFormDirty = false;  
-        this.isRescheduleFormDirty = false;
+        this.setFlagListNotDirty();
         this.takeActionActionText = actionText;                  
         const data = {
           allIdsList: this.demoRecord.demoSerialId,
@@ -422,10 +523,141 @@ export class DemoTrackerDataComponent implements OnInit {
       }
     });
     if (response['success']) {
+      context.setFlagListNotDirty();
       context.getDemoGridRecord(context.demoSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
       context.hideRescheduleFormLoaderMask();
     }
-  }  
+  }
+
+  openCustomerRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadCustomerRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadCustomerRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadCustomerRecord() {
+    alert("Loading Customer Record > " + this.demoRecord.customerSerialId);
+  }
+
+  openEnquiryRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadEnquiryRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadTutorRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadEnquiryRecord() {
+    alert("Loading Enquiry Record > " + this.demoRecord.enquirySerialId);
+  }
+
+  openTutorMapperRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadTutorMapperRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadTutorMapperRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadTutorMapperRecord() {
+    alert("Loading Tutor Mapper Record > " + this.demoRecord.tutorMapperSerialId);
+  }
+  
+  openTutorRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadTutorRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadTutorRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadTutorRecord() {
+    alert("Loading Tutor Record > " + this.demoRecord.tutorSerialId);
+  }
+
+  openReSchdeuledFromDemoRecord() {
+    if (!this.isFlagListDirty()) {
+      this.loadReSchdeuledFromDemoRecord();
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.loadReSchdeuledFromDemoRecord();
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
+  }
+
+  loadReSchdeuledFromDemoRecord() {
+    alert("Loading Rescheduled From Demo Record > " + this.demoRecord.rescheduledFromDemoSerialId);
+  }
 }

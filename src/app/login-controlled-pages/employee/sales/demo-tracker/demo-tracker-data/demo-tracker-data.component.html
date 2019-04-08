@@ -1,16 +1,20 @@
 <div>
   <div class="form-container-div">
-    <form *ngIf="showForm" class="form-container" style="max-width: 80%">
-      <div *ngIf="showEditControlSection"
-            class="form-container-toggle-button">
-        <label class="tab_container" (change)="setFormEditStatus(false)">
-          <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
-          <span class="tab_checkmark left">View</span>
-        </label>
-        <label class="tab_container" (change)="setFormEditStatus(true)">
-          <input type="radio" [checked]="editRecordForm" name="editFormChoice">
-          <span class="tab_checkmark right">Edit</span>
-        </label>
+    <form *ngIf="showRecordUpdateForm" class="form-container" style="max-width: 80%">
+      <div class="form-container-title">
+        <span>Record Update Form</span>
+      </div>
+      <div class="form-container-toggle-button">
+        <div *ngIf="showRecordUpdateEditControlSection">
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(false)">
+            <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(true)">
+            <input type="radio" [checked]="editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
       </div>
       <table class="form-container-generic-table">
         <tr style="background-color: beige;" *ngIf="!showCustomerDetails">
@@ -34,6 +38,10 @@
           <td>
             Hide Customer Details
           </td>
+        </tr>
+        <tr style="background-color: beige;" *ngIf="showCustomerDetails">
+          <td class="td-label"><label>Customer Serial Id</label></td>
+          <td><label class="data link_opener" (click)="openCustomerRecord()">{{demoRecord.customerSerialId}}</label></td>
         </tr>
         <tr style="background-color: beige;" *ngIf="showCustomerDetails">
           <td class="td-label"><label>Customer Name</label></td>
@@ -68,6 +76,10 @@
           <td>
             Hide Enquiry Details
           </td>
+        </tr>
+        <tr style="background-color: aliceblue;" *ngIf="showEnquiryDetails">
+          <td class="td-label"><label>Enquiry Serial Id</label></td>
+          <td><label class="data link_opener" (click)="openEnquiryRecord()">{{demoRecord.enquirySerialId}}</label></td>        
         </tr>
         <tr style="background-color: aliceblue;" *ngIf="showEnquiryDetails">
           <td class="td-label"><label>Enquiry Subject</label></td>
@@ -133,6 +145,10 @@
           </td>
         </tr>
         <tr style="background-color: beige;" *ngIf="showTutorDetails">
+          <td class="td-label"><label>Tutor Serial Id</label></td>
+          <td><label class="data link_opener" (click)="openTutorRecord()">{{demoRecord.tutorSerialId}}</label></td>        
+        </tr>
+        <tr style="background-color: beige;" *ngIf="showTutorDetails">
           <td class="td-label"><label>Tutor Name</label></td>
           <td><label class="data">{{demoRecord.tutorName}}</label></td>        
         </tr>
@@ -165,6 +181,10 @@
           <td>
             Hide Tutor Mapper Details
           </td>
+        </tr>
+        <tr style="background-color: aliceblue;" *ngIf="showTutorMapperDetails">
+          <td class="td-label"><label>Tutor Mapper Serial Id</label></td>
+          <td><label class="data link_opener" (click)="openTutorMapperRecord()">{{demoRecord.tutorMapperSerialId}}</label></td>        
         </tr>
         <tr style="background-color: aliceblue;" *ngIf="showTutorMapperDetails">
           <td class="td-label"><label>Mapping Quoted Tutor Rate</label></td>
@@ -366,7 +386,7 @@
         </tr>
         <tr *ngIf="demoRecord.isRescheduled">
           <td class="td-label"><label>Re-scheduled From Demo</label></td>
-          <td><label class="data">{{demoRecord.rescheduledFromDemoSerialId}}</label></td>        
+          <td><label class="data link_opener" (click)="openReSchdeuledFromDemoRecord()">{{demoRecord.rescheduledFromDemoSerialId}}</label></td>        
         </tr>
         <tr *ngIf="demoRecord.isRescheduled">
           <td class="td-label"><label>Re-Schedule Count</label></td>
@@ -436,18 +456,35 @@
           </td>
         </tr>
       </table>
-      <button *ngIf="showUpdateButton" type="submit"
-            class="ok-button form-container-update-button"
-            (click)="updateDemoRecord()">
-        Update Demo
-      </button>
+      <table class="form-container-generic-table">
+        <tr>
+          <td align="right">
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                  class="ok-button form-container-update-button"
+                  (click)="updateDemoRecord()">
+                  Update Demo
+            </button>
+          </td>
+          <td>
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="cancel-button form-container-update-button"
+                    (click)="resetDemoRecord()">
+                    Reset Demo
+            </button>
+          </td>
+        </tr>
+      </table>
+      
       <div class="form-mask" id="demo-form-mask-loader" [hidden]="demoFormMaskLoaderHidden">
         <div class="form-loader"></div>
       </div>
     </form>
     <form *ngIf="showRescheduleForm" class="form-container" style="max-width: 80%">
-        <div *ngIf="showRescheduleForm"
-              class="form-container-toggle-button">
+      <div class="form-container-title">
+        <span>Re-Schedule Demo Form</span>
+      </div>
+      <div class="form-container-toggle-button">
+        <div *ngIf="showRescheduleForm">
           <label class="tab_container" (change)="setRescheduleFormStatus(false)">
             <input type="radio" [checked]="!editReScheduleRecordForm" name="editReScheduleFormChoice">
             <span class="tab_checkmark left">View</span>
@@ -457,6 +494,7 @@
             <span class="tab_checkmark right">Edit</span>
           </label>
         </div>
+      </div>
       <table class="form-container-generic-table">
         <tr>
           <td class="td-label"><label>New Demo Date</label></td>
@@ -488,11 +526,17 @@
           </td>        
         </tr>
       </table>
-      <button *ngIf="showRescheduleButton" type="submit"
-            class="ok-button form-container-update-button"
-            (click)="reScheduleDemo()">
-        Re-Schedule Demo
-      </button>
+      <table class="form-container-generic-table">
+        <tr>
+          <td align="center">
+            <button *ngIf="showRescheduleButton" type="submit"
+                  class="ok-button form-container-update-button"
+                  (click)="reScheduleDemo()">
+              Re-Schedule Demo
+            </button>
+          </td>
+        </tr>
+      </table> 
       <div class="form-mask" id="demo-reschedule-form-mask-loader" [hidden]="demoRescheduleFormMaskLoaderHidden">
         <div class="form-loader"></div>
       </div>

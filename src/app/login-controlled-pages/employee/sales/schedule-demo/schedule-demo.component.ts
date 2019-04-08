@@ -38,7 +38,11 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
 
   showScheduleDemoMappedTutorData = false;
   selectedTutorMapperSerialId: string = null;
+  selectedTutorSerialId: string = null;
+  selectedCustomerSerialId: string = null;
   interimHoldSelectedTutorMapperSerialId: string = null;
+  interimHoldSelectedTutorSerialId: string = null;
+  interimHoldSelectedCustomerSerialId: string = null;
   tutorMapperDataAccess: TutorMapperDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
@@ -94,10 +98,14 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         mapping: 'tutorMapperSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
           this.interimHoldSelectedTutorMapperSerialId = column.getValueForColumn(record);
+          this.interimHoldSelectedTutorSerialId = record.getProperty('tutorMapperSerialId');
+            this.interimHoldSelectedCustomerSerialId = record.getProperty('customerSerialId');
           if (this.tutorMapperDataAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.tutor_mapper_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedTutorMapperSerialId = this.interimHoldSelectedTutorMapperSerialId;            
+            this.selectedTutorMapperSerialId = this.interimHoldSelectedTutorMapperSerialId;  
+            this.selectedTutorSerialId = this.interimHoldSelectedTutorSerialId;           
+            this.selectedCustomerSerialId = this.interimHoldSelectedCustomerSerialId;            
             this.toggleVisibilityScheduleDemoMappedTutorGrid();
           }
         }
@@ -353,6 +361,8 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
         scheduleDemoFormAccess: response.scheduleDemoFormAccess
       };
       context.selectedTutorMapperSerialId = context.interimHoldSelectedTutorMapperSerialId;
+      context.selectedTutorSerialId = context.interimHoldSelectedTutorSerialId;           
+      context.selectedCustomerSerialId = context.interimHoldSelectedCustomerSerialId;  
       context.toggleVisibilityScheduleDemoMappedTutorGrid();
     }
   }
@@ -361,6 +371,8 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
     if (this.showScheduleDemoMappedTutorData === true) {
       this.showScheduleDemoMappedTutorData = false;
       this.selectedTutorMapperSerialId = null;
+      this.selectedTutorSerialId = null;
+      this.selectedCustomerSerialId = null;
       setTimeout(() => {
         this.pendingMappedTutorsGridObject.init();
         this.demoReadyMappedTutorsGridObject.init();

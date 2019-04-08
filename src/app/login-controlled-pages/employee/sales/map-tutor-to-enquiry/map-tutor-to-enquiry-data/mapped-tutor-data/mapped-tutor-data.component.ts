@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { TutorMapper } from 'src/app/model/tutor-mapper';
 import { AppConstants } from 'src/app/utils/app-constants';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
@@ -9,6 +9,9 @@ import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { TutorMapperDataAccess } from '../map-tutor-to-enquiry-data.component';
+import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
+import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
+import { Column } from 'src/app/utils/grid/column';
 
 @Component({
   selector: 'app-mapped-tutor-data',
@@ -17,8 +20,30 @@ import { TutorMapperDataAccess } from '../map-tutor-to-enquiry-data.component';
 })
 export class MappedTutorDataComponent implements OnInit {
 
+  @ViewChild('currentTutorMappingGrid')
+  currentTutorMappingGridObject: GridComponent;
+  currentTutorMappingGridMetaData: GridDataInterface;
+
+  @ViewChild('currentCustomerMappingGrid')
+  currentCustomerMappingGridObject: GridComponent;
+  currentCustomerMappingGridMetaData: GridDataInterface;
+
+  @ViewChild('currentTutorScheduledDemoGrid')
+  currentTutorScheduledDemoGridObject: GridComponent;
+  currentTutorScheduledDemoGridMetaData: GridDataInterface;
+
+  @ViewChild('currentCustomerScheduledDemoGrid')
+  currentCustomerScheduledDemoGridObject: GridComponent;
+  currentCustomerScheduledDemoGridMetaData: GridDataInterface;
+
   @Input()
   tutorMapperSerialId: string = null;
+
+  @Input()
+  tutorSerialId: string = null;
+
+  @Input()
+  customerSerialId: string = null;
 
   @Input()
   tutorMapperDataAccess: TutorMapperDataAccess = null;
@@ -32,6 +57,8 @@ export class MappedTutorDataComponent implements OnInit {
   showEnquiryDetails = false;
   showCustomerDetails = false;
   showEmployeeActionButtons = false;
+  showMappingGrid = true;
+  showDemoGrid = true;
 
   formEditMandatoryDisbaled = true;
   takeActionDisabled = true;
@@ -89,11 +116,35 @@ export class MappedTutorDataComponent implements OnInit {
   scheduleDemoTimeModal: string;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {
+    this.currentTutorMappingGridMetaData = null;
+    this.currentCustomerMappingGridMetaData = null;
+    this.currentTutorScheduledDemoGridMetaData = null;
+    this.currentCustomerScheduledDemoGridMetaData = null;
     this.tutorMapperRecord = new TutorMapper();    
   }
 
   ngOnInit() {
     this.getTutorMapperGridRecord(this.tutorMapperSerialId);
+    this.setUpGridMetaData();
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.currentTutorMappingGridObject.init();
+      this.currentTutorMappingGridObject.addExtraParams('tutorSerialId', this.tutorSerialId);
+      this.currentCustomerMappingGridObject.init();
+      this.currentCustomerMappingGridObject.addExtraParams('customerSerialId', this.customerSerialId);
+      this.currentTutorScheduledDemoGridObject.init();
+      this.currentTutorScheduledDemoGridObject.addExtraParams('tutorSerialId', this.tutorSerialId);
+      this.currentCustomerScheduledDemoGridObject.init();
+      this.currentCustomerScheduledDemoGridObject.addExtraParams('customerSerialId', this.customerSerialId);
+    }, 100);
+    setTimeout(() => {
+      this.currentTutorMappingGridObject.refreshGridData();
+      this.currentCustomerMappingGridObject.refreshGridData();
+      this.currentTutorScheduledDemoGridObject.refreshGridData();
+      this.currentCustomerScheduledDemoGridObject.refreshGridData();
+    }, 100);
   }
 
   private showRecordUpdateFormLoaderMask() {
@@ -266,6 +317,8 @@ export class MappedTutorDataComponent implements OnInit {
     CommonUtilityFunctions.logOnConsole(mappedTutorGridRecord);
     this.tutorMapperRecord.setValuesFromGridRecord(mappedTutorGridRecord);
     this.tutorMapperSerialId = this.tutorMapperRecord.tutorMapperSerialId;
+    this.tutorSerialId = this.tutorMapperRecord.tutorSerialId;
+    this.customerSerialId = this.tutorMapperRecord.customerSerialId;
     this.tutorContactedDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.tutorMapperRecord.tutorContactedDateMillis);
     this.clientContactedDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.tutorMapperRecord.clientContactedDateMillis);
     this.adminActionDateAndTimeDisplay = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.tutorMapperRecord.adminActionDateMillis);
@@ -300,6 +353,384 @@ export class MappedTutorDataComponent implements OnInit {
       this.hideRecordUpdateFormLoaderMask();
       this.hideScheduleDemoFormLoaderMask();
     }, 500);
+  }
+
+  public getTutorMappingGridObject(id: string, title: string, restURL: string, startColumns: any[], collapsed: boolean = false) {
+    let grid = {
+      id: id,
+      title: title,
+      collapsed: collapsed,
+      store: {
+        isStatic: false,
+        restURL: restURL
+      },
+      columns: startColumns.concat([{
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
+        dataType: 'string',
+        mapping: 'enquirySerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Enquiry Record > ' + column.getValueForColumn(record));
+        }
+      }, {
+        id: 'enquirySubject',
+        headerName: 'Enquiry Subject',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.subjectsFilterOptions,
+        mapping: 'enquirySubject',
+        renderer: AdminCommonFunctions.subjectsRenderer
+      }, {
+        id: 'enquiryGrade',
+        headerName: 'Enquiry Grade',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+        mapping: 'enquiryGrade',
+        renderer: AdminCommonFunctions.studentGradesRenderer
+      }, {
+        id: 'enquiryPreferredTeachingType',
+        headerName: 'Enquiry Preferred Teaching Type',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'enquiryPreferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+      }, {
+        id: 'enquiryLocation',
+        headerName: 'Enquiry Location',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
+        mapping: 'enquiryLocation',
+        renderer: AdminCommonFunctions.locationsRenderer
+      }, {
+        id: 'enquiryAddressDetails',
+        headerName: 'Enquiry Address Details',
+        dataType: 'string',
+        mapping: 'enquiryAddressDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryAdditionalDetails',
+        headerName: 'Enquiry Additional Details',
+        dataType: 'string',
+        mapping: 'enquiryAdditionalDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryQuotedClientRate',
+        headerName: 'Enquiry Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'enquiryQuotedClientRate'
+      }, {
+        id: 'enquiryNegotiatedRateWithClient',
+        headerName: 'Enquiry Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'enquiryNegotiatedRateWithClient'
+      }, {
+        id: 'enquiryClientNegotiationRemarks',
+        headerName: 'Enquiry Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'enquiryClientNegotiationRemarks',
+        lengthyData: true
+      },{
+        id: 'mappingStatus',
+        headerName: 'Mapping Status',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.mappingStatusFilterOptions,
+        mapping: 'mappingStatus',
+        renderer: AdminCommonFunctions.mappingStatusRenderer
+      },{
+        id: 'isTutorContacted',
+        headerName: 'Is Tutor Contacted',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isTutorContacted',
+        renderer: GridCommonFunctions.yesNoRenderer
+      },{
+        id: 'isTutorAgreed',
+        headerName: 'Is Tutor Agreed',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isTutorAgreed',
+        renderer: GridCommonFunctions.yesNoRenderer
+      },{
+        id: 'quotedTutorRate',
+        headerName: 'Quoted Tutor Rate',
+        dataType: 'number',
+        mapping: 'quotedTutorRate'
+      },{
+        id: 'negotiatedRateWithTutor',
+        headerName: 'Negotiated Rate With Tutor',
+        dataType: 'number',
+        mapping: 'negotiatedRateWithTutor'
+      },{
+        id: 'tutorNegotiationRemarks',
+        headerName: 'Tutor Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'tutorNegotiationRemarks',
+        lengthyData: true
+      },{
+        id: 'isDemoScheduled',
+        headerName: 'Is Demo Scheduled',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.yesNoFilterOptions,
+        mapping: 'isDemoScheduled',
+        renderer: GridCommonFunctions.yesNoRenderer
+      }])
+    };
+    return grid;
+  }
+
+  public getDemoGridObject(id: string, title: string, restURL: string, startColumns: any[], collapsed: boolean = false) {
+    let grid = {
+      id: id,
+      title: title,
+      collapsed: collapsed,
+      store: {
+        isStatic: false,
+        restURL: restURL
+      },
+      columns: startColumns.concat([{
+        id: 'demoSerialId',
+        headerName: 'Demo Serial Id',
+        dataType: 'string',
+        mapping: 'demoSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Demo Record > ' + column.getValueForColumn(record));
+        }
+      }, {
+        id: 'demoDateAndTime',
+        headerName: 'Demo Date And Time',
+        dataType: 'date',
+        mapping: 'demoDateAndTimeMillis',
+        renderer: GridCommonFunctions.renderDateFromMillisWithTime
+      }, {
+        id: 'demoStatus',
+        headerName: 'Demo Status',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.demoStatusFilterOptions,
+        mapping: 'demoStatus',
+        renderer: AdminCommonFunctions.demoStatusRenderer
+      }, {
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
+        dataType: 'string',
+        mapping: 'enquirySerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Enquiry Record > ' + column.getValueForColumn(record));
+        }
+      }, {
+        id: 'enquirySubject',
+        headerName: 'Enquiry Subject',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.subjectsFilterOptions,
+        mapping: 'enquirySubject',
+        renderer: AdminCommonFunctions.subjectsRenderer
+      }, {
+        id: 'enquiryGrade',
+        headerName: 'Enquiry Grade',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+        mapping: 'enquiryGrade',
+        renderer: AdminCommonFunctions.studentGradesRenderer
+      }, {
+        id: 'enquiryPreferredTeachingType',
+        headerName: 'Enquiry Preferred Teaching Type',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.preferredTeachingTypeFilterOptions,
+        mapping: 'enquiryPreferredTeachingType',
+        multiList: true,
+        renderer: AdminCommonFunctions.preferredTeachingTypeMultiRenderer
+      }, {
+        id: 'enquiryLocation',
+        headerName: 'Enquiry Location',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.locationsFilterOptions,
+        mapping: 'enquiryLocation',
+        renderer: AdminCommonFunctions.locationsRenderer
+      }, {
+        id: 'enquiryAddressDetails',
+        headerName: 'Enquiry Address Details',
+        dataType: 'string',
+        mapping: 'enquiryAddressDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryAdditionalDetails',
+        headerName: 'Enquiry Additional Details',
+        dataType: 'string',
+        mapping: 'enquiryAdditionalDetails',
+        lengthyData: true
+      }, {
+        id: 'enquiryQuotedClientRate',
+        headerName: 'Enquiry Quoted Client Rate',
+        dataType: 'number',
+        mapping: 'enquiryQuotedClientRate'
+      }, {
+        id: 'enquiryNegotiatedRateWithClient',
+        headerName: 'Enquiry Negotiated Rate With Client',
+        dataType: 'number',
+        mapping: 'enquiryNegotiatedRateWithClient'
+      }, {
+        id: 'enquiryClientNegotiationRemarks',
+        headerName: 'Enquiry Client Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'enquiryClientNegotiationRemarks',
+        lengthyData: true
+      },{
+        id: 'tutorMapperQuotedTutorRate',
+        headerName: 'Mapping Quoted Tutor Rate',
+        dataType: 'number',
+        mapping: 'tutorMapperQuotedTutorRate'
+      },{
+        id: 'tutorMapperNegotiatedRateWithTutor',
+        headerName: 'Mapping Negotiated Rate With Tutor',
+        dataType: 'number',
+        mapping: 'tutorMapperNegotiatedRateWithTutor'
+      },{
+        id: 'tutorMapperTutorNegotiationRemarks',
+        headerName: 'Mapping Tutor Negotiation Remarks',
+        dataType: 'string',
+        mapping: 'tutorMapperTutorNegotiationRemarks',
+        lengthyData: true
+      }, {
+        id: 'rescheduledFromDemoSerialId',
+        headerName: 'Rescheduled From Demo Serial Id',
+        dataType: 'string',
+        mapping: 'rescheduledFromDemoSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
+          alert('Open Demo Record > ' + column.getValueForColumn(record));
+        }
+      }, {
+        id: 'reschedulingRemarks',
+        headerName: 'Re-scheduling Remarks',
+        dataType: 'string',
+        mapping: 'reschedulingRemarks',
+        lengthyData: true
+      }])
+    };
+    return grid;
+  }
+
+  public setUpGridMetaData() {
+    this.currentTutorMappingGridMetaData = {
+      grid: this.getTutorMappingGridObject('currentTutorMappingGrid', 'Current Tutor All Open Mappings', 
+                                      '/rest/sales/currentTutorMappingList', 
+                                      [{
+                                        id: 'customerSerialId',
+                                        headerName: 'Customer Serial Id',
+                                        dataType: 'string',
+                                        mapping: 'customerSerialId',
+                                        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+                                          alert('Open Customer Record > ' + column.getValueForColumn(record));
+                                        }
+                                      }, {
+                                        id: 'customerName',
+                                        headerName: 'Customer Name',
+                                        dataType: 'string',
+                                        mapping: 'customerName'
+                                      }, {
+                                        id: 'customerEmail',
+                                        headerName: 'Customer Email',
+                                        dataType: 'string',
+                                        mapping: 'customerEmail'
+                                      }, {
+                                        id: 'customerContactNumber',
+                                        headerName: 'Customer Contact Number',
+                                        dataType: 'string',
+                                        mapping: 'customerContactNumber'
+                                      }], true),
+      htmlDomElementId: 'current-tutor-mapping-grid',
+      hidden: false,
+    };
+    this.currentCustomerMappingGridMetaData = {
+      grid: this.getTutorMappingGridObject('currentCustomerMappingGrid', 'Current Customer All Open Mappings', 
+                                      '/rest/sales/currentCustomerMappingList', 
+                                      [{
+                                        id: 'tutorSerialId',
+                                        headerName: 'Tutor Serial Id',
+                                        dataType: 'string',
+                                        mapping: 'tutorSerialId',
+                                        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+                                          alert('Open Tutor Record > ' + column.getValueForColumn(record));
+                                        }
+                                      }, {
+                                        id: 'tutorName',
+                                        headerName: 'Tutor Name',
+                                        dataType: 'string',
+                                        mapping: 'tutorName',
+                                        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+                                        }        
+                                      },{
+                                        id: 'tutorEmail',
+                                        headerName: 'Tutor Email',
+                                        dataType: 'string',
+                                        mapping: 'tutorEmail'
+                                      },{
+                                        id: 'tutorContactNumber',
+                                        headerName: 'Tutor Contact Number',
+                                        dataType: 'string',
+                                        mapping: 'tutorContactNumber'
+                                      }], true),
+      htmlDomElementId: 'current-tutor-mapping-grid',
+      hidden: false,
+    };
+    this.currentTutorScheduledDemoGridMetaData = {
+      grid: this.getDemoGridObject('currentTutorScheduledDemoGrid', 'Current Tutor All Scheduled Demo', 
+                                    '/rest/sales/currentTutorScheduledDemoList', 
+                                    [{
+                                      id: 'customerSerialId',
+                                      headerName: 'Customer Serial Id',
+                                      dataType: 'string',
+                                      mapping: 'customerSerialId',
+                                      clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+                                        alert('Open Customer Record > ' + column.getValueForColumn(record));
+                                      }
+                                    }, {
+                                      id: 'customerName',
+                                      headerName: 'Customer Name',
+                                      dataType: 'string',
+                                      mapping: 'customerName'
+                                    }, {
+                                      id: 'customerEmail',
+                                      headerName: 'Customer Email',
+                                      dataType: 'string',
+                                      mapping: 'customerEmail'
+                                    }, {
+                                      id: 'customerContactNumber',
+                                      headerName: 'Customer Contact Number',
+                                      dataType: 'string',
+                                      mapping: 'customerContactNumber'
+                                    }], true),
+      htmlDomElementId: 'current-tutor-mapping-grid',
+      hidden: false,
+    };
+    this.currentCustomerScheduledDemoGridMetaData = {
+      grid: this.getDemoGridObject('currentCustomerScheduledDemoGrid', 'Current Customer All Scheduled Demo', 
+                                    '/rest/sales/currentCustomerScheduledDemoList', 
+                                    [{
+                                      id: 'tutorSerialId',
+                                      headerName: 'Tutor Serial Id',
+                                      dataType: 'string',
+                                      mapping: 'tutorSerialId',
+                                      clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+                                        alert('Open Tutor Record > ' + column.getValueForColumn(record));
+                                      }
+                                    }, {
+                                      id: 'tutorName',
+                                      headerName: 'Tutor Name',
+                                      dataType: 'string',
+                                      mapping: 'tutorName'
+                                    },{
+                                      id: 'tutorEmail',
+                                      headerName: 'Tutor Email',
+                                      dataType: 'string',
+                                      mapping: 'tutorEmail'
+                                    },{
+                                      id: 'tutorContactNumber',
+                                      headerName: 'Tutor Contact Number',
+                                      dataType: 'string',
+                                      mapping: 'tutorContactNumber'
+                                    }], true),
+      htmlDomElementId: 'current-tutor-mapping-grid',
+      hidden: false,
+    };
   }
 
   private updateProperty(key: string, event: any, data_type: string, updatedRecord: any, deselected: boolean = false, isAllOPeration: boolean = false) {
@@ -580,6 +1011,8 @@ export class MappedTutorDataComponent implements OnInit {
     });
     if (response['success']) {
       if (context.takeActionActionText === 'unmap') {
+        context.showMappingGrid = false;
+        context.showDemoGrid = false;
         context.showRecordUpdateForm = false;
         context.showMessage = true;
         context.textMessage = 'Successfully Unmapped the Tutor Record, please go back to listing to select another record';
@@ -644,7 +1077,7 @@ export class MappedTutorDataComponent implements OnInit {
   }
 
   loadEnquiryRecord() {
-    alert("Loading Enquiry Record > " + this.tutorMapperRecord.tutorSerialId);
+    alert("Loading Enquiry Record > " + this.tutorMapperRecord.enquirySerialId);
   }
   
   openTutorRecord() {

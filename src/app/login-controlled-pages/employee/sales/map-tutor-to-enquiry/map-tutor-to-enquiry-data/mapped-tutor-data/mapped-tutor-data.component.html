@@ -1,4 +1,24 @@
 <div>
+  <div *ngIf="showMappingGrid">
+    <app-grid #currentTutorMappingGrid 
+              id="current-tutor-mapping-grid" 
+              [gridMetaData]="currentTutorMappingGridMetaData">
+    </app-grid>
+    <app-grid #currentCustomerMappingGrid 
+              id="current-customer-mapping-grid" 
+              [gridMetaData]="currentCustomerMappingGridMetaData">
+    </app-grid> 
+  </div>
+  <div *ngIf="showDemoGrid">
+    <app-grid #currentTutorScheduledDemoGrid 
+              id="current-tutor-scheduled-demo-grid" 
+              [gridMetaData]="currentTutorScheduledDemoGridMetaData">
+    </app-grid>
+    <app-grid #currentCustomerScheduledDemoGrid 
+              id="current-customer-scheduled-demo-grid" 
+              [gridMetaData]="currentCustomerScheduledDemoGridMetaData">
+    </app-grid> 
+  </div>
   <div *ngIf="showMessage" class="form-container-div successMessage">
     {{textMessage}}
   </div>
@@ -130,6 +150,14 @@
             <td><label class="data"></label></td>        
           </tr>
           <tr>
+            <td class="td-label"><label>Tutor Mapper Serial Id</label></td>
+            <td><label class="data">{{tutorMapperRecord.tutorMapperSerialId}}</label></td>        
+          </tr>
+          <tr>
+            <td class="td-label"><label>Mapping Status</label></td>
+            <td><label class="data">{{tutorMapperStatusLookupRendererFromValue}}</label></td>        
+          </tr>
+          <tr>
             <td class="td-label"><label>Tutor Serial Id</label></td>
             <td><label class="data link_opener" (click)="openTutorRecord()">{{tutorMapperRecord.tutorSerialId}}</label></td>        
           </tr>
@@ -144,10 +172,6 @@
           <tr>
             <td class="td-label"><label>Tutor Contact Number</label></td>
             <td><label class="data">{{tutorMapperRecord.tutorContactNumber}}</label></td>        
-          </tr>
-          <tr>
-            <td class="td-label"><label>Mapping Status</label></td>
-            <td><label class="data">{{tutorMapperStatusLookupRendererFromValue}}</label></td>        
           </tr>
           <tr>
             <td class="td-label"><label>Quoted Tutor Rate</label></td>
@@ -470,7 +494,7 @@
       <div class="form-mask" id="tutor-mapper-form-mask-loader" [hidden]="tutorMapperFormMaskLoaderHidden">
         <div class="form-loader"></div>
       </div>
-    </form>
+    </form>    
     <form *ngIf="showSheduleDemoForm" class="form-container" style="max-width: 80%">
       <div class="form-container-title">
         <span>Schedule Demo Form</span>

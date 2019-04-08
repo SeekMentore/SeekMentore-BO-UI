@@ -4,14 +4,11 @@ import { AdminCommonFunctions } from 'src/app/utils/admin-common-functions';
 import { AppUtilityService } from 'src/app/utils/app-utility.service';
 import { ApplicationBreadCrumbConfig } from 'src/app/utils/application-bread-crumb-config';
 import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
-import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
-import { ActionButton } from 'src/app/utils/grid/action-button';
 import { Column } from 'src/app/utils/grid/column';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 
 @Component({
@@ -79,7 +76,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public getGridObject(id: string, title: string, restURL: string, customSelectionButtons: any[], collapsed: boolean = false) {
+  public getGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,
       title: title,
@@ -90,7 +87,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       },
       columns: [{
         id: 'demoSerialId',
-        headerName: 'Serial Id',
+        headerName: 'Demo Serial Id',
         dataType: 'string',
         mapping: 'demoSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
@@ -103,6 +100,14 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
           }
         }
       },{
+        id: 'customerSerialId',
+        headerName: 'Customer Serial',
+        dataType: 'string',
+        mapping: 'customerSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Customer Section ' + column.getValueForColumn(record));
+        }
+      }, {
         id: 'customerName',
         headerName: 'Customer Name',
         dataType: 'string',
@@ -117,6 +122,14 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         headerName: 'Customer Contact Number',
         dataType: 'string',
         mapping: 'customerContactNumber'
+      }, {
+        id: 'tutorSerialId',
+        headerName: 'Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'tutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Tutor Section ' + column.getValueForColumn(record));
+        }
       }, {
         id: 'tutorName',
         headerName: 'Tutor Name',
@@ -145,6 +158,14 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         filterOptions: CommonFilterOptions.demoStatusFilterOptions,
         mapping: 'demoStatus',
         renderer: AdminCommonFunctions.demoStatusRenderer
+      }, {
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
+        dataType: 'string',
+        mapping: 'enquirySerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Enquiry Section ' + column.getValueForColumn(record));
+        }
       }, {
         id: 'enquirySubject',
         headerName: 'Enquiry Subject',
@@ -321,107 +342,54 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         mapping: 'adminFinalizingRemarks',
         lengthyData: true
       }, {
+        id: 'rescheduledFromDemoSerialId',
+        headerName: 'Rescheduled From Demo Serial Id',
+        dataType: 'string',
+        mapping: 'rescheduledFromDemoSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
+          this.interimHoldSelectedDemoSerialId = record.getProperty('rescheduledFromDemoSerialId');
+          if (this.demoModifyAccess === null) {
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          } else {
+            this.selectedDemoSerialId = this.interimHoldSelectedDemoSerialId;            
+            this.toggleVisibilityDemoTrackerGrid();
+          }
+        }
+      }, {
         id: 'reschedulingRemarks',
-        headerName: 'Re-scheduling Remarks',
+        headerName: 'Rescheduling Remarks',
         dataType: 'string',
         mapping: 'reschedulingRemarks',
         lengthyData: true
       }],
-      hasSelectionColumn: customSelectionButtons.length > 0,
-      selectionColumn: {
-        buttons: customSelectionButtons
-      }
+      hasSelectionColumn: false      
     }
     return grid;
   }
 
-  private getCustomButton (
-      id:string, 
-      label: string, 
-      btnclass: string = 'btnSubmit', 
-      actionText: string, 
-      commentsRequired: boolean = false,
-      titleText: string,
-      placeholderText: string
-  ) {
-    return {
-      id: id,
-      label: label,
-      btnclass: btnclass,
-      clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        const demoSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'demoSerialId');
-        if (demoSerialIdsList.length === 0) {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: LcpConstants.grid_generic_no_record_selected_error,
-            onButtonClicked: () => {
-            }
-          });
-        } else {
-          this.helperService.showPromptDialog({
-            required: commentsRequired,
-            titleText: titleText,
-            placeholderText: placeholderText,
-            onOk: (message) => {                  
-              const data = {
-                allIdsList: demoSerialIdsList.join(';'),
-                button: actionText,
-                comments: message
-              };
-              this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.take_action_on_demo, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
-            },
-            onCancel: () => {
-            }
-          });
-        }
-      }
-    };
-  }
-
-  handleSelectionActionRequest(context: any, response: any) {
-    if (response['success'] === false) {
-      context.helperService.showAlertDialog({
-        isSuccess: response['success'],
-        message: CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']),
-        onButtonClicked: () => {
-        }
-      });
-    } else {
-      context.interimHoldSelectedDemoTrackerObject.refreshGridData();
-    }
-  }
-
   public setUpGridMetaData() {
-    let cancelDemo = this.getCustomButton('cancel', 'Cancel Demo', 'btnReject', 'cancel', true, 'Enter comments for Cancelling Demo', 'Please provide your comments for Cancelling Demo.');
-
     this.scheduledDemoGridMetaData = {
-      grid: this.getGridObject('scheduledDemoGrid', 'Scheduled Demo', '/rest/sales/scheduledDemoList', []),
+      grid: this.getGridObject('scheduledDemoGrid', 'Scheduled Demo', '/rest/sales/scheduledDemoList'),
       htmlDomElementId: 'scheduled-demo-grid',
       hidden: false
     };
-
     this.successfulDemoGridMetaData = {
-      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', [], true),
+      grid: this.getGridObject('abortedEnquiriesGrid', 'Successful Demo', '/rest/sales/successfulDemoList', true),
       htmlDomElementId: 'successful-demo-grid',
       hidden: false
     }; 
-
     this.failedDemoGridMetaData = {
-      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', [], true),
+      grid: this.getGridObject('failedDemoGrid', 'Failed Demo', '/rest/sales/failedDemoList', true),
       htmlDomElementId: 'failed-demo-grid',
       hidden: false
     }; 
-
     this.cancelledDemoGridMetaData = {
-      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', [], true),
+      grid: this.getGridObject('cancelledDemoGrid', 'Canceled Demo', '/rest/sales/canceledDemoList', true),
       htmlDomElementId: 'cancelled-demo-grid',
       hidden: false
     }; 
-
     this.enquiryClosedDemoGridMetaData = {
-      grid: this.getGridObject('enquiryClosedDemoGrid', 'Enquiry Closed Demo', '/rest/sales/enquiryClosedDemoList', [], true),
+      grid: this.getGridObject('enquiryClosedDemoGrid', 'Enquiry Closed Demo', '/rest/sales/enquiryClosedDemoList', true),
       htmlDomElementId: 'enquiry-closed-grid',
       hidden: false
     }; 

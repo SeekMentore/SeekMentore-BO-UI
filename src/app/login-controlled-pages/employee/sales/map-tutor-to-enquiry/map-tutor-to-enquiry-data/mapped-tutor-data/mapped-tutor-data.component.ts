@@ -175,7 +175,7 @@ export class MappedTutorDataComponent implements OnInit {
 
   private setSectionShowParams() {
     this.showRecordUpdateForm = this.tutorMapperDataAccess.tutorMapperFormAccess;
-    this.showRecordUpdateEditControlSection = this.tutorMapperDataAccess.tutorMapperFormAccess && !this.formEditMandatoryDisbaled;
+    this.showRecordUpdateEditControlSection = this.showRecordUpdateForm && !this.formEditMandatoryDisbaled;
     this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
     this.takeActionDisabled = !this.canUnmapTutor && !this.canMakeDemoReady && !this.canMakePending;
     this.showSheduleDemoForm = this.tutorMapperDataAccess.scheduleDemoFormAccess && this.canScheduleDemo;
@@ -310,6 +310,8 @@ export class MappedTutorDataComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
+      context.hideRecordUpdateFormLoaderMask();
+      context.hideScheduleDemoFormLoaderMask();
     }
   }
 
@@ -654,9 +656,7 @@ export class MappedTutorDataComponent implements OnInit {
                                         id: 'tutorName',
                                         headerName: 'Tutor Name',
                                         dataType: 'string',
-                                        mapping: 'tutorName',
-                                        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-                                        }        
+                                        mapping: 'tutorName'
                                       },{
                                         id: 'tutorEmail',
                                         headerName: 'Tutor Email',

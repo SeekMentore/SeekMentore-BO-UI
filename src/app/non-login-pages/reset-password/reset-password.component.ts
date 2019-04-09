@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AppUtilityService } from '../../utils/app-utility.service';
-import { HelperService } from '../../utils/helper.service';
-import { NlpConstants } from '../../utils/nlp-constants';
-import { NlpRestUrls } from '../../utils/nlp-rest-urls';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { HelperService } from 'src/app/utils/helper.service';
+import { NlpConstants } from 'src/app/utils/nlp-constants';
+import { NlpRestUrls } from 'src/app/utils/nlp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({

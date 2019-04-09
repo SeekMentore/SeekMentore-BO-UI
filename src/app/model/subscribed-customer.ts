@@ -1,5 +1,5 @@
-import { GridCommonFunctions } from "../utils/grid/grid-common-functions";
-import { GridRecord } from "../utils/grid/grid-record";
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { User } from "./user";
 
 export class SubscribedCustomer extends User {

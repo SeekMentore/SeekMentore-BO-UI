@@ -7,6 +7,10 @@ declare var CKEDITOR: any;
 
 export class CommonUtilityFunctions {
 
+  static MONTH_NAME_ARRAY = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  static MONTH_ABBR_NAME_ARRAY = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  static WEEKDAY_NAME_ARRAY = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+
   /** Common validity functions */
   public static checkObjectAvailability(object: any) {
     if (null !== object && undefined !== object) {
@@ -45,6 +49,7 @@ export class CommonUtilityFunctions {
     return false;
   }
 
+  // For setting value on <input> field type="date" - Param passed as Date signature
   public static getDateForDateInputParam(completeDateSignatureInUTC: Date) {
     const dateParam = new Date(completeDateSignatureInUTC);
     let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
@@ -52,6 +57,7 @@ export class CommonUtilityFunctions {
     return dateParam.getFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
+  // For setting value on <input> field type="date" - Param passed as Milliseconds
   public static getDateForDateMillisParam(millis: number) {
     const dateParam = new Date(millis);
     let dateValue = dateParam.getDate() > 9 ? dateParam.getDate() : ('0' + dateParam.getDate());
@@ -59,6 +65,7 @@ export class CommonUtilityFunctions {
     return dateParam.getFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
+  // For setting value on <input> field type="time" - Param passed as Milliseconds
   public static getTimeForDateMillisParam(millis: number) {
     const dateParam = new Date(millis);
     let hoursValue = dateParam.getHours() > 9 ? dateParam.getHours() : ('0' + dateParam.getHours());
@@ -66,22 +73,34 @@ export class CommonUtilityFunctions {
     return hoursValue + ':' + minutesValue;    
   }
 
+  // Formatting Date as YYYYMMDD which is understood by the Server
   public static formatDateYYYYMMDD(completeDateSignatureInUTC: Date) {
     let dateValue = completeDateSignatureInUTC.getDate() > 9 ? completeDateSignatureInUTC.getDate() : ('0' + completeDateSignatureInUTC.getDate());
     let monthValue = (completeDateSignatureInUTC.getMonth() + 1) > 9 ? (completeDateSignatureInUTC.getMonth() + 1) : ('0' + (completeDateSignatureInUTC.getMonth() + 1));
     return completeDateSignatureInUTC.getFullYear() + '-' + monthValue + '-' + dateValue;    
   }
 
+  // For showing Date on all UI Screens
   public static getDateStringInDDMMYYYYHHmmSS(datemillisInUTC: number) {
     if (datemillisInUTC > 0 && CommonUtilityFunctions.checkObjectAvailability(datemillisInUTC)) {
       const date_value = new Date(datemillisInUTC);
-      const dateString = 
-                (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
-        + '/' + ((date_value.getMonth() + 1) > 9 ? (date_value.getMonth() + 1) : ('0' + (date_value.getMonth() + 1)))
-        + '/' + date_value.getFullYear()
-        + ' ' + (date_value.getHours() > 9 ? date_value.getHours() : ('0' + date_value.getHours()))
+      let hours: number = date_value.getHours();
+      let am_pm: string = 'AM';
+      if (hours > 12) {
+        am_pm = 'PM';
+      }
+      if (hours < 1) {
+        hours = 12 - hours;
+      } else if (hours > 12) {
+        hours = hours - 12;
+      }  
+      const dateString = CommonUtilityFunctions.WEEKDAY_NAME_ARRAY[date_value.getDay()] 
+        + ' ' + (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
+        + '-' + CommonUtilityFunctions.MONTH_NAME_ARRAY[date_value.getMonth()]
+        + '-' + date_value.getFullYear()
+        + ' - ' + (hours > 9 ? hours : ('0' + hours))
         + ':' + (date_value.getMinutes() > 9 ? date_value.getMinutes() : ('0' + date_value.getMinutes()))
-        + ':' + (date_value.getSeconds() > 9 ? date_value.getSeconds() : ('0' + date_value.getSeconds()));
+        + ' ' + am_pm;;
       return dateString;
     }
     return '';

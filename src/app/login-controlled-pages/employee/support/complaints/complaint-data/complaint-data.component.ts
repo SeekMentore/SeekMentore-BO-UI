@@ -5,7 +5,7 @@ import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from "src/app/utils/helper.service";
-import { LcpRestUrls } from "../../../../../utils/lcp-rest-urls";
+import { LcpRestUrls } from "src/app/utils/lcp-rest-urls";
 import { ComplaintDataAccess } from '../complaints.component';
 
 @Component({

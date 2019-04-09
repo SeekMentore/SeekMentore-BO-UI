@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { AppUtilityService } from '../../utils/app-utility.service';
-import { HelperService } from '../../utils/helper.service';
-import { LcpConstants } from "../../utils/lcp-constants";
-import { MultiSelectInputData } from '../../utils/multi-select-input/multi-select-input.component';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { HelperService } from 'src/app/utils/helper.service';
+import { LcpConstants } from "src/app/utils/lcp-constants";
+import { MultiSelectInputData } from 'src/app/utils/multi-select-input/multi-select-input.component';
 import { ActionButton } from './action-button';
 import { Column } from './column';
 import { Grid } from './grid';

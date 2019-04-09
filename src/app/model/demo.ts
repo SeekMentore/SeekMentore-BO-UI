@@ -1,6 +1,6 @@
-import { GridCommonFunctions } from "../utils/grid/grid-common-functions";
-import { GridRecord } from "../utils/grid/grid-record";
-import { CommonUtilityFunctions } from "../utils/common-utility-functions";
+import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
+import { GridRecord } from 'src/app/utils/grid/grid-record';
+import { CommonUtilityFunctions } from "src/app/utils/common-utility-functions";
 
 export class Demo {
 	demoSerialId: string;

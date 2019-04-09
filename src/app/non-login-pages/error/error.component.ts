@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AppUtilityService } from '../../utils/app-utility.service';
-import { EnvironmentConstants } from '../../utils/environment-constants';
-import { HelperService } from '../../utils/helper.service';
-import { NlpRestUrls } from '../../utils/nlp-rest-urls';
+import { AppUtilityService } from 'src/app/utils/app-utility.service';
+import { EnvironmentConstants } from 'src/app/utils/environment-constants';
+import { HelperService } from 'src/app/utils/helper.service';
+import { NlpRestUrls } from 'src/app/utils/nlp-rest-urls';
 import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({

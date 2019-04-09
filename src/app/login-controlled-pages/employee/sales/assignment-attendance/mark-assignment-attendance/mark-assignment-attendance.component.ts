@@ -11,6 +11,8 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { AssignmentAttendanceMarkingAccess } from '../assignment-attendance.component';
+import { PackageAssignment } from 'src/app/model/package-assignment';
+import { AssignmentAttendance } from 'src/app/model/assignment-attendance';
 
 @Component({
   selector: 'app-mark-assignment-attendance',
@@ -29,8 +31,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   assignmentAttendanceGridObject: GridComponent;
   assignmentAttendanceGridMetaData: GridDataInterface;
 
-  selectedPackageAssignmentRecord: GridRecord;
-  selectedAssignmentAttendanceRecord: GridRecord;
+  assignmentAttendanceInsertedOrUpdatedRecord = {};
 
   formEditMandatoryDisbaled = true;
   editRecordForm = false;
@@ -41,39 +42,28 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   yesNoFilterOptions = CommonFilterOptions.yesNoFilterOptions;
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
 
-  isFormDirty: boolean = false;
+  isRecordUpdateFormDirty: boolean = false;
   assignmentAttendanceFormMaskLoaderHidden: boolean = true;
-  showForm: boolean = false;
-  showEditControlSection: boolean = false;
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
   documentRemovalAccess: boolean = false;
-  showInsertButton: boolean = false;
-  showUpdateButton: boolean = false;
-  
-  // Modal Properties
-  assignmentAttendanceUpdatedRecord = {};
+  showRecordInsertButton: boolean = false;
+  showRecordUpdateButton: boolean = false;
+
+  dirtyFlagList: string[] = ['RECORD_INSERT_UPDATE'];
+
   isInsertion: boolean;
   isTimeUpdated: boolean;
-  packageAssignmentSerialId_Modal: any;
-  assignmentAttendanceSerialId_Modal: any;
-  totalHours_Modal: any;
-  completedHours_Modal: any;
-  completedMinutes_Modal: any;
-  entryDateTimeMillis_Modal: any;
-  entryDate_Modal: any;
-  entryTime_Modal: any;
-  exitDateTimeMillis_Modal: any;
-  exitDate_Modal: any;
-  exitTime_Modal: any;
-  topicsTaught_Modal: any;
-  tutorRemarks_Modal: any;
-  punctualityRemarks_Modal: any;
-  expertiseRemarks_Modal: any;
-  knowledgeRemarks_Modal: any;
-  studentRemarks_Modal: any;
-  recordLastUpdated_Modal: any;
-  updatedBy_Modal: any;
-  updatedByName_Modal: any;
-  updatedByUserType_Modal: any;
+  
+  // Modal Properties
+  packageAssignmentRecord: PackageAssignment;
+  assignmentAttendanceRecord: AssignmentAttendance;
+  assignmentAttendanceSerialId: string = null;
+  assignmentAttendanceRecordLastUpdatedDateDisplayTime: string = null;
+  entryDateInputParam: any;
+  entryTimeInputParam: any;
+  exitDateInputParam: any;
+  exitTimeInputParam: any;
   selectedIsClassworkProvidedOptions: any[] = [];
   selectedIsHomeworkProvidedOptions: any[] = [];
   selectedIsTestProvidedOptions: any[] = [];
@@ -97,6 +87,8 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) {    
     this.assignmentAttendanceGridMetaData = null;
+    this.packageAssignmentRecord = new PackageAssignment();
+    this.assignmentAttendanceRecord = new AssignmentAttendance();
   }
 
   ngOnInit() {
@@ -104,23 +96,123 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     this.getPackageAssignmentGridRecord(this.packageAssignmentSerialId);  
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.assignmentAttendanceGridObject.init();
+      this.assignmentAttendanceGridObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentSerialId);
+    }, 100);
+    setTimeout(() => {
+      this.assignmentAttendanceGridObject.refreshGridData();
+    }, 100);
+  }
+
+  private showRecordUpdateFormLoaderMask() {
+    this.assignmentAttendanceFormMaskLoaderHidden = false;
+  }
+
+  private hideRecordUpdateFormLoaderMask() {
+    this.assignmentAttendanceFormMaskLoaderHidden = true;
+  }
+
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
+  private setSectionShowParams() {
+    this.showRecordUpdateForm = this.assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess 
+                      && (!this.formEditMandatoryDisbaled || (this.formEditMandatoryDisbaled && CommonUtilityFunctions.checkStringAvailability(this.assignmentAttendanceSerialId)));
+    this.showRecordUpdateEditControlSection = this.assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !this.formEditMandatoryDisbaled;
+    this.documentRemovalAccess = !this.formEditMandatoryDisbaled;
+    this.showRecordInsertButton = this.showRecordUpdateEditControlSection && this.editRecordForm && this.isInsertion; 
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm && !this.isInsertion; 
+  }
+
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_INSERT_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_INSERT_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_INSERT_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_INSERT_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
+  }
+
   private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     const data = {
       parentSerialId: packageAssignmentSerialId
     };    
     this.utilityService.makerequest(this, this.onGetPackageAssignmentGridRecord, LcpRestUrls.get_package_assignment_record, 
                                     'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
-  }
-
-  private setSectionShowParams() {
-    this.showForm = this.assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess 
-                      && (!this.formEditMandatoryDisbaled || (this.formEditMandatoryDisbaled && CommonUtilityFunctions.checkObjectAvailability(this.selectedAssignmentAttendanceRecord)));
-    this.showEditControlSection = this.assignmentAttendanceMarkingAccess.assignmentAttendanceMarkingAccess && !this.formEditMandatoryDisbaled;
-    this.documentRemovalAccess = !this.formEditMandatoryDisbaled;
-    this.showInsertButton = this.showEditControlSection && this.editRecordForm && this.isInsertion; 
-    this.showUpdateButton = this.showEditControlSection && this.editRecordForm && !this.isInsertion; 
-  }
+  }  
 
   private getAssignmentAttendanceUploadedDocumentCountAndExistence(assignmentAttendanceSerialId: string) {    
     const data = {
@@ -148,6 +240,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
@@ -172,105 +265,74 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }
   }
 
-  feedAttendance() {
-    if (!this.isFormDirty) {
-      this.showFormLoaderMask();
-      this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
-    } else {
-      this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changes on the form do you still want to continue.',
-        onOk: () => {
-          this.isFormDirty = false;
-          this.showFormLoaderMask();
-          this.setUpDataModal(this.selectedPackageAssignmentRecord, null, true);
-        },
-        onCancel: () => {
-          this.helperService.showAlertDialog({
-            isSuccess: false,
-            message: 'Action Aborted',
-            onButtonClicked: () => {
-            }
-          });
-        }
-      });
-    }
-  }
-
-  private setUpDataModal(packageAssignmentRecord: GridRecord, assignmentAttendanceRecord: GridRecord = null, isInsertion: boolean = false) {
-    this.editRecordForm = true;
-    this.selectedPackageAssignmentRecord = packageAssignmentRecord;
-    this.selectedAssignmentAttendanceRecord = assignmentAttendanceRecord;
+  private setUpPackageAssignmentDataModalFromRecord(packageAssignmentRecord: PackageAssignment, isInsertion: boolean) {
+    this.packageAssignmentRecord = packageAssignmentRecord;
+    this.packageAssignmentSerialId = this.packageAssignmentRecord.packageAssignmentSerialId;
     this.isTimeUpdated = false;
     this.isInsertion = isInsertion;
-    this.assignmentAttendanceUpdatedRecord = {};
-    this.packageAssignmentSerialId_Modal = packageAssignmentRecord.getProperty('packageAssignmentSerialId');
-    this.totalHours_Modal = packageAssignmentRecord.getProperty('totalHours');
-    this.completedHours_Modal = packageAssignmentRecord.getProperty('completedHours');
-    this.completedMinutes_Modal = packageAssignmentRecord.getProperty('completedMinutes');
+    this.assignmentAttendanceInsertedOrUpdatedRecord = {};
     let remainingTime: {
       remainingHours: number,
       remainingMinutes: number
     } = CommonUtilityFunctions.calculateRemainingHoursMinutesSecondsFromTotalAndCompletedHoursMinutesSeconds(
-      packageAssignmentRecord.getProperty('totalHours'), 0, 0,
-      packageAssignmentRecord.getProperty('completedHours'),
-      packageAssignmentRecord.getProperty('completedMinutes'), 0
+      this.packageAssignmentRecord.totalHours, 0, 0,
+      this.packageAssignmentRecord.completedHours,
+      this.packageAssignmentRecord.completedMinutes, 0
     );
     this.remainingHours = remainingTime.remainingHours;
     this.remainingMinutes = remainingTime.remainingMinutes;
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.setSectionShowParams();
+      this.hideRecordUpdateFormLoaderMask();
+    }, 500);
+  }
+
+  private setUpAssignmentAttendanceDataModalFromRecord(assignmentAttendanceRecord: AssignmentAttendance) {
     if (CommonUtilityFunctions.checkObjectAvailability(assignmentAttendanceRecord)) {
-      this.assignmentAttendanceSerialId_Modal = assignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId');
-      this.entryDateTimeMillis_Modal = assignmentAttendanceRecord.getProperty('entryDateTimeMillis');
-      this.entryDate_Modal = this.getDateForDateMillisParam(this.entryDateTimeMillis_Modal);
-      this.entryTime_Modal = this.getTimeForDateMillisParam(this.entryDateTimeMillis_Modal);
-      this.exitDateTimeMillis_Modal = assignmentAttendanceRecord.getProperty('exitDateTimeMillis');
-      this.exitDate_Modal = this.getDateForDateMillisParam(this.exitDateTimeMillis_Modal);
-      this.exitTime_Modal = this.getTimeForDateMillisParam(this.exitDateTimeMillis_Modal);
-      this.durationHours = assignmentAttendanceRecord.getProperty('durationHours');
-      this.durationMinutes = assignmentAttendanceRecord.getProperty('durationMinutes');
-      this.topicsTaught_Modal = assignmentAttendanceRecord.getProperty('topicsTaught');
-      this.selectedIsClassworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isClassworkProvided'));
-      this.selectedIsHomeworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isHomeworkProvided'));
-      this.selectedIsTestProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, assignmentAttendanceRecord.getProperty('isTestProvided'));
-      this.tutorRemarks_Modal = assignmentAttendanceRecord.getProperty('tutorRemarks');
-      this.selectedTutorPunctualityIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorPunctualityIndex'));
-      this.punctualityRemarks_Modal = assignmentAttendanceRecord.getProperty('punctualityRemarks');
-      this.selectedTutorExpertiseIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorExpertiseIndex'));
-      this.expertiseRemarks_Modal = assignmentAttendanceRecord.getProperty('expertiseRemarks');
-      this.selectedTutorKnowledgeIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, assignmentAttendanceRecord.getProperty('tutorKnowledgeIndex'));
-      this.knowledgeRemarks_Modal = assignmentAttendanceRecord.getProperty('knowledgeRemarks');
-      this.studentRemarks_Modal = assignmentAttendanceRecord.getProperty('studentRemarks');
-      this.recordLastUpdated_Modal = this.getDateFromMillis(assignmentAttendanceRecord.getProperty('recordLastUpdatedMillis'));
-      this.updatedBy_Modal = assignmentAttendanceRecord.getProperty('updatedBy');
-      this.updatedByName_Modal = assignmentAttendanceRecord.getProperty('updatedByName');
-      this.updatedByUserType_Modal = assignmentAttendanceRecord.getProperty('updatedByUserType');
-      CommonUtilityFunctions.setHTMLInputElementValue('topicsTaught', this.topicsTaught_Modal);
-      CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.tutorRemarks_Modal);
-      CommonUtilityFunctions.setHTMLInputElementValue('punctualityRemarks', this.punctualityRemarks_Modal);
-      CommonUtilityFunctions.setHTMLInputElementValue('expertiseRemarks', this.expertiseRemarks_Modal);
-      CommonUtilityFunctions.setHTMLInputElementValue('knowledgeRemarks', this.knowledgeRemarks_Modal);
-      CommonUtilityFunctions.setHTMLInputElementValue('studentRemarks', this.studentRemarks_Modal);
-    } else {      
-      this.assignmentAttendanceSerialId_Modal = '';
-      this.entryDateTimeMillis_Modal = '';
-      this.entryDate_Modal = this.getDateForDateMillisParam(new Date().getTime());
-      this.entryTime_Modal = this.getTimeForDateMillisParam(new Date().getTime());
-      this.exitDateTimeMillis_Modal = '';
-      this.exitDate_Modal = this.getDateForDateMillisParam(new Date().getTime());
-      this.exitTime_Modal = this.getTimeForDateMillisParam(new Date().getTime() + (1 * 60 * 60 * 1000));
+      this.assignmentAttendanceRecord = assignmentAttendanceRecord;
+      this.assignmentAttendanceSerialId = this.assignmentAttendanceRecord.assignmentAttendanceSerialId;
+      this.durationHours = this.assignmentAttendanceRecord.durationHours;
+      this.durationMinutes = this.assignmentAttendanceRecord.durationMinutes;
+      this.entryDateInputParam = CommonUtilityFunctions.getDateForDateMillisParam(this.assignmentAttendanceRecord.entryDateTimeMillis);
+      this.entryTimeInputParam = CommonUtilityFunctions.getTimeForDateMillisParam(this.assignmentAttendanceRecord.entryDateTimeMillis);
+      this.exitDateInputParam = CommonUtilityFunctions.getDateForDateMillisParam(this.assignmentAttendanceRecord.exitDateTimeMillis);
+      this.exitTimeInputParam = CommonUtilityFunctions.getTimeForDateMillisParam(this.assignmentAttendanceRecord.exitDateTimeMillis);
+      this.assignmentAttendanceRecordLastUpdatedDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.assignmentAttendanceRecord.recordLastUpdatedMillis);
+      this.selectedIsClassworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.assignmentAttendanceRecord.isClassworkProvided);
+      this.selectedIsHomeworkProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.assignmentAttendanceRecord.isHomeworkProvided);
+      this.selectedIsTestProvidedOptions = CommonUtilityFunctions.getSelectedFilterItems(this.yesNoFilterOptions, this.assignmentAttendanceRecord.isTestProvided);
+      this.selectedTutorPunctualityIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.assignmentAttendanceRecord.tutorPunctualityIndex);
+      this.selectedTutorExpertiseIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.assignmentAttendanceRecord.tutorExpertiseIndex);
+      this.selectedTutorKnowledgeIndexOptions = CommonUtilityFunctions.getSelectedFilterItems(this.happinessIndexFilterOptions, this.assignmentAttendanceRecord.tutorKnowledgeIndex);
+      CommonUtilityFunctions.setHTMLInputElementValue('topicsTaught', this.assignmentAttendanceRecord.topicsTaught);
+      CommonUtilityFunctions.setHTMLInputElementValue('tutorRemarks', this.assignmentAttendanceRecord.tutorRemarks);
+      CommonUtilityFunctions.setHTMLInputElementValue('punctualityRemarks', this.assignmentAttendanceRecord.punctualityRemarks);
+      CommonUtilityFunctions.setHTMLInputElementValue('expertiseRemarks', this.assignmentAttendanceRecord.expertiseRemarks);
+      CommonUtilityFunctions.setHTMLInputElementValue('knowledgeRemarks', this.assignmentAttendanceRecord.knowledgeRemarks);
+      CommonUtilityFunctions.setHTMLInputElementValue('studentRemarks', this.assignmentAttendanceRecord.studentRemarks);
+    } else {
+      this.assignmentAttendanceRecord = new AssignmentAttendance();
+      this.assignmentAttendanceRecord.assignmentAttendanceSerialId = '';
+      this.assignmentAttendanceSerialId = this.assignmentAttendanceRecord.assignmentAttendanceSerialId;      
+      this.entryDateInputParam = CommonUtilityFunctions.getDateForDateMillisParam(new Date().getTime());
+      this.entryTimeInputParam = CommonUtilityFunctions.getTimeForDateMillisParam(new Date().getTime());
+      this.exitDateInputParam = CommonUtilityFunctions.getDateForDateMillisParam(new Date().getTime());
+      this.exitTimeInputParam = CommonUtilityFunctions.getTimeForDateMillisParam(new Date().getTime() + (1 * 60 * 60 * 1000));
       this.durationHours = 1;
       this.durationMinutes = 0;
-      this.topicsTaught_Modal = '';
+      this.assignmentAttendanceRecord.topicsTaught = '';
       this.selectedIsClassworkProvidedOptions = null;
       this.selectedIsHomeworkProvidedOptions = null;
       this.selectedIsTestProvidedOptions = null;
-      this.tutorRemarks_Modal = '';
+      this.assignmentAttendanceRecord.tutorRemarks = '';
       this.selectedTutorPunctualityIndexOptions = null;
-      this.punctualityRemarks_Modal = '';
+      this.assignmentAttendanceRecord.punctualityRemarks = '';
       this.selectedTutorExpertiseIndexOptions = null;
-      this.expertiseRemarks_Modal = '';
+      this.assignmentAttendanceRecord.expertiseRemarks = '';
       this.selectedTutorKnowledgeIndexOptions = null;
-      this.knowledgeRemarks_Modal = '';
-      this.studentRemarks_Modal = '';
+      this.assignmentAttendanceRecord.knowledgeRemarks = '';
+      this.assignmentAttendanceRecord.studentRemarks = '';
       this.isOverdue = false;
       this.totalFiles = 0;
       this.classworkFileExists = false;
@@ -288,31 +350,50 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     setTimeout(() => {
       this.editRecordForm = false;
       this.setSectionShowParams();
-      this.hideFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
+    }, 500);
+  }
+
+  private setUpDataModal(packageAssignmentGridRecord: GridRecord, assignmentAttendanceGridRecord: GridRecord = null, isInsertion: boolean = false) {
+    this.packageAssignmentRecord.setValuesFromGridRecord(packageAssignmentGridRecord);
+    this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, isInsertion);
+    if (CommonUtilityFunctions.checkObjectAvailability(assignmentAttendanceGridRecord)) {
+      this.assignmentAttendanceRecord.setValuesFromGridRecord(assignmentAttendanceGridRecord);
+      this.setUpAssignmentAttendanceDataModalFromRecord(this.assignmentAttendanceRecord);
+    } else {
+      this.setUpAssignmentAttendanceDataModalFromRecord(null);
+    }
+    setTimeout(() => {
+      this.editRecordForm = false;
+      this.setSectionShowParams();
+      this.hideRecordUpdateFormLoaderMask();
     }, 500);    
-  }
+  } 
 
-  public setFormEditStatus(isEditable: boolean) {
-    this.editRecordForm = isEditable;
-    this.setSectionShowParams();
-  }
-
-  getDateForDateMillisParam(value: any) {
-    return CommonUtilityFunctions.getDateForDateMillisParam(value);
-  }
-
-  getTimeForDateMillisParam(value: any) {
-    return CommonUtilityFunctions.getTimeForDateMillisParam(value);
-  }
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.assignmentAttendanceGridObject.init();
-      this.assignmentAttendanceGridObject.addExtraParams('packageAssignmentSerialId', this.packageAssignmentSerialId);
-    }, 0);
-    setTimeout(() => {
-      this.assignmentAttendanceGridObject.refreshGridData();
-    }, 0);
+  feedAttendance() {
+    if (!this.isFlagListDirty()) {
+      this.showRecordUpdateFormLoaderMask();
+      this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, true);
+      this.setUpAssignmentAttendanceDataModalFromRecord(null);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.showRecordUpdateFormLoaderMask();
+          this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, true);
+          this.setUpAssignmentAttendanceDataModalFromRecord(null);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }
   }
 
   attachFile(event: any, type: any) {
@@ -328,7 +409,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     if (type === 'other') {
       this.otherFile = event.target.files[0];
     }
-    this.isFormDirty = true;
+    this.setFlagListDirty(false, ['RECORD_INSERT_UPDATE']);
   }
 
   detachAllFiles() {
@@ -355,13 +436,13 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   removeAssignmentAttendanceDocumentUploadedFile(type: any) {
     this.helperService.showConfirmationDialog({
-      message: 'Are you sure you want to remove the "' + type + '" file for Attendance Record ' + this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'),
+      message: 'Are you sure you want to remove the "' + type + '" file for Attendance Record ' + this.assignmentAttendanceSerialId,
       onOk: () => {
         const data = {
-          assignmentAttendanceSerialId: this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'),
+          assignmentAttendanceSerialId: this.assignmentAttendanceSerialId,
           documentType: type
         };
-        this.showFormLoaderMask();    
+        this.showRecordUpdateFormLoaderMask();    
         this.utilityService.makerequest(this, this.onRemoveAssignmentAttendanceDocumentUploadedFile, LcpRestUrls.remove_assignment_attendance_document_file, 
                                         'POST', this.utilityService.urlEncodeData(data), 'application/x-www-form-urlencoded');
       },
@@ -377,7 +458,6 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
   }
 
   onRemoveAssignmentAttendanceDocumentUploadedFile(context: any, response: any) {
-    CommonUtilityFunctions.logOnConsole(response);
     if (response['success']) {
       let removedDocumentType = response['removedDocumentType'];
       if (CommonUtilityFunctions.checkObjectAvailability(removedDocumentType)) {
@@ -408,26 +488,26 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         }
       });
     }
-    context.hideFormLoaderMask();
+    context.hideRecordUpdateFormLoaderMask();
   }
 
   downloadAssignmentAttendanceDocumentFile(type: any) {
-    this.showFormLoaderMask();
-    CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'));
+    this.showRecordUpdateFormLoaderMask();
+    CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.assignmentAttendanceSerialId);
     CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-documentType', type);
     this.utilityService.submitForm('attendanceDocumentDownloadForm', '/rest/sales/downloadAssignmentAttendanceDocumentFile', 'POST');
     setTimeout(() => {
-      this.hideFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
     }, 5000);
   }
 
   downloadAssignmentAttendanceAllDocuments() {
     if (this.totalFiles > 0) {
-      this.showFormLoaderMask();
-      CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.selectedAssignmentAttendanceRecord.getProperty('assignmentAttendanceSerialId'));
+      this.showRecordUpdateFormLoaderMask();
+      CommonUtilityFunctions.setHTMLInputElementValue('downloadAttendanceDocument-assignmentAttendanceSerialId', this.assignmentAttendanceSerialId);
       this.utilityService.submitForm('attendanceDocumentDownloadForm', '/rest/sales/downloadAssignmentAttendanceAllDocuments', 'POST');
       setTimeout(() => {
-        this.hideFormLoaderMask();
+        this.hideRecordUpdateFormLoaderMask();
       }, (this.totalFiles * 5000));
     } else {
       this.helperService.showAlertDialog({
@@ -437,15 +517,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         }
       });
     }
-  }
-
-  private showFormLoaderMask() {
-    this.assignmentAttendanceFormMaskLoaderHidden = false;
-  }
-
-  private hideFormLoaderMask() {
-    this.assignmentAttendanceFormMaskLoaderHidden = true;
-  }
+  } 
 
   public getAssignmentAttendanceGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
@@ -462,18 +534,22 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
         dataType: 'string',
         mapping: 'assignmentAttendanceSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {          
-          if (!this.isFormDirty) {
-            this.showFormLoaderMask();
-            this.getAssignmentAttendanceUploadedDocumentCountAndExistence(record.getProperty('assignmentAttendanceSerialId'));
-            this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
+          if (!this.isFlagListDirty()) {
+            this.showRecordUpdateFormLoaderMask();
+            this.getAssignmentAttendanceUploadedDocumentCountAndExistence(column.getValueForColumn(record));
+            this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, false);
+            this.assignmentAttendanceRecord.setValuesFromGridRecord(record);
+            this.setUpAssignmentAttendanceDataModalFromRecord(this.assignmentAttendanceRecord);
           } else {
             this.helperService.showConfirmationDialog({
-              message: 'You have unsaved changes on the form do you still want to continue.',
+              message: this.getConfirmationMessageForFormsDirty(),
               onOk: () => {
-                this.isFormDirty = false;
-                this.showFormLoaderMask();
-                this.getAssignmentAttendanceUploadedDocumentCountAndExistence(record.getProperty('assignmentAttendanceSerialId'));
-                this.setUpDataModal(this.selectedPackageAssignmentRecord, record);
+                this.setFlagListNotDirty();
+                this.showRecordUpdateFormLoaderMask();
+                this.getAssignmentAttendanceUploadedDocumentCountAndExistence(column.getValueForColumn(record));
+                this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, false);
+                this.assignmentAttendanceRecord.setValuesFromGridRecord(record);
+                this.setUpAssignmentAttendanceDataModalFromRecord(this.assignmentAttendanceRecord);
               },
               onCancel: () => {
                 this.helperService.showAlertDialog({
@@ -655,17 +731,9 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
     }
   }
 
-  getDateFromMillis(millis: number) {
-    return CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(millis);
-  }
-
-  getLookupRendererFromValue(value: any, lookupList: any []) {
-    return GridCommonFunctions.lookupRendererForValue(value, lookupList);
-  }
-
   updateAssignmentAttendanceProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    this.isFormDirty = true;
-    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.assignmentAttendanceUpdatedRecord, this.selectedAssignmentAttendanceRecord.property, deselected, isAllOPeration);
+    this.setFlagListDirty(false, ['RECORD_INSERT_UPDATE']);
+    CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.assignmentAttendanceInsertedOrUpdatedRecord, this.assignmentAttendanceRecord, deselected, isAllOPeration);
     switch (key) {
       case 'entryDateMillis' :
       case 'entryTimeMillis' : 
@@ -679,16 +747,16 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   insertAssignmentAttendanceRecord() {
     if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
-      CommonUtilityFunctions.updateRecordProperty(null, null, 'predefined_value', this.assignmentAttendanceUpdatedRecord, null, null, null, AppConstants.VARIABLE_LOCAL_TZ_OFFSET_MS);
+      CommonUtilityFunctions.updateRecordProperty(null, null, 'predefined_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null, AppConstants.VARIABLE_LOCAL_TZ_OFFSET_MS);
       const entryDate: HTMLInputElement = <HTMLInputElement>document.getElementById('entryDate');
       const entryTime: HTMLInputElement = <HTMLInputElement>document.getElementById('entryTime');
       const exitDate: HTMLInputElement = <HTMLInputElement>document.getElementById('exitDate');
       const exitTime: HTMLInputElement = <HTMLInputElement>document.getElementById('exitTime');
-      CommonUtilityFunctions.updateRecordProperty('entryDateMillis', entryDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.assignmentAttendanceUpdatedRecord, this.packageAssignmentSerialId);
+      CommonUtilityFunctions.updateRecordProperty('entryDateMillis', entryDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.assignmentAttendanceInsertedOrUpdatedRecord, this.packageAssignmentSerialId);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);
       }
@@ -701,7 +769,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       if (this.otherFile) {
         data.append('inputFileOther', this.otherFile);
       }
-      this.showFormLoaderMask();
+      this.showRecordUpdateFormLoaderMask();
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.insert_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
@@ -716,20 +784,20 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
 
   updateAssignmentAttendanceRecord() {
     if (CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationHours) && CommonUtilityFunctions.checkNonNegativeNumberAvailability(this.durationMinutes)) {
-      CommonUtilityFunctions.updateRecordProperty('packageAssignmentSerialId', this.packageAssignmentSerialId_Modal.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      CommonUtilityFunctions.updateRecordProperty('oldEntryDateTimeMillis', this.entryDateTimeMillis_Modal.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-      CommonUtilityFunctions.updateRecordProperty('oldExitDateTimeMillis', this.exitDateTimeMillis_Modal.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('packageAssignmentSerialId', this.packageAssignmentSerialId.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('oldEntryDateTimeMillis', this.assignmentAttendanceRecord.entryDateTimeMillis.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+      CommonUtilityFunctions.updateRecordProperty('oldExitDateTimeMillis', this.assignmentAttendanceRecord.exitDateTimeMillis.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
       if (this.isTimeUpdated) {
         const entryDate: HTMLInputElement = <HTMLInputElement>document.getElementById('entryDate');
         const entryTime: HTMLInputElement = <HTMLInputElement>document.getElementById('entryTime');
         const exitDate: HTMLInputElement = <HTMLInputElement>document.getElementById('exitDate');
         const exitTime: HTMLInputElement = <HTMLInputElement>document.getElementById('exitTime');
-        CommonUtilityFunctions.updateRecordProperty('entryDateMillis', entryDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-        CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-        CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
-        CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('entryDateMillis', entryDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('entryTimeMillis', entryTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('exitDateMillis', exitDate.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
+        CommonUtilityFunctions.updateRecordProperty('exitTimeMillis', exitTime.valueAsNumber.toString(), 'direct_value', this.assignmentAttendanceInsertedOrUpdatedRecord, null, null, null);
       }
-      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.assignmentAttendanceUpdatedRecord, this.assignmentAttendanceSerialId_Modal);
+      const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.assignmentAttendanceInsertedOrUpdatedRecord, this.assignmentAttendanceSerialId);
       if (this.classworkFile) {
         data.append('inputFileClasswork', this.classworkFile);
       }
@@ -742,7 +810,7 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       if (this.otherFile) {
         data.append('inputFileOther', this.otherFile);
       }
-      this.showFormLoaderMask();
+      this.showRecordUpdateFormLoaderMask();
       this.utilityService.makerequest(this, this.onInsertOrUpdateAssignmentAttendanceRecord, LcpRestUrls.update_assignment_attendance, 'POST',
         data, 'multipart/form-data', true);
     } else {
@@ -766,9 +834,37 @@ export class MarkAssignmentAttendanceComponent implements OnInit {
       context.editRecordForm = false;
       context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
       context.assignmentAttendanceGridObject.refreshGridData();
-      context.isFormDirty = false;
+      context.setFlagListNotDirty();
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
     }
+  }
+
+  resetAssignmentAttendanceRecord() {
+    if (!this.isFlagListDirty()) {
+      this.showRecordUpdateFormLoaderMask();
+      this.getAssignmentAttendanceUploadedDocumentCountAndExistence(this.assignmentAttendanceSerialId);
+      this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, false);
+      this.setUpAssignmentAttendanceDataModalFromRecord(this.assignmentAttendanceRecord);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.showRecordUpdateFormLoaderMask();
+          this.getAssignmentAttendanceUploadedDocumentCountAndExistence(this.assignmentAttendanceSerialId);
+          this.setUpPackageAssignmentDataModalFromRecord(this.packageAssignmentRecord, false);
+          this.setUpAssignmentAttendanceDataModalFromRecord(this.assignmentAttendanceRecord);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }    
   }
 }

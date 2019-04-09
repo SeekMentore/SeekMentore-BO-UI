@@ -8,8 +8,8 @@ import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
-import { CommonFilterOptions } from '../../../../../utils/common-filter-options';
-import { LcpRestUrls } from '../../../../../utils/lcp-rest-urls';
+import { CommonFilterOptions } from 'src/app/utils/common-filter-options';
+import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 import { SubscribedCustomerDataAccess } from '../subscribed-customer.component';
 
 @Component({

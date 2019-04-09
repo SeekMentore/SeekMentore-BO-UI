@@ -68,7 +68,7 @@ export class SubscriptionPackagesComponent implements OnInit {
       },
       columns: [{
         id: 'subscriptionPackageSerialId',
-        headerName: 'Serial Id',
+        headerName: 'Subscription Package Serial Id',
         dataType: 'string',
         mapping: 'subscriptionPackageSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
@@ -80,36 +80,6 @@ export class SubscriptionPackagesComponent implements OnInit {
             this.toggleVisibilitySubscriptionPackagesGrid();
           }
         }
-      },{
-        id: 'customerName',
-        headerName: 'Customer Name',
-        dataType: 'string',
-        mapping: 'customerName'
-      },{
-        id: 'customerEmail',
-        headerName: 'Customer Email',
-        dataType: 'string',
-        mapping: 'customerEmail'
-      },{
-        id: 'customerContactNumber',
-        headerName: 'Customer Contact Number',
-        dataType: 'string',
-        mapping: 'customerContactNumber'
-      },{
-        id: 'tutorName',
-        headerName: 'Tutor Name',
-        dataType: 'string',
-        mapping: 'tutorName'
-      },{
-        id: 'tutorEmail',
-        headerName: 'Tutor Email',
-        dataType: 'string',
-        mapping: 'tutorEmail'
-      },{
-        id: 'tutorContactNumber',
-        headerName: 'Tutor Contact Number',
-        dataType: 'string',
-        mapping: 'tutorContactNumber'
       },{
         id: 'createdMillis',
         headerName: 'Created Date',
@@ -129,6 +99,60 @@ export class SubscriptionPackagesComponent implements OnInit {
         mapping: 'endDateMillis',
         renderer: GridCommonFunctions.renderDateFromMillis
       },{
+        id: 'customerSerialId',
+        headerName: 'Customer Serial Id',
+        dataType: 'string',
+        mapping: 'customerSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Customer Record > ' + column.getValueForColumn(record));
+        }
+      },{
+        id: 'customerName',
+        headerName: 'Customer Name',
+        dataType: 'string',
+        mapping: 'customerName'
+      },{
+        id: 'customerEmail',
+        headerName: 'Customer Primary Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      },{
+        id: 'customerContactNumber',
+        headerName: 'Customer Primary Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
+      },{
+        id: 'tutorSerialId',
+        headerName: 'Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'tutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Tutor Record > ' + column.getValueForColumn(record));
+        }
+      },{
+        id: 'tutorName',
+        headerName: 'Tutor Name',
+        dataType: 'string',
+        mapping: 'tutorName'
+      },{
+        id: 'tutorEmail',
+        headerName: 'Tutor Primary Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      },{
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Primary Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
+      },{
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
+        dataType: 'string',
+        mapping: 'enquirySerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Enquiry Record > ' + column.getValueForColumn(record));
+        }
+      },{
         id: 'enquirySubject',
         headerName: 'Enquiry Subject',
         dataType: 'list',
@@ -142,6 +166,16 @@ export class SubscriptionPackagesComponent implements OnInit {
         filterOptions: CommonFilterOptions.studentGradesFilterOptions,
         mapping: 'enquiryGrade',
         renderer: AdminCommonFunctions.studentGradesRenderer
+      },{
+        id: 'enquiryEmail',
+        headerName: 'Enquiry Email',
+        dataType: 'string',
+        mapping: 'enquiryEmail'
+      },{
+        id: 'enquiryContactNumber',
+        headerName: 'Enquiry Contact Number',
+        dataType: 'string',
+        mapping: 'enquiryContactNumber'
       },{
         id: 'enquiryLocation',
         headerName: 'Enquiry Location',
@@ -186,6 +220,14 @@ export class SubscriptionPackagesComponent implements OnInit {
         mapping: 'enquiryClientNegotiationRemarks',
         lengthyData: true
       },{
+        id: 'tutorMapperSerialId',
+        headerName: 'Tutor Mapper Serial Id',
+        dataType: 'string',
+        mapping: 'tutorMapperSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Tutor Mapper Record > ' + column.getValueForColumn(record));
+        }
+      },{
         id: 'tutorMapperQuotedTutorRate',
         headerName: 'Tutor Mapper Quoted Tutor Rate',
         dataType: 'number',
@@ -201,6 +243,14 @@ export class SubscriptionPackagesComponent implements OnInit {
         dataType: 'string',
         mapping: 'tutorMapperTutorNegotiationRemarks',
         lengthyData: true
+      },{
+        id: 'demoSerialId',
+        headerName: 'Demo Serial Id',
+        dataType: 'string',
+        mapping: 'demoSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          alert('Open Demo Record > ' + column.getValueForColumn(record));
+        }
       },{
         id: 'demoClientRemarks',
         headerName: 'Demo Client Remarks',

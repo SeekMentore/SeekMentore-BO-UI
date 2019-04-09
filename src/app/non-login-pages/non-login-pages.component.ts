@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {HelperService} from '../utils/helper.service';
-import {AppConstants} from '../utils/app-constants';
-import {EnvironmentConstants} from '../utils/environment-constants';
+import { Component, OnInit } from '@angular/core';
+import { AppConstants } from 'src/app/utils/app-constants';
+import { EnvironmentConstants } from 'src/app/utils/environment-constants';
+import { HelperService } from 'src/app/utils/helper.service';
 
 @Component({
   selector: 'app-non-login-pages',

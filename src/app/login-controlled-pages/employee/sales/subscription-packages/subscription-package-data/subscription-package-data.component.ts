@@ -59,15 +59,17 @@ export class SubscriptionPackageDataComponent implements OnInit {
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
   packageBillingTypeFilterOptions = CommonFilterOptions.packageBillingTypeFilterOptions;
 
-  isFormDirty: boolean = false;
+  isRecordUpdateFormDirty: boolean = false;
   subscriptionPackageFormMaskLoaderHidden: boolean = true;
-  showForm: boolean = false;
-  showEditControlSection: boolean = false;
-  showUpdateButton: boolean = false;  
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
+  showRecordUpdateButton: boolean = false;  
   canActivateSubscription: boolean = false;
   canTerminateSubscription: boolean = false;
   canCreateAssignment: boolean = false;
   takeActionActionText: string;
+
+  dirtyFlagList: string[] = ['RECORD_UPDATE'];
 
   // Modal Variables
   subscriptionPackageRecord: SubscriptionPackage;
@@ -95,7 +97,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
   // Package Assignment Form Control Variables
   selectedAssignmentRecordSerialId: string = null;
   interimHoldSelectedAssignmentRecordSerialId: string = null;
-  subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;
+  packageAssignmentDataAccess: PackageAssignmentDataAccess = null;
   showSubscriptionPackageAssignmentData = false;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService) { 
@@ -115,36 +117,113 @@ export class SubscriptionPackageDataComponent implements OnInit {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageSerialId);
       this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.init();
       this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.addExtraParams('subscriptionPackageSerialId', this.subscriptionPackageSerialId);
-    }, 0);
+    }, 100);
     setTimeout(() => {
       this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
       this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.refreshGridData();
-    }, 0);
+    }, 100);
   }
 
-  private showFormLoaderMask() {
+  private showRecordUpdateFormLoaderMask() {
     this.subscriptionPackageFormMaskLoaderHidden = false;
   }
 
-  private hideFormLoaderMask() {
+  private hideRecordUpdateFormLoaderMask() {
     this.subscriptionPackageFormMaskLoaderHidden = true;
   }
 
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
+    this.editRecordForm = isEditable;
+    this.setSectionShowParams();
+  }
+
   private setSectionShowParams() {
-    this.showForm = this.subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess;
-    this.showEditControlSection = this.subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess && !this.formEditMandatoryDisbaled;
-    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
+    this.showRecordUpdateForm = this.subscriptionPackageDataAccess.subscriptionPackageDataModificationAccess;
+    this.showRecordUpdateEditControlSection = this.showRecordUpdateForm && !this.formEditMandatoryDisbaled;
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
     this.takeActionDisabled = !this.canActivateSubscription && !this.canTerminateSubscription && !this.canCreateAssignment;
     this.isContractReady = CommonUtilityFunctions.checkStringAvailability(this.subscriptionPackageRecord.contractSerialId);
   }
 
-  public setFormEditStatus(isEditable: boolean) {
-    this.editRecordForm = isEditable;
-    this.setSectionShowParams();
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
   }
   
   private getSubscriptionPackageGridRecord(subscriptionPackageSerialId: string) {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     const data = {
       parentSerialId: subscriptionPackageSerialId
     };    
@@ -173,6 +252,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
@@ -209,7 +289,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
     setTimeout(() => {
       this.editRecordForm = false;
       this.setSectionShowParams();
-      this.hideFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
     }, 500);
   }  
 
@@ -222,10 +302,10 @@ export class SubscriptionPackageDataComponent implements OnInit {
         }
       });
     } else {
-      context.subscriptionPackageAssignmentDataAccess = {
+      context.packageAssignmentDataAccess = {
         success: response.success,
         message: response.message,
-        subscriptionPackageAssignmentDataModificationAccess: response.subscriptionPackageAssignmentDataModificationAccess
+        packageAssignmentDataModificationAccess: response.packageAssignmentDataModificationAccess
       };
       context.selectedAssignmentRecordSerialId = context.interimHoldSelectedAssignmentRecordSerialId;
       context.toggleVisibilitySubscriptionPackageAssignmentGrid();
@@ -247,7 +327,7 @@ export class SubscriptionPackageDataComponent implements OnInit {
       setTimeout(() => {
         this.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
         this.selectedSubscriptionPackageAllHistoryAssignmentGridObject.refreshGridData();
-      }, 200);
+      }, 100);
       this.getSubscriptionPackageGridRecord(this.subscriptionPackageSerialId);
     } else {
       const backToSubscriptionPackageListingButton: HTMLElement = document.getElementById('back-to-subscription-packages-listing-button'); 
@@ -257,9 +337,8 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   private naviagteToPackageAssignmentFormAction(record: GridRecord, column: Column, gridComponentObject: GridComponent) {
-    this.isFormDirty = false;
     this.interimHoldSelectedAssignmentRecordSerialId = record.getProperty('packageAssignmentSerialId');
-    if (this.subscriptionPackageAssignmentDataAccess === null) {
+    if (this.packageAssignmentDataAccess === null) {
       this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_package_assignment_data_access, 'POST', null, 'application/x-www-form-urlencoded');
     } else {
       this.selectedAssignmentRecordSerialId = this.interimHoldSelectedAssignmentRecordSerialId;            
@@ -278,16 +357,17 @@ export class SubscriptionPackageDataComponent implements OnInit {
       },
       columns: [{
         id: 'packageAssignmentSerialId',
-        headerName: 'Serial Id',
+        headerName: 'Package Assignment Serial Id',
         dataType: 'string',
         mapping: 'packageAssignmentSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          if (!this.isFormDirty) {      
+          if (!this.isFlagListDirty()) {      
             this.naviagteToPackageAssignmentFormAction(record, column, gridComponentObject);
           } else {
             this.helperService.showConfirmationDialog({
-              message: 'You have unsaved changes on the form do you still want to continue.',
+              message: this.getConfirmationMessageForFormsDirty(),
               onOk: () => {
+                this.setFlagListNotDirty();
                 this.naviagteToPackageAssignmentFormAction(record, column, gridComponentObject);
               },
               onCancel: () => {
@@ -355,12 +435,12 @@ export class SubscriptionPackageDataComponent implements OnInit {
   }
 
   updateSubscriptionPackageProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    this.isFormDirty = true;
+    this.setFlagListDirty(false, ['RECORD_UPDATE']);
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageUpdatedRecord, this.subscriptionPackageRecord, deselected, isAllOPeration);
   }
 
   updateSubscriptionPackageRecord() {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.subscriptionPackageUpdatedRecord, this.subscriptionPackageSerialId);
     this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageRecord, LcpRestUrls.subscription_package_update_record, 'POST',
       data, 'multipart/form-data', true);
@@ -375,20 +455,21 @@ export class SubscriptionPackageDataComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
-      context.isFormDirty = false;
+      context.setFlagListNotDirty();
       context.getSubscriptionPackageGridRecord(context.subscriptionPackageSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
   takeActionOnSubscriptionPackage(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
-    if (!this.isFormDirty) {      
+    if (!this.isFlagListDirty()) {      
       this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changes on the form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
+          this.setFlagListNotDirty();
           this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
@@ -409,8 +490,8 @@ export class SubscriptionPackageDataComponent implements OnInit {
       titleText: titleText,
       placeholderText: placeholderText,
       onOk: (message) => {
-        this.showFormLoaderMask();
-        this.isFormDirty = false;  
+        this.showRecordUpdateFormLoaderMask();
+        this.setFlagListNotDirty();  
         this.takeActionActionText = actionText;             
         const data = {
           allIdsList: this.subscriptionPackageSerialId,
@@ -439,18 +520,18 @@ export class SubscriptionPackageDataComponent implements OnInit {
         context.selectedSubscriptionPackageAllCurrentAssignmentGridObject.refreshGridData();
       }
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
   downloadContract() {
     if (this.isContractReady) {
-      this.showFormLoaderMask();
+      this.showRecordUpdateFormLoaderMask();
       const subscriptionPackageSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('contractDownloadForm-subscriptionPackageSerialId');
       subscriptionPackageSerialId.value = this.subscriptionPackageSerialId;
       this.utilityService.submitForm('contractDownloadForm', '/rest/sales/downloadSubscriptionPackageContractPdf', 'POST');
       setTimeout(() => {
-        this.hideFormLoaderMask();
+        this.hideRecordUpdateFormLoaderMask();
       }, 5000);
     } else {
       this.helperService.showAlertDialog({
@@ -461,10 +542,32 @@ export class SubscriptionPackageDataComponent implements OnInit {
       });
     }
   }
+
+  resetSubscriptionPackageRecord() {
+    if (!this.isFlagListDirty()) {
+      this.getSubscriptionPackageGridRecord(this.subscriptionPackageSerialId);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.getSubscriptionPackageGridRecord(this.subscriptionPackageSerialId);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }    
+  }
 }
 
-export interface SubscriptionPackageAssignmentDataAccess {
+export interface PackageAssignmentDataAccess {
   success: boolean;
   message: string;
-  subscriptionPackageAssignmentDataModificationAccess: boolean;
+  packageAssignmentDataModificationAccess: boolean;
 }

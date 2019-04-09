@@ -36,12 +36,9 @@ export class AssignmentAttendanceComponent implements OnInit {
   reviewedAssignmentGridMetaData: GridDataInterface;
 
   showAssignmentAttendanceData = false;
-  selectedAssignmentRecordSerialId: string = null;
-  interimHoldSelectedAssignmentRecordSerialId: string = null;
+  selectedPackageAssignmentSerialId: string = null;
+  interimHoldSelectedPackageAssignmentSerialId: string = null;
   assignmentAttendanceMarkingAccess: AssignmentAttendanceMarkingAccess = null;
-  selectedRecordGridType: string = null;
-
-  interimHoldSelectedAssignmentGridObject: GridComponent = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) { 
     this.newAssignmentGridMetaData = null;
@@ -64,13 +61,13 @@ export class AssignmentAttendanceComponent implements OnInit {
       this.startedAssignmentGridObject.init();
       this.hoursCompletedAssignmentGridObject.init();
       this.reviewedAssignmentGridObject.init();
-    }, 0);
+    }, 100);
     setTimeout(() => {
       this.newAssignmentGridObject.refreshGridData();
       this.startedAssignmentGridObject.refreshGridData();
       this.hoursCompletedAssignmentGridObject.refreshGridData();
       this.reviewedAssignmentGridObject.refreshGridData();
-    }, 0);
+    }, 100);
   }
 
   public getAssignmentGridObject(id: string, title: string, restURL: string, hasActionColumn: boolean = false, actionColumn: any = null, collapsed: boolean = false) {
@@ -84,63 +81,24 @@ export class AssignmentAttendanceComponent implements OnInit {
       },
       columns: [{
         id: 'packageAssignmentSerialId',
-        headerName: 'Serial Id',
+        headerName: 'Package Assignment Serial Id',
         dataType: 'string',
         mapping: 'packageAssignmentSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-          this.interimHoldSelectedAssignmentRecordSerialId = record.getProperty('packageAssignmentSerialId');
-          this.selectedRecordGridType = gridComponentObject.grid.id; 
+          this.interimHoldSelectedPackageAssignmentSerialId = column.getValueForColumn(record);
           if (this.assignmentAttendanceMarkingAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.assignment_attendance_marking_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {
-            this.selectedAssignmentRecordSerialId = this.interimHoldSelectedAssignmentRecordSerialId;            
+            this.selectedPackageAssignmentSerialId = this.interimHoldSelectedPackageAssignmentSerialId;            
             this.toggleVisibilityAssignmentsGrid();
           }
         }
       },{
-        id: 'customerName',
-        headerName: 'Customer Name',
-        dataType: 'string',
-        mapping: 'customerName'
-      },{
-        id: 'customerEmail',
-        headerName: 'Customer Email',
-        dataType: 'string',
-        mapping: 'customerEmail'
-      },{
-        id: 'customerContactNumber',
-        headerName: 'Customer Contact Number',
-        dataType: 'string',
-        mapping: 'customerContactNumber'
-      },{
-        id: 'tutorName',
-        headerName: 'Tutor Name',
-        dataType: 'string',
-        mapping: 'tutorName'
-      },{
-        id: 'tutorEmail',
-        headerName: 'Tutor Email',
-        dataType: 'string',
-        mapping: 'tutorEmail'
-      },{
-        id: 'tutorContactNumber',
-        headerName: 'Tutor Contact Number',
-        dataType: 'string',
-        mapping: 'tutorContactNumber'
-      },{
-        id: 'enquirySubject',
-        headerName: 'Enquiry Subject',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.subjectsFilterOptions,
-        mapping: 'enquirySubject',
-        renderer: AdminCommonFunctions.subjectsRenderer
-      },{
-        id: 'enquiryGrade',
-        headerName: 'Enquiry Grade',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
-        mapping: 'enquiryGrade',
-        renderer: AdminCommonFunctions.studentGradesRenderer
+        id: 'createdMillis',
+        headerName: 'Created Date',
+        dataType: 'date',
+        mapping: 'createdMillis',
+        renderer: GridCommonFunctions.renderDateFromMillisWithTime
       },{
         id: 'startDateMillis',
         headerName: 'Start Date',
@@ -169,11 +127,70 @@ export class AssignmentAttendanceComponent implements OnInit {
         mapping: 'endDateMillis',
         renderer: GridCommonFunctions.renderDateFromMillis
       },{
-        id: 'createdMillis',
-        headerName: 'Created Date',
-        dataType: 'date',
-        mapping: 'createdMillis',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime
+        id: 'customerSerialId',
+        headerName: 'Customer Serial Id',
+        dataType: 'string',
+        mapping: 'customerSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+        }
+      },{
+        id: 'customerName',
+        headerName: 'Customer Name',
+        dataType: 'string',
+        mapping: 'customerName'
+      },{
+        id: 'customerEmail',
+        headerName: 'Customer Email',
+        dataType: 'string',
+        mapping: 'customerEmail'
+      },{
+        id: 'customerContactNumber',
+        headerName: 'Customer Contact Number',
+        dataType: 'string',
+        mapping: 'customerContactNumber'
+      },{
+        id: 'tutorSerialId',
+        headerName: 'Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'tutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+        }
+      },{
+        id: 'tutorName',
+        headerName: 'Tutor Name',
+        dataType: 'string',
+        mapping: 'tutorName'
+      },{
+        id: 'tutorEmail',
+        headerName: 'Tutor Email',
+        dataType: 'string',
+        mapping: 'tutorEmail'
+      },{
+        id: 'tutorContactNumber',
+        headerName: 'Tutor Contact Number',
+        dataType: 'string',
+        mapping: 'tutorContactNumber'
+      },{
+        id: 'enquirySerialId',
+        headerName: 'Enquiry Serial Id',
+        dataType: 'string',
+        mapping: 'enquirySerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+        }
+      },{
+        id: 'enquirySubject',
+        headerName: 'Enquiry Subject',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.subjectsFilterOptions,
+        mapping: 'enquirySubject',
+        renderer: AdminCommonFunctions.subjectsRenderer
+      },{
+        id: 'enquiryGrade',
+        headerName: 'Enquiry Grade',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.studentGradesFilterOptions,
+        mapping: 'enquiryGrade',
+        renderer: AdminCommonFunctions.studentGradesRenderer
       }],
       hasActionColumn : hasActionColumn,
       actionColumn : actionColumn
@@ -189,12 +206,14 @@ export class AssignmentAttendanceComponent implements OnInit {
         label: 'Download',
         btnclass: 'btnSubmit',
         clickEvent: (record: GridRecord, button: ActionButton, gridComponentObject: GridComponent) => {
+          gridComponentObject.showGridLoadingMask();
           button.disable();
           const packageAssignmentSerialId: HTMLInputElement = <HTMLInputElement>document.getElementById('downloadAttendanceTracker-packageAssignmentSerialId');
           packageAssignmentSerialId.value = record.getProperty('packageAssignmentSerialId');
           this.utilityService.submitForm('attendanceTrackerDownloadForm', '/rest/sales/downloadAttendanceTrackerSheet', 'POST');
           setTimeout(() => {
             button.enable();
+            gridComponentObject.hideGridLoadingMask();
           }, 5000);        
         }
       }]
@@ -238,7 +257,7 @@ export class AssignmentAttendanceComponent implements OnInit {
         message: response.message,
         assignmentAttendanceMarkingAccess: response.assignmentAttendanceMarkingAccess
       };
-      context.selectedAssignmentRecordSerialId = context.interimHoldSelectedAssignmentRecordSerialId;
+      context.selectedPackageAssignmentSerialId = context.interimHoldSelectedPackageAssignmentSerialId;
       context.toggleVisibilityAssignmentsGrid();
     }
   }
@@ -246,7 +265,7 @@ export class AssignmentAttendanceComponent implements OnInit {
   toggleVisibilityAssignmentsGrid() {
     if (this.showAssignmentAttendanceData === true) {
       this.showAssignmentAttendanceData = false;
-      this.selectedAssignmentRecordSerialId = null;
+      this.selectedPackageAssignmentSerialId = null;
       setTimeout(() => {
         this.newAssignmentGridObject.init();
         this.startedAssignmentGridObject.init();

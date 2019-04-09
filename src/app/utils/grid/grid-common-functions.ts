@@ -4,6 +4,10 @@ import { GridRecord } from './grid-record';
 
 export class GridCommonFunctions {
 
+  static MONTH_NAME_ARRAY = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  static MONTH_ABBR_NAME_ARRAY = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  static WEEKDAY_NAME_ARRAY = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+
   /** Common validity functions */
   public static checkObjectAvailability(object: any) {
     if (null !== object && undefined !== object) {
@@ -58,10 +62,9 @@ export class GridCommonFunctions {
     const datemillisInUTC = column.getValueForColumn(record);
     if (datemillisInUTC > 0 && GridCommonFunctions.checkObjectAvailability(datemillisInUTC)) {
       const date_value = new Date(datemillisInUTC);
-      const dateString = 
-                (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
-        + '/' + ((date_value.getMonth() + 1) > 9 ? (date_value.getMonth() + 1) : ('0' + (date_value.getMonth() + 1)))
-        + '/' + date_value.getFullYear()
+      const dateString = (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
+        + '-' + GridCommonFunctions.MONTH_ABBR_NAME_ARRAY[date_value.getMonth()]
+        + '-' + date_value.getFullYear();
       return dateString;
     }
     return '';
@@ -71,13 +74,22 @@ export class GridCommonFunctions {
     const datemillisInUTC = column.getValueForColumn(record);
     if (datemillisInUTC > 0 && GridCommonFunctions.checkObjectAvailability(datemillisInUTC)) {
       const date_value = new Date(datemillisInUTC);
-      const dateString = 
-                (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
-        + '/' + ((date_value.getMonth() + 1) > 9 ? (date_value.getMonth() + 1) : ('0' + (date_value.getMonth() + 1)))
-        + '/' + date_value.getFullYear()
-        + ' ' + (date_value.getHours() > 9 ? date_value.getHours() : ('0' + date_value.getHours()))
+      let hours: number = date_value.getHours();
+      let am_pm: string = 'AM';
+      if (hours > 12) {
+        am_pm = 'PM';
+      }
+      if (hours < 1) {
+        hours = 12 - hours;
+      } else if (hours > 12) {
+        hours = hours - 12;
+      }      
+      const dateString = (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
+        + '-' + GridCommonFunctions.MONTH_ABBR_NAME_ARRAY[date_value.getMonth()]
+        + '-' + date_value.getFullYear()
+        + ' - '+ (hours > 9 ? hours : ('0' + hours))
         + ':' + (date_value.getMinutes() > 9 ? date_value.getMinutes() : ('0' + date_value.getMinutes()))
-        + ':' + (date_value.getSeconds() > 9 ? date_value.getSeconds() : ('0' + date_value.getSeconds()));
+        + ' ' + am_pm;
       return dateString;
     }
     return '';

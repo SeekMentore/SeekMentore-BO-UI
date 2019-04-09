@@ -6,7 +6,7 @@ import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
-import { SubscriptionPackageAssignmentDataAccess } from '../subscription-package-data.component';
+import { PackageAssignmentDataAccess } from '../subscription-package-data.component';
 
 @Component({
   selector: 'app-subscription-package-assignment',
@@ -19,7 +19,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
   packageAssignmentSerialId: string = null;
 
   @Input()
-  subscriptionPackageAssignmentDataAccess: SubscriptionPackageAssignmentDataAccess = null;  
+  packageAssignmentDataAccess: PackageAssignmentDataAccess = null;  
 
   subscriptionPackageAssignmentUpdatedRecord = {};
 
@@ -39,13 +39,15 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
   happinessIndexFilterOptions = CommonFilterOptions.happinessIndexFilterOptions;
   packageBillingTypeFilterOptions = CommonFilterOptions.packageBillingTypeFilterOptions;
 
-  isFormDirty: boolean = false;
+  isRecordUpdateFormDirty: boolean = false;
   packageAssignmentFormMaskLoaderHidden: boolean = true;
-  showForm: boolean = false;
-  showEditControlSection: boolean = false;
-  showUpdateButton: boolean = false;  
+  showRecordUpdateForm: boolean = false;
+  showRecordUpdateEditControlSection: boolean = false;
+  showRecordUpdateButton: boolean = false;  
   canStartAssignment: boolean = false;
   canReviewCompleteAssignment: boolean = false;
+
+  dirtyFlagList: string[] = ['RECORD_UPDATE'];
 
   // Modal properties
   packageAssignmentRecord: PackageAssignment;
@@ -68,28 +70,105 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     this.getPackageAssignmentGridRecord(this.packageAssignmentSerialId);    
   }
 
-  private showFormLoaderMask() {
+  private showRecordUpdateFormLoaderMask() {
     this.packageAssignmentFormMaskLoaderHidden = false;
   }
 
-  private hideFormLoaderMask() {
+  private hideRecordUpdateFormLoaderMask() {
     this.packageAssignmentFormMaskLoaderHidden = true;
   }
 
-  private setSectionShowParams() {
-    this.showForm = this.subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess;
-    this.showEditControlSection = this.subscriptionPackageAssignmentDataAccess.subscriptionPackageAssignmentDataModificationAccess && !this.formEditMandatoryDisbaled;
-    this.showUpdateButton = this.showEditControlSection && this.editRecordForm;
-    this.takeActionDisabled = !this.canStartAssignment && !this.canReviewCompleteAssignment; 
-  }
-
-  public setFormEditStatus(isEditable: boolean) {
+  public setRecordUpdateFormEditStatus(isEditable: boolean) {
     this.editRecordForm = isEditable;
     this.setSectionShowParams();
   }
+
+  private setSectionShowParams() {
+    this.showRecordUpdateForm = this.packageAssignmentDataAccess.packageAssignmentDataModificationAccess;
+    this.showRecordUpdateEditControlSection = this.showRecordUpdateForm && !this.formEditMandatoryDisbaled;
+    this.showRecordUpdateButton = this.showRecordUpdateEditControlSection && this.editRecordForm;
+    this.takeActionDisabled = !this.canStartAssignment && !this.canReviewCompleteAssignment; 
+  }
+
+  private getConfirmationMessageForFormsDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let confirmationMessage: string = '';
+    let messageList: string[] = [];
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            if (this.isRecordUpdateFormDirty) {
+              messageList.push('You have unsaved changes on the Update form.');
+            }
+            break;
+          }
+        }
+      });
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(messageList)) {
+      messageList.push('Do you still want to continue');
+      messageList.forEach((message) => {
+        confirmationMessage += message + '\n';
+      });      
+    }
+    return confirmationMessage;
+  }
+
+  private isFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    let resultantFlagValue: boolean = false;
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            resultantFlagValue = resultantFlagValue || this.isRecordUpdateFormDirty;
+            break;
+          }
+        }
+      });
+    }
+    return resultantFlagValue;
+  }
+
+  private setFlagListNotDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = false;
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  private setFlagListDirty(allFlags: boolean = true, flagList: string[] = null) {
+    if (allFlags) {
+      flagList = this.dirtyFlagList;
+    }
+    if (CommonUtilityFunctions.checkNonEmptyList(flagList)) {
+      flagList.forEach((flag) => {
+        switch(flag) {
+          case 'RECORD_UPDATE' : {
+            this.isRecordUpdateFormDirty = true;
+            break;
+          }
+        }
+      });
+    }
+  }
   
   private getPackageAssignmentGridRecord(packageAssignmentSerialId: string) {
-    this.showFormLoaderMask();
+    this.showRecordUpdateFormLoaderMask();
     const data = {
       parentSerialId: packageAssignmentSerialId
     };    
@@ -117,6 +196,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
         onButtonClicked: () => {
         }
       });
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
   
@@ -138,23 +218,23 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     setTimeout(() => {
       this.editRecordForm = false;
       this.setSectionShowParams();
-      this.hideFormLoaderMask();
+      this.hideRecordUpdateFormLoaderMask();
     }, 500);
   }
 
-  updateSubscriptionPackageAssignmentProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
-    this.isFormDirty = true;
+  updatePackageAssignmentProperty(key: string, event: any, data_type: string, deselected: boolean = false, isAllOPeration: boolean = false) {
+    this.setFlagListDirty(false, ['RECORD_UPDATE']);
     CommonUtilityFunctions.updateRecordProperty(key, event, data_type, this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord, deselected, isAllOPeration);
   }
 
-  updateSubscriptionPackageAssignmentRecord() {
-    this.showFormLoaderMask();
-    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentRecord.packageAssignmentSerialId);
-    this.utilityService.makerequest(this, this.onUpdateSubscriptionPackageAssignmentRecord, LcpRestUrls.subscription_package_assignment_update_record, 'POST',
+  updatePackageAssignmentRecord() {
+    this.showRecordUpdateFormLoaderMask();
+    const data = CommonUtilityFunctions.encodeFormDataToUpdatedJSONWithParentSerialId(this.subscriptionPackageAssignmentUpdatedRecord, this.packageAssignmentSerialId);
+    this.utilityService.makerequest(this, this.onUpdatePackageAssignmentRecord, LcpRestUrls.subscription_package_assignment_update_record, 'POST',
       data, 'multipart/form-data', true);
   }
 
-  onUpdateSubscriptionPackageAssignmentRecord(context: any, response: any) {
+  onUpdatePackageAssignmentRecord(context: any, response: any) {
     context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
@@ -163,20 +243,21 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     });
     if (response['success']) {
       context.editRecordForm = false;
-      context.isFormDirty = false;
+      context.setFlagListNotDirty();
       context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
     }
   }
 
-  takeActionOnSubscriptionPackageAssignment(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
-    if (!this.isFormDirty) {      
+  takeActionOnPackageAssignment(titleText: string, placeholderText: string, actionText: string, commentsRequired: boolean = false) {
+    if (!this.isFlagListDirty()) {      
       this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
     } else {
       this.helperService.showConfirmationDialog({
-        message: 'You have unsaved changes on the form do you still want to continue.',
+        message: this.getConfirmationMessageForFormsDirty(),
         onOk: () => {
+          this.setFlagListNotDirty();
           this.takeActionPrompt(titleText, placeholderText, actionText, commentsRequired);
         },
         onCancel: () => {
@@ -197,14 +278,14 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
       titleText: titleText,
       placeholderText: placeholderText,
       onOk: (message) => { 
-        this.showFormLoaderMask();
-        this.isFormDirty = false;                  
+        this.showRecordUpdateFormLoaderMask();
+        this.setFlagListNotDirty();                 
         const data = {
-          allIdsList: this.packageAssignmentRecord.packageAssignmentSerialId,
+          allIdsList: this.packageAssignmentSerialId,
           button: actionText,
           comments: message
         };                     
-        this.utilityService.makerequest(this, this.handleTakeActionOnSubscriptionPackageAssignmentRecord,
+        this.utilityService.makerequest(this, this.handleTakeActionOnPackageAssignmentRecord,
           LcpRestUrls.take_action_on_subscription_package_assignment, 'POST', this.utilityService.urlEncodeData(data),
           'application/x-www-form-urlencoded');
       },
@@ -213,7 +294,7 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     });
   }
 
-  handleTakeActionOnSubscriptionPackageAssignmentRecord(context: any, response: any) {
+  handleTakeActionOnPackageAssignmentRecord(context: any, response: any) {
     context.helperService.showAlertDialog({
       isSuccess: response['success'],
       message: response['message'],
@@ -223,7 +304,29 @@ export class SubscriptionPackageAssignmentComponent implements OnInit {
     if (response['success']) {
       context.getPackageAssignmentGridRecord(context.packageAssignmentSerialId);
     } else {
-      context.hideFormLoaderMask();
+      context.hideRecordUpdateFormLoaderMask();
     }
+  }
+
+  resetPackageAssignmentRecord() {
+    if (!this.isFlagListDirty()) {
+      this.getPackageAssignmentGridRecord(this.packageAssignmentSerialId);
+    } else {
+      this.helperService.showConfirmationDialog({
+        message: this.getConfirmationMessageForFormsDirty(),
+        onOk: () => {
+          this.setFlagListNotDirty();
+          this.getPackageAssignmentGridRecord(this.packageAssignmentSerialId);
+        },
+        onCancel: () => {
+          this.helperService.showAlertDialog({
+            isSuccess: false,
+            message: 'Action Aborted',
+            onButtonClicked: () => {
+            }
+          });
+        }
+      });
+    }    
   }
 }

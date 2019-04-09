@@ -99,7 +99,20 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
             this.toggleVisibilityDemoTrackerGrid();
           }
         }
-      },{
+      }, {
+        id: 'demoDateAndTime',
+        headerName: 'Demo Date And Time',
+        dataType: 'date',
+        mapping: 'demoDateAndTimeMillis',
+        renderer: GridCommonFunctions.renderDateFromMillisWithTime
+      }, {
+        id: 'demoStatus',
+        headerName: 'Demo Status',
+        dataType: 'list',
+        filterOptions: CommonFilterOptions.demoStatusFilterOptions,
+        mapping: 'demoStatus',
+        renderer: AdminCommonFunctions.demoStatusRenderer
+      }, {
         id: 'customerSerialId',
         headerName: 'Customer Serial',
         dataType: 'string',
@@ -145,19 +158,6 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         headerName: 'Tutor Contact Number',
         dataType: 'string',
         mapping: 'tutorContactNumber'
-      }, {
-        id: 'demoDateAndTime',
-        headerName: 'Demo Date And Time',
-        dataType: 'date',
-        mapping: 'demoDateAndTimeMillis',
-        renderer: GridCommonFunctions.renderDateFromMillisWithTime
-      }, {
-        id: 'demoStatus',
-        headerName: 'Demo Status',
-        dataType: 'list',
-        filterOptions: CommonFilterOptions.demoStatusFilterOptions,
-        mapping: 'demoStatus',
-        renderer: AdminCommonFunctions.demoStatusRenderer
       }, {
         id: 'enquirySerialId',
         headerName: 'Enquiry Serial Id',
@@ -347,7 +347,7 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
         dataType: 'string',
         mapping: 'rescheduledFromDemoSerialId',
         clickEvent: (record: GridRecord, column: Column, gridComponentObject :GridComponent) => {
-          this.interimHoldSelectedDemoSerialId = record.getProperty('rescheduledFromDemoSerialId');
+          this.interimHoldSelectedDemoSerialId = column.getValueForColumn(record);
           if (this.demoModifyAccess === null) {
             this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.demo_modify_data_access, 'POST', null, 'application/x-www-form-urlencoded');
           } else {

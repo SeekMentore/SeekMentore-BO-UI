@@ -12,6 +12,7 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-enquiry-registration',
@@ -20,53 +21,47 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 })
 export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('nonContactedEnquiryGrid')
-  nonContactedEnquiryGridObject: GridComponent;
-  nonContactedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('nonContactedFindTutorGrid')
+  nonContactedFindTutorGridObject: GridComponent;
+  nonContactedFindTutorGridMetaData: GridDataInterface;
 
-  @ViewChild('nonVerifiedEnquiryGrid')
-  nonVerifiedEnquiryGridObject: GridComponent;
-  nonVerifiedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('nonVerifiedFindTutorGrid')
+  nonVerifiedFindTutorGridObject: GridComponent;
+  nonVerifiedFindTutorGridMetaData: GridDataInterface;
 
-  @ViewChild('verifiedEnquiryGrid')
-  verifiedEnquiryGridObject: GridComponent;
-  verifiedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('verifiedFindTutorGrid')
+  verifiedFindTutorGridObject: GridComponent;
+  verifiedFindTutorGridMetaData: GridDataInterface;
 
-  @ViewChild('verificationFailedEnquiryGrid')
-  verificationFailedEnquiryGridObject: GridComponent;
-  verificationFailedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('verificationFailedFindTutorGrid')
+  verificationFailedFindTutorGridObject: GridComponent;
+  verificationFailedFindTutorGridMetaData: GridDataInterface;
 
-  @ViewChild('toBeReContactedEnquiryGrid')
-  toBeReContactedEnquiryGridObject: GridComponent;
-  toBeReContactedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('toBeReContactedFindTutorGrid')
+  toBeReContactedFindTutorGridObject: GridComponent;
+  toBeReContactedFindTutorGridMetaData: GridDataInterface;
 
-  @ViewChild('selectedEnquiryGrid')
-  selectedEnquiryGridObject: GridComponent;
-  selectedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('selectedFindTutorGrid')
+  selectedFindTutorGridObject: GridComponent;
+  selectedFindTutorGridMetaData: GridDataInterface;
 
-  @ViewChild('rejectedEnquiryGrid')
-  rejectedEnquiryGridObject: GridComponent;
-  rejectedEnquiryGridMetaData: GridDataInterface;
+  @ViewChild('rejectedFindTutorGrid')
+  rejectedFindTutorGridObject: GridComponent;
+  rejectedFindTutorGridMetaData: GridDataInterface;
 
-  showEnquiryData = false;
-  selectedEnquiryRecord: GridRecord = null;
-  interimHoldSelectedEnquiryRecord: GridRecord = null;
-  enquiryDataAccess: EnquiryDataAccess = null;
-  selectedRecordGridType: string = null;
-
-  interimHoldSelectedEnquiryGridObject: GridComponent = null;
+  showFindTutorData = false;
+  selectedFindTutorSerialId: string = null;
+  interimHoldSelectedFindTutorSerialId: string = null;
+  findTutorDataAccess: FindTutorDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
-    this.nonContactedEnquiryGridMetaData = null;
-    this.nonVerifiedEnquiryGridMetaData = null;
-    this.verifiedEnquiryGridMetaData = null;
-    this.verificationFailedEnquiryGridMetaData = null;
-    this.toBeReContactedEnquiryGridMetaData = null;
-    this.selectedEnquiryGridMetaData = null;
-    this.rejectedEnquiryGridMetaData = null;
-    this.showEnquiryData = false;
-    this.selectedEnquiryRecord = null;
-    this.enquiryDataAccess = null;
+    this.nonContactedFindTutorGridMetaData = null;
+    this.nonVerifiedFindTutorGridMetaData = null;
+    this.verifiedFindTutorGridMetaData = null;
+    this.verificationFailedFindTutorGridMetaData = null;
+    this.toBeReContactedFindTutorGridMetaData = null;
+    this.selectedFindTutorGridMetaData = null;
+    this.rejectedFindTutorGridMetaData = null;
   }
 
   ngOnInit() {
@@ -79,24 +74,23 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.nonContactedEnquiryGridObject.init();
-      this.nonVerifiedEnquiryGridObject.init();
-      this.verifiedEnquiryGridObject.init();
-      this.verificationFailedEnquiryGridObject.init();
-      this.toBeReContactedEnquiryGridObject.init();
-      this.selectedEnquiryGridObject.init();
-      this.rejectedEnquiryGridObject.init();
-    }, 0);
-
+      this.nonContactedFindTutorGridObject.init();
+      this.nonVerifiedFindTutorGridObject.init();
+      this.verifiedFindTutorGridObject.init();
+      this.verificationFailedFindTutorGridObject.init();
+      this.toBeReContactedFindTutorGridObject.init();
+      this.selectedFindTutorGridObject.init();
+      this.rejectedFindTutorGridObject.init();
+    }, 100);
     setTimeout(() => {
-      this.nonContactedEnquiryGridObject.refreshGridData();
-      this.nonVerifiedEnquiryGridObject.refreshGridData();
-      this.verifiedEnquiryGridObject.refreshGridData();
-      this.verificationFailedEnquiryGridObject.refreshGridData();
-      this.toBeReContactedEnquiryGridObject.refreshGridData();
-      this.selectedEnquiryGridObject.refreshGridData();
-      this.rejectedEnquiryGridObject.refreshGridData();
-    }, 0);
+      this.nonContactedFindTutorGridObject.refreshGridData();
+      this.nonVerifiedFindTutorGridObject.refreshGridData();
+      this.verifiedFindTutorGridObject.refreshGridData();
+      this.verificationFailedFindTutorGridObject.refreshGridData();
+      this.toBeReContactedFindTutorGridObject.refreshGridData();
+      this.selectedFindTutorGridObject.refreshGridData();
+      this.rejectedFindTutorGridObject.refreshGridData();
+    }, 100);
   }
 
   private getSelectionColumnBlacklistButton() {
@@ -105,9 +99,8 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       label: 'Blacklist',
       btnclass: 'btnReject',
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedEnquiryGridObject = gridComponentObject;
-        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
-        if (enquiryIdsList.length === 0) {
+        const findTutorSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'findTutorSerialId');
+        if (findTutorSerialIdsList.length === 0) {
           this.helperService.showAlertDialog({
             isSuccess: false,
             message: LcpConstants.grid_generic_no_record_selected_error,
@@ -115,20 +108,33 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
+          let extraContextProperties: {
+            action: string,
+            button: ActionButton,
+            gridComponentObject: GridComponent
+          } = {
+            action: 'Blacklist',
+            button: button,
+            gridComponentObject: gridComponentObject
+          };
+          button.disable();
+          gridComponentObject.showGridLoadingMask();
           this.helperService.showPromptDialog({
             required: true,
             titleText: 'Enter comments to Blacklist',
             placeholderText: 'Please provide your comments for blacklisting the enquiries.',
             onOk: (message) => {
               const data = {
-                allIdsList: enquiryIdsList.join(';'),
+                allIdsList: findTutorSerialIdsList.join(';'),
                 comments: message
               };
               this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.blackList_enquiry_requests, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+                LcpRestUrls.blackList_find_tutors, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded', false, null, extraContextProperties);
             },
             onCancel: () => {
+              button.enable();
+              gridComponentObject.hideGridLoadingMask();
             }
           });              
         }
@@ -141,7 +147,6 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       id: 'sendEmail',
       label: 'Send Email',
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        // Refer document
         const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
         if (selectedEmailsList.length === 0) {
           this.helperService.showAlertDialog({
@@ -173,73 +178,69 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
         }
       },
       columns: [{
+        id: 'findTutorSerialId',
+        headerName: 'Find Tutor Serial Id',
+        dataType: 'string',
+        mapping: 'findTutorSerialId',
+        clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+          this.interimHoldSelectedFindTutorSerialId = column.getValueForColumn(record);
+          if (this.findTutorDataAccess === null) {
+            this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.find_tutor_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+          } else {
+            this.selectedFindTutorSerialId = this.interimHoldSelectedFindTutorSerialId;
+            this.toggleVisibilityFindTutorGrid();
+          }
+        }
+        }, {
           id: 'name',
           headerName: 'Name',
           dataType: 'string',
-          mapping: 'name',
-          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-            this.interimHoldSelectedEnquiryRecord = record;
-            this.selectedRecordGridType = gridComponentObject.grid.id;    
-            if (this.enquiryDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.enquiry_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-            } else {
-              this.selectedEnquiryRecord = this.interimHoldSelectedEnquiryRecord;
-              this.toggleVisibilityEnquiryGrid();
-            }
-          }
-        },
-        {
-          id: 'enquiryDate',
-          headerName: 'Enquiry Date',
+          mapping: 'name'
+        }, {
+          id: 'applicationDate',
+          headerName: 'Application Date',
           dataType: 'date',
-          mapping: 'enquiryDateMillis',
+          mapping: 'applicationDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillisWithTime
-        },
-        {
-          id: 'enquiryStatus',
-          headerName: 'Enquiry Status',
+        }, {
+          id: 'applicationStatus',
+          headerName: 'Application Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.publicApplicationStatusFilterOptions,
-          mapping: 'enquiryStatus',
+          mapping: 'applicationStatus',
           renderer: AdminCommonFunctions.publicApplicationStatusRenderer
-        },
-        {
+        }, {
           id: 'contactNumber',
           headerName: 'Contact Number',
           dataType: 'string',
           mapping: 'contactNumber'
-        },
-        {
+        }, {
           id: 'emailId',
           headerName: 'Email Id',
           dataType: 'string',
           mapping: 'emailId'
-        },
-        {
+        }, {
           id: 'studentGrade',
           headerName: 'Student Grades',
           dataType: 'list',
           filterOptions: CommonFilterOptions.studentGradesFilterOptions,
           mapping: 'studentGrade',
           renderer: AdminCommonFunctions.studentGradesRenderer
-        },
-        {
+        }, {
           id: 'subjects',
           headerName: 'Subjects',
           dataType: 'list',
           filterOptions: CommonFilterOptions.subjectsFilterOptions,
           mapping: 'subjects',
           renderer: AdminCommonFunctions.subjectsRenderer
-        },
-        {
+        }, {
           id: 'location',
           headerName: 'Location',
           dataType: 'list',
           filterOptions: CommonFilterOptions.locationsFilterOptions,
           mapping: 'location',
           renderer: AdminCommonFunctions.locationsRenderer
-        },
-        {
+        }, {
           id: 'preferredTimeToCall',
           headerName: 'Preferred Time To Call',
           dataType: 'list',
@@ -247,22 +248,19 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
           mapping: 'preferredTimeToCall',
           multiList: true,
           renderer: AdminCommonFunctions.preferredTimeToCallMultiRenderer
-        },
-        {
+        }, {
           id: 'additionalDetails',
           headerName: 'Additional Details',
           dataType: 'string',
           mapping: 'additionalDetails',
           lengthyData: true
-        },
-        {
+        }, {
           id: 'addressDetails',
           headerName: 'Address Details',
           dataType: 'string',
           mapping: 'addressDetails',
           lengthyData: true
-        },
-        {
+        }, {
           id: 'reference',
           headerName: 'Reference',
           dataType: 'list',
@@ -293,9 +291,8 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
       label: label,
       btnclass: btnclass,
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedEnquiryGridObject = gridComponentObject;
-        const enquiryIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'enquiryId');
-        if (enquiryIdsList.length === 0) {
+        const findTutorSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'findTutorSerialId');
+        if (findTutorSerialIdsList.length === 0) {
           this.helperService.showAlertDialog({
             isSuccess: false,
             message: LcpConstants.grid_generic_no_record_selected_error,
@@ -303,21 +300,34 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
+          let extraContextProperties: {
+            action: string,
+            button: ActionButton,
+            gridComponentObject: GridComponent
+          } = {
+            action: actionText,
+            button: button,
+            gridComponentObject: gridComponentObject
+          };
+          button.disable();
+          gridComponentObject.showGridLoadingMask();
           this.helperService.showPromptDialog({
             required: commentsRequired,
             titleText: titleText,
             placeholderText: placeholderText,
             onOk: (message) => {                  
               const data = {
-                allIdsList: enquiryIdsList.join(';'),
+                allIdsList: findTutorSerialIdsList.join(';'),
                 button: actionText,
                 comments: message
               };
               this.utilityService.makerequest(this, this.handleSelectionActionRequest,
                 LcpRestUrls.take_action_on_find_tutor, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+                'application/x-www-form-urlencoded', false, null, extraContextProperties);
             },
             onCancel: () => {
+              button.enable();
+              gridComponentObject.hideGridLoadingMask();
             }
           });
         }
@@ -335,51 +345,45 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     let failVerificationButton = this.getCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
     let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
 
-    this.nonContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonContactedEnquiryGrid', 'Non Contacted Enquiries', '/rest/support/nonContactedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/nonContactedEnquiriesList',
+    this.nonContactedFindTutorGridMetaData = {
+      grid: this.getGridObject('nonContactedFindTutorGrid', 'Non Contacted Find Tutor', '/rest/support/nonContactedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/nonContactedFindTutorList',
                               [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
-      htmlDomElementId: 'non-contacted-enquiry-grid',
+      htmlDomElementId: 'non-contacted-find-tutor-grid',
       hidden: false
     };
-
-    this.nonVerifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('nonVerifiedEnquiryGrid', 'Non Verified Enquiries', '/rest/support/nonVerifiedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/nonVerifiedEnquiriesList', 
+    this.nonVerifiedFindTutorGridMetaData = {
+      grid: this.getGridObject('nonVerifiedFindTutorGrid', 'Non Verified Find Tutor', '/rest/support/nonVerifiedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/nonVerifiedFindTutorList', 
                               [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton], true),
-      htmlDomElementId: 'non-verified-enquiry-grid',
+      htmlDomElementId: 'non-verified-find-tutor-grid',
       hidden: false
     };
-
-    this.verifiedEnquiryGridMetaData = {
-      grid: this.getGridObject('verifiedEnquiryGrid', 'Verified Enquiries', '/rest/support/verifiedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/verifiedEnquiriesList', 
+    this.verifiedFindTutorGridMetaData = {
+      grid: this.getGridObject('verifiedFindTutorGrid', 'Verified Find Tutor', '/rest/support/verifiedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/verifiedFindTutorList', 
                               [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton], true),
-      htmlDomElementId: 'verified-enquiry-grid',
+      htmlDomElementId: 'verified-find-tutor-grid',
       hidden: false
     };
-
-    this.verificationFailedEnquiryGridMetaData = {
-      grid: this.getGridObject('verificationFailedEnquiryGrid', 'Verification Failed Enquiries', '/rest/support/verificationFailedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/verificationFailedEnquiriesList', 
+    this.verificationFailedFindTutorGridMetaData = {
+      grid: this.getGridObject('verificationFailedFindTutorGrid', 'Verification Failed Find Tutor', '/rest/support/verificationFailedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/verificationFailedFindTutorList', 
                               [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton], true),
-      htmlDomElementId: 'verification-failed-enquiry-grid',
+      htmlDomElementId: 'verification-failed-find-tutor-grid',
       hidden: false
     };
-
-    this.toBeReContactedEnquiryGridMetaData = {
-      grid: this.getGridObject('toBeReContactedEnquiryGrid', 'To Be Re-Contacted Enquiries', '/rest/support/toBeReContactedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/toBeReContactedEnquiriesList', 
+    this.toBeReContactedFindTutorGridMetaData = {
+      grid: this.getGridObject('toBeReContactedFindTutorGrid', 'To Be Re-Contacted Find Tutor', '/rest/support/toBeReContactedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/toBeReContactedFindTutorList', 
                               [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton], true),
-      htmlDomElementId: 'to-be-recontacted-enquiry-grid',
+      htmlDomElementId: 'to-be-recontacted-find-tutor-grid',
       hidden: false
     };
-
-    this.selectedEnquiryGridMetaData = {
-      grid: this.getGridObject('selectedEnquiryGrid', 'Selected Enquiries', '/rest/support/selectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/selectedEnquiriesList', [], true),
-      htmlDomElementId: 'selected-enquiry-grid',
+    this.selectedFindTutorGridMetaData = {
+      grid: this.getGridObject('selectedFindTutorGrid', 'Selected Find Tutor', '/rest/support/selectedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/selectedFindTutorList', [], true),
+      htmlDomElementId: 'selected-find-tutor-grid',
       hidden: false
     };
-
-    this.rejectedEnquiryGridMetaData = {
-      grid: this.getGridObject('rejectedEnquiryGrid', 'Rejected Enquiries', '/rest/support/rejectedEnquiriesList', '/rest/support/downloadAdminReportFindTutorList', '/rejectedEnquiriesList', 
+    this.rejectedFindTutorGridMetaData = {
+      grid: this.getGridObject('rejectedFindTutorGrid', 'Rejected Find Tutor', '/rest/support/rejectedFindTutorList', '/rest/support/downloadAdminReportFindTutorList', '/rejectedFindTutorList', 
                               [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton], true),
-      htmlDomElementId: 'rejected-enquiry-grid',
+      htmlDomElementId: 'rejected-find-tutor-grid',
       hidden: false
     };
   }
@@ -393,17 +397,17 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.enquiryDataAccess = {
+      context.findTutorDataAccess = {
         success: response.success,
         message: response.message,
-        formDataEditAccess: response.formDataEditAccess
+        findTutorFormDataEditAccess: response.findTutorFormDataEditAccess
       };
-      context.selectedEnquiryRecord = context.interimHoldSelectedEnquiryRecord;
-      context.toggleVisibilityEnquiryGrid();
+      context.selectedFindTutorSerialId = context.interimHoldSelectedFindTutorSerialId;
+      context.toggleVisibilityFindTutorGrid();
     }
   }
 
-  handleSelectionActionRequest(context: any, response: any) {
+  handleSelectionActionRequest(context: any, response: any, extraContextProperties: Object) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
         isSuccess: response['success'],
@@ -412,41 +416,88 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.interimHoldSelectedEnquiryGridObject.refreshGridData();
+      if (CommonUtilityFunctions.checkObjectAvailability(extraContextProperties)) {
+        let action: string = extraContextProperties['action'];
+        let button: ActionButton = extraContextProperties['button'];
+        let gridComponentObject: GridComponent = extraContextProperties['gridComponentObject'];
+        button.enable();
+        gridComponentObject.hideGridLoadingMask();
+        gridComponentObject.refreshGridData();
+        switch(action) {
+          case 'contacted' : {
+            context.nonVerifiedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'recontact' : {
+            context.toBeReContactedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'verify' : {
+            context.verifiedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'reverify' : {
+            context.verifiedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'recontacted' : {
+            context.nonVerifiedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'select' : {
+            context.selectedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'failverify' : {
+            context.verificationFailedFindTutorGridObject.refreshGridData();
+            break;
+          }
+          case 'reject' : {
+            context.rejectedFindTutorGridObject.refreshGridData();
+            break;
+          }
+        }
+      } else {
+        context.helperService.showAlertDialog({
+          isSuccess: false,
+          message: 'Extra properties got damaged in the process, please refresh the page',
+          onButtonClicked: () => {
+          }
+        });
+      }
     }
   }
 
-  toggleVisibilityEnquiryGrid() {
-    if (this.showEnquiryData === true) {
-      this.showEnquiryData = false;
-      this.selectedEnquiryRecord = null;
+  toggleVisibilityFindTutorGrid() {
+    if (this.showFindTutorData === true) {
+      this.showFindTutorData = false;
+      this.selectedFindTutorSerialId = null;
       setTimeout(() => {
-        this.nonContactedEnquiryGridObject.init();
-        this.nonVerifiedEnquiryGridObject.init();
-        this.verifiedEnquiryGridObject.init();
-        this.verificationFailedEnquiryGridObject.init();
-        this.toBeReContactedEnquiryGridObject.init();
-        this.selectedEnquiryGridObject.init();
-        this.rejectedEnquiryGridObject.init();
+        this.nonContactedFindTutorGridObject.init();
+        this.nonVerifiedFindTutorGridObject.init();
+        this.verifiedFindTutorGridObject.init();
+        this.verificationFailedFindTutorGridObject.init();
+        this.toBeReContactedFindTutorGridObject.init();
+        this.selectedFindTutorGridObject.init();
+        this.rejectedFindTutorGridObject.init();
       }, 100);   
       setTimeout(() => {
-        this.nonContactedEnquiryGridObject.refreshGridData();
-        this.nonVerifiedEnquiryGridObject.refreshGridData();
-        this.verifiedEnquiryGridObject.refreshGridData();
-        this.verificationFailedEnquiryGridObject.refreshGridData();
-        this.toBeReContactedEnquiryGridObject.refreshGridData();
-        this.selectedEnquiryGridObject.refreshGridData();
-        this.rejectedEnquiryGridObject.refreshGridData();
-      }, 200);
+        this.nonContactedFindTutorGridObject.refreshGridData();
+        this.nonVerifiedFindTutorGridObject.refreshGridData();
+        this.verifiedFindTutorGridObject.refreshGridData();
+        this.verificationFailedFindTutorGridObject.refreshGridData();
+        this.toBeReContactedFindTutorGridObject.refreshGridData();
+        this.selectedFindTutorGridObject.refreshGridData();
+        this.rejectedFindTutorGridObject.refreshGridData();
+      }, 100);
     } else {
-      this.showEnquiryData = true;
+      this.showFindTutorData = true;
     }
   }
-
 }
 
-export interface EnquiryDataAccess {
+export interface FindTutorDataAccess {
   success: boolean;
   message: string;
-  formDataEditAccess: boolean;
+  findTutorFormDataEditAccess: boolean;
 }

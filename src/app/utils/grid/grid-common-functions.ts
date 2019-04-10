@@ -95,7 +95,7 @@ export class GridCommonFunctions {
     return '';
   }
 
-  public static lookupRenderer(record: GridRecord, column: Column, lookupList: any []) {
+  public static lookupRenderer(record: GridRecord, column: Column, lookupList: { value: any, label: any }[]) {
     var value = column.getValueForColumn(record);    	
     return GridCommonFunctions.lookupRendererForValue(value, lookupList);
   }
@@ -116,12 +116,12 @@ export class GridCommonFunctions {
     return returnValue;
   }
 
-  public static lookupMultiRenderer(record: GridRecord, column: Column, lookupList: any [], valueSplitter: string) {
+  public static lookupMultiRenderer(record: GridRecord, column: Column, lookupList: { value: any, label: any }[], valueSplitter: string) {
     var multivalue = column.getValueForColumn(record);    
     return GridCommonFunctions.lookupMultiRendererForValue(multivalue.split(valueSplitter), lookupList);
   }
 
-  public static lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: any [], seperationJoiner: string = '; ') {
+  public static lookupMultiRendererForValue(multivalueSplittedList: any [], lookupList: { value: any, label: any }[], seperationJoiner: string = '; ') {
     var returnHTMLList = [];
     multivalueSplittedList.forEach(splittedValue => {
       returnHTMLList.push(GridCommonFunctions.lookupRendererForValue(splittedValue, lookupList));

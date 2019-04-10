@@ -106,6 +106,31 @@ export class CommonUtilityFunctions {
     return '';
   }
 
+  // For showing Date (shorter version) on all UI Screens
+  public static getDateStringShortVersionInDDMMYYYYHHmmSS(datemillisInUTC: number) {
+    if (datemillisInUTC > 0 && CommonUtilityFunctions.checkObjectAvailability(datemillisInUTC)) {
+      const date_value = new Date(datemillisInUTC);
+      let hours: number = date_value.getHours();
+      let am_pm: string = 'AM';
+      if (hours > 12) {
+        am_pm = 'PM';
+      }
+      if (hours < 1) {
+        hours = 12 - hours;
+      } else if (hours > 12) {
+        hours = hours - 12;
+      }  
+      const dateString = (date_value.getDate() > 9 ? date_value.getDate() : ('0' + date_value.getDate()))
+        + '-' + CommonUtilityFunctions.MONTH_ABBR_NAME_ARRAY[date_value.getMonth()]
+        + '-' + date_value.getFullYear()
+        + ' - ' + (hours > 9 ? hours : ('0' + hours))
+        + ':' + (date_value.getMinutes() > 9 ? date_value.getMinutes() : ('0' + date_value.getMinutes()))
+        + ' ' + am_pm;;
+      return dateString;
+    }
+    return '';
+  }
+
   static getSelectedFilterItems(allowedOptions: { value: any, label: any }[], selectedValues: string) {
     if (!CommonUtilityFunctions.checkStringAvailability(selectedValues)) {
       selectedValues = '';

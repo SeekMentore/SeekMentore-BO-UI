@@ -23,8 +23,8 @@ export class LcpRestUrls {
   static blackList_become_tutors = '/rest/support/blacklistBecomeTutorList';
   static take_action_on_become_tutor = '/rest/support/takeActionOnBecomeTutor';
   static become_tutor_update_record = '/rest/support/updateBecomeTutorRecord';
-  static enquiry_request_data_access = '/rest/support/enquiryRequestCheckDataAccess';
-  static blackList_enquiry_requests = '/rest/support/blacklistEnquiryRequestList';
+  static find_tutor_data_access = '/rest/support/findTutorCheckDataAccess';
+  static blackList_find_tutors = '/rest/support/blacklistFindTutorList';
   static take_action_on_find_tutor = '/rest/support/takeActionOnFindTutor';
   static enquiry_request_update_record = '/rest/support/updateFindTutorRecord';
   static subscription_request_data_access = '/rest/support/subscriptionRequestCheckDataAccess';
@@ -69,4 +69,5 @@ export class LcpRestUrls {
   static remove_registered_tutor_document_file = '/rest/registeredTutor/removeRegisteredTutorDocumentFile';
   static get_registered_tutor_document_count_and_existence = '/rest/registeredTutor/getRegisteredTutorDocumentCountAndExistence';
   static get_enquiry_record = '/rest/sales/getEnquiryRecord';
+  static get_become_tutor_record = '/rest/support/getBecomeTutorRecord';
 }

@@ -1,541 +1,504 @@
-<div class="form-container-div">
-  <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
-    <input type="text" value="" size="10" name="tentativeTutorId" id="profileDownload-tentativeTutorId" />
-  </form>
-  <form class="form-container" style="max-width: 80%">
-    <div *ngIf="tutorDataAccess.formDataEditAccess && !formEditMandatoryDisbaled"
-          class="form-container-toggle-button">
-      <button type="submit"
-            class="btnSubmit"
-            style="width: 140px; height: 46px;"
-            (click)="downloadProfile()">            
-            <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download
-      </button>
-      <label class="tab_container" (change)="editRecordForm = false;">
-        <input type="radio" checked name="editFormChoice">
-        <span class="tab_checkmark left">View</span>
-      </label>
-      <label class="tab_container" (change)="editRecordForm = true;">
-        <input type="radio" name="editFormChoice">
-        <span class="tab_checkmark right">Edit</span>
-      </label>
-    </div>
-    <table class="form-container-generic-table">
-      <tr>
-        <td class="td-label"><label>First Name</label></td>
-        <td><input class="input_field" type="text" value="{{tutorRecord.property['firstName']}}"
-                    [disabled]="!editRecordForm"
-                    (change)="updateTutorProperty('firstName', $event, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Last Name</label></td>
-        <td><input class="input_field" type="text" value="{{tutorRecord.property['lastName']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('lastName', $event, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Application Date</label></td>        
-        <td><label class="data">{{getDateFromMillis(tutorRecord.property['applicationDateMillis'])}}</label></td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Application Status</label></td>
-        <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['applicationStatus'], applicationStatusFilterOptions)}}</label></td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Date of Brith</label></td>
-        <td><input class="input_field" type="date" value="{{getDateForDateInputParam(tutorRecord.property['dateOfBirth'])}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('dateOfBirth', $event, 'date')"></td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Contact Number</label></td>
-        <td><input class="input_field" type="text" value="{{tutorRecord.property['contactNumber']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('contactNumber', $event, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Email Id</label></td>
-        <td><input class="input_field" type="email" value="{{tutorRecord.property['emailId']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('emailId', $event, 'string')">
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Gender</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
-                                   [(ngModel)]="selectedGenderOption" name="genderOption"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('gender', $event, 'list')"
-                                   (onDeSelect)="updateTutorProperty('gender', $event, 'list', true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Qualification</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
-                                   [(ngModel)]="selectedQualificationOption" name="qualificationOption"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('qualification', $event, 'list')"
-                                   (onDeSelect)="updateTutorProperty('qualification', $event, 'list', true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Primary Profession</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
-                                   [(ngModel)]="selectedProfessionOption" name="professionOption"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('primaryProfession', $event, 'list')"
-                                   (onDeSelect)="updateTutorProperty('primaryProfession', $event, 'list', true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Transport Mode</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
-                                   [(ngModel)]="selectedTransportOption" name="transportOption"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('transportMode', $event, 'list')"
-                                   (onDeSelect)="updateTutorProperty('transportMode', $event, 'list', true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Teaching Experience</label></td>
-        <td><input class="input_field" type="number" value="{{tutorRecord.property['teachingExp']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateTutorProperty('teachingExp', $event, 'number')"></td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Student Grades</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
-                                   [(ngModel)]="selectedStudentGradeOptions" name="studentGradeOptions"
-                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('studentGrades', $event, 'multilist')"
-                                   (onDeSelect)="updateTutorProperty('studentGrades', $event, 'multilist', true)"
-                                   (onDeSelectAll)="updateTutorProperty('studentGrades', $event, 'multilist', true, true)"
-                                   (onSelectAll)="updateTutorProperty('studentGrades', $event, 'multilist', false, true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Subjects</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
-                                   [(ngModel)]="selectedSubjectOptions" name="subjectOptions"
-                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('subjects', $event, 'multilist')"
-                                   (onDeSelect)="updateTutorProperty('subjects', $event, 'multilist', true)"
-                                   (onDeSelectAll)="updateTutorProperty('subjects', $event, 'multilist', true, true)"
-                                   (onSelectAll)="updateTutorProperty('subjects', $event, 'multilist', false, true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Locations</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
-                                   [(ngModel)]="selectedLocationOptions" name="locationOptions"
-                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('locations', $event, 'multilist')"
-                                   (onDeSelect)="updateTutorProperty('locations', $event, 'multilist', true)"
-                                   (onDeSelectAll)="updateTutorProperty('locations', $event, 'multilist', true, true)"
-                                   (onSelectAll)="updateTutorProperty('locations', $event, 'multilist', false, true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Preferred Time To Call</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
-                                   [(ngModel)]="selectedCallTimeOptions" name="callTimeOptions"
-                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('preferredTimeToCall', $event, 'multilist')"
-                                   (onDeSelect)="updateTutorProperty('preferredTimeToCall', $event, 'multilist', true)"
-                                   (onDeSelectAll)="updateTutorProperty('preferredTimeToCall', $event, 'multilist', true, true)"
-                                   (onSelectAll)="updateTutorProperty('preferredTimeToCall', $event, 'multilist', false, true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Additional Details</label></td>
-        <td>
-            <textarea 
-                    class="textarea_field"
-                    [disabled]="!editRecordForm" 
-                    (change)="updateTutorProperty('additionalDetails', $event, 'string')"
-                    >{{tutorRecord.property['additionalDetails']}}</textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Address Details</label></td>
-        <td>
-            <textarea 
-                    class="textarea_field"
-                    [disabled]="!editRecordForm" 
-                    (change)="updateTutorProperty('addressDetails', $event, 'string')"
-                    >{{tutorRecord.property['addressDetails']}}</textarea>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Reference</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
-                                   [(ngModel)]="selectedReferenceOption" name="referenceOption"
-                                   [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('reference', $event, 'list')"
-                                   (onDeSelect)="updateTutorProperty('reference', $event, 'list', true)">
-                                   
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Preferred Teaching Type</label></td>
-        <td>
-          <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
-                                   [(ngModel)]="selectedTeachingTypeOptions" name="teachingTypeOptions"
-                                   [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateTutorProperty('preferredTeachingType', $event, 'multilist')"
-                                   (onDeSelect)="updateTutorProperty('preferredTeachingType', $event, 'multilist', true)"
-                                   (onDeSelectAll)="updateTutorProperty('preferredTeachingType', $event, 'multilist', true, true)"
-                                   (onSelectAll)="updateTutorProperty('preferredTeachingType', $event, 'multilist', false, true)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Record Last Updated</label></td>
-        <td><label class="data">{{getDateFromMillis(tutorRecord.property['recordLastUpdatedMillis'])}}</label></td>
-      </tr>
-      <tr>
-        <td class="td-label"><label>Updated By</label></td>
-        <td><label class="data">{{tutorRecord.property['updatedByName']}}</label></td>
-      </tr>      
-      <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
-        <td class="td-label">
-            <i
-                id="employee-actions-details-expander"
-                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                (click)="showEmployeeActionDetails = true"></i>
-        </td>
-        <td>
-          Show Action Details
-        </td>
-      </tr>  
-      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
-        <td colspan="2">          
-          <table width="100%">
-              <tr>
-                <td class="td-label">
-                    <i
-                        id="employee-actions-details-collapser"
-                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                        (click)="showEmployeeActionDetails = false"></i>
-                </td>
-                <td colspan="5">
-                  Hide Action Details
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Is Contacted</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
-                <td class="td-label"><label>Who Contacted</label></td>
-                <td><label class="data">{{tutorRecord.property['whoContactedName']}}</label></td>              
-                <td class="td-label"><label>Contacted Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['contactedDateMillis'])}}</label></td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Contacted Remarks</label></td>
-                <td colspan="5">
-                  <div class="form-remakrs">{{tutorRecord.property['contactedRemarks']}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Is Authentication Verified</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
-                <td class="td-label"><label>Who Verified</label></td>
-                <td><label class="data">{{tutorRecord.property['whoVerifiedName']}}</label></td>              
-                <td class="td-label"><label>Verification Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['verificationDateMillis'])}}</label></td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Verification Remarks</label></td>
-                <td colspan="5">
-                  <div class="form-remakrs">{{tutorRecord.property['verificationRemarks']}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Is To Be Recontacted</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
-                <td class="td-label"><label>Who Suggested For Recontact</label></td>
-                <td><label class="data">{{tutorRecord.property['whoSuggestedForRecontactName']}}</label></td>              
-                <td class="td-label"><label>Suggestion Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['suggestionDateMillis'])}}</label></td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Suggestion Remarks</label></td>
-                <td colspan="5">
-                  <div class="form-remakrs">{{tutorRecord.property['suggestionRemarks']}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label></label></td>
-                <td><label class="data"></label></td>
-                <td class="td-label"><label>Who Recontacted</label></td>
-                <td><label class="data">{{tutorRecord.property['whoRecontactedName']}}</label></td>              
-                <td class="td-label"><label>Recontacted Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['recontactedDateMillis'])}}</label></td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Recontacted Remarks</label></td>
-                <td colspan="5">
-                  <div class="form-remakrs">{{tutorRecord.property['recontactedRemarks']}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Is Selected</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
-                <td class="td-label"><label>Who Selected</label></td>
-                <td><label class="data">{{tutorRecord.property['whoSelectedName']}}</label></td>              
-                <td class="td-label"><label>Selection Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['selectionDateMillis'])}}</label></td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Selection Remarks</label></td>
-                <td colspan="5">
-                  <div class="form-remakrs">{{tutorRecord.property['selectionRemarks']}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Is Rejected</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
-                <td class="td-label"><label>Who Rejected</label></td>
-                <td><label class="data">{{tutorRecord.property['whoRejectedName']}}</label></td>              
-                <td class="td-label"><label>Rejection Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['rejectionDateMillis'])}}</label></td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Rejection Remarks</label></td>
-                <td colspan="5">
-                  <div class="form-remakrs">{{tutorRecord.property['rejectionRemarks']}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-label"><label>Rejection Count</label></td>
-                <td><label class="data">{{tutorRecord.property['rejectionCount']}}</label></td>
-                <td class="td-label"><label>Re-Applied</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(tutorRecord.property['reApplied'], yesNoFilterOptions)}}</label></td>
-                <td class="td-label"><label>Previous Application Date</label></td>
-                <td><label class="data">{{getDateFromMillis(tutorRecord.property['previousApplicationDateMillis'])}}</label></td>
-              </tr>             
-          </table>
-        </td>
-      </tr>
-      <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
-        <td class="td-label">
-            <i
-                id="employee-actions-details-expander"
-                class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                (click)="showEmployeeActionButtons = true"></i>
-        </td>
-        <td>
-          Show Action Buttons
-        </td>
-      </tr>  
-      <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
-        <td colspan="2">          
-          <table width="100%">
-              <tr>
-                <td class="td-label">
-                    <i
-                        id="employee-actions-details-collapser"
-                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                        (click)="showEmployeeActionButtons = false"></i>
-                </td>
-                <td colspan="3">
-                  Hide Action Buttons
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'nonContactedBecomeTutorGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
-                          Contacted
-                  </button>
-                </td>              
-                <td>
-                  <button type="submit"
-                          class="btnReset"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
-                          To Be Re-Contacted
-                  </button>
-                </td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'nonVerifiedBecomeTutorGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
-                          Verify
-                  </button>
-                </td>              
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
-                          Fail Verify
-                  </button>
-                </td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'verifiedBecomeTutorGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
-                          Select
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'verificationFailedBecomeTutorGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
-                          Re-Verify
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'toBeReContactedBecomeTutorGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnReset"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
-                          Re-Contacted
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'rejectedBecomeTutorGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnReset"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
-                          Re-Contacted
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
-                          Select
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="4"></td>
-              </tr>                         
-          </table>
-        </td>
-      </tr>
-    </table>        
-    <button *ngIf="tutorDataAccess.formDataEditAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
-            class="ok-button form-container-update-button"
-            (click)="updateTutorRecord()">            
-            Update
-    </button>
-  </form>
+<div>
+  <div class="form-container-div">
+    <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
+      <input type="text" value="" size="10" name="becomeTutorSerialId" id="profileDownload-becomeTutorSerialId" />
+    </form>
+    <form *ngIf="showRecordUpdateForm" class="form-container" style="max-width: 80%">
+      <div class="form-container-title">
+        <span>Record Update Form</span>
+      </div>
+      <div class="form-container-toggle-button">
+        <div>
+            <button type="submit"
+                  class="btnSubmit"
+                  style="width: 100%;"
+                  (click)="downloadProfile()">            
+                  <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Profile
+            </button>
+        </div>
+        <div *ngIf="!showRecordUpdateEditControlSection" style="margin-right: 1%;margin-bottom: .5rem;"> </div>
+        <div *ngIf="showRecordUpdateEditControlSection">
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(false)">
+            <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark left">View</span>
+          </label>
+          <label class="tab_container" (change)="setRecordUpdateFormEditStatus(true)">
+            <input type="radio" [checked]="editRecordForm" name="editFormChoice">
+            <span class="tab_checkmark right">Edit</span>
+          </label>
+        </div>
+      </div>
+      <table class="form-container-generic-table">
+        <tr>
+          <td class="td-label"></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>First Name</label></td>
+          <td><input  class="input_field" 
+                      id="firstName"
+                      type="text" 
+                      value="{{becomeTutorRecord.firstName}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateBecomeTutorProperty('firstName', $event, 'string')">
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Last Name</label></td>
+          <td><input  class="input_field" 
+                      id="lastName"
+                      type="text" 
+                      value="{{becomeTutorRecord.lastName}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateBecomeTutorProperty('lastName', $event, 'string')">
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Application Date</label></td>        
+          <td><label class="data">{{applicationDateDisplayTime}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Application Status</label></td>
+          <td><label class="data">{{applicationStatusLookupValue}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Date of Brith</label></td>
+          <td><input class="input_field"
+                     id="dateOfBirth"
+                     type="date" 
+                     value="{{dateOfBirthValue}}"
+                     [disabled]="!editRecordForm"
+                     (change)="updateBecomeTutorProperty('dateOfBirth', $event, 'date')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Contact Number</label></td>
+          <td><input  class="input_field" 
+                      id="contactNumber"
+                      type="text" 
+                      value="{{becomeTutorRecord.contactNumber}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateBecomeTutorProperty('contactNumber', $event, 'string')">
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Email Id</label></td>
+          <td><input  class="input_field"
+                      id="emailId" 
+                      type="email" 
+                      value="{{becomeTutorRecord.emailId}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateBecomeTutorProperty('emailId', $event, 'string')">
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Gender</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Gender'" [data]="genderFilterOptions"
+                                     [(ngModel)]="selectedGenderOption" name="genderOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('gender', $event, 'list')"
+                                     (onDeSelect)="updateBecomeTutorProperty('gender', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Qualification</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Qualification'" [data]="qualificationFilterOptions"
+                                     [(ngModel)]="selectedQualificationOption" name="qualificationOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('qualification', $event, 'list')"
+                                     (onDeSelect)="updateBecomeTutorProperty('qualification', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Primary Profession</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Primary Profession'" [data]="primaryProfessionFilterOptions"
+                                     [(ngModel)]="selectedProfessionOption" name="professionOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('primaryProfession', $event, 'list')"
+                                     (onDeSelect)="updateBecomeTutorProperty('primaryProfession', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Transport Mode</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Transport Mode'" [data]="transportModeFilterOptions"
+                                     [(ngModel)]="selectedTransportOption" name="transportOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('transportMode', $event, 'list')"
+                                     (onDeSelect)="updateBecomeTutorProperty('transportMode', $event, 'list', true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Teaching Experience</label></td>
+          <td><input  class="input_field" 
+                      id="teachingExp"
+                      type="number" 
+                      value="{{becomeTutorRecord.teachingExp}}"
+                      [disabled]="!editRecordForm"
+                      (change)="updateBecomeTutorProperty('teachingExp', $event, 'number')"></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Student Grades</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Student Grades'" [data]="studentGradesFilterOptions"
+                                     [(ngModel)]="selectedStudentGradeOptions" name="studentGradeOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('studentGrades', $event, 'multilist')"
+                                     (onDeSelect)="updateBecomeTutorProperty('studentGrades', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateBecomeTutorProperty('studentGrades', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateBecomeTutorProperty('studentGrades', $event, 'multilist', false, true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Subjects</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Subjects'" [data]="subjectsFilterOptions"
+                                     [(ngModel)]="selectedSubjectOptions" name="subjectOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('subjects', $event, 'multilist')"
+                                     (onDeSelect)="updateBecomeTutorProperty('subjects', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateBecomeTutorProperty('subjects', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateBecomeTutorProperty('subjects', $event, 'multilist', false, true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Locations</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
+                                     [(ngModel)]="selectedLocationOptions" name="locationOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('locations', $event, 'multilist')"
+                                     (onDeSelect)="updateBecomeTutorProperty('locations', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateBecomeTutorProperty('locations', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateBecomeTutorProperty('locations', $event, 'multilist', false, true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Preferred Time To Call</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
+                                     [(ngModel)]="selectedCallTimeOptions" name="callTimeOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('preferredTimeToCall', $event, 'multilist')"
+                                     (onDeSelect)="updateBecomeTutorProperty('preferredTimeToCall', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateBecomeTutorProperty('preferredTimeToCall', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateBecomeTutorProperty('preferredTimeToCall', $event, 'multilist', false, true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Additional Details</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      id="additionalDetails"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateBecomeTutorProperty('additionalDetails', $event, 'string')"
+              >{{becomeTutorRecord.additionalDetails}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Address Details</label></td>
+          <td>
+              <textarea 
+                      class="textarea_field"
+                      id="addressDetails"
+                      [disabled]="!editRecordForm" 
+                      (change)="updateBecomeTutorProperty('addressDetails', $event, 'string')"
+              >{{becomeTutorRecord.addressDetails}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Reference</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
+                                     [(ngModel)]="selectedReferenceOption" name="referenceOption"
+                                     [settings]="singleSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('reference', $event, 'list')"
+                                     (onDeSelect)="updateBecomeTutorProperty('reference', $event, 'list', true)">
+                                     
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Preferred Teaching Type</label></td>
+          <td>
+            <ng-multiselect-dropdown [placeholder]="'Preferred Teaching Type'" [data]="preferredTeachingTypeFilterOptions"
+                                     [(ngModel)]="selectedTeachingTypeOptions" name="teachingTypeOptions"
+                                     [settings]="multiSelectOptions" [disabled]="!editRecordForm"
+                                     (onSelect)="updateBecomeTutorProperty('preferredTeachingType', $event, 'multilist')"
+                                     (onDeSelect)="updateBecomeTutorProperty('preferredTeachingType', $event, 'multilist', true)"
+                                     (onDeSelectAll)="updateBecomeTutorProperty('preferredTeachingType', $event, 'multilist', true, true)"
+                                     (onSelectAll)="updateBecomeTutorProperty('preferredTeachingType', $event, 'multilist', false, true)">
+            </ng-multiselect-dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Record Last Updated</label></td>
+          <td><label class="data">{{becomeTutorRecordLastUpdatedDateDisplayTime}}</label></td>
+        </tr>
+        <tr>
+          <td class="td-label"><label>Updated By</label></td>
+          <td><label class="data">{{becomeTutorRecord.updatedByName}}</label></td>
+        </tr>      
+        <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
+          <td class="td-label">
+              <i
+                  id="employee-actions-details-expander"
+                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                  (click)="showEmployeeActionDetails = true"></i>
+          </td>
+          <td>
+            Show Action Details
+          </td>
+        </tr>
+        <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+          <td class="td-label">
+              <i
+                  id="employee-actions-details-collapser"
+                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                  (click)="showEmployeeActionDetails = false"></i>
+          </td>
+          <td>
+            Hide Action Details
+          </td>
+        </tr>  
+        <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+          <td colspan="2">          
+            <table width="100%">
+                <tr>
+                  <td class="td-label"><label>Is Contacted</label></td>
+                  <td><label class="data">{{isContactedLookupValue}}</label></td>              
+                  <td class="td-label"><label>Who Contacted</label></td>
+                  <td><label class="data">{{becomeTutorRecord.whoContactedName}}</label></td>              
+                  <td class="td-label"><label>Contacted Date</label></td>
+                  <td><label class="data">{{contactedDateDisplayTime}}</label></td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Contacted Remarks</label></td>
+                  <td colspan="5">
+                    <div class="form-remakrs">{{becomeTutorRecord.contactedRemarks}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Is Authentication Verified</label></td>
+                  <td><label class="data">{{isAuthenticationVerifiedLookupValue}}</label></td>
+                  <td class="td-label"><label>Who Verified</label></td>
+                  <td><label class="data">{{becomeTutorRecord.whoVerifiedName}}</label></td>              
+                  <td class="td-label"><label>Verification Date</label></td>
+                  <td><label class="data">{{verificationDateDisplayTime}}</label></td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Verification Remarks</label></td>
+                  <td colspan="5">
+                    <div class="form-remakrs">{{becomeTutorRecord.verificationRemarks}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Is To Be Recontacted</label></td>
+                  <td><label class="data">{{isToBeRecontactedLookupValue}}</label></td>
+                  <td class="td-label"><label>Who Suggested For Recontact</label></td>
+                  <td><label class="data">{{becomeTutorRecord.whoSuggestedForRecontactName}}</label></td>              
+                  <td class="td-label"><label>Suggestion Date</label></td>
+                  <td><label class="data">{{suggestionDateDisplayTime}}</label></td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Suggestion Remarks</label></td>
+                  <td colspan="5">
+                    <div class="form-remakrs">{{becomeTutorRecord.suggestionRemarks}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label></label></td>
+                  <td><label class="data"></label></td>
+                  <td class="td-label"><label>Who Recontacted</label></td>
+                  <td><label class="data">{{becomeTutorRecord.whoRecontactedName}}</label></td>              
+                  <td class="td-label"><label>Recontacted Date</label></td>
+                  <td><label class="data">{{recontactedDateDisplayTime}}</label></td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Recontacted Remarks</label></td>
+                  <td colspan="5">
+                    <div class="form-remakrs">{{becomeTutorRecord.recontactedRemarks}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Is Selected</label></td>
+                  <td><label class="data">{{isSelectedLookupValue}}</label></td>
+                  <td class="td-label"><label>Who Selected</label></td>
+                  <td><label class="data">{{becomeTutorRecord.whoSelectedName}}</label></td>              
+                  <td class="td-label"><label>Selection Date</label></td>
+                  <td><label class="data">{{selectionDateDisplayTime}}</label></td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Selection Remarks</label></td>
+                  <td colspan="5">
+                    <div class="form-remakrs">{{becomeTutorRecord.selectionRemarks}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Is Rejected</label></td>
+                  <td><label class="data">{{isRejectedLookupValue}}</label></td>
+                  <td class="td-label"><label>Who Rejected</label></td>
+                  <td><label class="data">{{becomeTutorRecord.whoRejectedName}}</label></td>              
+                  <td class="td-label"><label>Rejection Date</label></td>
+                  <td><label class="data">{{rejectionDateDisplayTime}}</label></td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Rejection Remarks</label></td>
+                  <td colspan="5">
+                    <div class="form-remakrs">{{becomeTutorRecord.rejectionRemarks}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-label"><label>Rejection Count</label></td>
+                  <td><label class="data">{{becomeTutorRecord.rejectionCount}}</label></td>
+                  <td class="td-label"><label>Re-Applied</label></td>
+                  <td><label class="data">{{reAppliedLookupValue}}</label></td>
+                  <td class="td-label"><label>Previous Application Date</label></td>
+                  <td><label class="data">{{previousApplicationDateDisplayTime}}</label></td>
+                </tr>             
+            </table>
+          </td>
+        </tr>
+        <tr style="background-color: beige;" *ngIf="!showEmployeeActionButtons && !takeActionDisabled">
+          <td class="td-label">
+              <i
+                  id="employee-actions-details-expander"
+                  class="fas fa-plus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                  (click)="showEmployeeActionButtons = true"></i>
+          </td>
+          <td>
+            Show Action Buttons
+          </td>
+        </tr>
+        <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
+          <td class="td-label">
+              <i
+                  id="employee-actions-details-collapser"
+                  class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                  (click)="showEmployeeActionButtons = false"></i>
+          </td>
+          <td>
+            Hide Action Buttons
+          </td>
+        </tr>  
+        <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
+          <td></td>
+          <td>           
+            <table width="100%">
+                <tr>
+                  <td>
+                    <button type="submit"
+                            *ngIf="canBlacklist"
+                            class="btnReject"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                            Blacklist
+                    </button>
+                  </td> 
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeContacted"
+                            class="btnSubmit"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
+                            Contacted
+                    </button>
+                  </td>
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeReverified"
+                            class="btnSubmit"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
+                            Re-Verify
+                    </button>
+                  </td> 
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeVerified"
+                            class="btnSubmit"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
+                            Verify
+                    </button>
+                  </td>
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeFailVerified"
+                            class="btnReject"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
+                            Fail Verify
+                    </button>
+                  </td>                 
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeToBeRecontact"
+                            class="btnReset"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
+                            To Be Re-Contacted
+                    </button>
+                  </td>
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeRecontacted"
+                            class="btnReset"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                            Re-Contacted
+                    </button>
+                  </td>
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeSelected"
+                            class="btnSubmit"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                            Select
+                    </button>
+                  </td>
+                  <td>
+                    <button type="submit"
+                            *ngIf="canMakeRejected"
+                            class="btnReject"
+                            (click)="takeActionOnBecomeTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                            Reject
+                    </button>
+                  </td>
+                </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-label"></td>
+          <td></td>
+        </tr>
+      </table>
+      <table class="form-container-generic-table">
+        <tr>
+          <td align="right">
+              <button *ngIf="showRecordUpdateButton" type="submit"
+                      class="ok-button form-container-update-button"
+                      (click)="updateBecomeTutorRecord()">
+                Update Become Tutor
+              </button>
+          </td>
+          <td>
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="cancel-button form-container-update-button"
+                    (click)="resetBecomeTutorRecord()">
+              Reset Become Tutor
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div class="form-mask" id="become-tutor-form-mask-loader" [hidden]="becomeTutorFormMaskLoaderHidden">
+        <div class="form-loader"></div>
+      </div>        
+    </form>
+  </div>
 </div>

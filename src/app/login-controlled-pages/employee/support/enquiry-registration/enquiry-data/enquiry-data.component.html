@@ -1,53 +1,73 @@
 <div class="form-container-div">
   <form id="profileDownloadForm" target="ifrDownload" method="post" class="noscreen">
-    <input type="text" value="" size="10" name="enquiryId" id="profileDownload-enquiryId" />
+    <input type="text" value="" size="10" name="findTutorSerialId" id="profileDownload-findTutorSerialId" />
   </form>
-  <form class="form-container" style="max-width: 80%">
-    <div *ngIf="enquiryDataAccess.formDataEditAccess && !formEditMandatoryDisbaled"
-          class="form-container-toggle-button">
-      <button type="submit"
-            class="btnSubmit"
-            style="width: 140px; height: 46px;"
-            (click)="downloadProfile()">            
-            <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download
-      </button>
-      <label class="tab_container" (change)="editRecordForm = false;">
-        <input type="radio" checked name="editFormChoice">
-        <span class="tab_checkmark left">View</span>
-      </label>
-      <label class="tab_container" (change)="editRecordForm = true;">
-        <input type="radio" name="editFormChoice">
-        <span class="tab_checkmark right">Edit</span>
-      </label>
+  <form *ngIf="showRecordUpdateForm" class="form-container" style="max-width: 80%">
+    <div class="form-container-title">
+      <span>Record Update Form</span>
+    </div>
+    <div class="form-container-toggle-button">
+      <div>
+          <button type="submit"
+                class="btnSubmit"
+                style="width: 100%;"
+                (click)="downloadProfile()">            
+                <i class="fa fa-download" style="color: white; padding: 10px;"></i>Download Profile
+          </button>
+      </div>
+      <div *ngIf="!showRecordUpdateEditControlSection" style="margin-right: 1%;margin-bottom: .5rem;"> </div>
+      <div *ngIf="showRecordUpdateEditControlSection">
+        <label class="tab_container" (change)="setRecordUpdateFormEditStatus(false)">
+          <input type="radio" [checked]="!editRecordForm" name="editFormChoice">
+          <span class="tab_checkmark left">View</span>
+        </label>
+        <label class="tab_container" (change)="setRecordUpdateFormEditStatus(true)">
+          <input type="radio" [checked]="editRecordForm" name="editFormChoice">
+          <span class="tab_checkmark right">Edit</span>
+        </label>
+      </div>
     </div>
     <table class="form-container-generic-table">
       <tr>
+        <td class="td-label"><label>Find Tutor Serial Id</label></td>
+        <td><label class="data">{{findTutorRecord.findTutorSerialId}}</label></td>
+      </tr>
+      <tr>
         <td class="td-label"><label>Name</label></td>
-        <td><input class="input_field" type="text" value="{{enquiryRecord.property['name']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateEnquiryProperty('name', $event, 'string')">
+        <td><input  class="input_field" 
+                    id="name"
+                    type="text" 
+                    value="{{findTutorRecord.name}}"
+                    [disabled]="!editRecordForm"
+                    (change)="updateFindTutorProperty('name', $event, 'string')">
         </td>
       </tr>
       <tr>
-        <td class="td-label"><label>Enquiry Date</label></td>
-        <td><label class="data">{{getDateFromMillis(enquiryRecord.property['enquiryDateMillis'])}}</label></td>
+        <td class="td-label"><label>Application Date</label></td>
+        <td><label class="data">{{applicationDateDisplayTime}}</label></td>
       </tr>
       <tr>
-        <td class="td-label"><label>Enquiry Status</label></td>
-        <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['enquiryStatus'], enquiryStatusFilterOptions)}}</label></td>
+        <td class="td-label"><label>Application Status</label></td>
+        <td><label class="data">{{applicationStatusLookupValue}}</label></td>
       </tr>
       <tr>
         <td class="td-label"><label>Contact Number</label></td>
-        <td><input class="input_field" type="text" value="{{enquiryRecord.property['contactNumber']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateEnquiryProperty('contactNumber', $event, 'string')">
+        <td><input  class="input_field" 
+                    id="contactNumber"
+                    type="text" 
+                    value="{{findTutorRecord.contactNumber}}"
+                    [disabled]="!editRecordForm"
+                    (change)="updateFindTutorProperty('contactNumber', $event, 'string')">
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Email Id</label></td>
-        <td><input class="input_field" type="email" value="{{enquiryRecord.property['emailId']}}"
-                   [disabled]="!editRecordForm"
-                   (change)="updateEnquiryProperty('emailId', $event, 'string')">
+        <td><input  class="input_field" 
+                    id="emailId"
+                    type="email" 
+                    value="{{findTutorRecord.emailId}}"
+                    [disabled]="!editRecordForm"
+                    (change)="updateFindTutorProperty('emailId', $event, 'string')">
         </td>
       </tr>
       <tr>
@@ -56,8 +76,8 @@
           <ng-multiselect-dropdown [placeholder]="'Student Grade'" [data]="studentGradesFilterOptions"
                                    [(ngModel)]="selectedStudentGradeOption" name="studentGrade"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('studentGrade', $event, 'list')"
-                                   (onDeSelect)="updateEnquiryProperty('studentGrade', $event, 'list', true)">
+                                   (onSelect)="updateFindTutorProperty('studentGrade', $event, 'list')"
+                                   (onDeSelect)="updateFindTutorProperty('studentGrade', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -67,8 +87,8 @@
           <ng-multiselect-dropdown [placeholder]="'Subject'" [data]="subjectsFilterOptions"
                                    [(ngModel)]="selectedSubjectOption" name="subjectOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('subjects', $event, 'list')"
-                                   (onDeSelect)="updateEnquiryProperty('subjects', $event, 'list', true)">
+                                   (onSelect)="updateFindTutorProperty('subjects', $event, 'list')"
+                                   (onDeSelect)="updateFindTutorProperty('subjects', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -78,8 +98,8 @@
           <ng-multiselect-dropdown [placeholder]="'Locations'" [data]="locationsFilterOptions"
                                    [(ngModel)]="selectedLocationOption" name="locationOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('location', $event, 'list')"
-                                   (onDeSelect)="updateEnquiryProperty('location', $event, 'list', true)">
+                                   (onSelect)="updateFindTutorProperty('location', $event, 'list')"
+                                   (onDeSelect)="updateFindTutorProperty('location', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -89,10 +109,10 @@
           <ng-multiselect-dropdown [placeholder]="'Preferred Time To Call'" [data]="preferredTimeToCallFilterOptions"
                                    [(ngModel)] = "selectedCallTimeOptions" name="callTimeOptions"
                                    [settings]="multiSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist')"
-                                   (onDeSelect)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist', true)"
-                                   (onDeSelectAll)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist', true, true)"
-                                   (onSelectAll)="updateEnquiryProperty('preferredTimeToCall', $event, 'multilist', false, true)">
+                                   (onSelect)="updateFindTutorProperty('preferredTimeToCall', $event, 'multilist')"
+                                   (onDeSelect)="updateFindTutorProperty('preferredTimeToCall', $event, 'multilist', true)"
+                                   (onDeSelectAll)="updateFindTutorProperty('preferredTimeToCall', $event, 'multilist', true, true)"
+                                   (onSelectAll)="updateFindTutorProperty('preferredTimeToCall', $event, 'multilist', false, true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
@@ -101,9 +121,10 @@
         <td>
             <textarea 
                     class="textarea_field"
+                    id="additionalDetails"
                     [disabled]="!editRecordForm" 
-                    (change)="updateEnquiryProperty('additionalDetails', $event, 'string')"
-                    >{{enquiryRecord.property['additionalDetails']}}</textarea>
+                    (change)="updateFindTutorProperty('additionalDetails', $event, 'string')"
+            >{{findTutorRecord.additionalDetails}}</textarea>
         </td>
       </tr>
       <tr>
@@ -111,9 +132,10 @@
         <td>
             <textarea 
                     class="textarea_field"
+                    id="addressDetails"
                     [disabled]="!editRecordForm" 
-                    (change)="updateEnquiryProperty('addressDetails', $event, 'string')"
-                    >{{enquiryRecord.property['addressDetails']}}</textarea>
+                    (change)="updateFindTutorProperty('addressDetails', $event, 'string')"
+            >{{findTutorRecord.addressDetails}}</textarea>
         </td>
       </tr>      
       <tr>
@@ -122,18 +144,18 @@
           <ng-multiselect-dropdown [placeholder]="'Reference'" [data]="referenceFilterOptions"
                                    [(ngModel)]="selectedReferenceOption" name="refrenceOption"
                                    [settings]="singleSelectOptions" [disabled]="!editRecordForm"
-                                   (onSelect)="updateEnquiryProperty('reference', $event, 'list')"
-                                   (onDeSelect)="updateEnquiryProperty('reference', $event, 'list', true)">
+                                   (onSelect)="updateFindTutorProperty('reference', $event, 'list')"
+                                   (onDeSelect)="updateFindTutorProperty('reference', $event, 'list', true)">
           </ng-multiselect-dropdown>
         </td>
       </tr>
       <tr>
         <td class="td-label"><label>Record Last Updated</label></td>
-        <td><label class="data">{{getDateFromMillis(enquiryRecord.property['recordLastUpdatedMillis'])}}</label></td>
+        <td><label class="data">{{recordLastUpdatedDateDisplayTime}}</label></td>
       </tr>
       <tr>
         <td class="td-label"><label>Updated By</label></td>
-        <td><label class="data">{{enquiryRecord.property['updatedByName']}}</label></td>
+        <td><label class="data">{{findTutorRecord.updatedByName}}</label></td>
       </tr>
       <tr style="background-color: aliceblue;" *ngIf="!showEmployeeActionDetails">
         <td class="td-label">
@@ -147,103 +169,103 @@
         </td>
       </tr>  
       <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
+        <td class="td-label">
+            <i
+                id="employee-actions-details-collapser"
+                class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionDetails = false"></i>
+        </td>
+        <td>
+          Hide Action Details
+        </td>
+      </tr>  
+      <tr style="background-color: aliceblue;" *ngIf="showEmployeeActionDetails">
         <td colspan="2">          
           <table width="100%">
               <tr>
-                <td class="td-label">
-                    <i
-                        id="employee-actions-details-collapser"
-                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                        (click)="showEmployeeActionDetails = false"></i>
-                </td>
-                <td colspan="5">
-                  Hide Action Details
-                </td>
-              </tr>
-              <tr>
                 <td class="td-label"><label>Is Contacted</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isContacted'], yesNoFilterOptions)}}</label></td>              
+                <td><label class="data">{{isContactedLookupValue}}</label></td>              
                 <td class="td-label"><label>Who Contacted</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoContactedName']}}</label></td>              
+                <td><label class="data">{{findTutorRecord.whoContactedName}}</label></td>              
                 <td class="td-label"><label>Contacted Date</label></td>
-                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['contactedDateMillis'])}}</label></td>
+                <td><label class="data">{{contactedDateDisplayTime}}</label></td>
               </tr>
               <tr>
                 <td class="td-label"><label>Contacted Remarks</label></td>
                 <td colspan="5">
-                  <div class="form-remakrs">{{enquiryRecord.property['contactedRemarks']}}</div>
+                  <div class="form-remakrs">{{findTutorRecord.contactedRemarks}}</div>
                 </td>
               </tr>
               <tr>
                 <td class="td-label"><label>Is Authentication Verified</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isAuthenticationVerified'], yesNoFilterOptions)}}</label></td>
+                <td><label class="data">{{isAuthenticationVerifiedLookupValue}}</label></td>
                 <td class="td-label"><label>Who Verified</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoVerifiedName']}}</label></td>              
+                <td><label class="data">{{findTutorRecord.whoVerifiedName}}</label></td>              
                 <td class="td-label"><label>Verification Date</label></td>
-                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['verificationDateMillis'])}}</label></td>
+                <td><label class="data">{{verificationDateDisplayTime}}</label></td>
               </tr>
               <tr>
                 <td class="td-label"><label>Verification Remarks</label></td>
                 <td colspan="5">
-                  <div class="form-remakrs">{{enquiryRecord.property['verificationRemarks']}}</div>
+                  <div class="form-remakrs">{{findTutorRecord.verificationRemarks}}</div>
                 </td>
               </tr>
               <tr>
                 <td class="td-label"><label>Is To Be Recontacted</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isToBeRecontacted'], yesNoFilterOptions)}}</label></td>
+                <td><label class="data">{{isToBeRecontactedLookupValue}}</label></td>
                 <td class="td-label"><label>Who Suggested For Recontact</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoSuggestedForRecontactName']}}</label></td>              
+                <td><label class="data">{{findTutorRecord.whoSuggestedForRecontactName}}</label></td>              
                 <td class="td-label"><label>Suggestion Date</label></td>
-                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['suggestionDateMillis'])}}</label></td>
+                <td><label class="data">{{suggestionDateDisplayTime}}</label></td>
               </tr>
               <tr>
                 <td class="td-label"><label>Suggestion Remarks</label></td>
                 <td colspan="5">
-                  <div class="form-remakrs">{{enquiryRecord.property['suggestionRemarks']}}</div>
+                  <div class="form-remakrs">{{findTutorRecord.suggestionRemarks}}</div>
                 </td>
               </tr>
               <tr>
                 <td class="td-label"><label></label></td>
                 <td><label class="data"></label></td>
                 <td class="td-label"><label>Who Recontacted</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoRecontactedName']}}</label></td>              
+                <td><label class="data">{{findTutorRecord.whoRecontactedName}}</label></td>              
                 <td class="td-label"><label>Recontacted Date</label></td>
-                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['recontactedDateMillis'])}}</label></td>
+                <td><label class="data">{{recontactedDateDisplayTime}}</label></td>
               </tr>
               <tr>
                 <td class="td-label"><label>Recontacted Remarks</label></td>
                 <td colspan="5">
-                  <div class="form-remakrs">{{enquiryRecord.property['recontactedRemarks']}}</div>
+                  <div class="form-remakrs">{{findTutorRecord.recontactedRemarks}}</div>
                 </td>
               </tr>
               <tr>
                 <td class="td-label"><label>Is Selected</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isSelected'], yesNoFilterOptions)}}</label></td>
+                <td><label class="data">{{isSelectedLookupValue}}</label></td>
                 <td class="td-label"><label>Who Selected</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoSelectedName']}}</label></td>              
+                <td><label class="data">{{findTutorRecord.whoSelectedName}}</label></td>              
                 <td class="td-label"><label>Selection Date</label></td>
-                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['selectionDateMillis'])}}</label></td>
+                <td><label class="data">{{selectionDateDisplayTime}}</label></td>
               </tr>
               <tr>
                 <td class="td-label"><label>Selection Remarks</label></td>
                 <td colspan="5">
-                  <div class="form-remakrs">{{enquiryRecord.property['selectionRemarks']}}</div>
+                  <div class="form-remakrs">{{findTutorRecord.selectionRemarks}}</div>
                 </td>
               </tr>
               <tr>
                 <td class="td-label"><label>Is Rejected</label></td>
-                <td><label class="data">{{getLookupRendererFromValue(enquiryRecord.property['isRejected'], yesNoFilterOptions)}}</label></td>
+                <td><label class="data">{{isRejectedLookupValue}}</label></td>
                 <td class="td-label"><label>Who Rejected</label></td>
-                <td><label class="data">{{enquiryRecord.property['whoRejectedName']}}</label></td>              
+                <td><label class="data">{{findTutorRecord.whoRejectedName}}</label></td>              
                 <td class="td-label"><label>Rejection Date</label></td>
-                <td><label class="data">{{getDateFromMillis(enquiryRecord.property['rejectionDateMillis'])}}</label></td>
+                <td><label class="data">{{rejectionDateDisplayTime}}</label></td>
               </tr>
               <tr>
                 <td class="td-label"><label>Rejection Remarks</label></td>
                 <td colspan="5">
-                  <div class="form-remakrs">{{enquiryRecord.property['rejectionRemarks']}}</div>
+                  <div class="form-remakrs">{{findTutorRecord.rejectionRemarks}}</div>
                 </td>
-              </tr>              
+              </tr>
           </table>
         </td>
       </tr>
@@ -257,194 +279,124 @@
         <td>
           Show Action Buttons
         </td>
-      </tr>  
+      </tr>
       <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
-        <td colspan="2">          
+        <td class="td-label">
+            <i
+                id="employee-actions-details-collapser"
+                class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
+                (click)="showEmployeeActionButtons = false"></i>
+        </td>
+        <td>
+          Hide Action Buttons
+        </td>
+      </tr>   
+      <tr style="background-color: beige;" *ngIf="showEmployeeActionButtons && !takeActionDisabled">
+        <td></td>
+        <td>           
           <table width="100%">
               <tr>
-                <td class="td-label">
-                    <i
-                        id="employee-actions-details-collapser"
-                        class="fas fa-minus" style="cursor: pointer; border: 1px solid black; border-radius: 4px;"
-                        (click)="showEmployeeActionButtons = false"></i>
-                </td>
-                <td colspan="3">
-                  Hide Action Buttons
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'nonContactedEnquiryGrid'">
-                <td></td>
                 <td>
                   <button type="submit"
+                          *ngIf="canBlacklist"
                           class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
+                          (click)="takeActionOnFindTutorRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
                           Blacklist
                   </button>
                 </td> 
                 <td>
                   <button type="submit"
+                          *ngIf="canMakeContacted"
                           class="btnSubmit"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'contacted')">            
                           Contacted
                   </button>
-                </td>              
+                </td>
                 <td>
                   <button type="submit"
+                          *ngIf="canMakeReverified"
+                          class="btnSubmit"
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
+                          Re-Verify
+                  </button>
+                </td> 
+                <td>
+                  <button type="submit"
+                          *ngIf="canMakeVerified"
+                          class="btnSubmit"
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
+                          Verify
+                  </button>
+                </td>
+                <td>
+                  <button type="submit"
+                          *ngIf="canMakeFailVerified"
+                          class="btnReject"
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
+                          Fail Verify
+                  </button>
+                </td>                 
+                <td>
+                  <button type="submit"
+                          *ngIf="canMakeToBeRecontact"
                           class="btnReset"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontact', true)">            
                           To Be Re-Contacted
                   </button>
                 </td>
                 <td>
                   <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'nonVerifiedEnquiryGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'verify')">            
-                          Verify
-                  </button>
-                </td>              
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'failverify', true)">            
-                          Fail Verify
-                  </button>
-                </td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'verifiedEnquiryGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
-                          Select
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'verificationFailedEnquiryGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnSubmit"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reverify')">            
-                          Re-Verify
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'toBeReContactedEnquiryGrid'">
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
+                          *ngIf="canMakeRecontacted"
                           class="btnReset"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
                           Re-Contacted
                   </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
-                          Reject
-                  </button>
                 </td>
-              </tr>
-              <tr *ngIf="selectedRecordGridType === 'rejectedEnquiryGrid'">
-                <td></td>
                 <td>
                   <button type="submit"
-                          class="btnReject"
-                          (click)="takeActionOnEnquiryRecord('Enter comments to Blacklist', 'Please provide your comments to Blacklist.', 'blacklist', true, true)">            
-                          Blacklist
-                  </button>
-                </td> 
-                <td>
-                  <button type="submit"
-                          class="btnReset"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'recontacted')">            
-                          Re-Contacted
-                  </button>
-                </td>              
-                <td></td>
-                <td>
-                  <button type="submit"
+                          *ngIf="canMakeSelected"
                           class="btnSubmit"
-                          (click)="takeActionOnEnquiryRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'select')">            
                           Select
                   </button>
                 </td>
+                <td>
+                  <button type="submit"
+                          *ngIf="canMakeRejected"
+                          class="btnReject"
+                          (click)="takeActionOnFindTutorRecord('Enter comments for action', 'Please provide your comments for taking the action.', 'reject', true)">            
+                          Reject
+                  </button>
+                </td>
               </tr>
-              <tr>
-                <td colspan="4"></td>
-              </tr>                         
           </table>
         </td>
       </tr>
+      <tr>
+        <td class="td-label"></td>
+        <td></td>
+      </tr>
     </table>
-    <button *ngIf="enquiryDataAccess.formDataEditAccess && !formEditMandatoryDisbaled && editRecordForm" type="submit"
-              class="ok-button form-container-update-button"
-              (click)="updateEnquiryRecord()">
-      Update
-    </button>
+    <table class="form-container-generic-table">
+      <tr>
+        <td align="right">
+            <button *ngIf="showRecordUpdateButton" type="submit"
+                    class="ok-button form-container-update-button"
+                    (click)="updateFindTutorRecord()">
+              Update Find Tutor
+            </button>
+        </td>
+        <td>
+          <button *ngIf="showRecordUpdateButton" type="submit"
+                  class="cancel-button form-container-update-button"
+                  (click)="resetFindTutorRecord()">
+              Reset Find Tutor
+          </button>
+        </td>
+      </tr>
+    </table>
+    <div class="form-mask" id="find-tutor-form-mask-loader" [hidden]="findTutorFormMaskLoaderHidden">
+      <div class="form-loader"></div>
+    </div>
   </form>
 </div>

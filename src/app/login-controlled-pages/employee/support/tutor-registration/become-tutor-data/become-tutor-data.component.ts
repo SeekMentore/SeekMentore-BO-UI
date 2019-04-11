@@ -82,7 +82,7 @@ export class BecomeTutorDataComponent implements OnInit {
   selectionDateDisplayTime: string;
   rejectionDateDisplayTime: string;
   previousApplicationDateDisplayTime: string;
-  becomeTutorRecordLastUpdatedDateDisplayTime: string;
+  recordLastUpdatedDateDisplayTime: string;
   selectedGenderOption: any[] = [];
   selectedQualificationOption: any[] = [];
   selectedProfessionOption: any[] = [];
@@ -262,7 +262,7 @@ export class BecomeTutorDataComponent implements OnInit {
     this.selectionDateDisplayTime = CommonUtilityFunctions.getDateStringShortVersionInDDMMYYYYHHmmSS(this.becomeTutorRecord.selectionDateMillis);
     this.rejectionDateDisplayTime = CommonUtilityFunctions.getDateStringShortVersionInDDMMYYYYHHmmSS(this.becomeTutorRecord.rejectionDateMillis);
     this.previousApplicationDateDisplayTime = CommonUtilityFunctions.getDateStringShortVersionInDDMMYYYYHHmmSS(this.becomeTutorRecord.previousApplicationDateMillis);
-    this.becomeTutorRecordLastUpdatedDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.becomeTutorRecord.recordLastUpdatedMillis);
+    this.recordLastUpdatedDateDisplayTime = CommonUtilityFunctions.getDateStringInDDMMYYYYHHmmSS(this.becomeTutorRecord.recordLastUpdatedMillis);
     this.selectedGenderOption = CommonUtilityFunctions.getSelectedFilterItems(this.genderFilterOptions, this.becomeTutorRecord.gender);
     this.selectedQualificationOption = CommonUtilityFunctions.getSelectedFilterItems(this.qualificationFilterOptions, this.becomeTutorRecord.qualification);
     this.selectedProfessionOption = CommonUtilityFunctions.getSelectedFilterItems(this.primaryProfessionFilterOptions, this.becomeTutorRecord.primaryProfession);

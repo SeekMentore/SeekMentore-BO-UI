@@ -184,7 +184,7 @@ export class LoginControlledPagesComponent implements OnInit, AfterViewInit {
 
   public checkActivity() {
     this.idleTime = this.idleTime + 1;
-    if (this.idleTime > AppConstants.IDLE_TIMEOUT) {
+    if (this.idleTime > AppConstants.IDLE_TIMEOUT) {      
       this.doLogout();
     }
   }

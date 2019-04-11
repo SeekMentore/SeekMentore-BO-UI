@@ -26,14 +26,14 @@ export class LcpRestUrls {
   static find_tutor_data_access = '/rest/support/findTutorCheckDataAccess';
   static blackList_find_tutors = '/rest/support/blacklistFindTutorList';
   static take_action_on_find_tutor = '/rest/support/takeActionOnFindTutor';
-  static enquiry_request_update_record = '/rest/support/updateFindTutorRecord';
+  static find_tutor_update_record = '/rest/support/updateFindTutorRecord';
   static subscription_request_data_access = '/rest/support/subscriptionRequestCheckDataAccess';
   static blackList_subscription_request = '/rest/support/blacklistSubscriptionRequestList';
   static take_action_on_subscription = '/rest/support/takeActionOnSubscription';
   static subscription_update_record = '/rest/support/updateSubscriptionRecord';
   static take_action_on_submit_query = '/rest/support/takeActionOnSubmitQuery';
-  static submitted_query_data_access = '/rest/support/submitQueryCheckDataAccess';
-  static submitted_query_update_record = '/rest/support/updateSubmitQueryRecord';
+  static submit_query_data_access = '/rest/support/submitQueryCheckDataAccess';
+  static submit_query_update_record = '/rest/support/updateSubmitQueryRecord';
   static complaint_data_access = '/rest/support/complaintCheckDataAccess';
   static complaint_update_record = '/rest/support/updateComplaintRecord';  
   static enquiry_data_access = '/rest/sales/enquiryCheckDataAccess';
@@ -70,4 +70,6 @@ export class LcpRestUrls {
   static get_registered_tutor_document_count_and_existence = '/rest/registeredTutor/getRegisteredTutorDocumentCountAndExistence';
   static get_enquiry_record = '/rest/sales/getEnquiryRecord';
   static get_become_tutor_record = '/rest/support/getBecomeTutorRecord';
+  static get_find_tutor_record = '/rest/support/getFindTutorRecord';
+  static get_submit_query_record = '/rest/support/getSubmitQueryRecord';
 }

@@ -580,6 +580,13 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
           headerName: 'Document Serial Id',
           dataType: 'string',
           mapping: 'documentSerialId',
+          renderer: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            let documentSerialId: any = column.getValueForColumn(record);
+            if (CommonUtilityFunctions.checkStringAvailability(documentSerialId)) {
+              return documentSerialId;
+            }
+            return '-Not Uploaded-';
+          },
           clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             let documentSerialId: string = column.getValueForColumn(record);
             if (CommonUtilityFunctions.checkStringAvailability(documentSerialId)) {
@@ -595,7 +602,7 @@ export class RegisteredTutorDataComponent implements OnInit, AfterViewInit {
                 isSuccess: false,
                 message: 'Document Type "' 
                           + GridCommonFunctions.lookupRendererForValue(record.getProperty('documentType'), CommonFilterOptions.tutorDocumentTypeFilterOptions) 
-                          + '" is unavailable for download, Please send a reminder to the tutor to upload.',
+                          + '" is unavailable for download \n Please send a reminder to the tutor to upload.',
                 onButtonClicked: () => {
                 }
               });

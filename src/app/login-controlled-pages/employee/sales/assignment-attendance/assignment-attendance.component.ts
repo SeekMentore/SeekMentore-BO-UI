@@ -70,6 +70,20 @@ export class AssignmentAttendanceComponent implements OnInit {
     }, 100);
   }
 
+  expandAllGrids() {
+    this.newAssignmentGridObject.expandGrid();
+    this.startedAssignmentGridObject.expandGrid();
+    this.hoursCompletedAssignmentGridObject.expandGrid();
+    this.reviewedAssignmentGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.newAssignmentGridObject.collapseGrid();
+    this.startedAssignmentGridObject.collapseGrid();
+    this.hoursCompletedAssignmentGridObject.collapseGrid();
+    this.reviewedAssignmentGridObject.collapseGrid();
+  }
+
   public getAssignmentGridObject(id: string, title: string, restURL: string, hasActionColumn: boolean = false, actionColumn: any = null, collapsed: boolean = false) {
     let grid = {
       id: id,

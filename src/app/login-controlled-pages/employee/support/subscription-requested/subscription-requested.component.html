@@ -1,23 +1,30 @@
 <div>
-  <div id="subscription-list-page" *ngIf="!showSubscriptionData">
-    <app-grid #nonContactedSubscriptionGrid id="non-contacted-subscription-grid" [gridMetaData]="nonContactedSubscriptionGridMetaData"></app-grid>
-    <app-grid #nonVerifiedSubscriptionGrid id="non-verified-subscription-grid" [gridMetaData]="nonVerifiedSubscriptionGridMetaData"></app-grid>
-    <app-grid #verifiedSubscriptionGrid id="verified-subscription-grid" [gridMetaData]="verifiedSubscriptionGridMetaData"></app-grid>
-    <app-grid #verificationFailedSubscriptionGrid id="verification-failed-subscription-grid" [gridMetaData]="verificationFailedSubscriptionGridMetaData"></app-grid>
-    <app-grid #toBeReContactedSubscriptionGrid id="to-be-recontacted-subscription-grid" [gridMetaData]="toBeReContactedSubscriptionGridMetaData"></app-grid>
-    <app-grid #selectedSubscriptionGrid id="selected-subscription-grid" [gridMetaData]="selectedSubscriptionGridMetaData"></app-grid>
-    <app-grid #rejectedSubscriptionGrid id="rejected-subscription-grid" [gridMetaData]="rejectedSubscriptionGridMetaData"></app-grid>    
+  <div id="subscribe-with-us-list-page" *ngIf="!showSubscribeWithUsData">
+    <div class="grid-all-expand-collapse-div">
+      <span class="left expand-collapse-span" style="margin-right: 2%;" (click)="expandAllGrids()">
+        <i style=" padding: 10px;" class="fa fa-plus"></i>Expand All
+      </span>
+      <span class="right expand-collapse-span" (click)="collapseAllGrids()">
+        <i style=" padding: 10px;" class="fa fa-minus"></i>Collapse All
+      </span>
+    </div>
+    <app-grid #nonContactedSubscribeWithUsGrid id="non-contacted-subscribe-with-us-grid" [gridMetaData]="nonContactedSubscribeWithUsGridMetaData"></app-grid>
+    <app-grid #nonVerifiedSubscribeWithUsGrid id="non-verified-subscribe-with-us-grid" [gridMetaData]="nonVerifiedSubscribeWithUsGridMetaData"></app-grid>
+    <app-grid #verifiedSubscribeWithUsGrid id="verified-subscribe-with-us-grid" [gridMetaData]="verifiedSubscribeWithUsGridMetaData"></app-grid>
+    <app-grid #verificationFailedSubscribeWithUsGrid id="verification-failed-subscribe-with-us-grid" [gridMetaData]="verificationFailedSubscribeWithUsGridMetaData"></app-grid>
+    <app-grid #toBeReContactedSubscribeWithUsGrid id="to-be-recontacted-subscribe-with-us-grid" [gridMetaData]="toBeReContactedSubscribeWithUsGridMetaData"></app-grid>
+    <app-grid #selectedSubscribeWithUsGrid id="selected-subscribe-with-us-grid" [gridMetaData]="selectedSubscribeWithUsGridMetaData"></app-grid>
+    <app-grid #rejectedSubscribeWithUsGrid id="rejected-subscribe-with-us-grid" [gridMetaData]="rejectedSubscribeWithUsGridMetaData"></app-grid>    
   </div>
-  <div id="subscription-data-page" *ngIf="showSubscriptionData">
+  <div id="subscribe-with-us-data-page" *ngIf="showSubscribeWithUsData">
     <button
-      id="back-to-subscription-listing-button"
-      class="back-to-listing-button ok-button" (click)="toggleVisibilitySubscriptionGrid()">
+      id="back-to-subscribe-with-us-listing-button"
+      class="back-to-listing-button ok-button" (click)="toggleVisibilitySubscribeWithUsGrid()">
       <i class="fas fa-chevron-left" style="padding-right: 15px;"></i>Back To Listing
     </button>
     <app-subscription-data 
-                    [subscriptionRecord]="selectedSubscriptionRecord" 
-                    [subscriptionDataAccess]="subscriptionDataAccess"
-                    [selectedRecordGridType]="selectedRecordGridType">
+                    [subscribeWithUsSerialId]="selectedSubscribeWithUsSerialId" 
+                    [subscribeWithUsDataAccess]="subscribeWithUsDataAccess">
     </app-subscription-data>
   </div>
 </div>

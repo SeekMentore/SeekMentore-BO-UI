@@ -27,10 +27,10 @@ export class LcpRestUrls {
   static blackList_find_tutors = '/rest/support/blacklistFindTutorList';
   static take_action_on_find_tutor = '/rest/support/takeActionOnFindTutor';
   static find_tutor_update_record = '/rest/support/updateFindTutorRecord';
-  static subscription_request_data_access = '/rest/support/subscriptionRequestCheckDataAccess';
-  static blackList_subscription_request = '/rest/support/blacklistSubscriptionRequestList';
-  static take_action_on_subscription = '/rest/support/takeActionOnSubscription';
-  static subscription_update_record = '/rest/support/updateSubscriptionRecord';
+  static subscribe_with_us_data_access = '/rest/support/subscribeWithUsCheckDataAccess';
+  static blackList_subscribe_with_us = '/rest/support/blacklistSubscribeWithUsList';
+  static take_action_on_subscribe_with_us = '/rest/support/takeActionOnSubscribeWithUs';
+  static subscribe_with_us_update_record = '/rest/support/updateSubscribeWithUsRecord';
   static take_action_on_submit_query = '/rest/support/takeActionOnSubmitQuery';
   static submit_query_data_access = '/rest/support/submitQueryCheckDataAccess';
   static submit_query_update_record = '/rest/support/updateSubmitQueryRecord';
@@ -71,5 +71,6 @@ export class LcpRestUrls {
   static get_enquiry_record = '/rest/sales/getEnquiryRecord';
   static get_become_tutor_record = '/rest/support/getBecomeTutorRecord';
   static get_find_tutor_record = '/rest/support/getFindTutorRecord';
+  static get_subscribe_with_us_record = '/rest/support/getSubscribeWithUsRecord';
   static get_submit_query_record = '/rest/support/getSubmitQueryRecord';
 }

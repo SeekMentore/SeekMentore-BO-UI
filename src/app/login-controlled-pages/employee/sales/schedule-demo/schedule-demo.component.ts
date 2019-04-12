@@ -66,13 +66,27 @@ export class ScheduleDemoComponent implements OnInit, AfterViewInit {
       this.demoReadyMappedTutorsGridObject.init(); 
       this.demoScheduledMappedTutorsGridObject.init();  
       this.enquiryClosedMappedTutorsGridObject.init();     
-    }, 0);
+    }, 100);
     setTimeout(() => {
       this.pendingMappedTutorsGridObject.refreshGridData();
       this.demoReadyMappedTutorsGridObject.refreshGridData();
       this.demoScheduledMappedTutorsGridObject.refreshGridData();
       this.enquiryClosedMappedTutorsGridObject.refreshGridData();
-    }, 0);
+    }, 100);
+  }
+
+  expandAllGrids() {
+    this.pendingMappedTutorsGridObject.expandGrid();
+    this.demoReadyMappedTutorsGridObject.expandGrid();
+    this.demoScheduledMappedTutorsGridObject.expandGrid();
+    this.enquiryClosedMappedTutorsGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.pendingMappedTutorsGridObject.collapseGrid();
+    this.demoReadyMappedTutorsGridObject.collapseGrid();
+    this.demoScheduledMappedTutorsGridObject.collapseGrid();
+    this.enquiryClosedMappedTutorsGridObject.collapseGrid();
   }
 
   public getGridObject (

@@ -72,6 +72,20 @@ export class AllEnquiriesComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  expandAllGrids() {
+    this.pendingEnquiryGridObject.expandGrid();
+    this.toBeMappedEnquiryGridObject.expandGrid();
+    this.completedEnquiryGridObject.expandGrid();
+    this.abortedEnquiryGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.pendingEnquiryGridObject.collapseGrid();
+    this.toBeMappedEnquiryGridObject.collapseGrid();
+    this.completedEnquiryGridObject.collapseGrid();
+    this.abortedEnquiryGridObject.collapseGrid();
+  }
+
   public getGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {
     let grid = {
       id: id,

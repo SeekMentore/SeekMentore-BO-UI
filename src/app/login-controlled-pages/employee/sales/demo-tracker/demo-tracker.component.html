@@ -1,5 +1,13 @@
 <div>
   <div id="demo-tracker-list-page" *ngIf="!showDemoTrackerData">
+    <div class="grid-all-expand-collapse-div">
+      <span class="left expand-collapse-span" style="margin-right: 2%;" (click)="expandAllGrids()">
+        <i style=" padding: 10px;" class="fa fa-plus"></i>Expand All
+      </span>
+      <span class="right expand-collapse-span" (click)="collapseAllGrids()">
+        <i style=" padding: 10px;" class="fa fa-minus"></i>Collapse All
+      </span>
+    </div>
     <app-grid #scheduledDemoGrid id="scheduled-demo-grid" [gridMetaData]="scheduledDemoGridMetaData"></app-grid>
     <app-grid #successfulDemoGrid id="successful-demo-grid" [gridMetaData]="successfulDemoGridMetaData"></app-grid>
     <app-grid #failedDemoGrid id="failed-demo-grid" [gridMetaData]="failedDemoGridMetaData"></app-grid>

@@ -22,8 +22,10 @@ export class ChangePasswordComponent implements OnInit {
   oldPassword: string;
   newPassword: string;
   retypeNewPassword: string;
+  changePasswordMaskLoaderHidden: boolean = true;
 
   constructor(private helperService: HelperService, private utilityService: AppUtilityService, private router: Router) {
+    this.resetErrorMessages();
   }
 
   ngOnInit() {
@@ -34,15 +36,26 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
+  private showResetPasswordFormLoaderMask() {
+    this.changePasswordMaskLoaderHidden = false;
+  }
+
+  private hideResetPasswordFormLoaderMask() {
+    this.changePasswordMaskLoaderHidden = true;
+  }
+
   changePassword() {
+    this.showResetPasswordFormLoaderMask();
     if (this.isValidFormData() === false) {
+      this.hideResetPasswordFormLoaderMask();
       return;
     }
-    const formData = new URLSearchParams();
-    formData.set('oldPassword', this.oldPassword);
-    formData.set('newPassword', this.newPassword);
-    formData.set('retypeNewPassword', this.retypeNewPassword);
-    this.utilityService.makerequest(this, this.onSuccess, LcpRestUrls.change_password_url, 'POST', formData.toString(),
+    const data = {
+      oldPassword: this.oldPassword,
+      newPassword: this.newPassword,
+      retypeNewPassword: this.retypeNewPassword
+    };
+    this.utilityService.makerequest(this, this.onSuccess, LcpRestUrls.change_password_url, 'POST', this.utilityService.urlEncodeData(data),
       'application/x-www-form-urlencoded');
   }
 
@@ -73,6 +86,7 @@ export class ChangePasswordComponent implements OnInit {
     } else {
       context.errorAjaxResponse = CommonUtilityFunctions.removeHTMLBRTagsFromServerResponse(response['message']);
     }
+    context.hideResetPasswordFormLoaderMask();
   }
 
   resetErrorMessages() {

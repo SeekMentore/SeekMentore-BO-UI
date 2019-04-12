@@ -1,11 +1,11 @@
 <div>
-  <div class="form-container-toggle-button">
-    <label class="tab_container">
-      <span class="left">Expand All</span>
-    </label>
-    <label class="tab_container">
-      <span class="right">Collapse All</span>
-    </label>
+  <div class="grid-all-expand-collapse-div">
+    <span class="left expand-collapse-span" style="margin-right: 2%;" (click)="expandAllGrids()">
+      <i style=" padding: 10px;" class="fa fa-plus"></i>Expand All
+    </span>
+    <span class="right expand-collapse-span" (click)="collapseAllGrids()">
+      <i style=" padding: 10px;" class="fa fa-minus"></i>Collapse All
+    </span>
   </div>
   <app-grid #alertGrid id="alert-grid" [gridMetaData]="alertGridMetaData"></app-grid>
   <app-grid #taskGrid id="task-grid" [gridMetaData]="taskGridMetaData"></app-grid>

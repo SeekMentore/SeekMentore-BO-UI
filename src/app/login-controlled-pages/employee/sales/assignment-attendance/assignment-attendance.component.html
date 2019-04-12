@@ -1,7 +1,15 @@
 <div>
   <div id="assignment-list-page" *ngIf="!showAssignmentAttendanceData">
+    <div class="grid-all-expand-collapse-div">
+      <span class="left expand-collapse-span" style="margin-right: 2%;" (click)="expandAllGrids()">
+        <i style=" padding: 10px;" class="fa fa-plus"></i>Expand All
+      </span>
+      <span class="right expand-collapse-span" (click)="collapseAllGrids()">
+        <i style=" padding: 10px;" class="fa fa-minus"></i>Collapse All
+      </span>
+    </div>
     <form id="attendanceTrackerDownloadForm" target="ifrDownload" method="post" class="noscreen">
-      <input type="text" value="" size="10" name="packageAssignmentSerialId" id="downloadAttendanceTracker-packageAssignmentSerialId" />
+      <input type="text" value="" size="10" name="packageAssignmentSerialId" id="downloadAttendanceTracker-packageAssignmentSerialId"/>
     </form>
     <app-grid #newAssignmentGrid id="new-assignment-grid" [gridMetaData]="newAssignmentGridMetaData"></app-grid>
     <app-grid #startedAssignmentGrid id="started-assignment-grid" [gridMetaData]="startedAssignmentGridMetaData"></app-grid>

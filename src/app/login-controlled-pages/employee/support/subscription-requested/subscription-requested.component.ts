@@ -12,6 +12,7 @@ import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.compon
 import { HelperService } from 'src/app/utils/helper.service';
 import { LcpConstants } from 'src/app/utils/lcp-constants';
 import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-subscription-requested',
@@ -20,53 +21,50 @@ import { LcpRestUrls } from 'src/app/utils/lcp-rest-urls';
 })
 export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('nonContactedSubscriptionGrid')
-  nonContactedSubscriptionGridObject: GridComponent;
-  nonContactedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('nonContactedSubscribeWithUsGrid')
+  nonContactedSubscribeWithUsGridObject: GridComponent;
+  nonContactedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  @ViewChild('nonVerifiedSubscriptionGrid')
-  nonVerifiedSubscriptionGridObject: GridComponent;
-  nonVerifiedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('nonVerifiedSubscribeWithUsGrid')
+  nonVerifiedSubscribeWithUsGridObject: GridComponent;
+  nonVerifiedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  @ViewChild('verifiedSubscriptionGrid')
-  verifiedSubscriptionGridObject: GridComponent;
-  verifiedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('verifiedSubscribeWithUsGrid')
+  verifiedSubscribeWithUsGridObject: GridComponent;
+  verifiedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  @ViewChild('verificationFailedSubscriptionGrid')
-  verificationFailedSubscriptionGridObject: GridComponent;
-  verificationFailedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('verificationFailedSubscribeWithUsGrid')
+  verificationFailedSubscribeWithUsGridObject: GridComponent;
+  verificationFailedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  @ViewChild('toBeReContactedSubscriptionGrid')
-  toBeReContactedSubscriptionGridObject: GridComponent;
-  toBeReContactedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('toBeReContactedSubscribeWithUsGrid')
+  toBeReContactedSubscribeWithUsGridObject: GridComponent;
+  toBeReContactedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  @ViewChild('selectedSubscriptionGrid')
-  selectedSubscriptionGridObject: GridComponent;
-  selectedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('selectedSubscribeWithUsGrid')
+  selectedSubscribeWithUsGridObject: GridComponent;
+  selectedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  @ViewChild('rejectedSubscriptionGrid')
-  rejectedSubscriptionGridObject: GridComponent;
-  rejectedSubscriptionGridMetaData: GridDataInterface;
+  @ViewChild('rejectedSubscribeWithUsGrid')
+  rejectedSubscribeWithUsGridObject: GridComponent;
+  rejectedSubscribeWithUsGridMetaData: GridDataInterface;
 
-  showSubscriptionData = false;
-  selectedSubscriptionRecord: GridRecord = null;
-  interimHoldSelectedSubscriptionRecord: GridRecord = null;
-  subscriptionDataAccess: SubscriptionDataAccess = null;
-  selectedRecordGridType: string = null;
-
-  interimHoldSelectedSubscriptionGridObject: GridComponent = null;
+  showSubscribeWithUsData = false;
+  selectedSubscribeWithUsSerialId: string = null;
+  interimHoldSelectedSubscribeWithUsSerialId: string = null;
+  subscribeWithUsDataAccess: SubscribeWithUsDataAccess = null;
 
   constructor(private utilityService: AppUtilityService, private helperService: HelperService, private router: Router) {
-    this.nonContactedSubscriptionGridMetaData = null;
-    this.nonVerifiedSubscriptionGridMetaData = null;
-    this.verifiedSubscriptionGridMetaData = null;
-    this.verificationFailedSubscriptionGridMetaData = null;
-    this.toBeReContactedSubscriptionGridMetaData = null;
-    this.selectedSubscriptionGridMetaData = null;
-    this.rejectedSubscriptionGridMetaData = null;
-    this.showSubscriptionData = false;
-    this.selectedSubscriptionRecord = null;
-    this.subscriptionDataAccess = null;
+    this.nonContactedSubscribeWithUsGridMetaData = null;
+    this.nonVerifiedSubscribeWithUsGridMetaData = null;
+    this.verifiedSubscribeWithUsGridMetaData = null;
+    this.verificationFailedSubscribeWithUsGridMetaData = null;
+    this.toBeReContactedSubscribeWithUsGridMetaData = null;
+    this.selectedSubscribeWithUsGridMetaData = null;
+    this.rejectedSubscribeWithUsGridMetaData = null;
+    this.showSubscribeWithUsData = false;
+    this.selectedSubscribeWithUsSerialId = null;
+    this.subscribeWithUsDataAccess = null;
   }
 
   ngOnInit() {
@@ -79,24 +77,44 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.nonContactedSubscriptionGridObject.init();
-      this.nonVerifiedSubscriptionGridObject.init();
-      this.verifiedSubscriptionGridObject.init();
-      this.verificationFailedSubscriptionGridObject.init();
-      this.toBeReContactedSubscriptionGridObject.init();
-      this.selectedSubscriptionGridObject.init();
-      this.rejectedSubscriptionGridObject.init();
-    }, 0);
+      this.nonContactedSubscribeWithUsGridObject.init();
+      this.nonVerifiedSubscribeWithUsGridObject.init();
+      this.verifiedSubscribeWithUsGridObject.init();
+      this.verificationFailedSubscribeWithUsGridObject.init();
+      this.toBeReContactedSubscribeWithUsGridObject.init();
+      this.selectedSubscribeWithUsGridObject.init();
+      this.rejectedSubscribeWithUsGridObject.init();
+    }, 100);
 
     setTimeout(() => {
-      this.nonContactedSubscriptionGridObject.refreshGridData();
-      this.nonVerifiedSubscriptionGridObject.refreshGridData();
-      this.verifiedSubscriptionGridObject.refreshGridData();
-      this.verificationFailedSubscriptionGridObject.refreshGridData();
-      this.toBeReContactedSubscriptionGridObject.refreshGridData();
-      this.selectedSubscriptionGridObject.refreshGridData();
-      this.rejectedSubscriptionGridObject.refreshGridData();
-    }, 0);
+      this.nonContactedSubscribeWithUsGridObject.refreshGridData();
+      this.nonVerifiedSubscribeWithUsGridObject.refreshGridData();
+      this.verifiedSubscribeWithUsGridObject.refreshGridData();
+      this.verificationFailedSubscribeWithUsGridObject.refreshGridData();
+      this.toBeReContactedSubscribeWithUsGridObject.refreshGridData();
+      this.selectedSubscribeWithUsGridObject.refreshGridData();
+      this.rejectedSubscribeWithUsGridObject.refreshGridData();
+    }, 100);
+  }
+
+  expandAllGrids() {
+    this.nonContactedSubscribeWithUsGridObject.expandGrid();
+    this.nonVerifiedSubscribeWithUsGridObject.expandGrid();
+    this.verifiedSubscribeWithUsGridObject.expandGrid();
+    this.verificationFailedSubscribeWithUsGridObject.expandGrid();
+    this.toBeReContactedSubscribeWithUsGridObject.expandGrid();
+    this.selectedSubscribeWithUsGridObject.expandGrid();
+    this.rejectedSubscribeWithUsGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.nonContactedSubscribeWithUsGridObject.collapseGrid();
+    this.nonVerifiedSubscribeWithUsGridObject.collapseGrid();
+    this.verifiedSubscribeWithUsGridObject.collapseGrid();
+    this.verificationFailedSubscribeWithUsGridObject.collapseGrid();
+    this.toBeReContactedSubscribeWithUsGridObject.collapseGrid();
+    this.selectedSubscribeWithUsGridObject.collapseGrid();
+    this.rejectedSubscribeWithUsGridObject.collapseGrid();
   }
 
   private getSelectionColumnBlacklistButton() {
@@ -105,9 +123,8 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       label: 'Blacklist',
       btnclass: 'btnReject',
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedSubscriptionGridObject = gridComponentObject;
-        const subscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
-        if (subscriptionIdsList.length === 0) {
+        const subscribeWithUsSerialIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'subscribeWithUsSerialId');
+        if (subscribeWithUsSerialIdsList.length === 0) {
           this.helperService.showAlertDialog({
             isSuccess: false,
             message: LcpConstants.grid_generic_no_record_selected_error,
@@ -115,20 +132,33 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
+          let extraContextProperties: {
+            action: string,
+            button: ActionButton,
+            gridComponentObject: GridComponent
+          } = {
+            action: 'Blacklist',
+            button: button,
+            gridComponentObject: gridComponentObject
+          };
+          button.disable();
+          gridComponentObject.showGridLoadingMask();
           this.helperService.showPromptDialog({
             required: true,
             titleText: 'Enter comments to Blacklist',
             placeholderText: 'Please provide your comments for blacklisting the subscriptions.',
             onOk: (message) => {
               const data = {
-                allIdsList: subscriptionIdsList.join(';'),
+                allIdsList: subscribeWithUsSerialIdsList.join(';'),
                 comments: message
               };
               this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.blackList_subscription_request, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+                LcpRestUrls.blackList_subscribe_with_us, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded', false, null, extraContextProperties);
             },
             onCancel: () => {
+              button.enable();
+              gridComponentObject.hideGridLoadingMask();
             }
           });
         }
@@ -141,7 +171,6 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       id: 'sendEmail',
       label: 'Send Email',
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        // Refer document
         const selectedEmailsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'emailId');
         if (selectedEmailsList.length === 0) {
           this.helperService.showAlertDialog({
@@ -172,55 +201,54 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           }
         }
       },
-      columns: [
-        {
+      columns: [{
+          id: 'subscribeWithUsSerialId',
+          headerName: 'Subscribe With Us Serial Id',
+          dataType: 'string',
+          mapping: 'subscribeWithUsSerialId',
+          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
+            this.interimHoldSelectedSubscribeWithUsSerialId = column.getValueForColumn(record);
+            if (this.subscribeWithUsDataAccess === null) {
+              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscribe_with_us_data_access, 'POST', null, 'application/x-www-form-urlencoded');
+            } else {
+              this.selectedSubscribeWithUsSerialId = this.interimHoldSelectedSubscribeWithUsSerialId;
+              this.toggleVisibilitySubscribeWithUsGrid();
+            }
+          }
+        }, {
           id: 'name',
           headerName: 'Name',
           dataType: 'string',
           mapping: 'firstName',
+          clubbedMapping: true,
+          clubbedProperties: ['firstName', 'lastName'],
           renderer: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
             return record.getProperty('firstName') + ' ' + record.getProperty('lastName');
-          },
-          clickEvent: (record: GridRecord, column: Column, gridComponentObject: GridComponent) => {
-            // Open the Data view port
-            this.interimHoldSelectedSubscriptionRecord = record;
-            this.selectedRecordGridType = gridComponentObject.grid.id;       
-            if (this.subscriptionDataAccess === null) {
-              this.utilityService.makerequest(this, this.handleDataAccessRequest, LcpRestUrls.subscription_request_data_access, 'POST', null, 'application/x-www-form-urlencoded');
-            } else {
-              this.selectedSubscriptionRecord = this.interimHoldSelectedSubscriptionRecord;
-              this.toggleVisibilitySubscriptionGrid();
-            }
           }
-        },
-        {
+        }, {
           id: 'applicationDate',
           headerName: 'Application Date',
           dataType: 'date',
           mapping: 'applicationDateMillis',
           renderer: GridCommonFunctions.renderDateFromMillisWithTime
-        },
-        {
+        }, {
           id: 'applicationStatus',
           headerName: 'Application Status',
           dataType: 'list',
           filterOptions: CommonFilterOptions.publicApplicationStatusFilterOptions,
           mapping: 'applicationStatus',
           renderer: AdminCommonFunctions.publicApplicationStatusRenderer
-        },
-        {
+        }, {
           id: 'contactNumber',
           headerName: 'Contact Number',
           dataType: 'string',
           mapping: 'contactNumber'
-        },
-        {
+        }, {
           id: 'emailId',
           headerName: 'Email Id',
           dataType: 'string',
           mapping: 'emailId'
-        },
-        {
+        }, {
           id: 'studentGrade',
           headerName: 'Student Grades',
           dataType: 'list',
@@ -228,8 +256,7 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           mapping: 'studentGrade',
           multiList: true,
           renderer: AdminCommonFunctions.studentGradesMultiRenderer
-        },
-        {
+        }, {
           id: 'subjects',
           headerName: 'Subjects',
           dataType: 'list',
@@ -237,16 +264,14 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           mapping: 'subjects',
           multiList: true,
           renderer: AdminCommonFunctions.subjectsMultiRenderer
-        },
-        {
+        }, {
           id: 'location',
           headerName: 'Location',
           dataType: 'list',
           filterOptions: CommonFilterOptions.locationsFilterOptions,
           mapping: 'location',
           renderer: AdminCommonFunctions.locationsRenderer
-        },
-        {
+        }, {
           id: 'preferredTimeToCall',
           headerName: 'Preferred Time To Call',
           dataType: 'list',
@@ -254,30 +279,26 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
           mapping: 'preferredTimeToCall',
           multiList: true,
           renderer: AdminCommonFunctions.preferredTimeToCallMultiRenderer
-        },
-        {
+        }, {
           id: 'additionalDetails',
           headerName: 'Additional Details',
           dataType: 'string',
           mapping: 'additionalDetails',
           lengthyData: true
-        },
-        {
+        }, {
           id: 'addressDetails',
           headerName: 'Address Details',
           dataType: 'string',
           mapping: 'addressDetails',
           lengthyData: true
-        },
-        {
+        }, {
           id: 'reference',
           headerName: 'Reference',
           dataType: 'list',
           filterOptions: CommonFilterOptions.referenceFilterOptions,
           mapping: 'reference',
           renderer: AdminCommonFunctions.referenceRenderer
-        }
-      ],
+        }],
       hasSelectionColumn: true,
       selectionColumn: {
         buttons: this.getSelectionColumnBaseButton().concat(customSelectionButtons)
@@ -300,7 +321,6 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
       label: label,
       btnclass: btnclass,
       clickEvent: (selectedRecords: GridRecord[], button: ActionButton, gridComponentObject: GridComponent) => {
-        this.interimHoldSelectedSubscriptionGridObject = gridComponentObject;
         const subscriptionIdsList = GridCommonFunctions.getSelectedRecordsPropertyList(selectedRecords, 'tentativeSubscriptionId');
         if (subscriptionIdsList.length === 0) {
           this.helperService.showAlertDialog({
@@ -310,6 +330,17 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
+          let extraContextProperties: {
+            action: string,
+            button: ActionButton,
+            gridComponentObject: GridComponent
+          } = {
+            action: actionText,
+            button: button,
+            gridComponentObject: gridComponentObject
+          };
+          button.disable();
+          gridComponentObject.showGridLoadingMask();
           this.helperService.showPromptDialog({
             required: commentsRequired,
             titleText: titleText,
@@ -321,10 +352,12 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
                 comments: message
               };
               this.utilityService.makerequest(this, this.handleSelectionActionRequest,
-                LcpRestUrls.take_action_on_subscription, 'POST', this.utilityService.urlEncodeData(data),
-                'application/x-www-form-urlencoded');
+                LcpRestUrls.take_action_on_subscribe_with_us, 'POST', this.utilityService.urlEncodeData(data),
+                'application/x-www-form-urlencoded', false, null, extraContextProperties);
             },
             onCancel: () => {
+              button.enable();
+              gridComponentObject.hideGridLoadingMask();
             }
           });
         }
@@ -342,51 +375,45 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
     let failVerificationButton = this.getCustomButton('failverify', 'Fail Verify', 'btnReject', 'failverify', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
     let rejectButton = this.getCustomButton('reject', 'Reject', 'btnReject', 'reject', true, 'Enter comments for action', 'Please provide your comments for taking the action.');
 
-    this.nonContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonContactedSubscriptionGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/nonContactedSubscriptionsList',
+    this.nonContactedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('nonContactedSubscribeWithUsGrid', 'Non Contacted Subscriptions', '/rest/support/nonContactedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/nonContactedSubscribeWithUsList',
                               [this.getSelectionColumnBlacklistButton(), contactedButton, recontactButton, rejectButton]),
-      htmlDomElementId: 'non-contacted-subscription-grid',
+      htmlDomElementId: 'non-contacted-subscribe-with-us-grid',
       hidden: false
     };
-
-    this.nonVerifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('nonVerifiedSubscriptionGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/nonVerifiedSubscriptionsList', 
+    this.nonVerifiedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('nonVerifiedSubscribeWithUsGrid', 'Non Verified Subscriptions', '/rest/support/nonVerifiedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/nonVerifiedSubscribeWithUsList', 
                               [this.getSelectionColumnBlacklistButton(), verifyButton, failVerificationButton, rejectButton], true),
-      htmlDomElementId: 'non-verified-subscription-grid',
+      htmlDomElementId: 'non-verified-subscribe-with-us-grid',
       hidden: false
     };
-
-    this.verifiedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verifiedSubscriptionGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/verifiedSubscriptionsList', 
+    this.verifiedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('verifiedSubscribeWithUsGrid', 'Verified Subscriptions', '/rest/support/verifiedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/verifiedSubscribeWithUsList', 
                               [this.getSelectionColumnBlacklistButton(), selectButton, rejectButton], true),
-      htmlDomElementId: 'verified-subscription-grid',
+      htmlDomElementId: 'verified-subscribe-with-us-grid',
       hidden: false
     };
-
-    this.verificationFailedSubscriptionGridMetaData = {
-      grid: this.getGridObject('verificationFailedSubscriptionGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/verificationFailedSubscriptionsList', 
+    this.verificationFailedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('verificationFailedSubscribeWithUsGrid', 'Verification Failed Subscriptions', '/rest/support/verificationFailedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/verificationFailedSubscribeWithUsList', 
                               [this.getSelectionColumnBlacklistButton(), reverifyButton, rejectButton], true),
-      htmlDomElementId: 'verification-failed-subscription-grid',
+      htmlDomElementId: 'verification-failed-subscribe-with-us-grid',
       hidden: false
     };
-
-    this.toBeReContactedSubscriptionGridMetaData = {
-      grid: this.getGridObject('toBeReContactedSubscriptionGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/toBeReContactedSubscriptionsList', 
+    this.toBeReContactedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('toBeReContactedSubscribeWithUsGrid', 'To Be Re-Contacted Subscriptions', '/rest/support/toBeReContactedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/toBeReContactedSubscribeWithUsList', 
                               [this.getSelectionColumnBlacklistButton(), recontactedButton, rejectButton], true),
-      htmlDomElementId: 'to-be-recontacted-subscription-grid',
+      htmlDomElementId: 'to-be-recontacted-subscribe-with-us-grid',
       hidden: false
     };
-
-    this.selectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('selectedSubscriptionGrid', 'Selected Subscriptions', '/rest/support/selectedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/selectedSubscriptionsList', [], true),
-      htmlDomElementId: 'selected-subscription-grid',
+    this.selectedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('selectedSubscribeWithUsGrid', 'Selected Subscriptions', '/rest/support/selectedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/selectedSubscribeWithUsList', [], true),
+      htmlDomElementId: 'selected-subscribe-with-us-grid',
       hidden: false
     };
-
-    this.rejectedSubscriptionGridMetaData = {
-      grid: this.getGridObject('rejectedSubscriptionGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscriptionsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/rejectedSubscriptionsList', 
+    this.rejectedSubscribeWithUsGridMetaData = {
+      grid: this.getGridObject('rejectedSubscribeWithUsGrid', 'Rejected Subscriptions', '/rest/support/rejectedSubscribeWithUsList', '/rest/support/downloadAdminReportSubscribeWithUsList', '/rejectedSubscribeWithUsList', 
                               [this.getSelectionColumnBlacklistButton(), recontactedButton, selectButton], true),
-      htmlDomElementId: 'rejected-subscription-grid',
+      htmlDomElementId: 'rejected-subscribe-with-us-grid',
       hidden: false
     };
   }
@@ -400,17 +427,17 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.subscriptionDataAccess = {
+      context.subscribeWithUsDataAccess = {
         success: response.success,
         message: response.message,
-        formDataEditAccess: response.formDataEditAccess
+        subscribeWithUsFormDataEditAccess: response.subscribeWithUsFormDataEditAccess
       };
-      context.selectedSubscriptionRecord = context.interimHoldSelectedSubscriptionRecord;
-      context.toggleVisibilitySubscriptionGrid();
+      context.selectedSubscribeWithUsSerialId = context.interimHoldSelectedSubscribeWithUsSerialId;
+      context.toggleVisibilitySubscribeWithUsGrid();
     }
   }
 
-  handleSelectionActionRequest(context: any, response: any) {
+  handleSelectionActionRequest(context: any, response: any, extraContextProperties: Object) {
     if (response['success'] === false) {
       context.helperService.showAlertDialog({
         isSuccess: response['success'],
@@ -419,41 +446,88 @@ export class SubscriptionRequestedComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      context.interimHoldSelectedSubscriptionGridObject.refreshGridData();
+      if (CommonUtilityFunctions.checkObjectAvailability(extraContextProperties)) {
+        let action: string = extraContextProperties['action'];
+        let button: ActionButton = extraContextProperties['button'];
+        let gridComponentObject: GridComponent = extraContextProperties['gridComponentObject'];
+        button.enable();
+        gridComponentObject.hideGridLoadingMask();
+        gridComponentObject.refreshGridData();
+        switch(action) {
+          case 'contacted' : {
+            context.nonVerifiedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'recontact' : {
+            context.toBeReContactedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'verify' : {
+            context.verifiedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'reverify' : {
+            context.verifiedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'recontacted' : {
+            context.nonVerifiedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'select' : {
+            context.selectedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'failverify' : {
+            context.verificationFailedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+          case 'reject' : {
+            context.rejectedSubscribeWithUsGridObject.refreshGridData();
+            break;
+          }
+        }
+      } else {
+        context.helperService.showAlertDialog({
+          isSuccess: false,
+          message: 'Extra properties got damaged in the process, please refresh the page',
+          onButtonClicked: () => {
+          }
+        });
+      }
     }
   }
 
-  toggleVisibilitySubscriptionGrid() {
-    if (this.showSubscriptionData === true) {
-      this.showSubscriptionData = false;
-      this.selectedSubscriptionRecord = null;
+  toggleVisibilitySubscribeWithUsGrid() {
+    if (this.showSubscribeWithUsData === true) {
+      this.showSubscribeWithUsData = false;
+      this.selectedSubscribeWithUsSerialId = null;
       setTimeout(() => {
-        this.nonContactedSubscriptionGridObject.init();
-        this.nonVerifiedSubscriptionGridObject.init();
-        this.verifiedSubscriptionGridObject.init();
-        this.verificationFailedSubscriptionGridObject.init();
-        this.toBeReContactedSubscriptionGridObject.init();
-        this.selectedSubscriptionGridObject.init();
-        this.rejectedSubscriptionGridObject.init();
+        this.nonContactedSubscribeWithUsGridObject.init();
+        this.nonVerifiedSubscribeWithUsGridObject.init();
+        this.verifiedSubscribeWithUsGridObject.init();
+        this.verificationFailedSubscribeWithUsGridObject.init();
+        this.toBeReContactedSubscribeWithUsGridObject.init();
+        this.selectedSubscribeWithUsGridObject.init();
+        this.rejectedSubscribeWithUsGridObject.init();
       }, 100);   
       setTimeout(() => {
-        this.nonContactedSubscriptionGridObject.refreshGridData();
-        this.nonVerifiedSubscriptionGridObject.refreshGridData();
-        this.verifiedSubscriptionGridObject.refreshGridData();
-        this.verificationFailedSubscriptionGridObject.refreshGridData();
-        this.toBeReContactedSubscriptionGridObject.refreshGridData();
-        this.selectedSubscriptionGridObject.refreshGridData();
-        this.rejectedSubscriptionGridObject.refreshGridData();
+        this.nonContactedSubscribeWithUsGridObject.refreshGridData();
+        this.nonVerifiedSubscribeWithUsGridObject.refreshGridData();
+        this.verifiedSubscribeWithUsGridObject.refreshGridData();
+        this.verificationFailedSubscribeWithUsGridObject.refreshGridData();
+        this.toBeReContactedSubscribeWithUsGridObject.refreshGridData();
+        this.selectedSubscribeWithUsGridObject.refreshGridData();
+        this.rejectedSubscribeWithUsGridObject.refreshGridData();
       }, 200);
     } else {
-      this.showSubscriptionData = true;
+      this.showSubscribeWithUsData = true;
     }
   }
-
 }
 
-export interface SubscriptionDataAccess {
+export interface SubscribeWithUsDataAccess {
   success: boolean;
   message: string;
-  formDataEditAccess: boolean;
+  subscribeWithUsFormDataEditAccess: boolean;
 }

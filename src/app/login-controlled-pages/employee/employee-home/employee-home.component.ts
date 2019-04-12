@@ -7,6 +7,7 @@ import { GridCommonFunctions } from 'src/app/utils/grid/grid-common-functions';
 import { GridRecord } from 'src/app/utils/grid/grid-record';
 import { GridComponent, GridDataInterface } from 'src/app/utils/grid/grid.component';
 import { HelperService } from 'src/app/utils/helper.service';
+import { CommonUtilityFunctions } from 'src/app/utils/common-utility-functions';
 
 @Component({
   selector: 'app-employee-home',
@@ -67,6 +68,18 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  expandAllGrids() {
+    this.alertGridObject.expandGrid();
+    this.taskGridObject.expandGrid();
+    this.workflowGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.alertGridObject.collapseGrid();
+    this.taskGridObject.collapseGrid();
+    this.workflowGridObject.collapseGrid();
+  }
+
   public setUpGridMetaData() {
     this.alertGridMetaData = {
       grid: {
@@ -77,6 +90,11 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           restURL: '/rest/employee/alertReminderList'
         },
         columns: [{
+          id: 'alertReminderSerialId',
+          headerName: 'Alert Reminder Serial Id',
+          dataType: 'string',
+          mapping: 'alertReminderSerialId'
+        }, {
           id: 'initiatedDate',
           headerName: 'Initiated Date',
           dataType: 'date',
@@ -129,6 +147,11 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           restURL: '/rest/employee/workflowList'
         },
         columns: [{
+          id: 'workflowSerialId',
+          headerName: 'Workflow Serial Id',
+          dataType: 'string',
+          mapping: 'workflowSerialId'
+        }, {
           id: 'initiatedDate',
           headerName: 'Initiated Date',
           dataType: 'date',
@@ -182,6 +205,11 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
           restURL: '/rest/employee/taskList'
         },
         columns: [{
+          id: 'taskSerialId',
+          headerName: 'Task Serial Id',
+          dataType: 'string',
+          mapping: 'taskSerialId'
+        }, {
           id: 'initiatedDate',
           headerName: 'Initiated Date',
           dataType: 'date',
@@ -224,5 +252,5 @@ export class EmployeeHomeComponent implements OnInit, AfterViewInit {
       htmlDomElementId: 'task-grid',
       hidden: false
     };
-  }
+  }  
 }

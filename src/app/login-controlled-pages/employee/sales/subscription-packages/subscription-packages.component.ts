@@ -50,11 +50,21 @@ export class SubscriptionPackagesComponent implements OnInit {
     setTimeout(() => {
       this.currentSubscriptionPackagesGridObject.init();
       this.historySubscriptionPackagesGridObject.init();
-    }, 0);
+    }, 100);
     setTimeout(() => {
       this.currentSubscriptionPackagesGridObject.refreshGridData();
       this.historySubscriptionPackagesGridObject.refreshGridData();
-    }, 0);
+    }, 100);
+  }
+
+  expandAllGrids() {
+    this.currentSubscriptionPackagesGridObject.expandGrid();
+    this.historySubscriptionPackagesGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.currentSubscriptionPackagesGridObject.collapseGrid();
+    this.historySubscriptionPackagesGridObject.collapseGrid();
   }
 
   public getSubscriptionPackageGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {

@@ -93,6 +93,26 @@ export class EnquiryRegistrationComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  expandAllGrids() {
+    this.nonContactedFindTutorGridObject.expandGrid();
+    this.nonVerifiedFindTutorGridObject.expandGrid();
+    this.verifiedFindTutorGridObject.expandGrid();
+    this.verificationFailedFindTutorGridObject.expandGrid();
+    this.toBeReContactedFindTutorGridObject.expandGrid();
+    this.selectedFindTutorGridObject.expandGrid();
+    this.rejectedFindTutorGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.nonContactedFindTutorGridObject.collapseGrid();
+    this.nonVerifiedFindTutorGridObject.collapseGrid();
+    this.verifiedFindTutorGridObject.collapseGrid();
+    this.verificationFailedFindTutorGridObject.collapseGrid();
+    this.toBeReContactedFindTutorGridObject.collapseGrid();
+    this.selectedFindTutorGridObject.collapseGrid();
+    this.rejectedFindTutorGridObject.collapseGrid();
+  }
+
   private getSelectionColumnBlacklistButton() {
     return {
       id: 'blacklist',

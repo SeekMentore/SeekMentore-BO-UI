@@ -66,14 +66,30 @@ export class DemoTrackerComponent implements OnInit, AfterViewInit {
       this.failedDemoGridObject.init();
       this.cancelledDemoGridObject.init();
       this.enquiryClosedDemoGridObject.init();
-    }, 0);
+    }, 100);
     setTimeout(() => {
       this.scheduledDemoGridObject.refreshGridData();
       this.successfulDemoGridObject.refreshGridData();
       this.failedDemoGridObject.refreshGridData();
       this.cancelledDemoGridObject.refreshGridData();
       this.enquiryClosedDemoGridObject.refreshGridData();
-    }, 0);
+    }, 100);
+  }
+
+  expandAllGrids() {
+    this.scheduledDemoGridObject.expandGrid();
+    this.successfulDemoGridObject.expandGrid();
+    this.failedDemoGridObject.expandGrid();
+    this.cancelledDemoGridObject.expandGrid();
+    this.enquiryClosedDemoGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.scheduledDemoGridObject.collapseGrid();
+    this.successfulDemoGridObject.collapseGrid();
+    this.failedDemoGridObject.collapseGrid();
+    this.cancelledDemoGridObject.collapseGrid();
+    this.enquiryClosedDemoGridObject.collapseGrid();
   }
 
   public getGridObject(id: string, title: string, restURL: string, collapsed: boolean = false) {

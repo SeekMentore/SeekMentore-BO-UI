@@ -102,6 +102,28 @@ export class TutorRegistrationComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  expandAllGrids() {
+    this.nonContactedBecomeTutorGridObject.expandGrid();
+    this.nonVerifiedBecomeTutorGridObject.expandGrid();
+    this.verifiedBecomeTutorGridObject.expandGrid();
+    this.verificationFailedBecomeTutorGridObject.expandGrid();
+    this.toBeReContactedBecomeTutorGridObject.expandGrid();
+    this.selectedBecomeTutorGridObject.expandGrid();
+    this.rejectedBecomeTutorGridObject.expandGrid();
+    this.registeredBecomeTutorGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.nonContactedBecomeTutorGridObject.collapseGrid();
+    this.nonVerifiedBecomeTutorGridObject.collapseGrid();
+    this.verifiedBecomeTutorGridObject.collapseGrid();
+    this.verificationFailedBecomeTutorGridObject.collapseGrid();
+    this.toBeReContactedBecomeTutorGridObject.collapseGrid();
+    this.selectedBecomeTutorGridObject.collapseGrid();
+    this.rejectedBecomeTutorGridObject.collapseGrid();
+    this.registeredBecomeTutorGridObject.collapseGrid();
+  }
+
   private getSelectionColumnBlacklistButton() {
     return {
       id: 'blacklist',

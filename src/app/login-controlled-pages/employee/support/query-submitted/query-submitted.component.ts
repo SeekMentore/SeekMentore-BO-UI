@@ -65,6 +65,18 @@ export class QuerySubmittedComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  expandAllGrids() {
+    this.nonContactedQueryGridObject.expandGrid();
+    this.nonAnsweredQueryGridObject.expandGrid();
+    this.answeredQueryGridObject.expandGrid();
+  }
+
+  collapseAllGrids() {
+    this.nonContactedQueryGridObject.collapseGrid();
+    this.nonAnsweredQueryGridObject.collapseGrid();
+    this.answeredQueryGridObject.collapseGrid();
+  }
+
   private getSelectionColumnBaseButton() {
     return [{
       id: 'sendEmail',
